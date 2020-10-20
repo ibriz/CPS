@@ -1,0 +1,17 @@
+.navTitle {
+    font-weight: normal;
+    font-size: 0.95rem !important;
+    line-height: 20px;
+cursor: pointer;
+/* identical to box height */
+
+text-align: center;
+// margin-left: 20px;
+
+color: rgba(38, 38, 38, 0.6);
+}
+
+.selectedNav {
+    color: #1AAABA;
+    font-weight: bold;
+}

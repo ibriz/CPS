@@ -1,0 +1,28 @@
+.heading {
+    color: #262626;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 1.3rem;
+}
+
+.headerContainer {
+    display: flex;
+    justify-content: center;
+    position: relative;
+
+}
+
+.account {
+    position: absolute;
+right: 1.5%;
+display: flex;
+    align-items: center;
+}
+
+
+@media screen and (max-width: 500px) {
+    .heading {
+        margin-top: 30px;
+    }
+
+}
