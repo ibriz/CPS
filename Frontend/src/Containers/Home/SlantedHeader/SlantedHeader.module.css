@@ -1,0 +1,137 @@
+.slanted {
+    background-color: #1AAABA;
+    height: 300px;
+    -webkit-clip-path: polygon(0 0, 100% 0, 100% 0%, 0 100%);
+    clip-path: polygon(0 0, 100% 0, 100% 78%, 0 100%); 
+    padding-left: 7px;
+    padding-right: 7px;
+    padding-top: 10px;
+}
+
+.tabularDataWrapper {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.firstRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.button {
+    padding: 0 !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    font-weight: 500 !important;
+    font-size: 16px !important;
+    padding-top: 3px !important;
+    padding-bottom: 3px !important;
+}
+
+.heading {
+    font-style: normal;
+font-weight: normal;
+font-size: 26px;
+line-height: 20px;
+
+color: #FFFFFF;
+
+display: flex;
+align-items: center;
+
+}
+
+.secondRow {
+    margin-top: 2.5em!important;
+    padding-left: 10px;
+}
+
+@media screen and (min-width: 992px) {
+    .secondRow {
+        align-items: center;
+    }
+
+    .button {
+        margin-left: 5px;
+    }
+
+    .slanted {
+        height: 270px;
+    }
+}
+
+
+@media screen and (max-width: 1100px) {
+
+    .slanted {
+        height: 280px;
+        clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%); 
+
+    }
+}
+
+@media screen and (max-width: 717px) {
+
+    .slanted {
+        height: 300px;
+        clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%); 
+
+    }
+}
+
+
+@media screen and (max-width: 640px) {
+
+    .slanted {
+        height: 320px;
+        clip-path: polygon(0 0, 100% 0, 100% 88%, 0 100%); 
+
+    }
+}
+
+@media screen and (max-width: 440px) {
+
+    .slanted {
+        height: 350px;
+        clip-path: polygon(0 0, 100% 0, 100% 88%, 0 100%); 
+
+    }
+}
+
+@media screen and (max-width: 370px) {
+
+    .slanted {
+        height: 300px;
+        clip-path: polygon(0 0, 100% 0, 100% 93%, 0 100%); 
+
+    }
+}
+
+
+@media screen and (max-width: 350px) {
+
+    .slanted {
+        height: 330px;
+        clip-path: polygon(0 0, 100% 0, 100% 93%, 0 100%); 
+
+    }
+}
+
+@media screen and (max-width: 319px) {
+
+    .slanted {
+        height: 330px;
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); 
+
+    }
+}
+
+@media screen and (max-width: 300px) {
+
+    .slanted {
+        height: 380px;
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); 
+
+    }
+}

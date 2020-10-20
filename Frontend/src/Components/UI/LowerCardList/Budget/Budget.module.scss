@@ -1,0 +1,95 @@
+.proposalContainer {
+    align-items: center;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid rgba(38, 38, 38, 0.1);
+}
+
+
+
+.proposalInfo {
+    font-weight: normal;
+    font-size: 9px;
+    line-height: 15px;
+    color: rgba(38, 38, 38, 0.6);
+}
+
+.budget {
+    font-style: normal;
+    font-weight: 600;
+    margin-left: 15px;
+    line-height: 15px;
+    color: rgba(38, 38, 38, 0.6);
+}
+
+.info {
+    display: flex;
+    flex-wrap: wrap;
+
+}
+
+.badge {
+    align-items: center;
+    display: flex !important;
+}
+
+
+
+
+
+@media screen and (min-width: 500px) {
+
+    .proposalInfo {
+        font-size: 15px;
+    }
+
+    .badge {
+        font-size: 16px !important;
+    }
+
+    .proposalInfo2 {
+        font-size: 0.85rem;;
+    }
+
+    .proposalContainer {
+        margin-bottom: 10px;
+    
+    }
+
+    .info {
+        margin-top: 5px;
+    }
+
+}
+
+@media screen and (min-width: 992px) {
+
+
+    .proposalInfo {
+        font-size: 15px;
+    }
+
+    .badge {
+        font-size: 16px !important;
+    }
+
+
+
+    .proposalContainer {
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+    
+    }
+
+    .info {
+        margin-top: 5px;
+    }
+
+    .proposalInfo2 {
+        margin-left: 0.85rem !important;   
+
+    }
+
+}
+
+
