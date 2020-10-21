@@ -54,33 +54,7 @@ const initialState = {
 
     proposalByAddress: [],
 
-    votesByProposal: [
-        {
-            sponsorAddress: 'hxe59539154a3d77023943c3bbd5fc3a081d697e6a',
-            status: 'Approved',
-            timestamp: 1600872145290985
-        },
-
-        {
-            sponsorAddress: 'hxe59539154a3d77023943c3bbd5fc3a081d697e6a',
-            status: 'Approved',
-            timestamp: 1600872145290985
-        },
-
-        {
-            sponsorAddress: 'hxe59539154a3d77023943c3bbd5fc3a081d697e6a',
-            status: 'Rejected',
-            timestamp: 1600872145290985
-        },
-
-        {
-            sponsorAddress: 'hxe59539154a3d77023943c3bbd5fc3a081d697e6a',
-            status: 'Rejected',
-            timestamp: 1600872145290985
-        },
-
-        
-    ]
+    votesByProposal: []
 };
 
 const proposalSlice = createSlice({

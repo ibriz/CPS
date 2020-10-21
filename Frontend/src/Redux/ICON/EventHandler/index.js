@@ -39,7 +39,7 @@ function setTimeoutPromise() {
         else if (result.status === 1) {
             NotificationManager.success(successMessage);
         }
-
+        console.log("callBack2", callBack);
         if(callBack) {
             console.log("callBack");
             callBack();
