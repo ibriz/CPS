@@ -27,7 +27,7 @@ const UpperCard = ({numberOfSubmittedProposals, updatePeriod, sponsorRequest, vo
         text = null;
         button = null;
         
-    } else if (period === 'VOTING') {
+    } else if (period === 'APPLICATION') {
         button = <Link to="/newProgressReport">
 
             <Button variant="info" className={styles.createProposalButton}>CREATE NEW PROGRESS REPORT</Button>
@@ -48,7 +48,7 @@ const UpperCard = ({numberOfSubmittedProposals, updatePeriod, sponsorRequest, vo
                     <Card className = {styles.upperCard}>
                         <Card.Body>
                             <Row className={styles.upperCardRow}>
-                                <span className={styles.proposalTitle}><b>{(period === 'APPLICATION') ? 'PROGRESS REPORT SUBMISSION OPENS IN' : 'PROGRESS REPORT SUBMISSION DEADLINE IN'}</b></span>
+                                <span className={styles.proposalTitle}><b>{(period === 'VOTING') ? 'PROGRESS REPORT SUBMISSION OPENS IN' : 'PROGRESS REPORT SUBMISSION DEADLINE IN'}</b></span>
                                 {text}
 
                             </Row>
