@@ -1,24 +1,35 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from './TabularData.module.css';
 import { connect } from 'react-redux';
+import { fetchProposalListRequest, fetchDraftsRequest } from 'Redux/Reducers/proposalSlice';
+import wallet from 'Redux/ICON/FrontEndWallet'
 
-
-const TabularData = ({ numberOfPendingProposals, numberOfSubmittedProposals, totalPendingProposalBudge, totalSubmittedProposalBudget, cpfRemainingFunds, numberOfApprovedProposals, totalApprovedProposalBudget }) => {
+const TabularData = ({ numberOfPendingProposals, numberOfSubmittedProposals, totalPendingProposalBudge, totalSubmittedProposalBudget, cpfRemainingFunds, numberOfApprovedProposals, totalApprovedProposalBudget, fetchProposalListRequest, walletAddress,totalCount }) => {
 
     const tabularData = [
         {
-            key: 'Pending Proposals',
-            value: `${numberOfPendingProposals} (${totalPendingProposalBudge} ICX)`
+            key: 'Voting Proposals',
+            value: `${totalCount.Voting} (${0} ICX)`
         },
         {
             key: 'Approved Proposals',
-            value: `${numberOfApprovedProposals} (${totalApprovedProposalBudget} ICX)`
+            value: `${totalCount.Active} (${totalApprovedProposalBudget} ICX)`
         },
         {
             key: 'CPF Remaining Funds',
             value: `${cpfRemainingFunds} ICX`
         }
     ];
+
+    useEffect(() => {
+        fetchProposalListRequest(
+            {
+                status: "Voting",
+                walletAddress: walletAddress || wallet.getAddress(),
+                pageNumber: 1
+            }
+        );
+    }, [])
 
     return (
         <div className = {styles.tabular}>
@@ -48,9 +59,19 @@ const mapStateToProps = () => state => {
 
         cpfRemainingFunds: state.proposals.cpfRemainingFunds,
 
+        walletAddress: state.account.address,
+        totalCount: state.proposals.totalCount
+
+
 
     };
 };
 
-export default connect(mapStateToProps)(TabularData);
+const mapDispatchToProps = dispatch => (
+    {
+        fetchProposalListRequest: (payload) => dispatch(fetchProposalListRequest(payload)),
+    }
+)
+
+export default connect(mapStateToProps, mapDispatchToProps)(TabularData);
 

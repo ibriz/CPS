@@ -40,6 +40,16 @@ const initialState = {
         Rejected: 0
     },
 
+    totalCount: {
+        Active: 0,
+        Voting: 0,
+        Completed: 0,
+        Pending: 0,
+        Disqualified: 0,
+        Paused: 0,
+        Rejected: 0
+    },
+
     sponsorRequestsList: {
         Pending: [],
         Approved: [],
@@ -94,7 +104,9 @@ const proposalSlice = createSlice({
             // console.log(Math.ceil(IconConverter.toNumber(action.payload.response[0].count) / 10));
             console.log(action.payload.status);
             // state.totalPages[action.payload.status] = Math.ceil(IconConverter.toNumber(action.payload.response[0].count) / 10)
-            state.totalPages[action.payload.status] = Math.ceil(IconConverter.toNumber(action.payload.response.count) / 10)
+            state.totalPages[action.payload.status] = Math.ceil(IconConverter.toNumber(action.payload.response.count) / 10);
+            state.totalCount[action.payload.status] = IconConverter.toNumber(action.payload.response.count)
+
             return;
         },
         fetchProposalListFailure(state) {
