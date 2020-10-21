@@ -7,13 +7,15 @@ import IconService from 'icon-sdk-js';
 import {HttpProvider} from 'icon-sdk-js';
 import {setModalShowSponsorRequests, setModalShowVoting} from 'Redux/Reducers/proposalSlice';
 import {setModalShowVotingPR} from 'Redux/Reducers/progressReportSlice';
+import { fetchPeriodDetailsRequest } from 'Redux/Reducers/periodSlice';
 
 const {_submitProposal,
         _submitProgressReport,
         _approve_sponsor,
         _reject_sponsor,
         _vote_proposal,
-        _vote_progress_report } = constants;
+        _vote_progress_report,
+        update_period } = constants;
 
 function setTimeoutPromise() {
     return new Promise(function(resolve, reject) { 
@@ -23,7 +25,8 @@ function setTimeoutPromise() {
 
  async function getResult({txHash,
         successMessage,
-        failureMessage}) {
+        failureMessage,
+        callBack}) {
      try {
         const provider = new HttpProvider('https://bicon.net.solidwallet.io/api/v3');
         const iconService = new IconService(provider);
@@ -35,6 +38,11 @@ function setTimeoutPromise() {
         }
         else if (result.status === 1) {
             NotificationManager.success(successMessage);
+        }
+
+        if(callBack) {
+            console.log("callBack");
+            callBack();
         }
      }
      catch {
@@ -157,6 +165,18 @@ export default (event) => {
     
                         // result = await iconService.getTransactionResult().execute();
                         break;
+
+                        case update_period:
+                            getResult({
+                                txHash: payload.result,
+                                failureMessage: "Period Update Failed",
+                                successMessage: "Period Updated Successfully",
+                                callBack: () => store.dispatch(fetchPeriodDetailsRequest())
+                            });
+            
+                                // window.location.reload();
+                            NotificationManager.info("Period Update Request Sent");
+                            break;
                 default:
                     break;
             }

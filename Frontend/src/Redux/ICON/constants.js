@@ -4,5 +4,6 @@ export default {
     _approve_sponsor: 32002,
     _reject_sponsor: 32003,
     _vote_proposal: 32004,
-    _vote_progress_report: 32005
+    _vote_progress_report: 32005,
+    update_period: 32006
 }

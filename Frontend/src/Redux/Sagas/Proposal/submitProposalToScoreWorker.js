@@ -17,9 +17,9 @@ function* submitProposalToScoreWorker({ payload }) {
         _title: payload.proposal.projectName,
         _total_budget: parseInt(payload.proposal.totalBudget).toFixed(),
         sponsor_address: payload.proposal.sponserPrep,
-        _ipfs_hash: payload.response.data.hash,
+        _ipfs_hash: payload.response.hash,
         _ipfs_key: payload.response.ipfsKey,
-        _ipfs_link: `https://gateway.ipfs.io/ipfs/${payload.response.data.hash}`
+        _ipfs_link: `https://gateway.ipfs.io/ipfs/${payload.response.hash}`
 
     }
 

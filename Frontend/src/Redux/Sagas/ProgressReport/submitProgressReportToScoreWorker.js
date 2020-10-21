@@ -5,13 +5,13 @@ function* submitProgressReportToScoreWorker({ payload }) {
     console.log(payload);
 
     const params = {
-        _ipfs_hash: payload.response.data.hash,
+        _ipfs_hash: payload.response.hash,
         _ipfs_key: payload.progressReport.projectName,
-        _report_key: payload.response.reportKey,
+        _report_key: payload.response.ipfsKey,
         _progress_report_title: payload.progressReport.progressReportTitle ,
         _budget_adjustment: `${Number(payload.progressReport.projectTermRevision)}` ,
         _adjustment_value: Number(payload.progressReport.additionalBudget).toFixed(),
-        _ipfs_link: `https://gateway.ipfs.io/ipfs/${payload.response.data.hash}`
+        _ipfs_link: `https://gateway.ipfs.io/ipfs/${payload.response.hash}`
 
     }
 

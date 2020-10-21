@@ -7,16 +7,16 @@ function* fetchPeriodDetailsRequestWorker({payload}) {
   try {
       console.log("fetchPeriodDetailsRequestWorker");
 
-//     const response = yield call(callKeyStoreWallet, {
-//         method: 'get_period_status'
-// });
+    const response = yield call(callKeyStoreWallet, {
+        method: 'get_period_status'
+});
 
-const response = {
-    _current_block: 1000,
-    _next_block: 10000,
-    _remaining_time: 86500,
-    _period: 'Voting Period'
-}
+// const response = {
+//     _current_block: 1000,
+//     _next_block: 10000,
+//     remaining_time: 86500,
+//     _period_name: 'Voting Period'
+// }
 
 console.log("fetchPeriodDetailsRequestWorker3");
 
