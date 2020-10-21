@@ -34,7 +34,7 @@ import {
   fetchProgressReportByProposalRequestWorker
 } from './ProgressReport';
 
-import { fetchPrepWorker } from './PRep';
+import { fetchPrepWorker, unregisterPrepWorker } from './PRep';
 import {fetchPeriodDetailsRequestWorker, updatePeriodWorker} from './Period'
 
 import { submitProposalRequest, submitProposalSuccess, fetchProposalListRequest, updateProposalStatus,  fetchProposalDetailRequest, fetchSponsorRequestsListRequest,
@@ -51,7 +51,7 @@ import { submitProgressReportRequest, submitProgressReportSuccess, fetchProgress
   fetchProgressReportByProposalRequest
 } from '../Reducers/progressReportSlice';
 import {fetchPeriodDetailsRequest, updatePeriod} from '../Reducers/periodSlice';
-import { fetchPrepsRequest } from '../Reducers/prepsSlice';
+import { fetchPrepsRequest, unregisterPrep } from '../Reducers/prepsSlice';
 import { FiPrinter } from 'react-icons/fi';
 
 
@@ -105,6 +105,8 @@ yield takeEvery(fetchProgressReportByProposalRequest.type, fetchProgressReportBy
 yield takeEvery(fetchPeriodDetailsRequest.type, fetchPeriodDetailsRequestWorker);
 
 yield takeEvery(updatePeriod.type, updatePeriodWorker);
+
+yield takeEvery(unregisterPrep.type, unregisterPrepWorker);
 
 
 

@@ -8,6 +8,7 @@ import {HttpProvider} from 'icon-sdk-js';
 import {setModalShowSponsorRequests, setModalShowVoting} from 'Redux/Reducers/proposalSlice';
 import {setModalShowVotingPR} from 'Redux/Reducers/progressReportSlice';
 import { fetchPeriodDetailsRequest } from 'Redux/Reducers/periodSlice';
+import {loginSuccess} from 'Redux/Reducers/accountSlice';
 
 const {_submitProposal,
         _submitProgressReport,
@@ -15,7 +16,8 @@ const {_submitProposal,
         _reject_sponsor,
         _vote_proposal,
         _vote_progress_report,
-        update_period } = constants;
+        update_period,
+        unregister_prep } = constants;
 
 function setTimeoutPromise() {
     return new Promise(function(resolve, reject) { 
@@ -177,6 +179,20 @@ export default (event) => {
                                 // window.location.reload();
                             NotificationManager.info("Period Update Request Sent");
                             break;
+
+                            case unregister_prep:
+                                getResult({
+                                    txHash: payload.result,
+                                    failureMessage: "Period Unregistration Failed",
+                                    successMessage: "Period Unregistered Successfully",
+                                    callBack: () => store.dispatch(loginSuccess({
+                                        isPrep: false
+                                      }))
+                                });
+                
+                                    // window.location.reload();
+                                NotificationManager.info("Period Unregistration Request Sent");
+                                break;
                 default:
                     break;
             }

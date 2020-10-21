@@ -32,9 +32,12 @@ const prepsSlice = createSlice({
         fetchPrepsFailure(state) {
             return;
         },
+        unregisterPrep() {
+            return;
+        },
     },
 })
 
-export const { fetchPrepsRequest, fetchPrepsSuccess, fetchPrepsFailure,
+export const { fetchPrepsRequest, fetchPrepsSuccess, fetchPrepsFailure, unregisterPrep
 } = prepsSlice.actions;
 export default prepsSlice.reducer;
