@@ -27,7 +27,7 @@ function DetailsModal(props) {
 
 
   const { proposalDetail, proposal, status, sponsorRequest = false, approveSponserRequest, rejectSponsorRequest, voting = false, voteProposal, progressReportByProposal, votesByProposal, fetchVoteResultRequest, approvedPercentage,
-    fetchProgressReportByProposalRequest } = props;
+    fetchProgressReportByProposalRequest, period, remainingTime } = props;
 
   useEffect(() => {
     props.proposal && props.fetchProposalDetail(
@@ -150,7 +150,7 @@ function DetailsModal(props) {
                         {
 
                           <ProgressText>
-                            {approvedPercentage}% Approved
+                            {approvedPercentage || 0}% Approved
                             </ProgressText>
                         }
 
@@ -225,7 +225,7 @@ function DetailsModal(props) {
         </Row>
 
         {
-          sponsorRequest && status === 'Pending' &&
+          sponsorRequest && (status === 'Pending') && (period === 'APPLICATION') && (remainingTime > 0) &&
           <Row style={{ justifyContent: 'center' }}>
             <Button variant="success" onClick={onClickApproveSponsorRequest}
                onClick={() => {
@@ -242,7 +242,7 @@ function DetailsModal(props) {
         }
 
         {
-          voting &&
+          voting && (period === 'VOTING') && (remainingTime > 0) &&
           <>
             <Row style={{ justifyContent: 'center' }}>
             <ButtonGroup aria-label="Basic example">
@@ -341,7 +341,9 @@ const mapStateToProps = state => (
     proposalDetail: state.proposals.proposalDetail,
     progressReportByProposal: state.progressReport.progressReportByProposal,
     votesByProposal: state.proposals.votesByProposal,
-    approvedPercentage: getProposalApprovedPercentage(state)
+    approvedPercentage: getProposalApprovedPercentage(state),
+    period: state.period.period,
+    remainingTime: state.period.remainingTime
   }
 )
 

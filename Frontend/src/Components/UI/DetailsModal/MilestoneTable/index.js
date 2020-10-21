@@ -21,7 +21,7 @@ const MilestoneTable = ({milestones, title = "Milestones"}) => {
     font-weight: 600;
     font-size: 14px;
     line-height: 17px;    
-    color: rgba(38, 38, 38, 0.6);
+    color: rgba(38, 38, 38, 0.9);
     `
 
     const Value = styled.div`
@@ -29,7 +29,7 @@ const MilestoneTable = ({milestones, title = "Milestones"}) => {
     font-weight: normal;
     font-size: 14px;
     line-height: 17px;    
-    color: rgba(38, 38, 38, 0.6);
+    color: rgba(38, 38, 38, 0.9);
     `
 
     return(

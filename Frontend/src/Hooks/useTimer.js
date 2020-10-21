@@ -51,6 +51,16 @@ const useTimer = () => {
             console.log(r);
 
             setRemainingTime(r);
+        } else {
+            setRemainingTime(
+                {
+                    day: 0,
+                    hour: 0,
+                    minute: 0,
+                    second: 0
+                }
+            );
+            dispatch(fetchPeriodDetailsRequest());
         }
 
     }

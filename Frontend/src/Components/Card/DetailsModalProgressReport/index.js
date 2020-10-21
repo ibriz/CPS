@@ -32,7 +32,8 @@ function DetailsModal(props) {
   const [voteConfirmationShow, setVoteConfirmationShow] = React.useState(false);
 
 
-  const { progressDetail, proposal, status, sponsorRequest = false, approveSponserRequest, rejectSponsorRequest, voting = false, voteProgressReport, progressReport, votesByProposal, fetchVoteResultRequest, approvedPercentage } = props;
+  const { progressDetail, proposal, status, sponsorRequest = false, approveSponserRequest, rejectSponsorRequest, voting = false, voteProgressReport, progressReport, votesByProposal, fetchVoteResultRequest, approvedPercentage,
+  period, remainingTime } = props;
 
   useEffect(() => {
     props.progressReport && props.fetchProgressReportDetailRequest(
@@ -225,7 +226,7 @@ function DetailsModal(props) {
         </Row>
 
         {
-          sponsorRequest && status === 'Pending' &&
+          sponsorRequest && (status === 'Pending') &&
           <Row style={{ justifyContent: 'center' }}>
             <Button variant="success" onClick={onClickApproveSponsorRequest}
               onClick={() => {
@@ -242,10 +243,10 @@ function DetailsModal(props) {
         }
 
         {
-          voting &&
+          voting && (period === 'VOTING') && (remainingTime > 0) &&
           <>
             {
-              1 === 1 &&
+              progressDetail?.projectTermRevision &&
               <Row>
                 <Col xs="12" style={{ display: 'flex', justifyContent: 'center' }}>
                   <span style={{ color: '#262626', fontWeight: 600 }}>Progress Report:</span>
@@ -270,7 +271,7 @@ function DetailsModal(props) {
             </Row>
 
             {
-              1 === 1 &&
+              progressDetail?.projectTermRevision &&
               <>
                 <Col xs="12">
 
@@ -376,8 +377,9 @@ const mapStateToProps = state => (
   {
     progressDetail: state.progressReport.progressReportDetail,
     votesByProposal: state.progressReport.votesByProgressReport,
-    approvedPercentage: getProgressReportApprovedPercentage(state)
-
+    approvedPercentage: getProgressReportApprovedPercentage(state),
+    period: state.period.period,
+    remainingTime: state.period.remainingTime
   }
 )
 
