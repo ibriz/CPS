@@ -21,34 +21,37 @@ const useTimer = () => {
     function calculateRemainingTime() {
 
         let timestamp = Math.floor(Date.now() / 1000);
-        var d =  remainingTimeRedux - (timestamp - timestampRedux) ;
-        console.log("useTimer");  
+        var d = remainingTimeRedux - (timestamp - timestampRedux);
+        console.log("useTimer");
         console.log(timestamp);
         console.log(timestampRedux);
         console.log(period);
         console.log(timestamp - timestampRedux);
- 
-        console.log(d);                     
-        var r = {};                                                                // result
-        var s = {                                                                  // structure
-            day: 86400,   // feel free to add your own row
-            hour: 3600,
-            minute: 60,
-            second: 1
-        };
 
-        Object.keys(s).forEach(function (key) {
-            r[key] = Math.floor(d / s[key]);
-            // if(r[key] < 0) {
-            //     r[key] = 0;
-            // }
-            d -= r[key] * s[key];
-        });
+        console.log(d);
+        if (remainingTimeRedux > 0 && d > 0) {
+            console.log("timestampRedux");
+            var r = {};                                                                
+            var s = {                                                                 
+                day: 86400,   
+                hour: 3600,
+                minute: 60,
+                second: 1
+            };
 
-        // for example: {year:0,month:0,week:1,day:2,hour:34,minute:56,second:7}
-        console.log(r);
+            Object.keys(s).forEach(function (key) {
+                r[key] = Math.floor(d / s[key]);
+                // if(r[key] < 0) {
+                //     r[key] = 0;
+                // }
+                d -= r[key] * s[key];
+            });
 
-        setRemainingTime(r);
+            // for example: {year:0,month:0,week:1,day:2,hour:34,minute:56,second:7}
+            console.log(r);
+
+            setRemainingTime(r);
+        }
 
     }
 
@@ -68,7 +71,8 @@ const useTimer = () => {
 
     return {
         period,
-        remainingTime
+        remainingTime,
+        remainingTimeSecond: remainingTimeRedux
     }
 }
 

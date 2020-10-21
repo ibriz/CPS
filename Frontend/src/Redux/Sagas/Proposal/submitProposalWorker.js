@@ -1,4 +1,4 @@
-import { call, put} from 'redux-saga/effects';
+import { call, put, select} from 'redux-saga/effects';
 // import {
 //   getCourseInfo,
 // } from '../services/api';
@@ -6,10 +6,17 @@ import {submitProposalSuccess, submitProposalFailure} from '../../Reducers/propo
 import {PROPOSAL_ADD_URL} from '../../Constants';
 import {request} from '../helpers';
 
+export const getAddress = (state) => state.account.address
+
 function* submitProposalWorker({payload}) {
   try {
+    const address = yield select(getAddress);
     const response = yield call(request, {
-      body: payload.proposal,
+      body: {
+        ...payload.proposal,
+        address,
+        type: "proposal"
+      },
       url: PROPOSAL_ADD_URL
     });
     yield put(submitProposalSuccess(

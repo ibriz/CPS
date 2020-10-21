@@ -35,7 +35,7 @@ import {
 } from './ProgressReport';
 
 import { fetchPrepWorker } from './PRep';
-import {fetchPeriodDetailsRequestWorker} from './Period'
+import {fetchPeriodDetailsRequestWorker, updatePeriodWorker} from './Period'
 
 import { submitProposalRequest, submitProposalSuccess, fetchProposalListRequest, updateProposalStatus,  fetchProposalDetailRequest, fetchSponsorRequestsListRequest,
   approveSponserRequest,
@@ -50,7 +50,7 @@ import { submitProgressReportRequest, submitProgressReportSuccess, fetchProgress
   fetchVoteResultRequest as fetchProgressReportVoteResultRequest,
   fetchProgressReportByProposalRequest
 } from '../Reducers/progressReportSlice';
-import {fetchPeriodDetailsRequest} from '../Reducers/periodSlice';
+import {fetchPeriodDetailsRequest, updatePeriod} from '../Reducers/periodSlice';
 import { fetchPrepsRequest } from '../Reducers/prepsSlice';
 import { FiPrinter } from 'react-icons/fi';
 
@@ -102,7 +102,9 @@ function* rootSaga() {
 
 
 yield takeEvery(fetchProgressReportByProposalRequest.type, fetchProgressReportByProposalRequestWorker);
-yield takeEvery(fetchPeriodDetailsRequest.type, fetchPeriodDetailsRequestWorker)
+yield takeEvery(fetchPeriodDetailsRequest.type, fetchPeriodDetailsRequestWorker);
+
+yield takeEvery(updatePeriod.type, updatePeriodWorker);
 
 
 
