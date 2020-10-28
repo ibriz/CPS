@@ -11,12 +11,12 @@ import { fetchPeriodDetailsRequest } from 'Redux/Reducers/periodSlice';
 import { loginPrepRequest } from 'Redux/Reducers/accountSlice';
 import { loginSuccess } from 'Redux/Reducers/accountSlice';
 
-const { _submitProposal,
-    _submitProgressReport,
-    _approve_sponsor,
-    _reject_sponsor,
-    _vote_proposal,
-    _vote_progress_report,
+const { submit_proposal,
+    submit_progress_report,
+    approve_sponsor,
+    reject_sponsor,
+    vote_proposal,
+    vote_progress_report,
     update_period,
     unregister_prep,
     register_prep } = constants;
@@ -88,7 +88,7 @@ export default (event) => {
             }
 
             switch (payload.id) {
-                case _submitProposal:
+                case submit_proposal:
                     console.log('history');
                     history.push('/proposals');
                     history.push('/proposals');
@@ -108,7 +108,7 @@ export default (event) => {
 
                     break;
 
-                case _submitProgressReport:
+                case submit_progress_report:
                     console.log('history');
                     history.push('/progress-reports');
                     history.push('/progress-reports');
@@ -124,7 +124,7 @@ export default (event) => {
                     NotificationManager.info("Progress Report Creation Request Sent");
                     break;
 
-                case _approve_sponsor:
+                case approve_sponsor:
                     console.log('history');
                     history.push('/sponsorRequests');
                     NotificationManager.info("Proposal Approval Request Sent");
@@ -138,7 +138,7 @@ export default (event) => {
 
                     // setTimeout(() => window.location.reload(), 800); 
                     break;
-                case _reject_sponsor:
+                case reject_sponsor:
                     history.push('/sponsorRequests');
                     NotificationManager.info("Proposal Rejection Request Sent");
 
@@ -153,7 +153,7 @@ export default (event) => {
                     // setTimeout(() => window.location.reload(), 800);                 
                     break;
 
-                case _vote_proposal:
+                case vote_proposal:
                     console.group("vote_proposal");
                     console.log(payload);
 
@@ -167,7 +167,7 @@ export default (event) => {
 
                     // result = await iconService.getTransactionResult().execute();
                     break;
-                case _vote_progress_report:
+                case vote_progress_report:
 
                     getResult({
                         txHash: payload.result,
