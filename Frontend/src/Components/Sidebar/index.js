@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 import { Badge } from 'react-bootstrap';
 import { connect } from 'react-redux';
 
-const Aside = ({ collapsed, rtl, toggled, handleToggleSidebar, handleCollapsedChange, isPrep }) => {
+const Aside = ({ collapsed, rtl, toggled, handleToggleSidebar, handleCollapsedChange, isPrep, isRegistered }) => {
   return (
     <ProSidebar
       collapsed={collapsed}
@@ -45,7 +45,7 @@ const Aside = ({ collapsed, rtl, toggled, handleToggleSidebar, handleCollapsedCh
       </SidebarHeader>
 
       <SidebarContent>
-        {!isPrep &&
+        {(!isPrep || !isRegistered) &&
           <Menu iconShape="circle">
             <MenuItem
               icon={<FaTachometerAlt />}
@@ -70,7 +70,7 @@ const Aside = ({ collapsed, rtl, toggled, handleToggleSidebar, handleCollapsedCh
         }
 
         {
-          isPrep &&
+          isPrep && isRegistered &&
           <>
             <Menu iconShape="circle">
             <MenuItem
@@ -147,7 +147,8 @@ const Aside = ({ collapsed, rtl, toggled, handleToggleSidebar, handleCollapsedCh
 
 const mapStateToProps = state => (
   {
-    isPrep: state.account.isPrep
+    isPrep: state.account.isPrep,
+    isRegistered: state.account.isRegistered
   }
 )
 

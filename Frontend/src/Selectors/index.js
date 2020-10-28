@@ -50,3 +50,16 @@ export const getProgressReportApprovedPercentage = createSelector(
     return (approvedVotes/totalVotes) * 100;
   }
 );
+
+const getApprovedVotersPR = state => state.progressReport.approvedVoters
+const getTotalVotersPR = state => state.progressReport.totalVoters
+
+export const getProgressReportApprovedVotersPercentage = createSelector(
+  [getApprovedVotersPR, getTotalVotersPR],
+  (approvedVoters, totalVoters) => {
+    if(parseInt(totalVoters) === 0) {
+      return 0;
+    }
+    return (approvedVoters/totalVoters) * 100;
+  }
+);
