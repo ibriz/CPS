@@ -4,10 +4,10 @@ import styles from './Header.module.css'
 import { Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { logout } from '../../Redux/Reducers/accountSlice';
-import {unregisterPrep} from 'Redux/Reducers/prepsSlice';
+import {unregisterPrep, registerPrep} from 'Redux/Reducers/prepsSlice';
 import ConfirmationModal from 'Components/UI/ConfirmationModal';
 
-const Header = ({ address, logout, title, isPrep, unregisterPrep }) => {
+const Header = ({ address, logout, title, isPrep, isRegistered, unregisterPrep, registerPrep }) => {
 
     const onLogout = () => {
         logout();
@@ -19,17 +19,27 @@ const Header = ({ address, logout, title, isPrep, unregisterPrep }) => {
         unregisterPrep();
     }
 
+    const onClickRegisterPrep = () => {
+        registerPrep();
+    }
+
     return (
         <Row className = {styles.headerContainer} >
             <span className={styles.heading}>{title}</span>
 
             <div className={styles.account}>
                 <span>{`${address.slice(0,4)}...${address.slice(address.length-2)}`}</span>
-                {/* {
-                    isPrep &&
+                {
+                    isPrep && isRegistered &&
                     <Button variant="danger" onClick={() => setShowUnregisterConfirmationModal(true)} style = {{marginRight: '5px', marginLeft: '5px'}}>Unregister Prep</Button>
 
-                } */}
+                }
+
+{
+                    isPrep && !isRegistered &&
+                    <Button variant="success" onClick={() => setShowUnregisterConfirmationModal(true)} style = {{marginRight: '5px', marginLeft: '5px'}}>Register Prep</Button>
+
+                }
 
                 <Button variant="info" onClick={onLogout}>Logout</Button>
             </div>
@@ -37,15 +47,19 @@ const Header = ({ address, logout, title, isPrep, unregisterPrep }) => {
             <ConfirmationModal
                 show={showUnregisterConfirmationModal}
                 onHide={() => setShowUnregisterConfirmationModal(false)}
-                heading={'Unregister Prep Confirmation'}
+                heading={isRegistered? 'Unregister Prep Confirmation' : 'Register Prep Confirmation'}
                 onConfirm={() => {
-                    onClickUnregisterPrep(
+                    if (isRegistered) {
+                        onClickUnregisterPrep();
+                    }
+                    else {
+                        onClickRegisterPrep();
 
-                    )
+                    }
                 }} >
                 {                 
                         <>
-                            <div>Are you sure you want to unregister from Prep List?</div>
+                            <div>Are you sure you want to {isRegistered ? 'unregister from' : 'register to'} Prep List?</div>
                         </> 
                 }
 
@@ -56,13 +70,17 @@ const Header = ({ address, logout, title, isPrep, unregisterPrep }) => {
 
 const mapStateToProps = state => ({
     address: state.account.address,
-    isPrep: state.account.isPrep
+    isPrep: state.account.isPrep,
+    isRegistered: state.account.isRegistered
+
 })
 
 const mapDispatchToProps = dispatch => (
     {
         logout: () => dispatch(logout()),
         unregisterPrep: () => dispatch(unregisterPrep()),
+        registerPrep: () => dispatch(registerPrep()),
+
     }
 )
 

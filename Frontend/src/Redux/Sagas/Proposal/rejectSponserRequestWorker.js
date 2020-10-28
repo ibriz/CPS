@@ -7,7 +7,7 @@ function* rejectSponserRequestWorker({ payload }) {
     }
 
     sendTransaction({
-        method: '_reject_sponsor',
+        method: 'reject_sponsor',
         params,
     }
     )

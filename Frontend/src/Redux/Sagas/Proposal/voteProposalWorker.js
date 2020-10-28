@@ -15,7 +15,7 @@ function* voteProposalWorker({ payload }) {
     }
 
     sendTransaction({
-        method: '_vote_proposal',
+        method: 'vote_proposal',
         params,
     }
     )

@@ -7,7 +7,7 @@ function* approveSponserRequestWorker({ payload }) {
     }
 
     sendTransaction({
-        method: '_approve_sponsor',
+        method: 'approve_sponsor',
         params,
         icxAmount: payload.sponsorBond,
     }

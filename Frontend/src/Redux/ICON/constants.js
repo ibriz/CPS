@@ -6,5 +6,6 @@ export default {
     _vote_proposal: 32004,
     _vote_progress_report: 32005,
     update_period: 32006,
-    unregister_prep: 32007
+    unregister_prep: 32007,
+    register_prep: 32008
 }

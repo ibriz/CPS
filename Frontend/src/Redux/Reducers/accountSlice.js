@@ -3,6 +3,7 @@ import { createSlice} from '@reduxjs/toolkit'
 const initialState = {
   address: null,
   isPrep: null,
+  isRegistered: false,
   loginType: ''
 };
 
@@ -22,7 +23,9 @@ const accountSlice = createSlice({
     },
     loginSuccess(state, payload) {
       state.isPrep = payload.payload.isPrep
-    }
+      state.isRegistered = payload.payload.isRegistered
+    },
+
   },
 })
 

@@ -1,9 +1,10 @@
-import { login, logout } from '../Reducers/accountSlice';
+import { login, logout, loginPrepRequest } from '../Reducers/accountSlice';
 import { takeEvery } from 'redux-saga/effects'
 
 import {
   loginWorker,
-  logoutWorker
+  logoutWorker,
+  loginPrepWorker
 } from './Account';
 
 import {
@@ -34,7 +35,7 @@ import {
   fetchProgressReportByProposalRequestWorker
 } from './ProgressReport';
 
-import { fetchPrepWorker, unregisterPrepWorker } from './PRep';
+import { fetchPrepWorker, unregisterPrepWorker, registerPrepWorker } from './PRep';
 import {fetchPeriodDetailsRequestWorker, updatePeriodWorker} from './Period'
 
 import { submitProposalRequest, submitProposalSuccess, fetchProposalListRequest, updateProposalStatus,  fetchProposalDetailRequest, fetchSponsorRequestsListRequest,
@@ -51,15 +52,14 @@ import { submitProgressReportRequest, submitProgressReportSuccess, fetchProgress
   fetchProgressReportByProposalRequest
 } from '../Reducers/progressReportSlice';
 import {fetchPeriodDetailsRequest, updatePeriod} from '../Reducers/periodSlice';
-import { fetchPrepsRequest, unregisterPrep } from '../Reducers/prepsSlice';
+import { fetchPrepsRequest, unregisterPrep, registerPrep } from '../Reducers/prepsSlice';
 import { FiPrinter } from 'react-icons/fi';
-
-
 
 function* rootSaga() {
 
   yield takeEvery(login.type, loginWorker);
   yield takeEvery(logout.type, logoutWorker);
+  yield takeEvery(loginPrepRequest.type, loginPrepWorker)
 
   yield takeEvery(submitProposalRequest.type, submitProposalToIPFSWorker);
   yield takeEvery(submitProposalSuccess.type, submitProposalToScoreWorker);
@@ -107,6 +107,9 @@ yield takeEvery(fetchPeriodDetailsRequest.type, fetchPeriodDetailsRequestWorker)
 yield takeEvery(updatePeriod.type, updatePeriodWorker);
 
 yield takeEvery(unregisterPrep.type, unregisterPrepWorker);
+
+yield takeEvery(registerPrep.type, registerPrepWorker);
+
 
 
 
