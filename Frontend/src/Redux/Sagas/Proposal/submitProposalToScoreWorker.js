@@ -19,7 +19,8 @@ function* submitProposalToScoreWorker({ payload }) {
         sponsor_address: payload.proposal.sponserPrep,
         _ipfs_hash: payload.response.hash,
         _ipfs_key: payload.response.ipfsKey,
-        _ipfs_link: `https://gateway.ipfs.io/ipfs/${payload.response.hash}`
+        _ipfs_link: `https://gateway.ipfs.io/ipfs/${payload.response.hash}`,
+        project_period: `${payload.proposal.projectDuration}`
 
     }
 

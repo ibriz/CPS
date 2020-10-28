@@ -8,7 +8,7 @@ import constants from './constants';
 
 // var CPSScore = 'cx724a3cf07c91a12dd7fd4987be130f383168b631';
 // var CPSScore = 'cxdf3c1ea6ba87e21957c63b21a54151a38a6ecb80';
-var CPSScore = 'cxa8b5d667e9feea5fbffc4c307b72fe3b273bec2b';
+var CPSScore = 'cx00c1e2d9b009fca69002c53c1ce3ed377708381e';
 
 
 // var testNet = "https://bicon.tracker.solidwallet.io/v3/address/info?address="
