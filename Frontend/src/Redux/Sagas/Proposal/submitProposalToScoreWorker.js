@@ -24,7 +24,7 @@ function* submitProposalToScoreWorker({ payload }) {
     }
 
     sendTransaction({
-        method: '_submitProposal',
+        method: 'submit_proposal',
         params,
         icxAmount: 50,
     }

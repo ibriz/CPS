@@ -1,35 +1,37 @@
 import store from '../../Store';
-import {login} from '../../Reducers/accountSlice';
+import { login } from '../../Reducers/accountSlice';
 import history from '../../../Router/history';
-import {NotificationManager} from 'react-notifications';
+import { NotificationManager } from 'react-notifications';
 import constants from '../constants';
 import IconService from 'icon-sdk-js';
-import {HttpProvider} from 'icon-sdk-js';
-import {setModalShowSponsorRequests, setModalShowVoting} from 'Redux/Reducers/proposalSlice';
-import {setModalShowVotingPR} from 'Redux/Reducers/progressReportSlice';
+import { HttpProvider } from 'icon-sdk-js';
+import { setModalShowSponsorRequests, setModalShowVoting } from 'Redux/Reducers/proposalSlice';
+import { setModalShowVotingPR } from 'Redux/Reducers/progressReportSlice';
 import { fetchPeriodDetailsRequest } from 'Redux/Reducers/periodSlice';
-import {loginSuccess} from 'Redux/Reducers/accountSlice';
+import { loginPrepRequest } from 'Redux/Reducers/accountSlice';
+import { loginSuccess } from 'Redux/Reducers/accountSlice';
 
-const {_submitProposal,
-        _submitProgressReport,
-        _approve_sponsor,
-        _reject_sponsor,
-        _vote_proposal,
-        _vote_progress_report,
-        update_period,
-        unregister_prep } = constants;
+const { _submitProposal,
+    _submitProgressReport,
+    _approve_sponsor,
+    _reject_sponsor,
+    _vote_proposal,
+    _vote_progress_report,
+    update_period,
+    unregister_prep,
+    register_prep } = constants;
 
 function setTimeoutPromise() {
-    return new Promise(function(resolve, reject) { 
-          setTimeout(resolve, 2000); 
+    return new Promise(function (resolve, reject) {
+        setTimeout(resolve, 2000);
     })
 }
 
- async function getResult({txHash,
-        successMessage,
-        failureMessage,
-        callBack}) {
-     try {
+async function getResult({ txHash,
+    successMessage,
+    failureMessage,
+}, callBack) {
+    try {
         const provider = new HttpProvider('https://bicon.net.solidwallet.io/api/v3');
         const iconService = new IconService(provider);
         await setTimeoutPromise();
@@ -40,26 +42,30 @@ function setTimeoutPromise() {
         }
         else if (result.status === 1) {
             NotificationManager.success(successMessage);
+            if (typeof callBack === "function") {
+                console.log("callback10");
+                callBack();
+            }
         }
-        console.log("callBack2", callBack);
-        if(callBack) {
-            console.log("callBack");
-            callBack();
-        }
-     }
-     catch {
-         console.log("Catch");
-         getResult(
-             {
-                 txHash,
-                 failureMessage,
-                 successMessage
-             }
-         );
-     }
+        // console.log("callBack2", callBack, typeof callBack);
+        // console.log("callBack");
+        // callBack();
+
+    }
+    catch {
+        console.log("Catch");
+        getResult(
+            {
+                txHash,
+                failureMessage,
+                successMessage
+            }
+        );
+    }
+
 
     return;
- };
+};
 
 export default (event) => {
     const { type, payload } = event.detail;
@@ -67,19 +73,19 @@ export default (event) => {
 
     switch (type) {
         case 'RESPONSE_ADDRESS':
-            console.log("login",payload);
-            store.dispatch(login({address: payload}));
+            console.log("login", payload);
+            store.dispatch(login({ address: payload }));
             break;
-        
+
         case 'RESPONSE_JSON-RPC':
             console.log(payload);
 
-            if(payload.code) {
-                NotificationManager.error(payload.message ,"Transaction Failed");
+            if (payload.code) {
+                NotificationManager.error(payload.message, "Transaction Failed");
                 return;
             }
 
-            switch(payload.id) {
+            switch (payload.id) {
                 case _submitProposal:
                     console.log('history');
                     history.push('/proposals');
@@ -93,8 +99,11 @@ export default (event) => {
                     getResult({
                         txHash: payload.result,
                         failureMessage: "Proposal Creation Failed",
-                        successMessage: "Proposal Created Successfully"
+                        successMessage: "Proposal Created Successfully",
+
+
                     });
+
                     break;
 
                 case _submitProgressReport:
@@ -108,15 +117,15 @@ export default (event) => {
                         failureMessage: "Progress Report Creation Failed",
                         successMessage: "Progress Report Created Successfully"
                     });
-    
-                        // window.location.reload();
+
+                    // window.location.reload();
                     NotificationManager.info("Progress Report Creation Request Sent");
                     break;
 
-                case _approve_sponsor: 
+                case _approve_sponsor:
                     console.log('history');
                     history.push('/sponsorRequests');
-                    NotificationManager.info("Proposal Approval Request Sent"); 
+                    NotificationManager.info("Proposal Approval Request Sent");
 
                     getResult({
                         txHash: payload.result,
@@ -124,12 +133,12 @@ export default (event) => {
                         successMessage: "Proposal Approved Successfully"
                     });
                     store.dispatch(setModalShowSponsorRequests(false));
-                    
+
                     // setTimeout(() => window.location.reload(), 800); 
-                break;
+                    break;
                 case _reject_sponsor:
                     history.push('/sponsorRequests');
-                    NotificationManager.info("Proposal Rejection Request Sent"); 
+                    NotificationManager.info("Proposal Rejection Request Sent");
 
                     getResult({
                         txHash: payload.result,
@@ -138,10 +147,10 @@ export default (event) => {
                     });
                     store.dispatch(setModalShowSponsorRequests(false));
 
-                    
+
                     // setTimeout(() => window.location.reload(), 800);                 
-                break;   
-                
+                    break;
+
                 case _vote_proposal:
                     console.group("vote_proposal");
                     console.log(payload);
@@ -156,43 +165,65 @@ export default (event) => {
 
                     // result = await iconService.getTransactionResult().execute();
                     break;
-                    case _vote_progress_report:
+                case _vote_progress_report:
 
-                        getResult({
-                            txHash: payload.result,
-                            failureMessage: "Vote Progress Report Failed",
-                            successMessage: "Progress Report Vote Succeded"
-                        });
-                        store.dispatch(setModalShowVotingPR(false));
-    
-                        // result = await iconService.getTransactionResult().execute();
-                        break;
+                    getResult({
+                        txHash: payload.result,
+                        failureMessage: "Vote Progress Report Failed",
+                        successMessage: "Progress Report Vote Succeded"
+                    });
+                    store.dispatch(setModalShowVotingPR(false));
 
-                        case update_period:
-                            getResult({
-                                txHash: payload.result,
-                                failureMessage: "Period Update Failed",
-                                successMessage: "Period Updated Successfully",
-                                callBack: () => store.dispatch(fetchPeriodDetailsRequest())
-                            });
-            
-                                // window.location.reload();
-                            NotificationManager.info("Period Update Request Sent");
-                            break;
+                    // result = await iconService.getTransactionResult().execute();
+                    break;
 
-                            case unregister_prep:
-                                getResult({
-                                    txHash: payload.result,
-                                    failureMessage: "Period Unregistration Failed",
-                                    successMessage: "Period Unregistered Successfully",
-                                    callBack: () => store.dispatch(loginSuccess({
-                                        isPrep: false
-                                      }))
-                                });
-                
-                                    // window.location.reload();
-                                NotificationManager.info("Period Unregistration Request Sent");
-                                break;
+                case update_period:
+                    getResult({
+                        txHash: payload.result,
+                        failureMessage: "Period Update Failed",
+                        successMessage: "Period Updated Successfully",
+
+                    });
+
+                    // window.location.reload();
+                    NotificationManager.info("Period Update Request Sent");
+                    break;
+
+                case unregister_prep:
+                    getResult({
+                        txHash: payload.result,
+                        failureMessage: "Prep Unregistration Failed",
+                        successMessage: "Prep Unregistered Successfully",
+
+                    }, () => {
+                        console.log("loginPrepRequestreq");
+
+                        store.dispatch(loginPrepRequest());
+                        console.log("loginPrepRequestsuccess");
+
+                    });
+
+                    // window.location.reload();
+                    NotificationManager.info("Prep Unregistration Request Sent");
+                    break;
+
+                case register_prep:
+                    getResult({
+                        txHash: payload.result,
+                        failureMessage: "Prep Registration Failed",
+                        successMessage: "Prep Registered Successfully",
+
+                    }, () => {
+                        console.log("loginPrepRequestreq");
+
+                        store.dispatch(loginPrepRequest());
+                        console.log("loginPrepRequestsuccess");
+
+                    });
+
+                    // window.location.reload();
+                    NotificationManager.info("Prep Registration Request Sent");
+                    break;
                 default:
                     break;
             }
@@ -200,11 +231,11 @@ export default (event) => {
 
         default:
             return;
-           
 
 
 
-            
+
+
     }
 }
 

@@ -17,7 +17,7 @@ function* voteProgressReportWorker({ payload }) {
     }
 
     sendTransaction({
-        method: '_vote_progress_report',
+        method: 'vote_progress_report',
         params,
     }
     )
