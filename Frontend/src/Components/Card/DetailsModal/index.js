@@ -5,20 +5,20 @@ import styles from './DetailsModal.module.css';
 import ProgressBar from '../../UI/ProgressBar';
 import ProgressText from '../../UI/ProgressText';
 import { FetchProposalDetailRequest, fetchProposalDetailRequest, approveSponserRequest, rejectSponsorRequest, voteProposal, fetchVoteResultRequest } from 'Redux/Reducers/proposalSlice';
-import {fetchProgressReportByProposalRequest} from 'Redux/Reducers/progressReportSlice';
+import { fetchProgressReportByProposalRequest } from 'Redux/Reducers/progressReportSlice';
 import { connect } from 'react-redux';
 import ProgressReportList from './ProgressReportList';
 import { proposalStatusMapping } from '../../../Constants';
 import VoteList from './VoteList';
 import RichTextEditor from 'Components/RichTextEditor';
 import ConfirmationModal from 'Components/UI/ConfirmationModal';
-import {getProposalApprovedPercentage, getProposalApprovedVotersPercentage}from 'Selectors';
+import { getProposalApprovedPercentage, getProposalApprovedVotersPercentage } from 'Selectors';
 
 function DetailsModal(props) {
 
   const voteOptions = ['Approve', 'Reject', 'Abstain'];
   const [vote, setVote] = useState(voteOptions[0]);
-  const [voteReason, setVoteReason] =  useState('');
+  const [voteReason, setVoteReason] = useState('');
   const [sponsorConfirmationShow, setSponsorConfirmationShow] = React.useState(false);
   const [sponsorVote, setSponsorVote] = useState('');
 
@@ -35,9 +35,9 @@ function DetailsModal(props) {
         hash: props.proposal.ipfsHash
       }
     );
-    
 
-    if(status === 'Active' || status === 'Completed' || status === 'Paused') {
+
+    if (status === 'Active' || status === 'Completed' || status === 'Paused') {
       props.proposal && fetchProgressReportByProposalRequest({
         proposalKey: props.proposal.ipfsKey
       })
@@ -143,18 +143,36 @@ function DetailsModal(props) {
                 if (['Voting'].includes(props.status))
                   return (
                     <>
+                      {/* <Col xs="12"> */}
+                        <Col lg="3" xs="12">
+
+                          <ProgressBar
+                            percentage={approvedPercentage} />
+                        </Col>
+
+                        <Col lg="8" xs="12" className={styles.progressTextContainer}>
+                          {
+
+                            <ProgressText>
+                              {approvedPercentage ? `${approvedPercentage.toFixed()}` : 0}% Stake Approved
+                            </ProgressText>
+                          }
+
+                        </Col>
+                      {/* </Col> */}
+                      <Col lg='1' xs ='12'></Col>
                       <Col lg="3" xs="12">
 
-                        <ProgressBar 
-                        percentage = {approvedPercentage}/>
+                        <ProgressBar
+                          percentage={approvedVoterPercentage} />
                       </Col>
 
-                      <Col lg="3" xs="12" className={styles.progressTextContainer}>
+                      <Col lg="8" xs="12" className={styles.progressTextContainer}>
                         {
 
                           <ProgressText>
-                            {approvedPercentage ? `${approvedPercentage.toFixed()}` : 0}% Approved
-                            </ProgressText>
+                            {approvedVoterPercentage ? `${approvedVoterPercentage.toFixed()}` : 0}% Voter Count Approved
+                          </ProgressText>
                         }
 
                       </Col>
@@ -231,15 +249,15 @@ function DetailsModal(props) {
           sponsorRequest && (status === 'Pending') && (period === 'APPLICATION') && (remainingTime > 0) &&
           <Row style={{ justifyContent: 'center' }}>
             <Button variant="success" onClick={onClickApproveSponsorRequest}
-               onClick={() => {
+              onClick={() => {
                 setSponsorConfirmationShow(true);
                 setSponsorVote('approve')
-               }}>Approve</Button>
-            <Button variant="danger" className={styles.rejectButton} onClick={onClickRejectSponsorRequest} 
-             onClick={() => {
-              setSponsorConfirmationShow(true);
-              setSponsorVote('reject')
-             }}>Reject</Button>
+              }}>Approve</Button>
+            <Button variant="danger" className={styles.rejectButton} onClick={onClickRejectSponsorRequest}
+              onClick={() => {
+                setSponsorConfirmationShow(true);
+                setSponsorVote('reject')
+              }}>Reject</Button>
 
           </Row>
         }
@@ -248,15 +266,15 @@ function DetailsModal(props) {
           voting && (period === 'VOTING') && (remainingTime > 0) &&
           <>
             <Row style={{ justifyContent: 'center' }}>
-            <ButtonGroup aria-label="Basic example">
+              <ButtonGroup aria-label="Basic example">
 
-              {
-                voteOptions.map(voteOption =>
-                <Button variant={vote === voteOption ? 'success' : 'light'} onClick={() => setVote(voteOption)}>{voteOption}</Button>
-                )
+                {
+                  voteOptions.map(voteOption =>
+                    <Button variant={vote === voteOption ? 'success' : 'light'} onClick={() => setVote(voteOption)}>{voteOption}</Button>
+                  )
 
-              }
-            </ButtonGroup>
+                }
+              </ButtonGroup>
 
 
             </Row>
@@ -271,15 +289,15 @@ function DetailsModal(props) {
                   onChange={(data) =>
                     setVoteReason(
                       data
-                    )                  } />
+                    )} />
               </Col>
 
             </Row>
 
-            <Row style = {{justifyContent: 'center'}}>
-                <Button variant="primary" onClick={() => setVoteConfirmationShow(true)} style = {{marginTop: '10px', width: '150px'}}>Submit Vote</Button>
+            <Row style={{ justifyContent: 'center' }}>
+              <Button variant="primary" onClick={() => setVoteConfirmationShow(true)} style={{ marginTop: '10px', width: '150px' }}>Submit Vote</Button>
 
-              </Row>
+            </Row>
           </>
         }
 
@@ -292,46 +310,46 @@ function DetailsModal(props) {
                   (
                     <>
                       <ListTitle>Progress Reports</ListTitle>
-                      <ProgressReportList 
-                        projectReports = {progressReportByProposal}/>
+                      <ProgressReportList
+                        projectReports={progressReportByProposal} />
                     </>
                   ) :
                   (status === 'Voting') ?
-                  <>
+                    <>
                       <ListTitle>VOTES</ListTitle>
-                      <VoteList 
-                        votes = {votesByProposal}/>
-                  </> :
-                  null
+                      <VoteList
+                        votes={votesByProposal} />
+                    </> :
+                    null
               }
 
             </Col>
           </Row>
         }
 
-<ConfirmationModal
-        show={sponsorConfirmationShow}
-        onHide={() => setSponsorConfirmationShow(false)}
-        heading = {sponsorVote === 'approve' ? 'Sponsor Request Approval Confirmation' : 'Sponsor Request Rejection Confirmation'}
-        onConfirm = {sponsorVote === 'approve' ?
-                onClickApproveSponsorRequest : onClickRejectSponsorRequest} >
-        {
-          (sponsorVote === 'approve') ? 
-          <>
-          <div>Are you sure you want to approve the sponsor request?</div> 
-          <div style = {{color: 'red'}}>You will need to transfer {proposalDetail.totalBudget * 0.1} ICX for sponsor bond.</div>
-          </>:
-          <span>Are you sure you want to reject the sponsor request?</span>
-        }
+        <ConfirmationModal
+          show={sponsorConfirmationShow}
+          onHide={() => setSponsorConfirmationShow(false)}
+          heading={sponsorVote === 'approve' ? 'Sponsor Request Approval Confirmation' : 'Sponsor Request Rejection Confirmation'}
+          onConfirm={sponsorVote === 'approve' ?
+            onClickApproveSponsorRequest : onClickRejectSponsorRequest} >
+          {
+            (sponsorVote === 'approve') ?
+              <>
+                <div>Are you sure you want to approve the sponsor request?</div>
+                <div style={{ color: 'red' }}>You will need to transfer {proposalDetail.totalBudget * 0.1} ICX for sponsor bond.</div>
+              </> :
+              <span>Are you sure you want to reject the sponsor request?</span>
+          }
 
         </ConfirmationModal>
 
         <ConfirmationModal
-        show={voteConfirmationShow}
-        onHide={() =>setVoteConfirmationShow (false)}
-        heading = {'Vote Confirmation'}
-        onConfirm = {onSubmitVote} >
-        Are you sure you want to {vote} the proposal?
+          show={voteConfirmationShow}
+          onHide={() => setVoteConfirmationShow(false)}
+          heading={'Vote Confirmation'}
+          onConfirm={onSubmitVote} >
+          Are you sure you want to {vote} the proposal?
         </ConfirmationModal>
 
       </Modal.Body>

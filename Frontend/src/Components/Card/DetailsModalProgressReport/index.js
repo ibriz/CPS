@@ -16,7 +16,7 @@ import { progressReportStatusMapping } from '../../../Constants';
 import VoteList from '../DetailsModal/VoteList';
 import RichTextEditor from 'Components/RichTextEditor';
 import ConfirmationModal from 'Components/UI/ConfirmationModal';
-import { getProgressReportApprovedPercentage } from 'Selectors';
+import { getProgressReportApprovedPercentage, getProgressReportApprovedVotersPercentage } from 'Selectors';
 
 function DetailsModal(props) {
 
@@ -33,7 +33,7 @@ function DetailsModal(props) {
 
 
   const { progressDetail, proposal, status, sponsorRequest = false, approveSponserRequest, rejectSponsorRequest, voting = false, voteProgressReport, progressReport, votesByProposal, fetchVoteResultRequest, approvedPercentage,
-  period, remainingTime } = props;
+  period, remainingTime, approvedVoterPercentage } = props;
 
   useEffect(() => {
     props.progressReport && props.fetchProgressReportDetailRequest(
@@ -152,12 +152,29 @@ function DetailsModal(props) {
                           percentage={approvedPercentage} />
                       </Col>
 
-                      <Col lg="3" xs="12" className={styles.progressTextContainer}>
+                      <Col lg="8" xs="12" className={styles.progressTextContainer}>
                         {
 
                           <ProgressText>
-                            {approvedPercentage}% Approved
+                            {approvedPercentage}% Stake Approved
                             </ProgressText>
+                        }
+
+                      </Col>
+
+                      <Col lg='1' xs ='12'></Col>
+                      <Col lg="3" xs="12">
+
+                        <ProgressBar
+                          percentage={approvedVoterPercentage} />
+                      </Col>
+
+                      <Col lg="8" xs="12" className={styles.progressTextContainer}>
+                        {
+
+                          <ProgressText>
+                            {approvedVoterPercentage ? `${approvedVoterPercentage.toFixed()}` : 0}% Voter Count Approved
+                          </ProgressText>
                         }
 
                       </Col>
@@ -384,6 +401,8 @@ const mapStateToProps = state => (
     progressDetail: state.progressReport.progressReportDetail,
     votesByProposal: state.progressReport.votesByProgressReport,
     approvedPercentage: getProgressReportApprovedPercentage(state),
+    approvedVoterPercentage: getProgressReportApprovedVotersPercentage(state),
+
     period: state.period.period,
     remainingTime: state.period.remainingTime
   }

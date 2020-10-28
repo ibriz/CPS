@@ -17,17 +17,18 @@ import { connect } from 'react-redux';
 
 const Main = ({
   handleToggleSidebar,
-  isPrep
+  isPrep,
+  isRegistered
 }) => {
 
   const prepRoute = (component) => (
-    isPrep ?
+    (isPrep && isRegistered) ?
       component :
       <Redirect to='/' />
   )
 
   const userRoute = (component) => (
-    !isPrep ?
+    (!isPrep || !isRegistered )?
       component :
       <Redirect to='/' />
   )
@@ -81,7 +82,9 @@ const Main = ({
 
 const mapStateToProps = state => (
   {
-    isPrep: state.account.isPrep
+    isPrep: state.account.isPrep,
+    isRegistered: state.account.isRegistered
+
   }
 )
 

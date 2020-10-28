@@ -42,6 +42,8 @@ async function getResult({ txHash,
         }
         else if (result.status === 1) {
             NotificationManager.success(successMessage);
+            console.log("callback", typeof callBack === "function");
+
             if (typeof callBack === "function") {
                 console.log("callback10");
                 callBack();
