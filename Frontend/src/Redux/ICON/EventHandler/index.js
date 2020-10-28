@@ -31,7 +31,9 @@ async function getResult({ txHash,
     successMessage,
     failureMessage,
 }, callBack) {
+
     try {
+
         const provider = new HttpProvider('https://bicon.net.solidwallet.io/api/v3');
         const iconService = new IconService(provider);
         await setTimeoutPromise();
@@ -42,7 +44,7 @@ async function getResult({ txHash,
         }
         else if (result.status === 1) {
             NotificationManager.success(successMessage);
-            console.log("callback", typeof callBack === "function");
+            console.log("callback", typeof callBack);
 
             if (typeof callBack === "function") {
                 console.log("callback10");
@@ -61,7 +63,8 @@ async function getResult({ txHash,
                 txHash,
                 failureMessage,
                 successMessage
-            }
+            },
+            callBack
         );
     }
 
@@ -197,11 +200,12 @@ export default (event) => {
                         failureMessage: "Prep Unregistration Failed",
                         successMessage: "Prep Unregistered Successfully",
 
-                    }, () => {
+                    }, function(){
                         console.log("loginPrepRequestreq");
 
                         store.dispatch(loginPrepRequest());
                         console.log("loginPrepRequestsuccess");
+                        return true;
 
                     });
 
@@ -215,12 +219,12 @@ export default (event) => {
                         failureMessage: "Prep Registration Failed",
                         successMessage: "Prep Registered Successfully",
 
-                    }, () => {
+                    }, function(){
                         console.log("loginPrepRequestreq");
 
                         store.dispatch(loginPrepRequest());
                         console.log("loginPrepRequestsuccess");
-
+                        return true;
                     });
 
                     // window.location.reload();
