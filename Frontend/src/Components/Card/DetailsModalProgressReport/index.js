@@ -42,21 +42,26 @@ function DetailsModal(props) {
       }
     );
 
+
+
+  }, [props.progressReport])
+
+
+  useEffect(() => {
     if (status === 'Voting') {
       // alert("Voting");
       props.progressReport && fetchVoteResultRequest({
         reportKey: progressReport.reportKey
       });
     }
-
-  }, [props.progressReport])
+  }, [props.progressReport, props.show])
 
   const onSubmitVote = () => {
     voteProgressReport(
       {
         vote,
         voteReason,
-        voteProjectTermRevision,
+        voteProjectTermRevision: progressDetail?.projectTermRevision ? voteProjectTermRevision : null,
         proposalKey: progressReport.proposalKey,
         reportKey: progressReport.reportKey
 
@@ -332,7 +337,8 @@ function DetailsModal(props) {
                   <>
                     <ListTitle>VOTES</ListTitle>
                     <VoteList
-                      votes={votesByProposal} />
+                      votes={votesByProposal}
+                      progressReport />
                   </> :
                   (
                     null

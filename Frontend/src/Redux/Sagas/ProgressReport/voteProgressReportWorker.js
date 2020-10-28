@@ -10,7 +10,7 @@ function* voteProgressReportWorker({ payload }) {
 
     const params = {
         _vote: voteStatusMapping[payload.vote],
-        _vote_budget_adjustment: voteStatusMapping[payload.voteProjectTermRevision],
+        _budget_adjustment_vote: voteStatusMapping[payload.voteProjectTermRevision],
         _vote_reason: payload.voteReason,
         _ipfs_key: payload.proposalKey,
         _report_key: payload.reportKey

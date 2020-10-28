@@ -25,6 +25,19 @@ export const getProposalApprovedPercentage = createSelector(
   }
 );
 
+const getApprovedVoters = state => state.proposals.approvedVoters
+const getTotalVoters = state => state.proposals.totalVoters
+
+export const getProposalApprovedVotersPercentage = createSelector(
+  [getApprovedVoters, getTotalVoters],
+  (approvedVoters, totalVoters) => {
+    if(parseInt(totalVoters) === 0) {
+      return 0;
+    }
+    return (approvedVoters/totalVoters) * 100;
+  }
+);
+
 const getApprovedVotesPR = state => state.progressReport.approvedVotes
 const getTotalVotesPR = state => state.progressReport.totalVotes
 

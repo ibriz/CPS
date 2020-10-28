@@ -12,13 +12,36 @@ import login from 'Redux/Sagas/Account/loginWorker';
 
 import iconLogo from 'Assets/Images/icon_white.png';
 import icxLogo from 'Assets/Images/icx_white.png'
+import {NotificationManager} from 'react-notifications';
 
 const SlantedHeader = ({ loginRequest, loginPrepRequest }) => {
 
     const onClickLogin = () => {
-        window.dispatchEvent(customRequestHasAccount);
-        window.dispatchEvent(customRequestAddress);
-        loginRequest();
+
+        var isChromium = window.chrome;
+        var winNav = window.navigator;
+        var vendorName = winNav.vendor;
+        var isOpera = typeof window.opr !== "undefined";
+        var isIEedge = winNav.userAgent.indexOf("Edge") > -1;
+        var isIOSChrome = winNav.userAgent.match("CriOS");
+
+        if (isIOSChrome) {
+        // is Google Chrome on IOS
+        } else if(
+        isChromium !== null &&
+        typeof isChromium !== "undefined" &&
+        vendorName === "Google Inc." &&
+        isOpera === false &&
+        isIEedge === false
+        ) {
+        // is Google Chrome
+            window.dispatchEvent(customRequestHasAccount);
+            window.dispatchEvent(customRequestAddress);
+            loginRequest();
+        } else { 
+            NotificationManager.warning("Please Use Google Chrome or any other Chromium Browser");
+        }
+
 
     }
 
