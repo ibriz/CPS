@@ -12,7 +12,7 @@ import { proposalStatusMapping } from '../../../Constants';
 import VoteList from './VoteList';
 import RichTextEditor from 'Components/RichTextEditor';
 import ConfirmationModal from 'Components/UI/ConfirmationModal';
-import {getProposalApprovedPercentage}from 'Selectors';
+import {getProposalApprovedPercentage, getProposalApprovedVotersPercentage}from 'Selectors';
 
 function DetailsModal(props) {
 
@@ -27,7 +27,7 @@ function DetailsModal(props) {
 
 
   const { proposalDetail, proposal, status, sponsorRequest = false, approveSponserRequest, rejectSponsorRequest, voting = false, voteProposal, progressReportByProposal, votesByProposal, fetchVoteResultRequest, approvedPercentage,
-    fetchProgressReportByProposalRequest, period, remainingTime } = props;
+    fetchProgressReportByProposalRequest, period, remainingTime, approvedVoterPercentage } = props;
 
   useEffect(() => {
     props.proposal && props.fetchProposalDetail(
@@ -36,12 +36,6 @@ function DetailsModal(props) {
       }
     );
     
-    if (status === 'Voting') {
-      // alert("Voting");
-      props.proposal && fetchVoteResultRequest({
-        proposalKey: props.proposal.ipfsKey
-      });
-    }
 
     if(status === 'Active' || status === 'Completed' || status === 'Paused') {
       props.proposal && fetchProgressReportByProposalRequest({
@@ -51,6 +45,15 @@ function DetailsModal(props) {
 
 
   }, [props.proposal])
+
+  useEffect(() => {
+    if (status === 'Voting') {
+      // alert("Voting");
+      props.proposal && fetchVoteResultRequest({
+        proposalKey: props.proposal.ipfsKey
+      });
+    }
+  }, [props.proposal, props.show])
 
   const onSubmitVote = () => {
     voteProposal(
@@ -150,7 +153,7 @@ function DetailsModal(props) {
                         {
 
                           <ProgressText>
-                            {approvedPercentage || 0}% Approved
+                            {approvedPercentage ? `${approvedPercentage.toFixed()}` : 0}% Approved
                             </ProgressText>
                         }
 
@@ -342,6 +345,7 @@ const mapStateToProps = state => (
     progressReportByProposal: state.progressReport.progressReportByProposal,
     votesByProposal: state.proposals.votesByProposal,
     approvedPercentage: getProposalApprovedPercentage(state),
+    approvedVoterPercentage: getProposalApprovedVotersPercentage(state),
     period: state.period.period,
     remainingTime: state.period.remainingTime
   }
