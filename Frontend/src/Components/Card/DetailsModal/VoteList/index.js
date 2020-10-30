@@ -8,8 +8,9 @@ const VoteList = ({votes, progressReport}) => {
     return(
         <Container fluid>
         {
-            votes.length ? votes.map((vote) =>
+            votes.length ? votes.map((vote, index) =>
                 <Vote
+                key = {index}
                 vote = {vote}
                 />
 

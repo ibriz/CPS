@@ -1,4 +1,4 @@
-import { setCookie } from '../../../helpers/cookie';
+// import { setCookie } from '../../../helpers/cookie';
 import { callKeyStoreWallet } from '../../ICON/utils';
 import { put, call, select } from 'redux-saga/effects';
 import { loginSuccess } from 'Redux/Reducers/accountSlice';

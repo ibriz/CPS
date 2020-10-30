@@ -53,14 +53,14 @@ const SlantedHeader = ({ loginRequest, loginPrepRequest }) => {
     }
 
     return (
-        <div class={styles.slanted}>
+        <div className={styles.slanted}>
             <Container fluid>
                 <Row className={styles.firstRow}>
                     <span className={styles.heading} style={{ marginTop: '3px' }}>
                         {/* <img src = {iconLogo} style = {{width: '55px', height: '20px', marginRight: '2px'}}/><b>CPS</b> */}
                         {/* <span style = {{fontWeight: 600}}>ic</span> <img src = {icxLogo} style = {{width: '20px', height: '20px', marginLeft: '1px', marginBottom: '-3px'}}/><span style = {{fontWeight: 600}}>nCPS</span> */}
                         <svg width="114" height="28" viewBox="0 0 114 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <g clip-path="url(#clip0)">
+                            <g clipPath="url(#clip0)">
                                 <path d="M3.76721 8.60689H0.529114V21.931H3.76721V8.60689Z" fill="white"></path>
                                 <path d="M15.7037 8.25518H20.7196V5.11035H15.7037C10.9418 5.11035 7.08997 8.87587 7.08997 13.531C7.08997 18.1862 10.9418 21.9517 15.7037 21.9517H20.7196V18.7862H15.7037C12.7408 18.7862 10.3281 16.4276 10.3281 13.531C10.3069 10.6138 12.7196 8.25518 15.7037 8.25518Z" fill="white"></path>
                                 <path d="M52.2751 5.11035C48.0212 5.11035 44.5714 8.48276 44.5714 12.6414V21.931H47.8095V12.6414C47.8095 10.2207 49.8201 8.25518 52.2963 8.25518C54.7725 8.25518 56.7831 10.2207 56.7831 12.6414V21.931H60.0212V12.6414C60 8.48276 56.5291 5.11035 52.2751 5.11035Z" fill="white"></path>

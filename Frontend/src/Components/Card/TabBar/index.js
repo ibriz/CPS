@@ -27,8 +27,8 @@ const TabBar = ({ selectedTab, setSelectedTab, searchText, setSearchText, tabs, 
                 style={{ display: 'inline-flex', flexWrap: 'wrap', alignItems: 'center', gap: '5px', width: '100%' }}
             >
                 {
-                    tabs.map((tab) =>
-                        <Nav.Item>
+                    tabs.map((tab, index) =>
+                        <Nav.Item key = {index}>
                             <NavBarTitle
                         onClick = {() => setSelectedTab(tab)}
                         activeCondition = {selectedTab === tab}>

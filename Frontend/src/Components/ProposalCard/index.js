@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { fetchProposalListRequest, fetchDraftsRequest } from 'Redux/Reducers/proposalSlice';
 import Pagination from 'Components/Card/Pagination';
 import proposalStates from './proposalStates';
-import { select } from 'redux-saga/effects';
+// import { select } from 'redux-saga/effects';
 import wallet from 'Redux/ICON/FrontEndWallet'
 import DetailsModal from 'Components/Card/DetailsModal';
 import {withRouter} from 'react-router-dom';
@@ -52,7 +52,7 @@ const ProposalCard = ({ proposalList, fetchProposalListRequest, walletAddress, t
             );
         }
 
-    }, [selectedTab, pageNumber])
+    }, [selectedTab, pageNumber, fetchDraftsRequest, fetchProposalListRequest, walletAddress])
 
     const setCurrentPages = (status, pageNumber) => {
         setPageNumber(prevState => (
@@ -99,7 +99,7 @@ const ProposalCard = ({ proposalList, fetchProposalListRequest, walletAddress, t
 
 
         setFilteredProposalList(filteredProposals);
-    }, [selectedTab, proposalList, searchText]);
+    }, [selectedTab, proposalList, searchText, pageNumber, walletAddress]);
 
     return (
         <>
@@ -132,7 +132,7 @@ const ProposalCard = ({ proposalList, fetchProposalListRequest, walletAddress, t
                             <Pagination
                                 currentPage={pageNumber?.[selectedTab]}
                                 setCurrentPage={(pageNumber) => setCurrentPages(selectedTab, pageNumber)}
-                                totalPages={totalPages[selectedTab]} />
+                                totalPages={totalPages[selectedTab] ?? 1} />
 
                             <DetailsModal
                                 show={modalShow}

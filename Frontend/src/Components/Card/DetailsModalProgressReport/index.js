@@ -33,7 +33,7 @@ function DetailsModal(props) {
 
 
   const { progressDetail, proposal, status, sponsorRequest = false, approveSponserRequest, rejectSponsorRequest, voting = false, voteProgressReport, progressReport, votesByProposal, fetchVoteResultRequest, approvedPercentage,
-  period, remainingTime, approvedVoterPercentage } = props;
+  period, remainingTime, approvedVoterPercentage, fetchProgressReportDetailRequest,  ...remainingProps } = props;
 
   useEffect(() => {
     props.progressReport && props.fetchProgressReportDetailRequest(
@@ -91,7 +91,7 @@ function DetailsModal(props) {
 
   return (
     <Modal
-      {...props}
+      {...remainingProps}
       size="lg"
       aria-labelledby="contained-modal-title-vcenter"
       centered

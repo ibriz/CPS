@@ -11,8 +11,9 @@ const ProgressReportList = ({projectReports}) => {
     return (
         <Container fluid>
             {
-                projectReports.length ? projectReports.map((progressReport) =>
+                projectReports.length ? projectReports.map((progressReport, index) =>
                     <ProgressReport
+                        key = {index}
                         progressReport={progressReport}
                         selectedTab={progressReportStatusMapping.find(mapping => {
                             return(mapping.status === progressReport.status)

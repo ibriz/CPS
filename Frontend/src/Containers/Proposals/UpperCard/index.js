@@ -12,9 +12,6 @@ const UpperCard = ({ numberOfSubmittedProposals, updatePeriod, sponsorRequest, v
     const { period, remainingTime, remainingTimeSecond } = useTimer();
     let [periodConfirmationShow, setPeriodConfirmationShow] = React.useState(false);
 
-    console.log("remainingTimeSecond", remainingTimeSecond);
-    console.log(remainingTimeSecond);
-
     let button;
     let text;
 

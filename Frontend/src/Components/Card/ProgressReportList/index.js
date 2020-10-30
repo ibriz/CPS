@@ -9,6 +9,7 @@ const ProjectReportList = ({projectReports, selectedTab, onClickProgressReport})
             {
                 projectReports.length ? projectReports.map((progressReport) =>
                     <ProgressReport 
+                        key = {progressReport.reportKey}
                         progressReport = {progressReport}
                         selectedTab = {selectedTab}
                         onClick={() => onClickProgressReport(progressReport)}

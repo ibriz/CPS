@@ -106,9 +106,9 @@ const initialState = {
     progressReportDetail: null,
 
     totalPages: {
-        Approved: [],
-        Rejected: [],
-        Voting: []
+        Approved: 0,
+        Rejected: 0,
+        Voting: 0
     },
     error: null,
     votesByProgressReport: [],
