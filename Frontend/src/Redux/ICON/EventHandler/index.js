@@ -7,9 +7,9 @@ import IconService from 'icon-sdk-js';
 import { HttpProvider } from 'icon-sdk-js';
 import { setModalShowSponsorRequests, setModalShowVoting } from 'Redux/Reducers/proposalSlice';
 import { setModalShowVotingPR } from 'Redux/Reducers/progressReportSlice';
-import { fetchPeriodDetailsRequest } from 'Redux/Reducers/periodSlice';
+// import { fetchPeriodDetailsRequest } from 'Redux/Reducers/periodSlice';
 import { loginPrepRequest } from 'Redux/Reducers/accountSlice';
-import { loginSuccess } from 'Redux/Reducers/accountSlice';
+// import { loginSuccess } from 'Redux/Reducers/accountSlice';
 
 const { submit_proposal,
     submit_progress_report,

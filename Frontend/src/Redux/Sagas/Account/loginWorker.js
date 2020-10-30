@@ -1,8 +1,6 @@
 import { setCookie } from '../../../helpers/cookie';
-import { callKeyStoreWallet } from '../../ICON/utils';
-import { put, call } from 'redux-saga/effects';
-import { loginSuccess, loginPrepRequest } from 'Redux/Reducers/accountSlice';
-import { IconConverter } from 'icon-sdk-js';
+import { put } from 'redux-saga/effects';
+import { loginPrepRequest } from 'Redux/Reducers/accountSlice';
 
 export default function* login(payload) {
   try {
