@@ -156,7 +156,7 @@ function DetailsModal(props) {
                         {
 
                           <ProgressText>
-                            {approvedPercentage}% Stake Approved
+                              {approvedPercentage ? `${approvedPercentage.toFixed()}` : 0}% Stake Approved
                             </ProgressText>
                         }
 
