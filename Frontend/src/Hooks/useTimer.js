@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { connect } from 'react-redux';
 import { fetchPeriodDetailsRequest } from 'Redux/Reducers/periodSlice';
 import { useDispatch, useSelector } from "react-redux";
 
