@@ -42,8 +42,8 @@ const MilestoneTable = ({milestones, title = "Milestones"}) => {
         </thead>
         <tbody>
             {
-                milestones?.map(milestone => (
-                    <tr>
+                milestones?.map((milestone, index) => (
+                    <tr key = {index}>
 
                         <TableData>
                             <Key>{milestone.name || 'N/A'}</Key>

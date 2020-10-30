@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { fetchProposalListRequest,setModalShowVoting } from 'Redux/Reducers/proposalSlice';
 import Pagination from 'Components/Card/Pagination';
 import proposalStates from './proposalStates';
-import { select } from 'redux-saga/effects';
+// import { select } from 'redux-saga/effects';
 import wallet from 'Redux/ICON/FrontEndWallet'
 import DetailsModal from 'Components/Card/DetailsModal';
 import ProgressReportList from 'Components/Card/ProgressReportList';
@@ -51,7 +51,7 @@ const VotingCard = ({ proposalList, fetchProposalListRequest, walletAddress, tot
                 pageNumber: pageNumber?.[selectedTab] ?? 1
             }        
         );
-    }, [selectedTab, pageNumber])
+    }, [selectedTab, pageNumber, fetchProgressReport, walletAddress])
 
     useEffect(() => {
 
@@ -62,7 +62,7 @@ const VotingCard = ({ proposalList, fetchProposalListRequest, walletAddress, tot
 
 
         setFilteredProgressReportList(filteredProgressReports);
-    }, [selectedTab, progressReportList, searchText]);
+    }, [selectedTab, progressReportList, searchText, pageNumber]);
 
     useEffect(() => {
         fetchProposalListRequest(
@@ -72,7 +72,7 @@ const VotingCard = ({ proposalList, fetchProposalListRequest, walletAddress, tot
                 pageNumber: pageNumber?.[selectedTab] ?? 1
             }
         );
-    }, [selectedTab, pageNumber])
+    }, [selectedTab, pageNumber, fetchProposalListRequest, walletAddress])
 
     const setCurrentPages = (status, pageNumber) => {
         setPageNumber(prevState => (
@@ -103,7 +103,7 @@ const VotingCard = ({ proposalList, fetchProposalListRequest, walletAddress, tot
         );
 
         setFilteredProposalList(filteredProposals);
-    }, [selectedTab, proposalList, searchText]);
+    }, [selectedTab, proposalList, searchText, pageNumber]);
 
     return (
         <>

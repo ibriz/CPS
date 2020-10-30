@@ -11,6 +11,7 @@ const ProposalList = ({ proposals, selectedTab, onClickProposal }) => {
             {
                 proposals.length ? proposals.map((proposal) =>
                     <Proposal
+                        key = {proposal.ipfsKey}
                         proposal={proposal}
                         selectedTab={selectedTab}
                         onClick={() => onClickProposal(proposal)}

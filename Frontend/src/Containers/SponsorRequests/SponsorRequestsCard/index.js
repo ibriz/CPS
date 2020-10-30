@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { fetchSponsorRequestsListRequest, setModalShowSponsorRequests } from 'Redux/Reducers/proposalSlice';
 import Pagination from 'Components/Card/Pagination';
 import proposalStates from './proposalStates';
-import { select } from 'redux-saga/effects';
+// import { select } from 'redux-saga/effects';
 import wallet from 'Redux/ICON/FrontEndWallet'
 import DetailsModal from 'Components/Card/DetailsModal';
 
@@ -39,7 +39,7 @@ const SponsorRequestsCard = ({ proposalList, fetchProposalListRequest, walletAdd
         );
 
         // setModalShowSponsorRequests(true);
-    }, [selectedTab, pageNumber])
+    }, [selectedTab, pageNumber, fetchProposalListRequest, walletAddress])
 
     const setCurrentPages = (status, pageNumber) => {
         setPageNumber(prevState => (

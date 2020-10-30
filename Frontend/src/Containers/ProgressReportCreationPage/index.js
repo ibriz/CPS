@@ -11,7 +11,7 @@ import AppFormLabel from 'Components/UI/AppFormLabel';
 import RichTextEditor from 'Components/RichTextEditor';
 
 import LoaderModal from '../../Components/UI/LoaderModal';
-import {getCurrentUserActiveProposals} from 'Selectors';
+// import {getCurrentUserActiveProposals} from 'Selectors';
 import {fetchProposalListRequest, fetchProposalByAddressRequest} from 'Redux/Reducers/proposalSlice';
 import {updateProposalStatus} from 'Redux/Reducers/proposalSlice';
 import {NotificationManager} from 'react-notifications';

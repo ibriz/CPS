@@ -13,8 +13,8 @@ const DetailsTable = ({ title, data }) => {
             </thead>
             <tbody>
                 {
-                    data.map(row => (
-                        <tr>
+                    data.map((row, index) => (
+                        <tr key = {index}>
 
                             <td className={styles.data}>
                                 <span className={styles.key}>{row.key}</span>

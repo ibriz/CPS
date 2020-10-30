@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import PaginationComponent from 'react-responsive-pagination';
 
 
@@ -9,7 +9,7 @@ const Pagination = ({currentPage, setCurrentPage, totalPages}) => {
         <div className="commentBox">
 
     <PaginationComponent
-      current={currentPage}
+      current={currentPage ?? 1}
       total={totalPages}
       maxWidth = {10}
       onPageChange={setCurrentPage}

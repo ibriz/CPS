@@ -27,7 +27,7 @@ function DetailsModal(props) {
 
 
   const { proposalDetail, proposal, status, sponsorRequest = false, approveSponserRequest, rejectSponsorRequest, voting = false, voteProposal, progressReportByProposal, votesByProposal, fetchVoteResultRequest, approvedPercentage,
-    fetchProgressReportByProposalRequest, period, remainingTime, approvedVoterPercentage } = props;
+    fetchProgressReportByProposalRequest, period, remainingTime, approvedVoterPercentage, fetchProposalDetail, ...remainingProps } = props;
 
   useEffect(() => {
     props.proposal && props.fetchProposalDetail(
@@ -88,7 +88,7 @@ function DetailsModal(props) {
 
   return (
     <Modal
-      {...props}
+      {...remainingProps}
       size="lg"
       aria-labelledby="contained-modal-title-vcenter"
       centered

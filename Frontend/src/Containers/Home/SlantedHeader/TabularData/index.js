@@ -35,7 +35,7 @@ const TabularData = ({ numberOfPendingProposals, numberOfSubmittedProposals, tot
         <div className = {styles.tabular}>
             {
                 tabularData.map((data, index) => (
-                    <div className={styles.tableRow} style = {index === 0 ? {marginTop: 0} : {}}>
+                    <div className={styles.tableRow} style = {index === 0 ? {marginTop: 0} : {}} key = {data.key}>
                         <span className={styles.key}>{data.key}</span>
                         <span className={styles.value}>{data.value}</span>
                     </div>

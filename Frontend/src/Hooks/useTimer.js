@@ -14,21 +14,12 @@ const useTimer = () => {
         minute: 0,
         second: 0
     })
-    console.log("useTimer2");
-    console.log(timestampRedux);
     const dispatch = useDispatch();
 
     function calculateRemainingTime() {
 
         let timestamp = Math.floor(Date.now() / 1000);
         var d = remainingTimeRedux - (timestamp - timestampRedux);
-        console.log("useTimer");
-        console.log(timestamp);
-        console.log(timestampRedux);
-        console.log(period);
-        console.log(timestamp - timestampRedux);
-
-        console.log(d);
         if (remainingTimeRedux > 0 && d > 0) {
             console.log("timestampRedux");
             var r = {};                                                                
@@ -60,7 +51,7 @@ const useTimer = () => {
                     second: 0
                 }
             );
-            dispatch(fetchPeriodDetailsRequest());
+            // dispatch(fetchPeriodDetailsRequest());
         }
 
     }
@@ -73,8 +64,7 @@ const useTimer = () => {
         }
         calculateRemainingTime();
         const interval = setInterval(() => calculateRemainingTime(), 1000);
-        console.log("useTimer3");
-        console.log();
+ 
 
         return () => clearInterval(interval);
     }, [timestampRedux, remainingTimeRedux])
