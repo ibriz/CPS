@@ -1,10 +1,19 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './TabularData.module.css';
 import { connect } from 'react-redux';
-import { fetchProposalListRequest, fetchDraftsRequest } from 'Redux/Reducers/proposalSlice';
-import wallet from 'Redux/ICON/FrontEndWallet'
+import { fetchProposalListRequest } from 'Redux/Reducers/proposalSlice';
+import wallet from 'Redux/ICON/FrontEndWallet';
+import {fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest} from 'Redux/Reducers/fundSlice';
 
-const TabularData = ({ numberOfPendingProposals, numberOfSubmittedProposals, totalPendingProposalBudge, totalSubmittedProposalBudget, cpfRemainingFunds, numberOfApprovedProposals, totalApprovedProposalBudget, fetchProposalListRequest, walletAddress,totalCount }) => {
+const TabularData = ({ numberOfPendingProposals, numberOfSubmittedProposals, totalPendingProposalBudge, totalSubmittedProposalBudget, cpfRemainingFunds, numberOfApprovedProposals, totalApprovedProposalBudget, fetchProposalListRequest, walletAddress,totalCount, fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, cpfScoreAddress }) => {
+
+    useEffect(() => {
+        fetchCPFScoreAddressRequest()
+    }, [fetchCPFScoreAddressRequest]);
+
+    useEffect(() => {
+        fetchCPFRemainingFundRequest();
+    }, [fetchCPFRemainingFundRequest, cpfScoreAddress])
 
     const tabularData = [
         {
@@ -57,7 +66,8 @@ const mapStateToProps = () => state => {
         numberOfApprovedProposals: state.proposals.numberOfApprovedProposals,
         totalApprovedProposalBudget: state.proposals.totalApprovedProposalBudget,
 
-        cpfRemainingFunds: state.proposals.cpfRemainingFunds,
+        cpfRemainingFunds: state.fund.cpfRemainingFunds,
+        cpfScoreAddress: state.fund.cpfScoreAddress,
 
         walletAddress: state.account.address,
         totalCount: state.proposals.totalCount
@@ -70,6 +80,8 @@ const mapStateToProps = () => state => {
 const mapDispatchToProps = dispatch => (
     {
         fetchProposalListRequest: (payload) => dispatch(fetchProposalListRequest(payload)),
+        fetchCPFScoreAddressRequest: payload => dispatch(fetchCPFScoreAddressRequest(payload)),
+        fetchCPFRemainingFundRequest: payload => dispatch(fetchCPFRemainingFundRequest(payload))
     }
 )
 
