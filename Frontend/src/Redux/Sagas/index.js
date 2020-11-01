@@ -20,7 +20,8 @@ import {
   fetchDraftRequestWorker,
   voteProposalWorker,
   fetchProposalByAddressWorker,
-  fetchProposalVoteResultRequestWorker
+  fetchProposalVoteResultRequestWorker,
+  fetchProjectAmountsWorker
 } from './Proposal';
 
 import {
@@ -48,7 +49,8 @@ import { submitProposalRequest, submitProposalSuccess, fetchProposalListRequest,
   rejectSponsorRequest,
   saveDraftRequest, fetchDraftsRequest,
   voteProposal, fetchProposalByAddressRequest,
-  fetchVoteResultRequest as fetchProposalVoteResultRequest} from '../Reducers/proposalSlice';
+  fetchVoteResultRequest as fetchProposalVoteResultRequest,
+  fetchProjectAmountsRequest} from '../Reducers/proposalSlice';
 import { submitProgressReportRequest, submitProgressReportSuccess, fetchProgressReportListRequest, fetchProgressReportDetailRequest,
   fetchDraftsRequest as fetchDraftsRequestProgressReport,
   saveDraftRequest as saveDraftRequestProgressReport,
@@ -117,7 +119,9 @@ yield takeEvery(unregisterPrep.type, unregisterPrepWorker);
 yield takeEvery(registerPrep.type, registerPrepWorker);
 
 yield takeEvery(fetchCPFScoreAddressRequest.type, fetchCPFScoreAddressWorker);
-yield takeEvery(fetchCPFRemainingFundRequest.type, fetchCPFRemainingFundWorker)
+yield takeEvery(fetchCPFRemainingFundRequest.type, fetchCPFRemainingFundWorker);
+
+yield takeEvery(fetchProjectAmountsRequest.type, fetchProjectAmountsWorker)
 
 
 
