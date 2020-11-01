@@ -64,7 +64,38 @@ const initialState = {
 
     proposalByAddress: [],
 
-    votesByProposal: []
+    votesByProposal: [],
+
+    projectAmounts: {
+        Active: {
+            amount: 0,
+            count: 0,
+        },
+        Voting: {
+            amount: 0,
+            count: 0,
+        },
+        Completed: {
+            amount: 0,
+            count: 0,
+        },
+        Pending: {
+            amount: 0,
+            count: 0,
+        },
+        Disqualified: {
+            amount: 0,
+            count: 0,
+        },
+        Paused: {
+            amount: 0,
+            count: 0,
+        },
+        Rejected: {
+            amount: 0,
+            count: 0,
+        }
+    }
 };
 
 const proposalSlice = createSlice({
@@ -261,7 +292,26 @@ const proposalSlice = createSlice({
         },  
         fetchVoteResultFailure() {
             return;
-        },  
+        },
+        
+        
+        fetchProjectAmountsRequest(state) {
+            return;
+        },
+        fetchProjectAmountsSuccess(state, action) {
+            // state.proposalList = action.payload
+            // state.proposalList.
+            for(const proposalStatus of proposalStatusMapping) {
+                state.projectAmounts[proposalStatus.name] = {
+                    amount: IconConverter.toBigNumber(action.payload[proposalStatus.status]?.amount ?? 0),
+                    count: IconConverter.toBigNumber(action.payload[proposalStatus.status]?.count ?? 0)
+                }
+            }
+            return;
+        },
+        fetchProjectAmountsFailure(state) {
+            return;
+        },
     },
 })
 
@@ -275,5 +325,6 @@ export const { submitProposalRequest, submitProposalSuccess, submitProposalFailu
     voteProposal,
     fetchProposalByAddressRequest, fetchProposalByAddressSuccess, fetchProposalByAddressFailure,
     setModalShowSponsorRequests, setModalShowVoting, 
-    fetchVoteResultRequest, fetchVoteResultSuccess, fetchVoteResultFailure } = proposalSlice.actions;
+    fetchVoteResultRequest, fetchVoteResultSuccess, fetchVoteResultFailure,
+    fetchProjectAmountsRequest, fetchProjectAmountsSuccess, fetchProjectAmountsFailure } = proposalSlice.actions;
 export default proposalSlice.reducer;

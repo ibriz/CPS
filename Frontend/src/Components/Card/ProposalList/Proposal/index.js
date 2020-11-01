@@ -7,6 +7,7 @@ import ProgressBar from '../../../UI/ProgressBar';
 import LowerCardTitle from '../../../UI/LowerCardList/LowerCardTitle';
 import LowerCardInfo from '../../../UI/LowerCardList/LowerCardInfo';
 import Budget from '../../../UI/LowerCardList/Budget';
+import {icxFormat} from 'helpers';
 
 const badgeColor = {
     'Voting': 'warning',
@@ -37,7 +38,7 @@ const Proposal = ({ proposal, selectedTab, onClick }) => {
                         <LowerCardInfo>{`${proposal._contributor_address.slice(0, 4)}...${proposal._contributor_address.slice(proposal._contributor_address.length - 3)}`}</LowerCardInfo>
                         <LowerCardInfo className={"proposalInfo2"}>Started from: {new Date(proposal._timestamp / 1000).toLocaleDateString()}</LowerCardInfo>
                         <Budget>
-                            Budget: {proposal.budget} ICX
+                            Budget: {icxFormat(proposal.budget)} ICX
                     </Budget>
 
                     </Row>

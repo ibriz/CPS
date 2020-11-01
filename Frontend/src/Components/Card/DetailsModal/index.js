@@ -13,6 +13,7 @@ import VoteList from './VoteList';
 import RichTextEditor from 'Components/RichTextEditor';
 import ConfirmationModal from 'Components/UI/ConfirmationModal';
 import { getProposalApprovedPercentage, getProposalApprovedVotersPercentage } from 'Selectors';
+import {icxFormat} from 'helpers';
 
 function DetailsModal(props) {
 
@@ -47,12 +48,12 @@ function DetailsModal(props) {
   }, [props.proposal])
 
   useEffect(() => {
-    if (status === 'Voting') {
+    // if (status === 'Voting') {
       // alert("Voting");
       props.proposal && fetchVoteResultRequest({
         proposalKey: props.proposal.ipfsKey
       });
-    }
+    // }
   }, [props.proposal, props.show])
 
   const onSubmitVote = () => {
@@ -213,7 +214,7 @@ function DetailsModal(props) {
                     },
                     {
                       key: 'Total Budget',
-                      value: `${proposalDetail?.totalBudget} ICX` || 'N/A'
+                      value: `${icxFormat(proposalDetail?.totalBudget)} ICX` || 'N/A'
                     },
                     {
                       key: 'Sponsor Prep',
@@ -337,7 +338,7 @@ function DetailsModal(props) {
             (sponsorVote === 'approve') ?
               <>
                 <div>Are you sure you want to approve the sponsor request?</div>
-                <div style={{ color: 'red' }}>You will need to transfer {proposalDetail.totalBudget * 0.1} ICX for sponsor bond.</div>
+                <div style={{ color: 'red' }}>You will need to transfer {icxFormat(proposalDetail.totalBudget * 0.1, true)} ICX for sponsor bond.</div>
               </> :
               <span>Are you sure you want to reject the sponsor request?</span>
           }

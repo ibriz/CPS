@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import styles from './TabularData.module.css';
 import { connect } from 'react-redux';
-import { fetchProposalListRequest } from 'Redux/Reducers/proposalSlice';
+import { fetchProposalListRequest, fetchProjectAmountsRequest } from 'Redux/Reducers/proposalSlice';
 import wallet from 'Redux/ICON/FrontEndWallet';
 import {fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest} from 'Redux/Reducers/fundSlice';
+import {icxFormat} from 'helpers';
 
-const TabularData = ({ numberOfPendingProposals, numberOfSubmittedProposals, totalPendingProposalBudge, totalSubmittedProposalBudget, cpfRemainingFunds, numberOfApprovedProposals, totalApprovedProposalBudget, fetchProposalListRequest, walletAddress,totalCount, fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, cpfScoreAddress }) => {
+const TabularData = ({ numberOfPendingProposals, numberOfSubmittedProposals, totalPendingProposalBudge, totalSubmittedProposalBudget, cpfRemainingFunds, numberOfApprovedProposals, totalApprovedProposalBudget, fetchProposalListRequest, walletAddress,totalCount, fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, cpfScoreAddress, fetchProjectAmountsRequest, projectAmounts }) => {
 
     useEffect(() => {
-        fetchCPFScoreAddressRequest()
-    }, [fetchCPFScoreAddressRequest]);
+        fetchCPFScoreAddressRequest();
+        fetchProjectAmountsRequest();
+    }, [fetchCPFScoreAddressRequest, fetchProjectAmountsRequest]);
 
     useEffect(() => {
         fetchCPFRemainingFundRequest();
@@ -18,15 +20,15 @@ const TabularData = ({ numberOfPendingProposals, numberOfSubmittedProposals, tot
     const tabularData = [
         {
             key: 'Voting Proposals',
-            value: `${totalCount.Voting} (${0} ICX)`
+            value: `${projectAmounts.Voting.count} (${icxFormat(projectAmounts.Voting.amount)} ICX)`
         },
         {
             key: 'Approved Proposals',
-            value: `${totalCount.Active} (${totalApprovedProposalBudget} ICX)`
+            value: `${projectAmounts.Active.count} (${icxFormat(projectAmounts.Active.amount)} ICX)`
         },
         {
             key: 'CPF Remaining Funds',
-            value: `${cpfRemainingFunds} ICX`
+            value: `${icxFormat(cpfRemainingFunds, true)} ICX`
         }
     ];
 
@@ -70,7 +72,9 @@ const mapStateToProps = () => state => {
         cpfScoreAddress: state.fund.cpfScoreAddress,
 
         walletAddress: state.account.address,
-        totalCount: state.proposals.totalCount
+        totalCount: state.proposals.totalCount,
+
+        projectAmounts: state.proposals.projectAmounts
 
 
 
@@ -81,7 +85,8 @@ const mapDispatchToProps = dispatch => (
     {
         fetchProposalListRequest: (payload) => dispatch(fetchProposalListRequest(payload)),
         fetchCPFScoreAddressRequest: payload => dispatch(fetchCPFScoreAddressRequest(payload)),
-        fetchCPFRemainingFundRequest: payload => dispatch(fetchCPFRemainingFundRequest(payload))
+        fetchCPFRemainingFundRequest: payload => dispatch(fetchCPFRemainingFundRequest(payload)),
+        fetchProjectAmountsRequest: payload => dispatch(fetchProjectAmountsRequest(payload)),
     }
 )
 
