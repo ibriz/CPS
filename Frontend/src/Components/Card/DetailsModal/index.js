@@ -48,12 +48,12 @@ function DetailsModal(props) {
   }, [props.proposal])
 
   useEffect(() => {
-    // if (status === 'Voting') {
+    if (status === 'Voting') {
       // alert("Voting");
       props.proposal && fetchVoteResultRequest({
         proposalKey: props.proposal.ipfsKey
       });
-    // }
+    }
   }, [props.proposal, props.show])
 
   const onSubmitVote = () => {
