@@ -13,7 +13,7 @@ import VoteList from './VoteList';
 import RichTextEditor from 'Components/RichTextEditor';
 import ConfirmationModal from 'Components/UI/ConfirmationModal';
 import { getProposalApprovedPercentage, getProposalApprovedVotersPercentage } from 'Selectors';
-import {icxFormat} from 'helpers';
+import { icxFormat } from 'helpers';
 
 function DetailsModal(props) {
 
@@ -127,14 +127,15 @@ function DetailsModal(props) {
                     <>
                       <Col lg="3" xs="12">
 
-                        <ProgressBar />
+                        <ProgressBar
+                          percentage={proposal?.completedPercentage} />
                       </Col>
 
-                      <Col lg="3" xs="12" className={styles.progressTextContainer}>
+                      <Col lg="8" xs="12" className={styles.progressTextContainer}>
                         {
 
                           <ProgressText>
-                            46% Completed
+                            {proposal?.completedPercentage ? `${proposal?.completedPercentage.toFixed()}` : 0}% Completed
                           </ProgressText>
                         }
 
@@ -145,23 +146,23 @@ function DetailsModal(props) {
                   return (
                     <>
                       {/* <Col xs="12"> */}
-                        <Col lg="3" xs="12">
+                      <Col lg="3" xs="12">
 
-                          <ProgressBar
-                            percentage={approvedPercentage} />
-                        </Col>
+                        <ProgressBar
+                          percentage={approvedPercentage} />
+                      </Col>
 
-                        <Col lg="8" xs="12" className={styles.progressTextContainer}>
-                          {
+                      <Col lg="8" xs="12" className={styles.progressTextContainer}>
+                        {
 
-                            <ProgressText>
-                              {approvedPercentage ? `${approvedPercentage.toFixed()}` : 0}% Stake Approved
+                          <ProgressText>
+                            {approvedPercentage ? `${approvedPercentage.toFixed()}` : 0}% Stake Approved
                             </ProgressText>
-                          }
+                        }
 
-                        </Col>
+                      </Col>
                       {/* </Col> */}
-                      <Col lg='1' xs ='12'></Col>
+                      <Col lg='1' xs='12'></Col>
                       <Col lg="3" xs="12">
 
                         <ProgressBar

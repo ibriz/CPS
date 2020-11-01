@@ -147,7 +147,10 @@ const proposalSlice = createSlice({
                             timestamp: progressReport._timestamp,
                             ipfsHash: progressReport._ipfs_hash,
                             reportKey: progressReport._report_key,
-                            proposalKey: progressReport._ipfs_key
+                            proposalKey: progressReport._ipfs_key,
+                            approvedVotes: IconConverter.toBigNumber(progressReport.approved_votes),
+                            totalVotes: IconConverter.toBigNumber(progressReport.total_votes),
+                            approvedPercentage: (!progressReport.total_votes || parseInt(progressReport.total_votes) === 0) ? 0 : ((progressReport.approved_votes / progressReport.total_votes) * 100)
                         }
                     )
                 );
