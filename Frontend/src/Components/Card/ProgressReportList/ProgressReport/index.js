@@ -42,8 +42,8 @@ const ProgressReport = ({ progressReport, selectedTab, showProject = true, onCli
                 </Col>
 
                 <Col sm="3" className={styles.progressBar} >
-                    <ProgressText>46% Completed</ProgressText>
-                    <ProgressBar />
+                    <ProgressText>{progressReport.approvedPercentage ?? 0}% Approved</ProgressText>
+                    <ProgressBar percentage = {progressReport.approvedPercentage} />
                 </Col>
             </Row>
             <hr className={styles.horizontalRule} />

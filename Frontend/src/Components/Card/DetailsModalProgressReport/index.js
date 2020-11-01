@@ -124,25 +124,25 @@ function DetailsModal(props) {
             {
               ((selectedTab) => {
                 console.log(props.selectedTab);
-                if (['Active', 'Paused'].includes(props.status))
-                  return (
-                    <>
-                      <Col lg="3" xs="12">
+                // if (['Active', 'Paused'].includes(props.status))
+                //   return (
+                //     <>
+                //       <Col lg="3" xs="12">
 
-                        <ProgressBar />
-                      </Col>
+                //         <ProgressBar />
+                //       </Col>
 
-                      <Col lg="3" xs="12" className={styles.progressTextContainer}>
-                        {
+                //       <Col lg="3" xs="12" className={styles.progressTextContainer}>
+                //         {
 
-                          <ProgressText>
-                            46% Completed
-                            </ProgressText>
-                        }
+                //           <ProgressText>
+                //             46% Completed
+                //             </ProgressText>
+                //         }
 
-                      </Col>
-                    </>
-                  )
+                //       </Col>
+                //     </>
+                //   )
                 if (['Voting'].includes(props.status))
                   return (
                     <>
