@@ -35,6 +35,11 @@ import {
   fetchProgressReportByProposalRequestWorker
 } from './ProgressReport';
 
+import {
+  fetchCPFScoreAddressWorker,
+  fetchCPFRemainingFundWorker
+} from './Fund';
+
 import { fetchPrepWorker, unregisterPrepWorker, registerPrepWorker } from './PRep';
 import {fetchPeriodDetailsRequestWorker, updatePeriodWorker} from './Period'
 
@@ -53,6 +58,7 @@ import { submitProgressReportRequest, submitProgressReportSuccess, fetchProgress
 } from '../Reducers/progressReportSlice';
 import {fetchPeriodDetailsRequest, updatePeriod} from '../Reducers/periodSlice';
 import { fetchPrepsRequest, unregisterPrep, registerPrep } from '../Reducers/prepsSlice';
+import {fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest} from '../Reducers/fundSlice';
 import { FiPrinter } from 'react-icons/fi';
 
 function* rootSaga() {
@@ -109,6 +115,9 @@ yield takeEvery(updatePeriod.type, updatePeriodWorker);
 yield takeEvery(unregisterPrep.type, unregisterPrepWorker);
 
 yield takeEvery(registerPrep.type, registerPrepWorker);
+
+yield takeEvery(fetchCPFScoreAddressRequest.type, fetchCPFScoreAddressWorker);
+yield takeEvery(fetchCPFRemainingFundRequest.type, fetchCPFRemainingFundWorker)
 
 
 
