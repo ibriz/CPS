@@ -7,7 +7,7 @@ import useTimer from 'Hooks/useTimer';
 import {updatePeriod} from 'Redux/Reducers/periodSlice';
 import ConfirmationModal from 'Components/UI/ConfirmationModal';
 
-const UpperCard = ({ numberOfSubmittedProposals, updatePeriod, sponsorRequest, voting, isPrep, isRegistered }) => {
+const UpperCard = ({ numberOfSubmittedProposals, updatePeriod, sponsorRequest, voting, isPrep, isRegistered, projectAmounts }) => {
 
     const { period, remainingTime, remainingTimeSecond } = useTimer();
     let [periodConfirmationShow, setPeriodConfirmationShow] = React.useState(false);
@@ -34,6 +34,8 @@ const UpperCard = ({ numberOfSubmittedProposals, updatePeriod, sponsorRequest, v
         </Link>
 
         text = <span className={styles.proposalNumber}>{numberOfSubmittedProposals} Proposals submitted</span>
+
+        text = <span className={styles.proposalNumber}>Create a New Proposal</span>
 
     } else {
         button = null;
@@ -128,7 +130,10 @@ const mapStateToProps = state => {
     return {
         numberOfSubmittedProposals: state.proposals.numberOfSubmittedProposals,
         isPrep: state.account.isPrep,
-        isRegistered: state.account.isRegistered
+        isRegistered: state.account.isRegistered,
+
+        projectAmounts: state.proposals.projectAmounts
+
     };
 };
 

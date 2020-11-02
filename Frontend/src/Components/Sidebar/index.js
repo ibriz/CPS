@@ -56,7 +56,7 @@ const Aside = ({ collapsed, rtl, toggled, handleToggleSidebar, handleCollapsedCh
 
             </MenuItem>
             <MenuItem icon={<FaGem />}
-              suffix={<Badge size="xl" variant="primary" >3</Badge>}> {<span>Proposals</span>}
+              > {<span>Proposals</span>}
               <Link to="/proposals" />
 
             </MenuItem>
@@ -82,7 +82,7 @@ const Aside = ({ collapsed, rtl, toggled, handleToggleSidebar, handleCollapsedCh
 
               </MenuItem>
               <MenuItem icon={<FaGem />}
-                suffix={<Badge size="xl" variant="primary" >3</Badge>}> {<span>Proposals</span>}
+                > {<span>Proposals</span>}
                 <Link to="/proposals" />
 
               </MenuItem>

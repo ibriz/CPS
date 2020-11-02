@@ -11,7 +11,9 @@ import { connect } from 'react-redux';
 import login from 'Redux/Sagas/Account/loginWorker';
 
 import iconLogo from 'Assets/Images/icon_white.png';
-import icxLogo from 'Assets/Images/icx_white.png'
+import icxLogo from 'Assets/Images/icx_white.png';
+// import intersect from 'Assets/Images/intersect.png'
+
 import {NotificationManager} from 'react-notifications';
 
 const SlantedHeader = ({ loginRequest, loginPrepRequest }) => {
@@ -54,7 +56,7 @@ const SlantedHeader = ({ loginRequest, loginPrepRequest }) => {
 
     return (
         <div className={styles.slanted}>
-            <Container fluid>
+            <Container fluid className = {styles.container}>
                 <Row className={styles.firstRow}>
                     <span className={styles.heading} style={{ marginTop: '3px' }}>
                         {/* <img src = {iconLogo} style = {{width: '55px', height: '20px', marginRight: '2px'}}/><b>CPS</b> */}

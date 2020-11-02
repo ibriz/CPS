@@ -6,7 +6,16 @@
     padding-left: 7px;
     padding-right: 7px;
     padding-top: 10px;
+
+    
+
 }
+
+/* .container {
+    background-image: url('../../../Assets/Images/Intersect.png');
+    background-repeat: no-repeat;
+    background-position: top right;
+} */
 
 .tabularDataWrapper {
     display: flex;
