@@ -52,7 +52,7 @@ const Proposal = ({ proposal, selectedTab, onClick }) => {
                             ["Voting"].includes(selectedTab) &&
                                 <>
 
-                                    <ProgressText>{proposal.approvedPercentage ? `${proposal.approvedPercentage.toFixed()}` : 0}% Stake Approved%</ProgressText>
+                                    <ProgressText>{proposal.approvedPercentage ? `${proposal.approvedPercentage.toFixed()}` : 0}% Stake Approved</ProgressText>
                                     <ProgressBar percentage={proposal.approvedPercentage} />
                                 </>
                         }
