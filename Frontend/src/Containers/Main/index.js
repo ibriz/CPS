@@ -45,10 +45,10 @@ const Main = ({
             <Dashboard />
           </Route>
           <Route path="/proposals">
-            {userRoute(<Proposals />)}
+            {<Proposals />}
           </Route>
           <Route path="/progress-reports">
-            {userRoute(<ProgressReports />)}
+            {<ProgressReports />}
           </Route>
           <Route path="/newProposal">
             {userRoute(<ProposalCreationPage />)}
