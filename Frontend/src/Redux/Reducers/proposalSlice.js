@@ -313,8 +313,8 @@ const proposalSlice = createSlice({
             // state.proposalList.
             for(const proposalStatus of proposalStatusMapping) {
                 state.projectAmounts[proposalStatus.name] = {
-                    amount: IconConverter.toBigNumber(action.payload[proposalStatus.status]?.amount ?? 0),
-                    count: IconConverter.toBigNumber(action.payload[proposalStatus.status]?.count ?? 0)
+                    amount: IconConverter.toBigNumber(action.payload[proposalStatus.status]?._total_amount ?? 0),
+                    count: IconConverter.toBigNumber(action.payload[proposalStatus.status]?._count ?? 0)
                 }
             }
             return;

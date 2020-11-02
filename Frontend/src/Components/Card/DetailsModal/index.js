@@ -71,7 +71,7 @@ function DetailsModal(props) {
     approveSponserRequest(
       {
         ipfsKey: proposal.ipfsKey,
-        sponsorBond: proposalDetail.totalBudget * 0.1
+        sponsorBond: proposalDetail?.totalBudget * 0.1
       }
     );
     // props.onHide();
@@ -347,7 +347,7 @@ function DetailsModal(props) {
             (sponsorVote === 'approve') ?
               <>
                 <div>Are you sure you want to approve the sponsor request?</div>
-                <div style={{ color: 'red' }}>You will need to transfer {icxFormat(proposalDetail.totalBudget * 0.1, true)} ICX for sponsor bond.</div>
+                <div style={{ color: 'red' }}>You will need to transfer {icxFormat((proposalDetail?.totalBudget?? 0) * 0.1, true)} ICX for sponsor bond.</div>
               </> :
               <span>Are you sure you want to reject the sponsor request?</span>
           }
