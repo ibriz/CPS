@@ -258,7 +258,8 @@ const proposalSlice = createSlice({
             state.proposalByAddress = action.payload.response.map(proposal => (
                 {
                     _proposal_title: proposal._proposal_title,
-                    ipfsKey: proposal._ipfs_key
+                    ipfsKey: proposal._ipfs_key,
+                    newProgressReport: !!parseInt(proposal.new_progress_report)
                 }
             ));
             return;

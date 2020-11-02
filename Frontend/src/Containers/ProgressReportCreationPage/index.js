@@ -153,10 +153,10 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                             </AppFormLabel>
                             <Col sm="10" className={styles.inputSameLine}>
                                 <Form.Control size="md" as="select" value={progressReport.projectName} name="projectName" onChange={handleChange} required>
-                                    <option selected disabled value="">Select Project Report</option>
+                                    <option selected disabled value="">Select Project</option>
                                     {
                                         currentUserActiveProposals.map((proposal) => 
-                                    <option value = {proposal.ipfsKey}>{proposal._proposal_title}</option>
+                                    <option value = {proposal.ipfsKey} disabled = {!proposal.newProgressReport}>{proposal._proposal_title}</option>
                                     
 
                                         )

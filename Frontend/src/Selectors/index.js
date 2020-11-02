@@ -63,3 +63,19 @@ export const getProgressReportApprovedVotersPercentage = createSelector(
     return (approvedVoters/totalVoters) * 100;
   }
 );
+
+
+const getProposalByAddress = state => state.proposals.proposalByAddress
+
+export const getNewProgressReportInfo = createSelector(
+  [getProposalByAddress],
+  (proposalByAddress) => {
+    const canCreateNewProgressReportCount = proposalByAddress.filter(proposal => proposal.newProgressReport).length;
+    const totalProgressReportCount = proposalByAddress.length;
+    return {
+      canCreateNewProgressReportCount,
+      totalProgressReportCount,
+      canCreateNewProgressReport: canCreateNewProgressReportCount > 0
+    }
+  }
+);

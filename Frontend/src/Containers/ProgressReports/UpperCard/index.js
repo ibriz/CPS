@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from './UpperCard.module.scss';
 import { Row, Col, Card, Button } from 'react-bootstrap';
 import {connect} from 'react-redux';
@@ -6,14 +6,24 @@ import {Link} from 'react-router-dom';
 import useTimer from 'Hooks/useTimer';
 import {updatePeriod} from 'Redux/Reducers/periodSlice';
 import ConfirmationModal from 'Components/UI/ConfirmationModal';
+import {getNewProgressReportInfo} from 'Selectors';
+import {fetchProposalByAddressRequest} from 'Redux/Reducers/proposalSlice';
 
-const UpperCard = ({numberOfSubmittedProposals, updatePeriod, sponsorRequest, voting, isPrep, isRegistered }) => {
+const UpperCard = ({numberOfSubmittedProposals, updatePeriod, sponsorRequest, voting, isPrep, isRegistered, walletAddress, fetchProposalByAddressRequest, newProgressReportInfo }) => {
 
     const {period, remainingTime, remainingTimeSecond} = useTimer();
     let [periodConfirmationShow, setPeriodConfirmationShow] = React.useState(false);
 
     let button;
     let text;
+
+    useEffect(() => {
+        fetchProposalByAddressRequest(
+            {
+                walletAddress
+            }
+        )
+    }, [fetchProposalByAddressRequest, walletAddress]);
 
     const onClickUpdatePeriod = () => {
         setPeriodConfirmationShow(true);
@@ -28,12 +38,26 @@ const UpperCard = ({numberOfSubmittedProposals, updatePeriod, sponsorRequest, vo
         button = null;
         
     } else if (period === 'APPLICATION') {
-        button = <Link to="/newProgressReport">
+
+        if(newProgressReportInfo.totalProgressReportCount === 0) {
+            text = <span className={styles.proposalNumber}>You have no active proposal</span>
+            button = <span className={styles.proposalNumber}>You need to have active proposal to create new progress report</span>
+        }
+
+        else if (newProgressReportInfo.canCreateNewProgressReportCount === 0) {
+            text = <span className={styles.proposalNumber}>You have created progress report for all of your active proposals.</span>
+            button = null
+        }
+
+
+        else {
+            button = <Link to="/newProgressReport">
 
             <Button variant="info" className={styles.createProposalButton}>CREATE NEW PROGRESS REPORT</Button>
         </Link>
 
-        text = <span className={styles.proposalNumber}>{numberOfSubmittedProposals} Progress Reports submitted</span>
+        text = <span className={styles.proposalNumber}>You have created progress report for <b>{newProgressReportInfo.totalProgressReportCount - newProgressReportInfo.canCreateNewProgressReportCount}</b> out of <b>{newProgressReportInfo.totalProgressReportCount}</b> active proposals. </span>
+        }
 
 
     } else {
@@ -83,12 +107,16 @@ const mapStateToProps = () => state => {
     return {
         numberOfSubmittedProposals: state.proposals.numberOfSubmittedProposals,
         isPrep: state.account.isPrep,
-        isRegistered: state.account.isRegistered
+        isRegistered: state.account.isRegistered,
+        newProgressReportInfo: getNewProgressReportInfo(state),
+        walletAddress: state.account.address
     };
 };
 
 const mapDispatchToProps = dispatch => ({
-    updatePeriod: payload => dispatch(updatePeriod(payload))
+    updatePeriod: payload => dispatch(updatePeriod(payload)),
+    fetchProposalByAddressRequest: payload => dispatch(fetchProposalByAddressRequest(payload))
+
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(UpperCard);
