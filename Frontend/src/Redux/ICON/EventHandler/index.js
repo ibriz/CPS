@@ -9,6 +9,8 @@ import { setModalShowSponsorRequests, setModalShowVoting } from 'Redux/Reducers/
 import { setModalShowVotingPR } from 'Redux/Reducers/progressReportSlice';
 // import { fetchPeriodDetailsRequest } from 'Redux/Reducers/periodSlice';
 import { loginPrepRequest } from 'Redux/Reducers/accountSlice';
+import { fetchSponsorRequestsListRequest } from 'Redux/Reducers/proposalSlice';
+
 // import { loginSuccess } from 'Redux/Reducers/accountSlice';
 
 const { submit_proposal,
@@ -136,6 +138,17 @@ export default (event) => {
                         txHash: payload.result,
                         failureMessage: "Proposal Approval Failed",
                         successMessage: "Proposal Approved Successfully"
+                    }, function(){
+
+                        store.dispatch(fetchSponsorRequestsListRequest(
+                            {
+                                status: "Pending",
+                                walletAddress: store.getState().account.address,
+                                pageNumber: 1
+                            }
+                        ));
+                        return true;
+
                     });
                     store.dispatch(setModalShowSponsorRequests(false));
 
@@ -149,6 +162,17 @@ export default (event) => {
                         txHash: payload.result,
                         failureMessage: "Proposal Rejection Failed",
                         successMessage: "Proposal Rejected Successfully"
+                    }, function(){
+
+                        store.dispatch(fetchSponsorRequestsListRequest(
+                            {
+                                status: "Pending",
+                                walletAddress: store.getState().account.address,
+                                pageNumber: 1
+                            }
+                        ));
+                        return true;
+
                     });
                     store.dispatch(setModalShowSponsorRequests(false));
 

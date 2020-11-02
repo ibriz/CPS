@@ -12,8 +12,8 @@ function* submitProgressReportToScoreWorker({ payload }) {
         _budget_adjustment: `${Number(payload.progressReport.projectTermRevision)}` ,
         _adjustment_value: Number(payload.progressReport.additionalBudget).toFixed(),
         _ipfs_link: `https://gateway.ipfs.io/ipfs/${payload.response.hash}`,
-        _completed_percent: `${payload.progressReport.percentageCompleted}`,
-        _additional_month: payload.progressReport.additionalTime ? `${payload.progressReport.additionalTime}` : null,
+        // _completed_percent: `${payload.progressReport.percentageCompleted}`,
+        // _additional_month: payload.progressReport.additionalTime ? `${payload.progressReport.additionalTime}` : null,
 
 
     }

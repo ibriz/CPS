@@ -28,7 +28,7 @@ function DetailsModal(props) {
 
 
   const { proposalDetail, proposal, status, sponsorRequest = false, approveSponserRequest, rejectSponsorRequest, voting = false, voteProposal, progressReportByProposal, votesByProposal, fetchVoteResultRequest, approvedPercentage,
-    fetchProgressReportByProposalRequest, period, remainingTime, approvedVoterPercentage, fetchProposalDetail, ...remainingProps } = props;
+    fetchProgressReportByProposalRequest, period, remainingTime, approvedVoterPercentage, fetchProposalDetail, walletAddress, ...remainingProps } = props;
 
   useEffect(() => {
     props.proposal && props.fetchProposalDetail(
@@ -267,6 +267,9 @@ function DetailsModal(props) {
         {
           voting && (period === 'VOTING') && (remainingTime > 0) &&
           <>
+          {
+            !votesByProposal.some(vote => vote.sponsorAddress === walletAddress) ?
+            <>
             <Row style={{ justifyContent: 'center' }}>
               <ButtonGroup aria-label="Basic example">
 
@@ -300,6 +303,11 @@ function DetailsModal(props) {
               <Button variant="primary" onClick={() => setVoteConfirmationShow(true)} style={{ marginTop: '10px', width: '150px' }}>Submit Vote</Button>
 
             </Row>
+            </> :
+            <>
+            <p style = {{color: '#262626', textAlign: 'center'}}>You have already voted for this proposal</p>
+            </>
+          }
           </>
         }
 
@@ -367,7 +375,8 @@ const mapStateToProps = state => (
     approvedPercentage: getProposalApprovedPercentage(state),
     approvedVoterPercentage: getProposalApprovedVotersPercentage(state),
     period: state.period.period,
-    remainingTime: state.period.remainingTime
+    remainingTime: state.period.remainingTime,
+    walletAddress: state.account.address
   }
 )
 

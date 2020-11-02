@@ -7,7 +7,7 @@ import { logout } from '../../Redux/Reducers/accountSlice';
 import {unregisterPrep, registerPrep} from 'Redux/Reducers/prepsSlice';
 import ConfirmationModal from 'Components/UI/ConfirmationModal';
 
-const Header = ({ address, logout, title, isPrep, isRegistered, unregisterPrep, registerPrep }) => {
+const Header = ({ address, logout, title, isPrep, isRegistered, unregisterPrep, registerPrep,period }) => {
 
     const onLogout = () => {
         logout();
@@ -30,13 +30,13 @@ const Header = ({ address, logout, title, isPrep, isRegistered, unregisterPrep, 
             <div className={styles.account}>
                 <span>{`${address.slice(0,4)}...${address.slice(address.length-2)}`}</span>
                 {
-                    isPrep && isRegistered &&
+                    isPrep && isRegistered && period === 'APPLICATION' &&
                     <Button variant="danger" onClick={() => setShowUnregisterConfirmationModal(true)} style = {{marginRight: '5px', marginLeft: '5px'}}>Unregister Prep</Button>
 
                 }
 
 {
-                    isPrep && !isRegistered &&
+                    isPrep && !isRegistered && period === 'APPLICATION' &&
                     <Button variant="success" onClick={() => setShowUnregisterConfirmationModal(true)} style = {{marginRight: '5px', marginLeft: '5px'}}>Register Prep</Button>
 
                 }
@@ -71,7 +71,8 @@ const Header = ({ address, logout, title, isPrep, isRegistered, unregisterPrep, 
 const mapStateToProps = state => ({
     address: state.account.address,
     isPrep: state.account.isPrep,
-    isRegistered: state.account.isRegistered
+    isRegistered: state.account.isRegistered,
+    period: state.period.period
 
 })
 
