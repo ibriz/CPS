@@ -133,7 +133,7 @@ const proposalSlice = createSlice({
                         approvedVotes: IconConverter.toBigNumber(proposal.approved_votes),
                         totalVotes: IconConverter.toBigNumber(proposal.total_votes),
                         approvedPercentage: (!proposal.total_votes || parseInt(proposal.total_votes) === 0) ? 0 : ((proposal.approved_votes / proposal.total_votes) * 100),
-                        completedPercentage: IconConverter.toBigNumber(proposal.completed_percentage),
+                        completedPercentage: parseInt(IconConverter.toBigNumber(proposal.completed_percentage)),
                         // if(parseInt(totalVoters) === 0) {
                         //     return 0;
                         //   }
