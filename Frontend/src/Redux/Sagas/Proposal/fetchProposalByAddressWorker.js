@@ -18,33 +18,33 @@ const proposalListStatusMapping = {
 
 function* fetchProposalByAddressWorker({payload}) {
   try {
-  //   const responseActive = yield call(callKeyStoreWallet, {
-  //       method: 'get_active_proposals',
-  //       params: {
-  //           // _status: '_active',
-  //         _wallet_address: payload.walletAddress,
+    const responseActive = yield call(callKeyStoreWallet, {
+        method: 'get_active_proposals',
+        params: {
+            // _status: '_active',
+          _wallet_address: payload.walletAddress,
   
       
-  //     }
-  // });
+      }
+  });
 
-const responseActive = [
-    {
-        _proposal_title: "Active Project 1",
-        _ipfs_key: "proposal3da587f3-49a9-4ad0-8455-733071552845",
-        new_progress_report: '0x00'
-    },
-    {
-        _proposal_title: "Active Project 2",
-        _ipfs_key: "proposal3da587f3-49a9-4ad0-8455-733071552846",
-        new_progress_report: '0x00'
-    },
-    {
-      _proposal_title: "Active Project 2",
-      _ipfs_key: "proposal3da587f3-49a9-4ad0-8455-733071552847",
-      new_progress_report: '0x00'
-  }
-]
+// const responseActive = [
+//     {
+//         _proposal_title: "Active Project 1",
+//         _ipfs_key: "proposal3da587f3-49a9-4ad0-8455-733071552845",
+//         new_progress_report: '0x00'
+//     },
+//     {
+//         _proposal_title: "Active Project 2",
+//         _ipfs_key: "proposal3da587f3-49a9-4ad0-8455-733071552846",
+//         new_progress_report: '0x00'
+//     },
+//     {
+//       _proposal_title: "Active Project 2",
+//       _ipfs_key: "proposal3da587f3-49a9-4ad0-8455-733071552847",
+//       new_progress_report: '0x00'
+//   }
+// ]
 
 // const responsePaused = yield call(callKeyStoreWallet, {
 //     method: '_get_active_proposals',
