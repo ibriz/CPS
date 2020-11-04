@@ -57,7 +57,7 @@ const Aside = ({ collapsed, rtl, toggled, handleToggleSidebar, handleCollapsedCh
             </MenuItem>
             <MenuItem icon={<FaGem />}
               > {<span>Proposals</span>}
-              <Link to="/proposals" />
+              <Link to={process.env.PUBLIC_URL + "/proposals"} />
 
             </MenuItem>
             <MenuItem icon={<FaList />}
@@ -83,7 +83,7 @@ const Aside = ({ collapsed, rtl, toggled, handleToggleSidebar, handleCollapsedCh
               </MenuItem>
               <MenuItem icon={<FaGem />}
                 > {<span>Proposals</span>}
-                <Link to="/proposals" />
+                <Link to={process.env.PUBLIC_URL + "/proposals"} />
 
               </MenuItem>
               <MenuItem icon={<FaList />}

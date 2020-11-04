@@ -22,10 +22,13 @@ export default function* loginPrepWorker() {
     // }
     const isPrep = !!parseInt(IconConverter.toBigNumber(response.isPRep));
     const isRegistered = !!parseInt(IconConverter.toBigNumber(response.isRegistered));
+    const payPenalty = !!parseInt(IconConverter.toBigNumber(response.payPenalty));
+
 
     yield put(loginSuccess({
       isPrep,
-      isRegistered
+      isRegistered,
+      payPenalty
     }));
 
 

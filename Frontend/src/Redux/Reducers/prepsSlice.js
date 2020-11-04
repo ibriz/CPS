@@ -38,9 +38,12 @@ const prepsSlice = createSlice({
         registerPrep() {
             return;
         },
+        payPenalty() {
+            return;
+        },
     },
 })
 
-export const { fetchPrepsRequest, fetchPrepsSuccess, fetchPrepsFailure, unregisterPrep, registerPrep
+export const { fetchPrepsRequest, fetchPrepsSuccess, fetchPrepsFailure, unregisterPrep, registerPrep, payPenalty
 } = prepsSlice.actions;
 export default prepsSlice.reducer;

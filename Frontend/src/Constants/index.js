@@ -86,3 +86,5 @@ export const proposalStatusMapping = [
     },
 
 ];
+
+export const payPenaltyAmount = 10;

@@ -21,7 +21,8 @@ const { submit_proposal,
     vote_progress_report,
     update_period,
     unregister_prep,
-    register_prep } = constants;
+    register_prep,
+    pay_prep_penalty } = constants;
 
 function setTimeoutPromise() {
     return new Promise(function (resolve, reject) {
@@ -254,10 +255,28 @@ export default (event) => {
                     // window.location.reload();
                     NotificationManager.info("Prep Registration Request Sent");
                     break;
+                
+                    case pay_prep_penalty:
+                        getResult({
+                            txHash: payload.result,
+                            failureMessage: "Prep Penalty Pay Failed",
+                            successMessage: "Penalty Paid Successfully",
+        
+                        }, function(){
+        
+                            store.dispatch(loginPrepRequest());
+                            return true;
+                        });
+        
+                        // window.location.reload();
+                        NotificationManager.info("Prep Penalty Sent");
+                        break;
                 default:
                     break;
             }
             break;
+
+            
 
         default:
             return;

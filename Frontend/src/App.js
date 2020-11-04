@@ -10,7 +10,7 @@ function App({ address }) {
   return (
     <>
       <Switch>
-        <Route path="/">
+        <Route path={process.env.PUBLIC_URL + "/"}>
           {address ? <Layout /> :
             <Home />}
         </Route>
