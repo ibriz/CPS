@@ -44,7 +44,7 @@ const Main = ({
           <Route path="/dashboard">
             <Dashboard />
           </Route>
-          <Route path="/proposals">
+          <Route path={process.env.PUBLIC_URL + "/proposals"}>
             {<Proposals />}
           </Route>
           <Route path="/progress-reports">

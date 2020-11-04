@@ -7,5 +7,6 @@ export default {
     vote_progress_report: 32005,
     update_period: 32006,
     unregister_prep: 32007,
-    register_prep: 32008
+    register_prep: 32008,
+    pay_prep_penalty: 32009
 }
