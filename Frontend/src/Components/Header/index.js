@@ -7,7 +7,7 @@ import { logout } from '../../Redux/Reducers/accountSlice';
 import {unregisterPrep, registerPrep} from 'Redux/Reducers/prepsSlice';
 import ConfirmationModal from 'Components/UI/ConfirmationModal';
 
-const Header = ({ address, logout, title, isPrep, isRegistered, unregisterPrep, registerPrep,period }) => {
+const Header = ({ address, logout, title, isPrep, isRegistered, unregisterPrep, registerPrep,period, payPenalty }) => {
 
     const onLogout = () => {
         logout();
@@ -30,13 +30,13 @@ const Header = ({ address, logout, title, isPrep, isRegistered, unregisterPrep, 
             <div className={styles.account}>
                 <span>{`${address.slice(0,4)}...${address.slice(address.length-2)}`}</span>
                 {
-                    isPrep && isRegistered && period === 'APPLICATION' &&
+                    isPrep && isRegistered && !payPenalty && period === 'APPLICATION' &&
                     <Button variant="danger" onClick={() => setShowUnregisterConfirmationModal(true)} style = {{marginRight: '5px', marginLeft: '5px'}}>Unregister Prep</Button>
 
                 }
 
 {
-                    isPrep && !isRegistered && period === 'APPLICATION' &&
+                    isPrep && !isRegistered && !payPenalty && period === 'APPLICATION' &&
                     <Button variant="success" onClick={() => setShowUnregisterConfirmationModal(true)} style = {{marginRight: '5px', marginLeft: '5px'}}>Register Prep</Button>
 
                 }
@@ -60,6 +60,11 @@ const Header = ({ address, logout, title, isPrep, isRegistered, unregisterPrep, 
                 {                 
                         <>
                             <div>Are you sure you want to {isRegistered ? 'unregister from' : 'register to'} Prep List?</div>
+                            {
+                                !isRegistered &&
+                                <div style = {{color: 'red'}}>If you miss voting on voting period you should pay penalty to re-register.</div>
+
+                            }
                         </> 
                 }
 
@@ -72,6 +77,8 @@ const mapStateToProps = state => ({
     address: state.account.address,
     isPrep: state.account.isPrep,
     isRegistered: state.account.isRegistered,
+    payPenalty: state.account.payPenalty,
+
     period: state.period.period
 
 })
