@@ -42,6 +42,10 @@ class CPF_TREASURY_INTERFACE(InterfaceScore):
                              _total_added_installment_count: int = 0) -> None:
         pass
 
+    @interface
+    def return_fund_amount(self) -> None:
+        pass
+
 
 class CPS_TREASURY_INTERFACE(InterfaceScore):
     @interface
@@ -132,6 +136,10 @@ class CPS_Score(IconScoreBase):
     _DEPOSIT_AMOUNT = "deposit_amount"
     _PENALTY_AMOUNT = "penalty_amount"
 
+    _VOTING_PROPOSALS = "voting_proposals"
+    _VOTING_PROGRESS_REPORTS = "voting_progress_reports"
+    _ACTIVE_PROPOSALS = "active_proposals"
+
     _VOTERS = "voters"
     _VOTE = "vote"
     _STAKE_WEIGHT = "stake_weight"
@@ -190,6 +198,10 @@ class CPS_Score(IconScoreBase):
         self.contributors = ArrayDB(self._CONTRIBUTORS, db, value_type=Address)
         self.sponsors = ArrayDB(self._SPONSORS, db, value_type=Address)
         self.voters = ArrayDB(self._VOTERS, db, value_type=Address)
+
+        self.voting_proposals = ArrayDB(self._VOTING_PROPOSALS, db, value_type=str)
+        self.voting_progress_reports = ArrayDB(self._VOTING_PROGRESS_REPORTS, db, value_type=str)
+        self.active_proposals = ArrayDB(self._ACTIVE_PROPOSALS, db, value_type=str)
 
         self._sponsor_pending = ArrayDB(self._SPONSOR_PENDING, db, value_type=str)
         self._pending = ArrayDB(self._PENDING, db, value_type=str)
@@ -498,12 +510,14 @@ class CPS_Score(IconScoreBase):
         if _address not in self.preps_denylist:
             revert(f'{_address} not in denylist.')
 
-        if self.msg.value == self.penalty_amount.get():
-            _prep = self.preps_denylist.pop()
-            if _prep != _address:
-                for prep in range(0, len(self.preps_denylist)):
-                    if self.preps_denylist[prep] == _address:
-                        self.preps_denylist[prep] = _prep
+        if self.msg.value != self.penalty_amount.get():
+            revert(f'Please pay Penalty amount of {self.penalty_amount.get()} ICX to register as a P-Rep.')
+
+        _prep = self.preps_denylist.pop()
+        if _prep != _address:
+            for prep in range(0, len(self.preps_denylist)):
+                if self.preps_denylist[prep] == _address:
+                    self.preps_denylist[prep] = _prep
 
         self._main_preps.put(_address)
         self.PRepPenalty(self.msg.sender,
@@ -828,6 +842,7 @@ class CPS_Score(IconScoreBase):
 
         if self.progress_report_details[_ipfs_key][_report_key][self._STATUS] == self._WAITING:
             self.report_voters_details[_report_key][self._TOTALVOTES] += self.get_stake(str(self.msg.sender))
+            self.report_voters_list[_report_key][self._IPFS_KEY] = _ipfs_key
 
             if self.report_voters_list[_report_key][self._VOTERS] == "":
                 self.report_voters_list[_report_key][self._VOTERS] = str(self.msg.sender)
@@ -1071,11 +1086,11 @@ class CPS_Score(IconScoreBase):
                 if self.proposal_details[proposals][self._CONTRIBUTOR_ADDRESS] == _wallet_address:
                     _report_keys = self.progress_report_keys[proposals]
                     _reports = _report_keys.split(",")
-                    _report = False
+                    _report = True
 
                     for report in _reports:
                         if self.progress_report_details[proposals][report][self._STATUS] == self._WAITING:
-                            _report = True
+                            _report = False
                     _proposals_details = {self._PROJECT_TITLE: self.proposal_details[proposals][self._PROJECT_TITLE],
                                           self._IPFS_KEY: proposals,
                                           "new_progress_report": _report}
@@ -1233,6 +1248,14 @@ class CPS_Score(IconScoreBase):
         rejected_votes = 0
         _approve_voters = 0
         _reject_voters = 0
+        if self.report_voters_details[_report_key][self._TOTALVOTES] is None:
+            self.report_voters_details[_report_key][self._TOTALVOTES] = 0
+
+        if _voters_list == "":
+            return {"data": _vote_status, "approve_voters": _approve_voters, "reject_voters": _reject_voters,
+                    "total_voters": len(self._main_preps), "approved_votes": approved_votes,
+                    "rejected_votes": rejected_votes,
+                    "total_votes": self.report_voters_details[_report_key][self._TOTALVOTES]}
 
         for voters in _voters:
             _voters = {self._IPFS_KEY: self.report_voters_list[_report_key][self._IPFS_KEY],
@@ -1307,25 +1330,37 @@ class CPS_Score(IconScoreBase):
         if self.period_name.get() == "Application Period":
             self.period_name.set("Voting Period")
             self.next_block.set(self.next_block.get() + _BLOCKS_COUNT)
+            self.update_application_result()
 
         else:
             self.period_name.set("Application Period")
             self.next_block.set(self.next_block.get() + _BLOCKS_COUNT)
-            self.update_proposals_result()
-            self.update_budget_adjustments()
+            # self.update_proposals_result()
+            # self.update_budget_adjustments()
             self.update_progress_report_result()
-            self.update_denylist_preps()
+            self.check_progress_report_submission()
+            # self.update_denylist_preps()
 
     def update_application_result(self):
-        pass
+        for x in range(0, len(self._pending)):
+            self.voting_proposals.put(self._pending[x])
+
+        for x in range(0, len(self._waiting)):
+            self.voting_progress_reports.put(self._waiting[x])
+
+        for x in range(0, len(self._active)):
+            self.active_proposals.put(self._active[x])
+
+        for x in range(0, len(self._paused)):
+            self.active_proposals.put(self._paused[x])
 
     def update_proposals_result(self):
         """
         Calculate the votes and update the proposals status on the end of the voting period.
         :return:
         """
-        _pending_proposals = self.get_proposals_keys_by_status(self._PENDING)
-        for proposals in _pending_proposals:
+        for proposal in range(0, len(self.voting_proposals)):
+            proposals = self.voting_proposals.pop()
             _period_count = int(self.proposal_details[proposals][self._PERIOD_COUNT])
             _title = self.proposal_details[proposals][self._PROJECT_TITLE]
             _sponsor_address = self.proposal_details[proposals][self._SPONSOR_ADDRESS]
@@ -1352,7 +1387,7 @@ class CPS_Score(IconScoreBase):
                 self.proposal_details[proposals][self._TIMESTAMP] = str(self.now())
                 _data_out = self.proposals_status[self._PENDING].pop()
                 if _data_out != proposals:
-                    for p in range(len(self.proposals_status[self._PENDING])):
+                    for p in range(0, len(self.proposals_status[self._PENDING])):
                         if self.proposals_status[self._PENDING][p] == proposals:
                             self.proposals_status[self._PENDING][p] = _data_out
 
@@ -1363,7 +1398,7 @@ class CPS_Score(IconScoreBase):
                 self.proposal_details[proposals][self._TIMESTAMP] = str(self.now())
                 _data_out = self.proposals_status[self._PENDING].pop()
                 if _data_out != proposals:
-                    for p in range(len(self.proposals_status[self._PENDING])):
+                    for p in range(0, len(self.proposals_status[self._PENDING])):
                         if self.proposals_status[self._PENDING][p] == proposals:
                             self.proposals_status[self._PENDING][p] = _data_out
                 self._active.put(proposals)
@@ -1378,7 +1413,7 @@ class CPS_Score(IconScoreBase):
                 self.proposal_details[proposals][self._TIMESTAMP] = str(self.now())
                 _data_out = self.proposals_status[self._PENDING].pop()
                 if _data_out != proposals:
-                    for p in range(len(self.proposals_status[self._PENDING])):
+                    for p in range(0, len(self.proposals_status[self._PENDING])):
                         if self.proposals_status[self._PENDING][p] == proposals:
                             self.proposals_status[self._PENDING][p] = _data_out
 
@@ -1396,7 +1431,8 @@ class CPS_Score(IconScoreBase):
         Reward is the progress report is accepted.
         :return:
         """
-        for _reports in self.progress_report_status[self._WAITING]:
+        for reports in range(0, len(self.voting_progress_reports)):
+            _reports = self.voting_progress_reports.pop()
             _report_result = self.get_progress_report_result(_reports)
             _approve_voters = int(_report_result["approve_voters"])
             _reject_voters = int(_report_result["reject_voters"])
@@ -1406,14 +1442,32 @@ class CPS_Score(IconScoreBase):
             _total_voters = int(_report_result["total_voters"])
 
             _ipfs_key = _report_result["data"][0][self._IPFS_KEY]
+
+            if _ipfs_key in self.active_proposals:
+                _data_out = self.active_proposals.pop()
+                if _data_out != _ipfs_key:
+                    for x in range(0, len(self.active_proposals)):
+                        if self.active_proposals[x] == _ipfs_key:
+                            self.active_proposals[x] = _data_out
+
+            _voters_list = self.report_voters_list[_reports][self._VOTERS]
+            _voters = _voters_list.split(",")
+
+            _all_preps = self.get_preps_address()
+            _not_voters = list(set(self._main_preps) - set(_voters))
+            for x in _not_voters:
+                if x not in self.inactive_preps:
+                    self.inactive_preps.put(x)
+
             cps_treasury_score = self.create_interface_score(self.cps_treasury_score.get(), CPS_TREASURY_INTERFACE)
+            cpf_treasury_score = self.create_interface_score(self.cpf_score.get(), CPF_TREASURY_INTERFACE)
 
             if _approve_voters / _total_voters >= _MAJORITY and _approved_votes / _total_votes >= _MAJORITY:
                 self.progress_report_details[_ipfs_key][_reports][self._STATUS] = self._APPROVED
                 self.progress_report_details[_ipfs_key][_reports][self._TIMESTAMP] = str(self.now())
                 _data_out = self.progress_report_status[self._WAITING].pop()
                 if _data_out != _reports:
-                    for p in range(len(self.progress_report_status[self._WAITING])):
+                    for p in range(0, len(self.progress_report_status[self._WAITING])):
                         if self.progress_report_status[self._WAITING][p] == _reports:
                             self.progress_report_status[self._WAITING][p] = _data_out
                 self.progress_report_status[self._APPROVED].put(_reports)
@@ -1423,7 +1477,7 @@ class CPS_Score(IconScoreBase):
                     self.proposal_details[_ipfs_key][self._TIMESTAMP] = str(self.now())
                     _data_out = self.proposals_status[self._PAUSED].pop()
                     if _data_out != _ipfs_key:
-                        for p in range(len(self.proposals_status[self._PAUSED])):
+                        for p in range(0, len(self.proposals_status[self._PAUSED])):
                             if self.proposals_status[self._PAUSED][p] == _ipfs_key:
                                 self.proposals_status[self._PAUSED][p] = _data_out
                     self._active.put(_ipfs_key)
@@ -1436,7 +1490,7 @@ class CPS_Score(IconScoreBase):
                 self.progress_report_details[_ipfs_key][_reports][self._TIMESTAMP] = str(self.now())
                 _data_out = self.progress_report_status[self._WAITING].pop()
                 if _data_out != _reports:
-                    for p in range(len(self.progress_report_status[self._WAITING])):
+                    for p in range(0, len(self.progress_report_status[self._WAITING])):
                         if self.progress_report_status[self._WAITING][p] == _reports:
                             self.progress_report_status[self._WAITING][p] = _data_out
                 self.progress_report_status[self._REJECTED].put(_reports)
@@ -1446,7 +1500,7 @@ class CPS_Score(IconScoreBase):
                     self.proposal_details[_ipfs_key][self._TIMESTAMP] = str(self.now())
                     _data_out = self.proposals_status[self._PAUSED].pop()
                     if _data_out != _ipfs_key:
-                        for p in range(len(self.proposals_status[self._ACTIVE])):
+                        for p in range(0, len(self.proposals_status[self._ACTIVE])):
                             if self.proposals_status[self._ACTIVE][p] == _ipfs_key:
                                 self.proposals_status[self._ACTIVE][p] = _data_out
                     self._paused.put(_ipfs_key)
@@ -1456,36 +1510,90 @@ class CPS_Score(IconScoreBase):
                     self.proposal_details[_ipfs_key][self._TIMESTAMP] = str(self.now())
                     _data_out = self.proposals_status[self._PAUSED].pop()
                     if _data_out != _ipfs_key:
-                        for p in range(len(self.proposals_status[self._PAUSED])):
+                        for p in range(0, len(self.proposals_status[self._PAUSED])):
                             if self.proposals_status[self._PAUSED][p] == _ipfs_key:
                                 self.proposals_status[self._PAUSED][p] = _data_out
                     self._disqualified.put(_ipfs_key)
                     cps_treasury_score.disqualify_project(_ipfs_key)
 
                     _sponsor_deposit_amount = int(self.sponsor_deposit[_ipfs_key][self._DEPOSIT_AMOUNT])
-                    self.icx.transfer(self.cpf_score.get(), _sponsor_deposit_amount)
+                    cpf_treasury_score.icx(_sponsor_deposit_amount).return_fund_amount()
                     self.SponsorBondReturned(self.address, self.cpf_score.get(),
                                              f'Project Disqualified. {_sponsor_deposit_amount // 10 ** 18} ICX returned to CPF Treasury Address.')
 
             else:
+                if self.proposal_details[_ipfs_key][self._STATUS] == self._ACTIVE:
+                    self.proposal_details[_ipfs_key][self._STATUS] = self._PAUSED
+                    self.proposal_details[_ipfs_key][self._TIMESTAMP] = str(self.now())
+                    _data_out = self._active.pop()
+                    if _data_out != _ipfs_key:
+                        for p in range(0, len(self._active)):
+                            if self._active[p] == _ipfs_key:
+                                self._active[p] = _data_out
+                    self._paused.put(_ipfs_key)
+
+                elif self.proposal_details[_ipfs_key][self._STATUS] == self._PAUSED:
+                    self.proposal_details[_ipfs_key][self._STATUS] = self._DISQUALIFIED
+                    self.proposal_details[_ipfs_key][self._TIMESTAMP] = str(self.now())
+                    _data_out = self.proposals_status[self._PAUSED].pop()
+                    if _data_out != _ipfs_key:
+                        for p in range(0, len(self.proposals_status[self._PAUSED])):
+                            if self.proposals_status[self._PAUSED][p] == _ipfs_key:
+                                self.proposals_status[self._PAUSED][p] = _data_out
+                    self._disqualified.put(_ipfs_key)
+
+                    cps_treasury_score.disqualify_project(_ipfs_key)
+
+                    _sponsor_deposit_amount = int(self.sponsor_deposit[_ipfs_key][self._DEPOSIT_AMOUNT])
+                    cpf_treasury_score.icx(_sponsor_deposit_amount).return_fund_amount()
+                    self.SponsorBondReturned(self.address, self.cpf_score.get(),
+                                             f'Project Disqualified. {_sponsor_deposit_amount // 10 ** 18} ICX '
+                                             f'returned to CPF Treasury Address.')
+
                 self.progress_report_details[_ipfs_key][_reports][self._STATUS] = self._REJECTED
                 self.progress_report_details[_ipfs_key][_reports][self._TIMESTAMP] = str(self.now())
                 _data_out = self.progress_report_status[self._WAITING].pop()
                 if _data_out != _reports:
-                    for p in range(len(self.progress_report_status[self._WAITING])):
-                        if self.progress_report_status[self._WAITING][p] == _reports:
-                            self.progress_report_status[self._WAITING][p] = _data_out
-                self.progress_report_status[self._REJECTED].put(_reports)
+                    for p in range(0, len(self._waiting)):
+                        if self._waiting[p] == _reports:
+                            self._waiting[p] = _data_out
+                self._progress_rejected.put(_reports)
 
-                if self.proposal_details[_ipfs_key][self._STATUS] == self._ACTIVE:
-                    self.proposal_details[_ipfs_key][self._STATUS] = self._PAUSED
-                    self.proposal_details[_ipfs_key][self._TIMESTAMP] = str(self.now())
-                    _data_out = self.proposals_status[self._PAUSED].pop()
-                    if _data_out != _ipfs_key:
-                        for p in range(len(self.proposals_status[self._ACTIVE])):
-                            if self.proposals_status[self._ACTIVE][p] == _ipfs_key:
-                                self.proposals_status[self._ACTIVE][p] = _data_out
-                    self._paused.put(_ipfs_key)
+    def check_progress_report_submission(self):
+        """
+        Check if all active and paused proposals submits the progress report
+        :return:
+        """
+        cps_treasury_score = self.create_interface_score(self.cps_treasury_score.get(), CPS_TREASURY_INTERFACE)
+        cpf_treasury_score = self.create_interface_score(self.cpf_score.get(), CPF_TREASURY_INTERFACE)
+        for _ipfs_key in self.active_proposals:
+            if self.proposal_details[_ipfs_key][self._STATUS] == self._ACTIVE:
+                self.proposal_details[_ipfs_key][self._STATUS] = self._PAUSED
+                self.proposal_details[_ipfs_key][self._TIMESTAMP] = str(self.now())
+                _data_out = self._active.pop()
+                if _data_out != _ipfs_key:
+                    for p in range(0, len(self._active)):
+                        if self._active[p] == _ipfs_key:
+                            self._active[p] = _data_out
+                self._paused.put(_ipfs_key)
+
+            elif self.proposal_details[_ipfs_key][self._STATUS] == self._PAUSED:
+                self.proposal_details[_ipfs_key][self._STATUS] = self._DISQUALIFIED
+                self.proposal_details[_ipfs_key][self._TIMESTAMP] = str(self.now())
+                _data_out = self.proposals_status[self._PAUSED].pop()
+                if _data_out != _ipfs_key:
+                    for p in range(0, len(self.proposals_status[self._PAUSED])):
+                        if self.proposals_status[self._PAUSED][p] == _ipfs_key:
+                            self.proposals_status[self._PAUSED][p] = _data_out
+                self._disqualified.put(_ipfs_key)
+
+                cps_treasury_score.disqualify_project(_ipfs_key)
+
+                _sponsor_deposit_amount = int(self.sponsor_deposit[_ipfs_key][self._DEPOSIT_AMOUNT])
+                cpf_treasury_score.icx(_sponsor_deposit_amount).return_fund_amount()
+                self.SponsorBondReturned(self.address, self.cpf_score.get(),
+                                         f'Project Disqualified. {_sponsor_deposit_amount // 10 ** 18} ICX '
+                                         f'returned to CPF Treasury Address.')
 
     def update_budget_adjustments(self):
         """
