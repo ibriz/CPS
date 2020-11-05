@@ -24,7 +24,7 @@ const TabularData = ({ numberOfPendingProposals, numberOfSubmittedProposals, tot
         },
         {
             key: 'Approved Proposals',
-            value: `${projectAmounts.Active.count} (${icxFormat(projectAmounts.Active.amount)} ICX)`
+            value: `${projectAmounts.Active.count + projectAmounts.Paused.count} (${icxFormat(projectAmounts.Active.amount + projectAmounts.Paused.amount)} ICX)`
         },
         {
             key: 'CPF Remaining Funds',
