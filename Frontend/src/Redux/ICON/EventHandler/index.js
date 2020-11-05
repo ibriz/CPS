@@ -37,7 +37,8 @@ async function getResult({ txHash,
 
     try {
 
-        const provider = new HttpProvider('https://bicon.net.solidwallet.io/api/v3');
+        // const provider = new HttpProvider('https://bicon.net.solidwallet.io/api/v3');
+        const provider = new HttpProvider('https://zicon.net.solidwallet.io/api/v3');
         const iconService = new IconService(provider);
         await setTimeoutPromise();
         const result = await iconService.getTransactionResult(txHash).execute();
