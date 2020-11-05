@@ -6,8 +6,11 @@ import { connect } from 'react-redux';
 import { logout } from '../../Redux/Reducers/accountSlice';
 import {unregisterPrep, registerPrep} from 'Redux/Reducers/prepsSlice';
 import ConfirmationModal from 'Components/UI/ConfirmationModal';
+import UserInfoFormModal from './UserInfoFormModal';
 
 const Header = ({ address, logout, title, isPrep, isRegistered, unregisterPrep, registerPrep,period, payPenalty }) => {
+
+    const [modalShow, setModalShow] = React.useState(false);
 
     const onLogout = () => {
         logout();
@@ -28,7 +31,7 @@ const Header = ({ address, logout, title, isPrep, isRegistered, unregisterPrep, 
             <span className={styles.heading}>{title}</span>
 
             <div className={styles.account}>
-                <span>{`${address.slice(0,4)}...${address.slice(address.length-2)}`}</span>
+                <span onClick={() => setModalShow(true)} style = {{cursor: 'pointer'}}>{`${address.slice(0,4)}...${address.slice(address.length-2)}`}</span>
                 {
                     isPrep && isRegistered && !payPenalty && period === 'APPLICATION' &&
                     <Button variant="danger" onClick={() => setShowUnregisterConfirmationModal(true)} style = {{marginRight: '5px', marginLeft: '5px'}}>Unregister Prep</Button>
@@ -69,6 +72,11 @@ const Header = ({ address, logout, title, isPrep, isRegistered, unregisterPrep, 
                 }
 
             </ConfirmationModal>
+
+            <UserInfoFormModal
+                show={modalShow}
+                onHide={() => setModalShow(false)}
+      />
         </Row>
     )
 }
