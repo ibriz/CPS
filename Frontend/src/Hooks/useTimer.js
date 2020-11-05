@@ -50,7 +50,7 @@ const useTimer = () => {
                     second: 0
                 }
             );
-            // dispatch(fetchPeriodDetailsRequest());
+            dispatch(fetchPeriodDetailsRequest());
         }
 
     }
