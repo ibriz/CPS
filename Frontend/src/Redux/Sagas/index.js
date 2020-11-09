@@ -42,7 +42,11 @@ import {
 } from './Fund';
 
 import { fetchPrepWorker, unregisterPrepWorker, registerPrepWorker, payPenaltyWorker } from './PRep';
-import {fetchPeriodDetailsRequestWorker, updatePeriodWorker} from './Period'
+import {fetchPeriodDetailsRequestWorker, updatePeriodWorker} from './Period';
+
+import {fetchUserDataRequestWorker, submitUserDataRequestWorker} from './User';
+
+
 
 import { submitProposalRequest, submitProposalSuccess, fetchProposalListRequest, updateProposalStatus,  fetchProposalDetailRequest, fetchSponsorRequestsListRequest,
   approveSponserRequest,
@@ -61,6 +65,7 @@ import { submitProgressReportRequest, submitProgressReportSuccess, fetchProgress
 import {fetchPeriodDetailsRequest, updatePeriod} from '../Reducers/periodSlice';
 import { fetchPrepsRequest, unregisterPrep, registerPrep, payPenalty } from '../Reducers/prepsSlice';
 import {fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest} from '../Reducers/fundSlice';
+import {fetchUserDataRequest, submitUserDataRequest} from '../Reducers/userSlice';
 import { FiPrinter } from 'react-icons/fi';
 
 function* rootSaga() {
@@ -123,8 +128,10 @@ yield takeEvery(fetchCPFRemainingFundRequest.type, fetchCPFRemainingFundWorker);
 
 yield takeEvery(fetchProjectAmountsRequest.type, fetchProjectAmountsWorker);
 
-yield takeEvery(payPenalty.type, payPenaltyWorker)
+yield takeEvery(payPenalty.type, payPenaltyWorker);
 
+yield takeEvery(fetchUserDataRequest.type, fetchUserDataRequestWorker);
+yield takeEvery(submitUserDataRequest.type, submitUserDataRequestWorker)
 
 
 
