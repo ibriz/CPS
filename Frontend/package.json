@@ -36,7 +36,6 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "onandroid": "node node_modules/react-scripts/scripts/start.js"
-
   },
   "eslintConfig": {
     "extends": "react-app"

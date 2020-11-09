@@ -8,7 +8,7 @@ import {unregisterPrep, registerPrep} from 'Redux/Reducers/prepsSlice';
 import ConfirmationModal from 'Components/UI/ConfirmationModal';
 import UserInfoFormModal from './UserInfoFormModal';
 
-const Header = ({ address, logout, title, isPrep, isRegistered, unregisterPrep, registerPrep,period, payPenalty }) => {
+const Header = ({ address, logout, title, isPrep, isRegistered, unregisterPrep, registerPrep,period, payPenalty, firstName, lastName }) => {
 
     const [modalShow, setModalShow] = React.useState(false);
 
@@ -31,7 +31,7 @@ const Header = ({ address, logout, title, isPrep, isRegistered, unregisterPrep, 
             <span className={styles.heading}>{title}</span>
 
             <div className={styles.account}>
-                <span onClick={() => setModalShow(true)} style = {{cursor: 'pointer'}}>{`${address.slice(0,4)}...${address.slice(address.length-2)}`}</span>
+                <span onClick={() => setModalShow(true)} className = {styles.address }>{firstName ? `${firstName} ${lastName}` : `${address.slice(0,4)}...${address.slice(address.length-2)}`}</span>
                 {
                     isPrep && isRegistered && !payPenalty && period === 'APPLICATION' &&
                     <Button variant="danger" onClick={() => setShowUnregisterConfirmationModal(true)} style = {{marginRight: '5px', marginLeft: '5px'}}>Unregister Prep</Button>
@@ -87,7 +87,9 @@ const mapStateToProps = state => ({
     isRegistered: state.account.isRegistered,
     payPenalty: state.account.payPenalty,
 
-    period: state.period.period
+    period: state.period.period,
+    firstName: state.user.firstName,
+    lastName: state.user.lastName
 
 })
 

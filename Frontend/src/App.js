@@ -1,11 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Layout from './Containers/Layout';
 import Home from './Containers/Home';
 import { Switch, Route} from 'react-router-dom';
 import { connect } from 'react-redux'
 import { NotificationContainer} from 'react-notifications';
+import {fetchUserDataRequest} from 'Redux/Reducers/userSlice';
 
-function App({ address }) {
+function App({ address, fetchUserDataRequest }) {
+
+  useEffect(() => {
+    address && fetchUserDataRequest();
+  }, [address])
 
   return (
     <>
@@ -27,4 +32,8 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(App);
+const mapDispatchToProps = {
+  fetchUserDataRequest
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
