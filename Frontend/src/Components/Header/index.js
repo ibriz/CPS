@@ -7,10 +7,13 @@ import { logout } from '../../Redux/Reducers/accountSlice';
 import {unregisterPrep, registerPrep} from 'Redux/Reducers/prepsSlice';
 import ConfirmationModal from 'Components/UI/ConfirmationModal';
 import UserInfoFormModal from './UserInfoFormModal';
+import useTimer from 'Hooks/useTimer';
 
 const Header = ({ address, logout, title, isPrep, isRegistered, unregisterPrep, registerPrep,period, payPenalty, firstName, lastName }) => {
 
     const [modalShow, setModalShow] = React.useState(false);
+
+    const {isRemainingTimeZero} = useTimer();
 
     const onLogout = () => {
         logout();
@@ -33,13 +36,13 @@ const Header = ({ address, logout, title, isPrep, isRegistered, unregisterPrep, 
             <div className={styles.account}>
                 <span onClick={() => setModalShow(true)} className = {styles.address }>{firstName ? `${firstName} ${lastName}` : `${address.slice(0,4)}...${address.slice(address.length-2)}`}</span>
                 {
-                    isPrep && isRegistered && !payPenalty && period === 'APPLICATION' &&
+                    isPrep && isRegistered && !payPenalty && period === 'APPLICATION' && !isRemainingTimeZero &&
                     <Button variant="danger" onClick={() => setShowUnregisterConfirmationModal(true)} style = {{marginRight: '5px', marginLeft: '5px'}}>Unregister Prep</Button>
 
                 }
 
 {
-                    isPrep && !isRegistered && !payPenalty && period === 'APPLICATION' &&
+                    isPrep && !isRegistered && !payPenalty && period === 'APPLICATION' && !isRemainingTimeZero &&
                     <Button variant="success" onClick={() => setShowUnregisterConfirmationModal(true)} style = {{marginRight: '5px', marginLeft: '5px'}}>Register Prep</Button>
 
                 }

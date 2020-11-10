@@ -71,7 +71,8 @@ const useTimer = () => {
     return {
         period,
         remainingTime,
-        remainingTimeSecond: remainingTimeRedux
+        remainingTimeSecond: remainingTimeRedux,
+        isRemainingTimeZero: (remainingTime.day === 0) && (remainingTime.hour === 0) && (remainingTime.minute === 0) && (remainingTime.second === 0)
     }
 }
 

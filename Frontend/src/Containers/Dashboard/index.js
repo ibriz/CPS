@@ -5,9 +5,12 @@ import ConfirmationModal from 'Components/UI/ConfirmationModal';
 import { payPenalty } from 'Redux/Reducers/prepsSlice';
 import { payPenaltyAmount } from 'Constants';
 import { connect } from 'react-redux';
+import useTimer from 'Hooks/useTimer';
 
-const Dashboard = ({ payPenaltyRequest, payPenalty }) => {
+const Dashboard = ({ payPenaltyRequest, payPenalty, period }) => {
     const [showPayPenaltyConfirmationModal, setShowPayPenaltyConfirmationModal] = useState(false);
+    const {isRemainingTimeZero} = useTimer();
+
     return (
         <Container>
             <Header title="Dashboard" />
@@ -16,11 +19,22 @@ const Dashboard = ({ payPenaltyRequest, payPenalty }) => {
                 <Row style={{ marginTop: '15px' }}>
                     <Col xs="12">
                         <Alert variant="danger">
-                            You have been denyListed. You need to pay the penalty amount of {payPenaltyAmount} ICX to re-register
-                        <br />
-                            <Button variant="info" onClick={setShowPayPenaltyConfirmationModal}>
-                                Pay Penalty
-                        </Button>
+                            {
+                                period === 'APPLICATION' && !isRemainingTimeZero ? 
+                                `You have been denyListed. You need to pay the penalty amount of ${payPenaltyAmount} ICX to re-register.` :
+                                `You have been denyListed. You can pay the penalty amount of ${payPenaltyAmount} ICX in the next Application period to re-register.`
+                            }
+                            
+                            {
+                               period === 'APPLICATION' && !isRemainingTimeZero &&
+                               <>
+                                    <br />
+                                    <Button variant="info" onClick={setShowPayPenaltyConfirmationModal}>
+                                        Pay Penalty
+                                    </Button>
+                               </> 
+                            }
+
 
                             <ConfirmationModal
                                 show={showPayPenaltyConfirmationModal}
@@ -42,7 +56,9 @@ const Dashboard = ({ payPenaltyRequest, payPenalty }) => {
 
 const mapStateToProps = state => (
     {
-        payPenalty: state.account.payPenalty
+        payPenalty: state.account.payPenalty,
+        period: state.period.period,
+
     }
 );
 
