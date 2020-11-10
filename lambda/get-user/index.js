@@ -1,23 +1,25 @@
-const fleekStorage = require('@fleekhq/fleek-storage-js');
+const redis = require('redis');
+const client = redis.createClient(process.env.REDIS_URL);
+
+const { promisify } = require('util');
+const getAsync = promisify(client.get).bind(client);
 
 exports.handler = async (event) => {
     try {
-        let body = JSON.parse(event.body);
-        let responseCode = 200;
+        let statusCode = 200;
 
-        const updatedProposal = await fleekStorage.upload({
-            apiKey: '+p9sArqKr/itlUg+AllYbw==',
-            apiSecret: 'wtwqYMafL5kgXYKJerg66qchF2uksqThzoqAGZEy3Hg=',
-            key: body.ipfsKey,
-            data: JSON.stringify(body),
-        });
+        if (!event.queryStringParameters.address) return new Error('address of the user is required');
+
+        const redisKey = event.queryStringParameters.address;
+
+        const redisResponse = await getAsync(redisKey);
 
         let response = {
-            statusCode: responseCode,
+            statusCode: statusCode,
             headers: {
                 'Access-Control-Allow-Origin': '*'
             },
-            body: JSON.stringify(updatedProposal)
+            body: redisResponse
         };
 
         return response;
