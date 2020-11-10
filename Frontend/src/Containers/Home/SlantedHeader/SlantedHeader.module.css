@@ -11,11 +11,41 @@
 
 }
 
-/* .container {
-    background-image: url('../../../Assets/Images/Intersect.png');
+.slanted {
+    position: relative;
+}
+
+.slanted::before {    
+    content: "";
+
     background-repeat: no-repeat;
-    background-position: top right;
-} */
+    background-position: bottom right;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    opacity: 0.75;
+
+    /* background-image: url('../../../Assets/Images/Intersect4.png');
+    opacity: 0.4;
+    background-size: 600px 240px;
+    background-position: top right; */
+
+    background-image: url('../../../Assets/Images/Intersect2.png');
+    background-size: auto 300px;
+    opacity: 0.35;
+
+    /* background-image: url('../../../Assets/Images/Intersect3.png');
+    background-size: 1000px 450px;
+    opacity: 0.4; */
+
+    /* background-image: url('../../../Assets/Images/Intersect1.png');
+    opacity: 0.4;
+    background-size: auto 300px;
+    background-position: bottom right; */
+
+}
 
 .tabularDataWrapper {
     display: flex;
@@ -36,6 +66,7 @@
     font-size: 16px !important;
     padding-top: 3px !important;
     padding-bottom: 3px !important;
+    
 }
 
 .heading {

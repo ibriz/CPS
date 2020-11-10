@@ -81,7 +81,7 @@ const SlantedHeader = ({ loginRequest, loginPrepRequest }) => {
                         </svg>
 
                     </span>
-                    <div style={{ marginTop: '3px' }}>
+                    <div style={{ marginTop: '3px', zIndex: 1000 }}>
                         {/* <Button variant="outline-light" className = {styles.button} onClick={onClickPrepLogin}>LOGIN PREP</Button>{' '} */}
                         <Button variant="outline-light" className={styles.button} onClick={onClickLogin}>LOGIN</Button>{' '}
 
