@@ -3,28 +3,42 @@ var { v4: uuidv4 } = require('uuid');
 
 exports.handler = async (event) => {
     
-    let body = JSON.parse(event.body);
-    let responseCode = 200;
-    let ipfsKey = event.body.type + uuidv4();
+    try {
+        let body = JSON.parse(event.body);
+        let responseCode = 200;
+        let ipfsKey = event.body.type + uuidv4();
+            
+        body.ipfsKey = ipfsKey;
+            
+        const uploadedProposal = await fleekStorage.upload({
+            apiKey: '+p9sArqKr/itlUg+AllYbw==',
+            apiSecret: 'wtwqYMafL5kgXYKJerg66qchF2uksqThzoqAGZEy3Hg=',
+            key: ipfsKey,
+            data: JSON.stringify(body),
+        });
         
-    body.ipfsKey = ipfsKey;
-		
-	const uploadedProposal = await fleekStorage.upload({
-		apiKey: '+p9sArqKr/itlUg+AllYbw==',
-		apiSecret: 'wtwqYMafL5kgXYKJerg66qchF2uksqThzoqAGZEy3Hg=',
-		key: ipfsKey,
-		data: JSON.stringify(body),
-    });
-    
-    uploadedProposal.ipfsKey = ipfsKey;
-	
-	let response = {
-        statusCode: responseCode,
-        headers: {
-            'Access-Control-Allow-Origin': '*'
-        },
-        body: JSON.stringify(uploadedProposal)
-    };
+        uploadedProposal.ipfsKey = ipfsKey;
         
-    return response;
+        let response = {
+            statusCode: responseCode,
+            headers: {
+                'Access-Control-Allow-Origin': '*'
+            },
+            body: JSON.stringify(uploadedProposal)
+        };
+            
+        return response;
+    } catch (err) {
+
+        return {
+            statusCode: err.statusCode ? err.statusCode : 500,
+            headers: {
+                'Access-Control-Allow-Origin': '*'
+            },
+            body: JSON.stringify({
+                error: err.name ? err.name : 'Exception',
+                message: err.message ? err.message : 'Unknown error',
+            }),
+        };
+    }
 };
