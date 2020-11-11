@@ -35,6 +35,15 @@ const userSlice = createSlice({
             return;
         },
     },
+    extraReducers: {
+        "account/logout": (state, action) => {
+          state.email = null;
+          state.firstName = null;
+          state.lastName = null;
+          state.enableEmailNotification = null;
+        }     
+     }
+    
 })
 
 export const { fetchUserDataRequest, fetchUserDataSuccess, fetchUserDataFailure, 

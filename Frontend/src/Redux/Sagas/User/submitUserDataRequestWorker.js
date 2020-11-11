@@ -5,6 +5,7 @@ import { call, put, select} from 'redux-saga/effects';
 import {submitUserDataSuccess, submitUserDataFailure, fetchUserDataRequest} from '../../Reducers/userSlice';
 import {SUBMIT_USER_DATA_URL} from '../../Constants';
 import {request} from '../helpers';
+import {NotificationManager} from 'react-notifications';
 
 export const getAddress = (state) => state.account.address
 
@@ -21,11 +22,14 @@ function* submitUserDataRequestWorker({payload}) {
       },
       url: SUBMIT_USER_DATA_URL
     });
+    NotificationManager.success("User Data Updated Successfully");
     yield put(submitUserDataSuccess(
     ));
     yield put(fetchUserDataRequest());
   } catch (error) {
+    NotificationManager.error("User Data Update Failed");
     yield put(submitUserDataFailure());
+
   }
 }
 
