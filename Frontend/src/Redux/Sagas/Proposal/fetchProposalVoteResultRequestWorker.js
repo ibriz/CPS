@@ -28,13 +28,15 @@ function* fetchProposalVoteResultRequestWorker({payload}) {
 
     // const response = {
     //   data: Array(10).fill(0).map((_, index) => (  {
-    //         _status:"_sponsor_pending",
+    //         status:"_pending",
     //         _proposal_title :`${payload.status} ${payload.pageNumber}${index} New Proposal`,
-    //         _contributor_address : (index % 2 === 0) ? "hx177b10efe3018961a405cc7c20ee811c552831a5": "hxfd114a60eefa8e2c3de2d00dc5e41b1a0c7e8931",
+    //         address : (index % 2 === 0) ? "hx177b10efe3018961a405cc7c20ee811c552831a5": "hxfd114a60eefa8e2c3de2d00dc5e41b1a0c7e8931",
     //         budget : 10000,
-    //         _timestamp : 1600872145290985,
+    //         vote : (index % 2 === 0) ? "_rejected": "_approved",
     //         _ipfs_hash: "bafybeih63y3v5goi3if4e3yrwsjnc2lv7uiesui2cuamfvvgebki5ewo2e",
-    //           _ipfs_key: "proposal338e7daa-867e-4ea1-995b-b0e118b0036e"
+    //           _ipfs_key: "proposal338e7daa-867e-4ea1-995b-b0e118b0036e",
+    //           _timestamp : 1600872145290985,
+
     //     }
     //     )),
     //     count: 143

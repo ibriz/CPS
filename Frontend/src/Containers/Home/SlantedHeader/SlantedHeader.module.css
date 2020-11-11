@@ -32,18 +32,18 @@
     background-size: 600px 240px;
     background-position: top right; */
 
-    background-image: url('../../../Assets/Images/Intersect2.png');
+    /* background-image: url('../../../Assets/Images/Intersect2.png');
     background-size: auto 300px;
-    opacity: 0.35;
+    opacity: 0.35; */
 
     /* background-image: url('../../../Assets/Images/Intersect3.png');
     background-size: 1000px 450px;
     opacity: 0.4; */
 
-    /* background-image: url('../../../Assets/Images/Intersect1.png');
-    opacity: 0.4;
+    background-image: url('../../../Assets/Images/Intersect1.png');
+    opacity: 0.3;
     background-size: auto 300px;
-    background-position: bottom right; */
+    background-position: bottom right;
 
 }
 
