@@ -34,7 +34,7 @@ const Header = ({ address, logout, title, isPrep, isRegistered, unregisterPrep, 
             <span className={styles.heading}>{title}</span>
 
             <div className={styles.account}>
-                <span onClick={() => setModalShow(true)} className = {styles.address }>{firstName ? `${firstName} ${lastName}` : `${address.slice(0,4)}...${address.slice(address.length-2)}`}</span>
+                <span onClick={() => setModalShow(true)} className = {styles.address }>{(firstName || lastName) ? `${firstName || ''} ${lastName || ''}` : `${address.slice(0,4)}...${address.slice(address.length-2)}`}</span>
                 {
                     isPrep && isRegistered && !payPenalty && period === 'APPLICATION' && !isRemainingTimeZero &&
                     <Button variant="danger" onClick={() => setShowUnregisterConfirmationModal(true)} style = {{marginRight: '5px', marginLeft: '5px'}}>Unregister Prep</Button>
@@ -78,6 +78,7 @@ const Header = ({ address, logout, title, isPrep, isRegistered, unregisterPrep, 
 
             <UserInfoFormModal
                 show={modalShow}
+                setModalShow = {setModalShow}
                 onHide={() => setModalShow(false)}
       />
         </Row>
