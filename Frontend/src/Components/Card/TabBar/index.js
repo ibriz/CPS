@@ -37,6 +37,8 @@ const TabBar = ({ selectedTab, setSelectedTab, searchText, setSearchText, tabs, 
                         </Nav.Item>
                     )
                 }
+
+                <div style = {{flexGrow: 1}}></div>
                 <NavBarInputGroup 
                     placeholder = {placeholder}
                     value = {searchText}
