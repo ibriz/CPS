@@ -14,9 +14,14 @@ const Vote = ({vote}) => {
                 <Col sm="9" className = {styles.infos}>
                     <Row style={{ alignItems: 'center' }} className={styles.firstRow}>
                         {/* <Badge size="xs" variant={badgeColor[selectedTab]} className={styles.badge}>{selectedTab}</Badge>{' '} */}
+                        <Col lg = "6" xs = "12" style = {{paddingLeft: '0px'}}>
                         <LowerCardTitle style = {{fontSize:'14px'}}>{vote.sponsorAddress}</LowerCardTitle>
+                        </Col>
+                        <Col lg = "3" xs = "12">
+
                         <Badge size="xs" variant={proposalStatusMapping.find(mapping => 
                             mapping.name === vote.status)?.badgeColor} className={styles.badge}>{vote.status}</Badge>{' '}
+                        </Col>
 
                     </Row>
                     {/* <Row className={styles.secondRow}>
@@ -30,7 +35,7 @@ const Vote = ({vote}) => {
 
                 </Col>
 
-                <Col sm="3">
+                <Col lg="3" xs = "12" className = {styles.dateContainer}>
                     <LowerCardInfo>{new Date(vote.timestamp / 1000).toLocaleString()}</LowerCardInfo>
 
                 </Col>

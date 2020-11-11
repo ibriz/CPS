@@ -190,4 +190,33 @@
 
   }
 
+  @media screen and (min-width: 992px) {
+    .badge {
+        margin-left: 20px;
+    }
+
+  }
+
+  @media screen and (max-width: 991px) {
+    .firstRow > * {
+        padding-left: 0px !important;
+        margin-top: 3px !important;
+        width: 100%;
+    }
+
+    .dateContainer {
+        padding-left: 0px !important
+    }
+
+
+
+    // .secondRow > *, .firstRow > span:last-child {
+    //     width: 100%;
+    //     margin-top: 3px !important;
+    // }
+
+  }
+
+
+
 
