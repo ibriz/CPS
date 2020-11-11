@@ -7,18 +7,18 @@ function* fetchUserDataRequestWorker({payload}) {
 
     const getAddress = (state) => state.account.address
     const address = yield select(getAddress);
-    // const response = yield call(getRequest, {
-    //   url: `redis/user/${address}`,
-    //   method: 'GET'
-    // });
+    const response = yield call(getRequest, {
+      url: `redis?address=${address}`,
+      method: 'GET'
+    });
 
-    const response = {
-            "email":"tejpant@gmail.com",
-            "address":"hx6c8f76faff8d64e43115eb7cbd8aac3a510c1c5d",
-            "firstName":"Tejasvi Raj",
-            "lastName":"Pant",
-            "enableEmailNotifications": true
-        }
+    // const response = {
+    //         "email":"tejpant@gmail.com",
+    //         "address":"hx6c8f76faff8d64e43115eb7cbd8aac3a510c1c5d",
+    //         "firstName":"Tejasvi Raj",
+    //         "lastName":"Pant",
+    //         "enableEmailNotifications": true
+    //     }
     yield put(fetchUserDataSuccess(
       {
         response,
