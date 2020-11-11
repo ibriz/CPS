@@ -28,7 +28,7 @@ const TabBar = ({ selectedTab, setSelectedTab, searchText, setSearchText, tabs, 
             >
                 {
                     tabs.map((tab, index) =>
-                        <Nav.Item key = {index}>
+                        <Nav.Item key = {index} className = {styles.navItem}>
                             <NavBarTitle
                         onClick = {() => setSelectedTab(tab)}
                         activeCondition = {selectedTab === tab}>

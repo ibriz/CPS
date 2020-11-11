@@ -41,7 +41,7 @@ const ProgressReport = ({ progressReport, selectedTab, showProject = true, onCli
                     </Row>
                 </Col>
 
-                <Col sm="3" className={styles.progressBar} >
+                <Col md="3" xs = "12" className={styles.progressBar} >
                     <ProgressText>{progressReport.approvedPercentage ? progressReport.approvedPercentage.toFixed() : 0}% Approved</ProgressText>
                     <ProgressBar percentage = {progressReport.approvedPercentage} />
                 </Col>
