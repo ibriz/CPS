@@ -109,7 +109,7 @@ const ProgressReportCard = ({progressReportList, fetchProgressReport, walletAddr
                             searchText = {searchText}
                             setSearchText = {setSearchText}
                             tabs = {progressReportStates}
-                            placeholder = "Search Progress Reports"
+                            placeholder = "Search Progress Report"
                             />
 
                         <hr style = {{marginTop: '-9px'}}  />

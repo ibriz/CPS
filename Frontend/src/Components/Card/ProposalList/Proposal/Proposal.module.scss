@@ -44,6 +44,14 @@
     padding-right: 0px !important;
 }
 
+@media screen and (max-width: 767px) {
+    .progressBar {
+        margin-top: 5px;
+    }
+}
+
+
+
 @media screen and (min-width: 500px) {
 
     .proposalInfo {
@@ -185,6 +193,15 @@
     
       }
 
+
+  }
+
+  @media screen and (max-width: 767px) {
+
+           .secondRow > *, .firstRow > span:last-child {
+            width: 100%;
+            margin-top: 3px !important;
+        }
 
   }
 

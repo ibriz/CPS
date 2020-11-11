@@ -113,7 +113,7 @@ const ProposalCard = ({ proposalList, fetchProposalListRequest, walletAddress, t
                                 searchText={searchText}
                                 setSearchText={setSearchText}
                                 tabs={proposalStatesList}
-                                placeholder="Search Proposal by title"
+                                placeholder="Search Proposal"
 
                             />
                             <hr style={{ marginTop: '-9px' }} />

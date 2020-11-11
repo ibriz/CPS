@@ -45,7 +45,7 @@ const Proposal = ({ proposal, selectedTab, onClick }) => {
 
                 </Col>
 
-                <Col sm="3" className={styles.progressBar} >
+                <Col md="3" xs = "12" className={styles.progressBar} >
                     
 
                         {

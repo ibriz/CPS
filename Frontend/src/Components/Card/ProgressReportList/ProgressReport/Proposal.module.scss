@@ -177,5 +177,19 @@
 
   }
 
+
+  @media screen and (max-width: 767px) {
+
+    .secondRow > *, .firstRow > span:last-child {
+     width: 100%;
+     margin-top: 3px !important;
+ }
+
+ .progressBar {
+    margin-top: 5px;
+}
+
+}
+
   
 
