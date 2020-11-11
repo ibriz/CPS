@@ -207,7 +207,10 @@ function DetailsModal(props) {
 
           {/* <Col lg="4" className = "d-none d-lg-block"> */}
           <Col lg="4" xs="12">
-            <Col xs="12">
+            <Col xs="12" style = {{
+                  paddingLeft: '0px',
+                  paddingRight: '0px'
+                }}>
               <DetailsTable
                 title={"Project Details"}
                 data={
@@ -226,7 +229,10 @@ function DetailsModal(props) {
             </Col>
             {
               (progressDetail?.projectTermRevision) &&
-              <Col xs="12">
+              <Col xs="12" style = {{
+                paddingLeft: '0px',
+                paddingRight: '0px'
+              }}>
                 <DetailsTable
                   title={"Project Term Revision"}
                   data={

@@ -200,7 +200,10 @@ function DetailsModal(props) {
 
           {/* <Col lg="4" className = "d-none d-lg-block"> */}
           <Col lg="4" xs="12">
-            <Col xs="12">
+            <Col xs="12" style = {{
+                  paddingLeft: '0px',
+                  paddingRight: '0px'
+                }}>
               <DetailsTable
                 title={"Project Details"}
                 data={
@@ -235,13 +238,22 @@ function DetailsModal(props) {
                     },
                   ]
                 }
+
+
               />
             </Col>
             {
               (proposalDetail?.milestones?.length > 0) &&
-              <Col xs="12">
+              <Col xs="12" style = {{
+                paddingLeft: '0px',
+                paddingRight: '0px'
+              }}>
                 <MilestoneTable
-                  milestones={proposalDetail?.milestones} />
+                  milestones={proposalDetail?.milestones}
+                  style = {{
+                    paddingLeft: '0px',
+                    paddingRight: '0px'
+                  }} />
               </Col>
             }
           </Col>
