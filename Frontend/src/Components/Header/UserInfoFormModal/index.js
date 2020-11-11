@@ -9,7 +9,7 @@ import {submitUserDataRequest} from 'Redux/Reducers/userSlice';
 import ConfirmationModal from 'Components/UI/ConfirmationModal';
 
 
-const UserInfoFormModal = ({user, submitUserDataRequest, ...props}) => {
+const UserInfoFormModal = ({user, submitUserDataRequest, setModalShow, ...props}) => {
 
   const [userData, setUserData] = useState(
     {
@@ -89,7 +89,7 @@ const UserInfoFormModal = ({user, submitUserDataRequest, ...props}) => {
               Last Name
             </Form.Label>
             <Col sm="4" className={styles.inputSameLine}>
-              <Form.Control placeholder="Enter Last Name" size="md" value={userData.lastName} name="lastName" onChange={handleChange} required />
+              <Form.Control placeholder="Enter Last Name" size="md" value={userData.lastName} name="lastName" onChange={handleChange} />
             </Col>
           </Form.Group>
 
@@ -132,7 +132,8 @@ const UserInfoFormModal = ({user, submitUserDataRequest, ...props}) => {
                         {
                             userData
                         }
-                    )
+                    );
+                  setModalShow(false);
                 }} >
                 {                 
                         <>
