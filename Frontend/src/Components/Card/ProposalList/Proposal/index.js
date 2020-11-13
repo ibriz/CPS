@@ -8,6 +8,7 @@ import LowerCardTitle from '../../../UI/LowerCardList/LowerCardTitle';
 import LowerCardInfo from '../../../UI/LowerCardList/LowerCardInfo';
 import Budget from '../../../UI/LowerCardList/Budget';
 import { icxFormat } from 'helpers';
+import {proposalStatusMapping} from 'Constants';
 
 const badgeColor = {
     'Voting': 'warning',
@@ -31,7 +32,7 @@ const Proposal = ({ proposal, selectedTab, onClick }) => {
             <Row className={styles.proposalContainer} onClick={onClick}>
                 <Col sm="9" className={styles.infos}>
                     <Row style={{ alignItems: 'center' }} className={styles.firstRow}>
-                        <Badge size="xs" variant={badgeColor[selectedTab]} className={styles.badge}>{selectedTab}</Badge>{' '}
+                        <Badge size="xs" variant={proposalStatusMapping.find(mapping => mapping.status === proposal._status).badgeColor} className={styles.badge}>{proposalStatusMapping.find(mapping => mapping.status === proposal._status).name}</Badge>{' '}
                         <LowerCardTitle>{proposal._proposal_title}</LowerCardTitle>
                     </Row>
                     <Row className={styles.secondRow}>
