@@ -5,7 +5,7 @@ import NavBarInputGroup from '../../UI/LowerCardNavBar/NavBarInputGroup';
 import { Nav } from 'react-bootstrap';
 
 
-const TabBar = ({ selectedTab, setSelectedTab, searchText, setSearchText, tabs, placeholder }) => {
+const TabBar = ({ selectedTab, setSelectedTab, searchText, setSearchText, tabs, placeholder,maxWidth }) => {
 
     return (
         <div className={styles.proposalNavBar}>
@@ -42,7 +42,8 @@ const TabBar = ({ selectedTab, setSelectedTab, searchText, setSearchText, tabs, 
                 <NavBarInputGroup 
                     placeholder = {placeholder}
                     value = {searchText}
-                    setValue = {setSearchText}/>
+                    setValue = {setSearchText}
+                    maxWidth = {maxWidth}/>
 
             </Nav>
 

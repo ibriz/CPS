@@ -28,8 +28,12 @@ font-weight: 300;
     font-size: 20px;
     display: flex;
     align-items: center;
-    margin-left: 2px !important;
+    // margin-left: 2px !important;
     color: rgba(38, 38, 38, 0.8);
+
+    span {
+        height: 100%;
+    }
 
 }
 
@@ -39,7 +43,4 @@ font-weight: 300;
         min-width: 220px;
     }
 
-    .inputGroupAppend {
-        margin-left: 5px !important;
-    }
 }

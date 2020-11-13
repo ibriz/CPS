@@ -11,6 +11,7 @@ import {
   submitProposalToIPFSWorker,
   submitProposalToScoreWorker,
   fetchProposalListWorker,
+  fetchMyProposalListWorker,
   updateProposalStatusWorker,
   fetchProposalDetailWorker,
   fetchSponsorRequestsListWorker,
@@ -48,7 +49,7 @@ import {fetchUserDataRequestWorker, submitUserDataRequestWorker} from './User';
 
 
 
-import { submitProposalRequest, submitProposalSuccess, fetchProposalListRequest, updateProposalStatus,  fetchProposalDetailRequest, fetchSponsorRequestsListRequest,
+import { submitProposalRequest, submitProposalSuccess, fetchProposalListRequest, fetchMyProposalListRequest, updateProposalStatus,  fetchProposalDetailRequest, fetchSponsorRequestsListRequest,
   approveSponserRequest,
   rejectSponsorRequest,
   saveDraftRequest, fetchDraftsRequest,
@@ -78,6 +79,9 @@ function* rootSaga() {
   yield takeEvery(submitProposalSuccess.type, submitProposalToScoreWorker);
 
   yield takeEvery(fetchProposalListRequest.type, fetchProposalListWorker);
+
+  yield takeEvery(fetchMyProposalListRequest.type, fetchMyProposalListWorker);
+
 
   yield takeEvery(submitProgressReportRequest.type, submitProgressReportToIPFSWorker);
   yield takeEvery(submitProgressReportSuccess.type, submitProgressReportToScoreWorker);
