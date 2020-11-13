@@ -1,0 +1,12 @@
+.card {
+    height: auto;
+    min-height: 100%;
+
+}
+
+.cardBody{
+    height: 200px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+}
