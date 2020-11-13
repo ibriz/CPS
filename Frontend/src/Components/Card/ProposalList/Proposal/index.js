@@ -50,7 +50,7 @@ const Proposal = ({ proposal, selectedTab, onClick }) => {
                     
 
                         {
-                            ["Voting"].includes(selectedTab) &&
+                            ["Voting"].includes(proposalStatusMapping.find(mapping => mapping.status === proposal._status).name) &&
                                 <>
 
                                     <ProgressText>{proposal.approvedPercentage ? `${proposal.approvedPercentage.toFixed()}` : 0}% Stake Approved</ProgressText>
@@ -59,7 +59,7 @@ const Proposal = ({ proposal, selectedTab, onClick }) => {
                         }
 
                         {
-                            ["Active", "Paused"].includes(selectedTab) &&
+                            ["Active", "Paused"].includes(proposalStatusMapping.find(mapping => mapping.status === proposal._status).name) &&
                                 <>
 
                                     <ProgressText>{proposal.completedPercentage ? `${proposal.completedPercentage.toFixed()}` : 0}% Completed</ProgressText>

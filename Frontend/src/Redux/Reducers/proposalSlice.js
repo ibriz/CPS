@@ -30,6 +30,8 @@ const initialState = {
         Draft: []
     },
 
+    myProposalList: [],
+
     totalPages: {
         Active: 0,
         Voting: 0,
@@ -323,6 +325,49 @@ const proposalSlice = createSlice({
         fetchProjectAmountsFailure(state) {
             return;
         },
+
+
+        fetchMyProposalListRequest(state) {
+            return;
+        },
+        fetchMyProposalListSuccess(state, action) {
+            // state.proposalList = action.payload
+            // state.proposalList.
+
+
+            state.myProposalList = action.payload.response.data.map (
+                proposal => (
+                    {
+                        _status: proposal._status,
+                        _proposal_title: proposal._proposal_title,
+                        _contributor_address: proposal._contributor_address,
+                        budget: parseInt(proposal.budget),
+                        _timestamp: proposal._timestamp,
+                        ipfsHash: proposal._ipfs_hash,
+                        ipfsKey: proposal._ipfs_key,
+                        approvedVotes: IconConverter.toBigNumber(proposal.approved_votes),
+                        totalVotes: IconConverter.toBigNumber(proposal.total_votes),
+                        approvedPercentage: (!proposal.total_votes || parseInt(proposal.total_votes) === 0) ? 0 : ((proposal.approved_votes / proposal.total_votes) * 100),
+                        completedPercentage: parseInt(IconConverter.toBigNumber(proposal.percentage_completed)),
+                        // if(parseInt(totalVoters) === 0) {
+                        //     return 0;
+                        //   }
+                        //   return (approvedVoters/totalVoters) * 100;
+                    }
+                )
+            );
+            console.log(fetchProposalListSuccess);
+            // console.log(Math.ceil(IconConverter.toNumber(action.payload.response[0].count) / 10));
+            console.log(action.payload.status);
+            // state.totalPages[action.payload.status] = Math.ceil(IconConverter.toNumber(action.payload.response[0].count) / 10)
+            state.totalPages[action.payload.status] = Math.ceil(IconConverter.toNumber(action.payload.response.count) / 10);
+            state.totalCount[action.payload.status] = IconConverter.toNumber(action.payload.response.count)
+
+            return;
+        },
+        fetchMyProposalListFailure(state) {
+            return;
+        },
     },
 })
 
@@ -337,5 +382,6 @@ export const { submitProposalRequest, submitProposalSuccess, submitProposalFailu
     fetchProposalByAddressRequest, fetchProposalByAddressSuccess, fetchProposalByAddressFailure,
     setModalShowSponsorRequests, setModalShowVoting, 
     fetchVoteResultRequest, fetchVoteResultSuccess, fetchVoteResultFailure,
-    fetchProjectAmountsRequest, fetchProjectAmountsSuccess, fetchProjectAmountsFailure } = proposalSlice.actions;
+    fetchProjectAmountsRequest, fetchProjectAmountsSuccess, fetchProjectAmountsFailure,
+    fetchMyProposalListRequest, fetchMyProposalListSuccess, fetchMyProposalListFailure } = proposalSlice.actions;
 export default proposalSlice.reducer;
