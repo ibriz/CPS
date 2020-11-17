@@ -11,8 +11,8 @@ exports.handler = async (event) => {
         body.ipfsKey = ipfsKey;
             
         const uploadedProposal = await fleekStorage.upload({
-            apiKey: '+p9sArqKr/itlUg+AllYbw==',
-            apiSecret: 'wtwqYMafL5kgXYKJerg66qchF2uksqThzoqAGZEy3Hg=',
+            apiKey: process.env.API_KEY,
+            apiSecret: process.env.API_SECRET,
             key: ipfsKey,
             data: JSON.stringify(body),
         });

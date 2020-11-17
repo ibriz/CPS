@@ -6,8 +6,8 @@ exports.handler = async (event) => {
         let responseCode = 200;
 
         const updatedProposal = await fleekStorage.upload({
-            apiKey: '+p9sArqKr/itlUg+AllYbw==',
-            apiSecret: 'wtwqYMafL5kgXYKJerg66qchF2uksqThzoqAGZEy3Hg=',
+            apiKey: process.env.API_KEY,
+            apiSecret: process.env.API_SECRET,
             key: body.ipfsKey,
             data: JSON.stringify(body),
         });
