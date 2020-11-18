@@ -5,7 +5,7 @@ import {callKeyStoreWallet} from '../../ICON/utils';
 function* submitProgressReportWorker({payload}) {
   try {
     const response = yield call(callKeyStoreWallet, {
-            method: 'get_preps'
+            method: 'get_PReps'
     });
     yield put(fetchPrepsSuccess(response));
   } catch (error) {

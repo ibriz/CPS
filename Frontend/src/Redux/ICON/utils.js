@@ -9,7 +9,7 @@ import constants from './constants';
 // var CPSScore = 'cx724a3cf07c91a12dd7fd4987be130f383168b631';
 // var CPSScore = 'cxdf3c1ea6ba87e21957c63b21a54151a38a6ecb80';
 // var CPSScore = 'cx00c1e2d9b009fca69002c53c1ce3ed377708381e';
-var CPSScore = 'cxa50e3778e53e9476df91e25011e54fe5461dc979';
+var CPSScore = 'cx6bb0e6683dd326165d42289c12b6bd0eaa596cc9';
 
 
 // var testNet = "https://bicon.tracker.solidwallet.io/v3/address/info?address="
@@ -53,8 +53,8 @@ export async function callKeyStoreWallet({
         .params(params)
         .build();
 
-    // const provider = new HttpProvider('https://bicon.net.solidwallet.io/api/v3');
-    const provider = new HttpProvider('https://zicon.net.solidwallet.io/api/v3');
+    const provider = new HttpProvider('https://bicon.net.solidwallet.io/api/v3');
+    // const provider = new HttpProvider('https://zicon.net.solidwallet.io/api/v3');
     const iconService = new IconService(provider);
     console.log("callKeyStoreWallet start");
     const response = await iconService.call(call).execute();
@@ -77,7 +77,7 @@ export function sendTransaction({
     const txnData = txnBuilder
         .from(fromAddress)
         .to(scoreAddress)
-        .nid(IconConverter.toBigNumber(80))
+        .nid(IconConverter.toBigNumber(3))
         .timestamp(new Date().getTime() * 1000)
         .stepLimit(IconConverter.toBigNumber(100000000))
         .version(IconConverter.toBigNumber(3))
