@@ -7,13 +7,14 @@ import ProgressText from '../../UI/ProgressText';
 import { FetchProposalDetailRequest, fetchProposalDetailRequest, approveSponserRequest, rejectSponsorRequest, voteProposal, fetchVoteResultRequest } from 'Redux/Reducers/proposalSlice';
 import { fetchProgressReportByProposalRequest } from 'Redux/Reducers/progressReportSlice';
 import { connect } from 'react-redux';
-import ProgressReportList from './ProgressReportList';
+import ProgressReportList from 'Components/Card/ProgressReportList';
 import { proposalStatusMapping } from '../../../Constants';
 import VoteList from './VoteList';
 import RichTextEditor from 'Components/RichTextEditor';
 import ConfirmationModal from 'Components/UI/ConfirmationModal';
 import { getProposalApprovedPercentage, getProposalApprovedVotersPercentage } from 'Selectors';
 import { icxFormat } from 'helpers';
+import DetailsModalPR from 'Components/Card/DetailsModalProgressReport';
 
 function DetailsModal(props) {
 
@@ -22,13 +23,19 @@ function DetailsModal(props) {
   const [voteReason, setVoteReason] = useState('');
   const [sponsorConfirmationShow, setSponsorConfirmationShow] = React.useState(false);
   const [sponsorVote, setSponsorVote] = useState('');
-
+  const [modalShow, setModalShow] = React.useState(false);
+  const [selectedProgressReport, setSelectedProgressReport] = React.useState();
 
   const [voteConfirmationShow, setVoteConfirmationShow] = React.useState(false);
 
 
   const { proposalDetail, proposal, status, sponsorRequest = false, approveSponserRequest, rejectSponsorRequest, voting = false, voteProposal, progressReportByProposal, votesByProposal, fetchVoteResultRequest, approvedPercentage,
     fetchProgressReportByProposalRequest, period, remainingTime, approvedVoterPercentage, fetchProposalDetail, walletAddress, ...remainingProps } = props;
+
+    const onClickProgressReport = (porgressReport) => {
+      setModalShow(true);
+      setSelectedProgressReport(porgressReport);
+  }
 
   useEffect(() => {
     props.proposal && props.fetchProposalDetail(
@@ -333,7 +340,9 @@ function DetailsModal(props) {
                     <>
                       <ListTitle>Progress Reports</ListTitle>
                       <ProgressReportList
-                        projectReports={progressReportByProposal} />
+                        projectReports={progressReportByProposal}
+                        onClickProgressReport={onClickProgressReport}
+                        />
                     </>
                   ) :
                   (status === 'Voting') ?
@@ -373,6 +382,13 @@ function DetailsModal(props) {
           onConfirm={onSubmitVote} >
           Are you sure you want to {vote} the proposal?
         </ConfirmationModal>
+
+        <DetailsModalPR
+                                show={modalShow}
+                                onHide={() => setModalShow(false)}
+                                progressReport={selectedProgressReport}
+                                // status={selectedTab}
+                            />  
 
       </Modal.Body>
     </Modal>

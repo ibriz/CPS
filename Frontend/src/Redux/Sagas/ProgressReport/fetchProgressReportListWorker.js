@@ -19,7 +19,7 @@ function* submitProgressReportWorker({payload}) {
 
 // const response = {
 //   data: Array(10).fill(0).map((_, index) => (  {
-//         _status:"_sponsor_pending",
+//         _status:"_rejected",
 //         _project_report_title :`${payload.status} ${payload.pageNumber}${index} New Project Report`,
 //         _proposal_title: 'New Proposal',
 //         _contributor_address: 'hxfd114a60eefa8e2c3de2d00dc5e41b1a0c7e8931',
