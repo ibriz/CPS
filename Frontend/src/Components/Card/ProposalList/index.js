@@ -3,7 +3,7 @@ import styles from './ProposalList.module.scss';
 import { Container } from 'react-bootstrap';
 import Proposal from './Proposal';
 
-const ProposalList = ({ proposals, selectedTab, onClickProposal }) => {
+const ProposalList = ({ proposals, selectedTab, onClickProposal, emptyListMessage, proposalPendingPR = false }) => {
 
 
     return (
@@ -14,10 +14,12 @@ const ProposalList = ({ proposals, selectedTab, onClickProposal }) => {
                         key = {proposal.ipfsKey}
                         proposal={proposal}
                         selectedTab={selectedTab}
+                        proposalPendingPR = {proposalPendingPR}
                         onClick={() => onClickProposal(proposal)}
+                        
                     />
 
-                ) : <span className={styles.noProposals}>No {selectedTab} Proposals</span>
+                ) : <span className={styles.noProposals}>{emptyListMessage || `No ${selectedTab} Proposals`}</span>
             }
         </Container>
     )

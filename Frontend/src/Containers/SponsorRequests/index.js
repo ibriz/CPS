@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from '../../Components/Header';
 import {Container} from 'react-bootstrap';
-import SponsorRequestsCard from './SponsorRequestsCard';
+import SponsorRequestsCard from 'Components/SponsorRequestsCard';
 import UpperCard from '../Proposals/UpperCard';
 
 const SponsorRequests = () => {
@@ -11,7 +11,7 @@ const SponsorRequests = () => {
             <UpperCard sponsorRequest/>
 
             <SponsorRequestsCard
-                proposalStatesList = {['Pending', 'Approved', 'Rejected']}
+                proposalStatesList = {['Pending', 'Approved', 'Rejected', 'Disqualified']}
                 initialState = {'Pending'}
             />
         </Container>

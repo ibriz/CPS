@@ -205,4 +205,20 @@
 
   }
 
+  .createProposalButton {
+    font-size: 0.95rem !important;
+    padding: 5px !important;
+}
+
+@media screen and (min-width: 992px) {
+    .createProgressReportButtonContainer {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+}
+
+
+
+
 

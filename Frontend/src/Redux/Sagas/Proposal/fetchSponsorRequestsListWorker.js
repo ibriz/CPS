@@ -7,8 +7,9 @@ import {fetchSponsorRequestsListSuccess, fetchSponsorRequestsListFailure} from '
 
 const proposalListStatusMapping = {
   'Pending': '_sponsor_pending',
-  'Approved': '_pending',
-  'Rejected': '_rejected'
+  'Approved': '_approved',
+  'Rejected': '_rejected',
+  'Disqualified': '_disqualified'
 }
 
 function* fetchSponsorRequestsListWorker({payload}) {

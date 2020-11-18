@@ -56,12 +56,15 @@ const initialState = {
         Pending: [],
         Approved: [],
         Rejected: [],
+        Disqualified: []
     },
 
     totalPagesSponsorRequests: {
         Pending: 0,
         Approved: 0,
         Rejected: 0,
+        Disqualified: 0,
+
     },
 
     proposalByAddress: [],

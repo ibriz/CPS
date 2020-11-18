@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Badge } from 'react-bootstrap';
+import { Row, Col, Badge, Button } from 'react-bootstrap';
 import styles from './Proposal.module.scss';
 
 import ProgressText from '../../../UI/ProgressText';
@@ -9,6 +9,8 @@ import LowerCardInfo from '../../../UI/LowerCardList/LowerCardInfo';
 import Budget from '../../../UI/LowerCardList/Budget';
 import { icxFormat } from 'helpers';
 import {proposalStatusMapping} from 'Constants';
+import ClassNames from 'classnames';
+import {Link} from 'react-router-dom';
 
 const badgeColor = {
     'Voting': 'warning',
@@ -26,11 +28,11 @@ const badgeColor = {
 
 }
 
-const Proposal = ({ proposal, selectedTab, onClick }) => {
+const Proposal = ({ proposal, selectedTab, onClick, proposalPendingPR = false }) => {
     return (
         <>
             <Row className={styles.proposalContainer} onClick={onClick}>
-                <Col sm="9" className={styles.infos}>
+                <Col sm={proposalPendingPR ? "8" : "9"} className={styles.infos}>
                     <Row style={{ alignItems: 'center' }} className={styles.firstRow}>
                         <Badge size="xs" variant={proposalStatusMapping.find(mapping => mapping.status === proposal._status).badgeColor} className={styles.badge}>{proposalStatusMapping.find(mapping => mapping.status === proposal._status).name}</Badge>{' '}
                         <LowerCardTitle>{proposal._proposal_title}</LowerCardTitle>
@@ -45,33 +47,63 @@ const Proposal = ({ proposal, selectedTab, onClick }) => {
                     </Row>
 
                 </Col>
-
-                <Col md="3" xs = "12" className={styles.progressBar} >
+                {
+                                    !proposalPendingPR &&
+                                    <Col md={proposalPendingPR ? "4" : "3"} xs = "12" className={styles.progressBar} >
                     
 
-                        {
-                            ["Voting"].includes(proposalStatusMapping.find(mapping => mapping.status === proposal._status).name) &&
-                                <>
+                                    {
+                                        ["Voting"].includes(proposalStatusMapping.find(mapping => mapping.status === proposal._status).name) &&
+                                            <>
+            
+                                                <ProgressText>{proposal.approvedPercentage ? `${proposal.approvedPercentage.toFixed()}` : 0}% Stake Approved</ProgressText>
+                                                <ProgressBar percentage={proposal.approvedPercentage} />
+                                            </>
+                                    }
+            
+                                    {
+                                        ["Active", "Paused"].includes(proposalStatusMapping.find(mapping => mapping.status === proposal._status).name) && !proposalPendingPR &&
+                                            <>
+            
+                                                <ProgressText>{proposal.completedPercentage ? `${proposal.completedPercentage.toFixed()}` : 0}% Completed</ProgressText>
+                                                <ProgressBar percentage={proposal.completedPercentage} />
+                                            </>
+                                    }
+            
+            
+            
+            
+              
+            
+            
+                            </Col>
+                }
 
-                                    <ProgressText>{proposal.approvedPercentage ? `${proposal.approvedPercentage.toFixed()}` : 0}% Stake Approved</ProgressText>
-                                    <ProgressBar percentage={proposal.approvedPercentage} />
-                                </>
-                        }
+{
+                                    proposalPendingPR &&
+                                    <Col lg="4" xs = "12" className={ClassNames(styles.progressBar, styles.createProgressReportButtonContainer)} >
+            
+                                    {
+                                        ["Active", "Paused"].includes(proposalStatusMapping.find(mapping => mapping.status === proposal._status).name) && proposalPendingPR &&
+                                            <>
+                                                <Link to={{
+                                                        pathname: "/newProgressReport",
+                                                        // search: "?sort=name",
+                                                        // hash: "#the-hash",
+                                                        ipfsKey: proposal.ipfsKey
+                                                    }}>
+                                                <Button variant="info" className={styles.createProposalButton} >CREATE NEW PROGRESS REPORT</Button>
+                                                </Link>
+                                            </>
+                                    }
+            
+            
+              
+            
+            
+                            </Col>
+                }
 
-                        {
-                            ["Active", "Paused"].includes(proposalStatusMapping.find(mapping => mapping.status === proposal._status).name) &&
-                                <>
-
-                                    <ProgressText>{proposal.completedPercentage ? `${proposal.completedPercentage.toFixed()}` : 0}% Completed</ProgressText>
-                                    <ProgressBar percentage={proposal.completedPercentage} />
-                                </>
-                        }
-
-
-  
-
-
-                </Col>
 
             </Row>
 

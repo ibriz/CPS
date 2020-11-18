@@ -12,9 +12,14 @@ import { fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest } from 'Redux
 import { fetchProjectAmountsRequest } from 'Redux/Reducers/proposalSlice';
 import styles from './Dashboard.module.scss';
 import MyProposalCard from 'Components/MyProposalCard';
+import ProposalPendingPRCard from 'Components/ProposalPendingPRCard';
+import SponsorRequestsCard from 'Components/SponsorRequestsCard';
+import VotingCard from 'Components/VotingCard';
 
 
-const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfRemainingFunds, cpfScoreAddress, fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, fetchProjectAmountsRequest, isPrep, isRegisteted }) => {
+
+
+const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfRemainingFunds, cpfScoreAddress, fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, fetchProjectAmountsRequest, isPrep, isRegistered }) => {
     const [showPayPenaltyConfirmationModal, setShowPayPenaltyConfirmationModal] = useState(false);
     const { isRemainingTimeZero } = useTimer();
 
@@ -91,22 +96,46 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
             </Row>
 
             {
-                (!isPrep ||  !isRegisteted) && 
+                (!isPrep ||  !isRegistered) && period === 'APPLICATION' &&
                 <>
                     <div className = {styles.myProposalHeading}>Proposals Pending Progress Report</div>
+
+                    <ProposalPendingPRCard />
+                </>
+            }
+
+
+            {
+                (!isPrep ||  !isRegistered) && 
+                <>
+                    <div className = {styles.myProposalHeading}>My Proposals</div>
 
                     <MyProposalCard />
                 </>
             }
-            
 
-            {
-                (!isPrep ||  !isRegisteted) && 
+
+{
+                (isPrep ||  isRegistered) && 
                 <>
-                                        <div className = {styles.myProposalHeading}>My Proposals</div>
+                    <div className = {styles.myProposalHeading}>Sponsor Requests</div>
 
-                    <MyProposalCard />
+                    <SponsorRequestsCard
+                        proposalStatesList = {['Pending', 'Approved', 'Rejected', 'Disqualified']}
+                        initialState = {'Pending'} />
                 </>
+            }
+
+{
+                (isPrep ||  isRegistered) && 
+                <>
+                    <div className = {styles.myProposalHeading}>Voting</div>
+
+                    <VotingCard
+                proposalStatesList = {['Proposals', 'Progress Reports']}
+                initialState = {'Proposals'}
+            />
+            </>
             }
 
 
@@ -127,7 +156,7 @@ const mapStateToProps = state => (
         cpfRemainingFunds: state.fund.cpfRemainingFunds,
         cpfScoreAddress: state.fund.cpfScoreAddress,
         isPrep: state.account.isPrep,
-        isRegisteted: state.account.isRegisteted
+        isRegistered: state.account.isRegistered
 
 
     }
