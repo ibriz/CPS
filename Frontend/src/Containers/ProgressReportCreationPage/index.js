@@ -24,7 +24,8 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
 
     const {
         draftProgressReport,
-        isDraft
+        isDraft,
+        ipfsKey
     } = location;
     const [progressReport, setProposal] = useState(
         {
@@ -42,6 +43,15 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
         }
     );
     let [submissionConfirmationShow, setSubmissionConfirmationShow] = React.useState(false);
+
+    useEffect(() => {
+        setProposal(proposal => (
+            {
+                ...progressReport,
+                projectName: ipfsKey
+            }
+        ))
+    }, [ipfsKey])
 
 
     useEffect(() => {

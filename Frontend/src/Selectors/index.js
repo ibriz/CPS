@@ -1,4 +1,5 @@
-import { createSelector } from 'reselect'
+import { createSelector } from 'reselect';
+import {proposalStatusMapping} from 'Constants';
 
 const getProposalList = state => state.proposals.proposalList
 const getWalletAddress = state => state.account.address
@@ -77,5 +78,23 @@ export const getNewProgressReportInfo = createSelector(
       totalProgressReportCount,
       canCreateNewProgressReport: canCreateNewProgressReportCount > 0
     }
+  }
+);
+
+
+const getMyProposals = state => state.proposals.myProposalList
+
+
+export const getProposalPendingProgressReport = createSelector(
+  [getProposalByAddress, getMyProposals],
+  (proposalByAddress, myProposals) => {
+
+    const activePausedProposals = myProposals.filter(proposal => {
+      const status = proposalStatusMapping.find(mapping => mapping.status === proposal._status).name;
+      return (status === 'Active' || status === 'Paused' );
+
+    });
+    const proposalPendingProgressReport = activePausedProposals.filter(proposal => proposalByAddress.find(item => item.ipfsKey === proposal.ipfsKey)?.newProgressReport === true );
+    return proposalPendingProgressReport;
   }
 );

@@ -21,7 +21,7 @@ function* fetchProposalByAddressWorker({payload}) {
     const responseActive = yield call(callKeyStoreWallet, {
         method: 'get_active_proposals',
         params: {
-            // _status: '_active',
+            _status: '_active',
           _wallet_address: payload.walletAddress,
   
       
@@ -30,20 +30,11 @@ function* fetchProposalByAddressWorker({payload}) {
 
 // const responseActive = [
 //     {
-//         _proposal_title: "Active Project 1",
-//         _ipfs_key: "proposal3da587f3-49a9-4ad0-8455-733071552845",
-//         new_progress_report: '0x00'
+//         _proposal_title: "Hello Icon",
+//         _ipfs_key: "undefined46c3b07a-2f67-4caa-bc88-6290da31901d",
+//         new_progress_report: '0x01'
 //     },
-//     {
-//         _proposal_title: "Active Project 2",
-//         _ipfs_key: "proposal3da587f3-49a9-4ad0-8455-733071552846",
-//         new_progress_report: '0x00'
-//     },
-//     {
-//       _proposal_title: "Active Project 2",
-//       _ipfs_key: "proposal3da587f3-49a9-4ad0-8455-733071552847",
-//       new_progress_report: '0x00'
-//   }
+
 // ]
 
 // const responsePaused = yield call(callKeyStoreWallet, {
