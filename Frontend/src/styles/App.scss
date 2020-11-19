@@ -1,5 +1,16 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
-@import url('~bootstrap/dist/css/bootstrap.min.css');
+
+
+
+// $theme-colors: (
+//   "info": black,
+//   "primary": black,
+//   "success": black,
+
+
+// );
+
+@import '~bootstrap/scss/bootstrap';
 
 $sidebar-bg-color: #1AAABA;
 $submenu-bg-color: rgba(255, 255, 255, 0.05);
