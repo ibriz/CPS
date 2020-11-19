@@ -21,7 +21,7 @@ function* fetchProposalByAddressWorker({payload}) {
     const responseActive = yield call(callKeyStoreWallet, {
         method: 'get_active_proposals',
         params: {
-            _status: '_active',
+            // _status: '_active',
           _wallet_address: payload.walletAddress,
   
       
