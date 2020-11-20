@@ -1,7 +1,8 @@
 import React from 'react';
 import styles from './Home.module.scss';
 import SlantedHeader from './SlantedHeader';
-import ProposalCard from '../../Components/ProposalCard'
+import ProposalCard from '../../Components/ProposalCard';
+import Footer from 'Components/Footer';
 
 const Home = () => {
     return (
@@ -14,6 +15,8 @@ const Home = () => {
                 />
 
             </div>
+            
+
         </div>
     )
 }

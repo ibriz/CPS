@@ -26,10 +26,16 @@ body {
   height: 100vh;
   color: #353535;
   font-family: 'Montserrat', sans-serif;
+  background: linear-gradient(0deg, rgba(38, 38, 38, 0.05), rgba(38, 38, 38, 0.05)), #FFFFFF;
 }
 
 #root {
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+
 }
 
 .app {

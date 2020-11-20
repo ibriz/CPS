@@ -5,6 +5,7 @@ import { Switch, Route} from 'react-router-dom';
 import { connect } from 'react-redux'
 import { NotificationContainer} from 'react-notifications';
 import {fetchUserDataRequest} from 'Redux/Reducers/userSlice';
+import Footer from 'Components/Footer';
 
 function App({ address, fetchUserDataRequest }) {
 
@@ -16,8 +17,14 @@ function App({ address, fetchUserDataRequest }) {
     <>
       <Switch>
         <Route path={process.env.PUBLIC_URL + "/"}>
+          <>
           {address ? <Layout /> :
-            <Home />}
+          <>
+            <Home />
+            <Footer />
+
+          </>}
+            </>
         </Route>
       </Switch>
       <NotificationContainer />
