@@ -14,6 +14,7 @@ import SponsorRequests from '../SponsorRequests';
 import Voting from '../Voting';
 import BackedProjects from '../BackedProjects';
 import { connect } from 'react-redux';
+import Footer from 'Components/Footer';
 
 const Main = ({
   handleToggleSidebar,
@@ -34,6 +35,7 @@ const Main = ({
   )
 
   return (
+    <>
     <main>
       <div className="btn-toggle" onClick={() => handleToggleSidebar(true)}>
         <FaBars />
@@ -70,11 +72,15 @@ const Main = ({
             <Dashboard />
           </Route>
         </Switch>
+
+        {/* <Footer /> */}
+        {/* <Footer /> */}
       </div>
 
 
 
     </main>
+    </>
   );
 };
 

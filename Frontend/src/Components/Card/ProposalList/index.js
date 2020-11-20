@@ -7,7 +7,7 @@ const ProposalList = ({ proposals, selectedTab, onClickProposal, emptyListMessag
 
 
     return (
-        <Container fluid>
+        <Container fluid style = {proposals.length ? {} : {minHeight: '150px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
             {
                 proposals.length ? proposals.map((proposal) =>
                     <Proposal

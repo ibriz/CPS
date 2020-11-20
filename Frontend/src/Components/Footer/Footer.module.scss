@@ -1,0 +1,63 @@
+.socialLink {
+    background: url(https://icon.foundation/resources/image/common.png?v=190425) left top no-repeat;
+    background-size: 500px auto;
+    display: block;
+    width: 43px;
+    height: 43px;
+    margin-left: 5px;
+}
+
+a:first-child > span.socialLink {
+    margin-left: 0px !important
+}
+
+.medium {
+    background-position: 0px -300px;
+}
+
+.twitter {
+    background-position: -54px -300px;
+}
+
+.facebook {
+    background-position: -108px -300px;
+}
+
+.github {
+    background-position: -162px -300px;
+}
+
+.reddit {
+    background-position: -216px -300px;
+}
+
+.kakao {
+    background-position: -270px -300px;
+}
+
+.telegram {
+    background-position: -324px -300px;
+}
+
+
+.footerColumn {
+    padding-left: 40px !important;  
+}
+
+.firstRow {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+
+@media screen and (min-width: 768px) {
+    .links {
+        padding-left: 120px !important;
+    }
+
+    .firstRow {
+        padding-top: 50px;
+        padding-bottom: 60px;
+    }
+
+}
