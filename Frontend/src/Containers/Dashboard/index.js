@@ -22,7 +22,7 @@ import {fetchExpectedGrantRequest} from 'Redux/Reducers/fundSlice';
 
 const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfRemainingFunds, cpfScoreAddress, fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, fetchProjectAmountsRequest, isPrep, isRegistered, myProposalList, fetchExpectedGrantRequest, expectedGrant, sponsorBond, totalCountSponsorRequests, remainingVotesProposal, remainingVotesPR }) => {
     const [showPayPenaltyConfirmationModal, setShowPayPenaltyConfirmationModal] = useState(false);
-    const { isRemainingTimeZero, highestSignificantTime } = useTimer();
+    const { isRemainingTimeZero, highestSignificantTime, highestSignificantTimeForGrant } = useTimer();
 
     let cardInfo;
 
@@ -42,7 +42,7 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
             },
             {
                 color: '#304C89',
-                title: `Disbursement Due in ${highestSignificantTime.value} ${highestSignificantTime.text}`,
+                title: `Disbursement Due in ${highestSignificantTimeForGrant.value} ${highestSignificantTimeForGrant.text}`,
                 // value={`${icxFormat(cpfRemainingFunds, true)} ICX`} 
                 value: `${expectedGrant} ICX`
             },
@@ -69,7 +69,7 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
             },
             {
                 color: '#304C89',
-                title: `Sponsor Reward in  ${highestSignificantTime.value} ${highestSignificantTime.text}`,
+                title: `Sponsor Reward in  ${highestSignificantTimeForGrant.value} ${highestSignificantTimeForGrant.text}`,
                 // value={`${icxFormat(cpfRemainingFunds, true)} ICX`} 
                 value: `${expectedGrant} ICX`
             },
