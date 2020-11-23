@@ -7,7 +7,14 @@ const useTimer = () => {
     const remainingTimeRedux = useSelector(state => state.period.remainingTime);
     const period = useSelector(state => state.period.period);
     const timestampRedux = useSelector(state => state.period.timestamp);
+    const periodSpan = useSelector(state => state.period.periodSpan);
     const [remainingTime, setRemainingTime] = useState({
+        day: 0,
+        hour: 0,
+        minute: 0,
+        second: 0
+    });
+    const [remainingTimeForGrant, setRemainingTimeForGrant] = useState({
         day: 0,
         hour: 0,
         minute: 0,
@@ -15,11 +22,36 @@ const useTimer = () => {
     })
     const dispatch = useDispatch();
 
-    function calculateRemainingTime() {
+
+    const getHighestSignificantTime = (remainingTime) => {
+
+        let highestSignificantTime = {
+            text: 'second',
+            value: 0
+        }
+
+        if (remainingTime.day !== 0) {
+            highestSignificantTime.text = 'day' + (remainingTime.day > 1 ? 's': '');
+            highestSignificantTime.value = remainingTime.day
+        } else if (remainingTime.hour !== 0) {
+            highestSignificantTime.text = 'hour' + (remainingTime.hour > 1 ? 's': '');
+            highestSignificantTime.value = remainingTime.hour
+        } else if (remainingTime.minute !== 0) {
+            highestSignificantTime.text = 'minute' + (remainingTime.minute > 1 ? 's': '');
+            highestSignificantTime.value = remainingTime.minute
+        } else {
+            highestSignificantTime.text = 'second' + (remainingTime.second > 1 ? 's': '');
+            highestSignificantTime.value = remainingTime.second
+        }
+
+        return highestSignificantTime;
+    }
+
+    function calculateRemainingTime(remainingTime, setRemainingTime) {
 
         let timestamp = Math.floor(Date.now() / 1000);
-        var d = remainingTimeRedux - (timestamp - timestampRedux);
-        if (remainingTimeRedux > 0 && d > 0) {
+        var d = remainingTime - (timestamp - timestampRedux);
+        if (remainingTime > 0 && d > 0) {
             console.log("timestampRedux");
             var r = {};                                                                
             var s = {                                                                 
@@ -61,19 +93,29 @@ const useTimer = () => {
         value: 0
     }
 
-    if (remainingTime.day !== 0) {
-        highestSignificantTime.text = 'day' + (remainingTime.day > 1 ? 's': '');
-        highestSignificantTime.value = remainingTime.day
-    } else if (remainingTime.hour !== 0) {
-        highestSignificantTime.text = 'hour' + (remainingTime.hour > 1 ? 's': '');
-        highestSignificantTime.value = remainingTime.hour
-    } else if (remainingTime.minute !== 0) {
-        highestSignificantTime.text = 'minute' + (remainingTime.minute > 1 ? 's': '');
-        highestSignificantTime.value = remainingTime.minute
-    } else {
-        highestSignificantTime.text = 'second' + (remainingTime.second > 1 ? 's': '');
-        highestSignificantTime.value = remainingTime.second
+    let highestSignificantTimeForGrant = {
+        text: 'second',
+        value: 0
     }
+
+
+    highestSignificantTime = getHighestSignificantTime(remainingTime);
+    highestSignificantTimeForGrant = getHighestSignificantTime(remainingTimeForGrant);
+
+
+    // if (remainingTime.day !== 0) {
+    //     highestSignificantTime.text = 'day' + (remainingTime.day > 1 ? 's': '');
+    //     highestSignificantTime.value = remainingTime.day
+    // } else if (remainingTime.hour !== 0) {
+    //     highestSignificantTime.text = 'hour' + (remainingTime.hour > 1 ? 's': '');
+    //     highestSignificantTime.value = remainingTime.hour
+    // } else if (remainingTime.minute !== 0) {
+    //     highestSignificantTime.text = 'minute' + (remainingTime.minute > 1 ? 's': '');
+    //     highestSignificantTime.value = remainingTime.minute
+    // } else {
+    //     highestSignificantTime.text = 'second' + (remainingTime.second > 1 ? 's': '');
+    //     highestSignificantTime.value = remainingTime.second
+    // }
 
 
     useEffect(() => {
@@ -81,10 +123,15 @@ const useTimer = () => {
         if (!remainingTimeRedux || !period || !timestampRedux) {
             dispatch(fetchPeriodDetailsRequest());
         }
-        calculateRemainingTime();
-        const interval = setInterval(() => calculateRemainingTime(), 1000);
- 
+        calculateRemainingTime(remainingTimeRedux, setRemainingTime);
 
+        calculateRemainingTime(remainingTimeRedux + periodSpan, setRemainingTimeForGrant);
+
+        const interval = setInterval(() => {
+            calculateRemainingTime(remainingTimeRedux, setRemainingTime);
+            calculateRemainingTime(remainingTimeRedux + (period === 'APPLICATION' ? periodSpan : 0), setRemainingTimeForGrant);
+        }, 1000);
+    
         return () => clearInterval(interval);
     }, [timestampRedux, remainingTimeRedux])
 
@@ -93,7 +140,10 @@ const useTimer = () => {
         remainingTime,
         remainingTimeSecond: remainingTimeRedux,
         isRemainingTimeZero: (remainingTime.day === 0) && (remainingTime.hour === 0) && (remainingTime.minute === 0) && (remainingTime.second === 0),
-        highestSignificantTime
+        highestSignificantTime,
+        remainingTimeForGrant,
+        highestSignificantTimeForGrant
+
     }
 }
 
