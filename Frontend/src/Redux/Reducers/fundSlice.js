@@ -3,9 +3,12 @@ import {IconConverter} from 'icon-sdk-js';
 
 const initialState = {
     cpfRemainingFunds: 0,
-    cpfScoreAddress: null
-};
+    cpfScoreAddress: null,
 
+    expectedGrant: 0,
+    sponsorBond: 0
+
+};
 
 
 const fundSlice = createSlice({
@@ -38,10 +41,27 @@ const fundSlice = createSlice({
         fetchCPFRemainingFundFailure() {
             return;
         },
+
+
+        fetchExpectedGrantRequest() {
+            return;
+        },
+        fetchExpectedGrantSuccess(state, action) {
+            state.expectedGrant = IconConverter.toBigNumber(action.payload.response.total_amount);
+            state.sponsorBond = IconConverter.toBigNumber(action.payload.response.sponsor_bond);
+
+            // state.cpfScoreAddress = action.payload.response;
+
+            return;
+        },
+        fetchExpectedGrantFailure() {
+            return;
+        },
     },
 })
 
 export const { fetchCPFScoreAddressRequest, fetchCPFScoreAddressSuccess, fetchCPFScoreAddressFailure,
-    fetchCPFRemainingFundRequest, fetchCPFRemainingFundSuccess, fetchCPFRemainingFundFailure
+    fetchCPFRemainingFundRequest, fetchCPFRemainingFundSuccess, fetchCPFRemainingFundFailure,
+    fetchExpectedGrantRequest, fetchExpectedGrantSuccess, fetchExpectedGrantFailure
 } = fundSlice.actions;
 export default fundSlice.reducer;

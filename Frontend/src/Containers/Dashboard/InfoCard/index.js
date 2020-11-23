@@ -2,13 +2,13 @@ import React from 'react';
 import { Row, Col, Card } from 'react-bootstrap';
 import styles from './InfoCard.module.scss';
 
-const InfoCard = ({bg = "secondary", title, value}) => {
+const InfoCard = ({bg = "secondary", title, value, color = '#FF0000'}) => {
     return (
-        <Card bg = {bg} text={(bg === 'light' || bg === 'warning') ? 'dark' : 'white'} className = {styles.card} style = {{height: 'auto', minHeight: '100%'}}
+        <Card bg = {bg}className = {styles.card} style = {{height: 'auto', minHeight: '100%'}}
         >
-            <Card.Body className = {styles.cardBody}>
-                <Card.Title style = {{textAlign: 'center', fontSize: '23px'}}>{value}</Card.Title>
-                <Card.Text style = {{fontSize: '18px', textAlign: 'center'}}>
+            <Card.Body className = {styles.cardBody} style= {{color: color, border: `1px solid ${color}`}} >
+                <Card.Title style = {{textAlign: 'center', fontSize: '2rem', fontWeight: 700}}>{value}</Card.Title>
+                <Card.Text style = {{fontSize: '0.875rem', textAlign: 'center', fontWeight: 500}}>
                     {title}
                  </Card.Text>
 
