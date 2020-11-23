@@ -113,7 +113,8 @@ const initialState = {
     error: null,
     votesByProgressReport: [],
 
-    progressReportByProposal: []
+    progressReportByProposal: [],
+    remainingVotes: []
 };
 
 const proposalSlice = createSlice({
@@ -254,6 +255,33 @@ const proposalSlice = createSlice({
         fetchProgressReportByProposalFailure(){
             return;
         },
+
+
+        fetchRemainingVotesPRSuccess(state, action) {
+            // state.progressReportList = action.payload
+            // state.progressReportList = progressReportList.map(progressReport);
+
+                state.remainingVotes = action.payload.response.map (
+                    progressReport => (
+                        {
+                            status: progressReport._status,
+                            progressReportTitle: progressReport._project_report_title,
+                            projectTitle: progressReport._proposal_title,
+                            contributorAddress: progressReport._contributor_address,
+                            timestamp: progressReport._timestamp,
+                            ipfsHash: progressReport._ipfs_hash,
+                            reportKey: progressReport._report_key,
+                            proposalKey: progressReport._ipfs_key,
+                            approvedVotes: IconConverter.toBigNumber(progressReport.approved_votes),
+                            totalVotes: IconConverter.toBigNumber(progressReport.total_votes),
+                            approvedPercentage: (!progressReport.total_votes || parseInt(progressReport.total_votes) === 0) ? 0 : ((progressReport.approved_votes / progressReport.total_votes) * 100)
+                        }
+                    )
+                );
+
+        },
+
+
 
     },
 })
