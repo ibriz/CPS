@@ -4,7 +4,7 @@ import styles from './ProposalCard.module.scss';
 import TabBar from 'Components/Card/TabBar';
 import ProposalList from 'Components/Card/ProposalList';
 import { connect } from 'react-redux';
-import { fetchProposalListRequest,setModalShowVoting } from 'Redux/Reducers/proposalSlice';
+import { fetchProposalListRequest,setModalShowVoting, fetchRemainingVotesRequest } from 'Redux/Reducers/proposalSlice';
 import Pagination from 'Components/Card/Pagination';
 import proposalStates from './proposalStates';
 // import { select } from 'redux-saga/effects';
@@ -15,7 +15,7 @@ import {fetchProgressReportListRequest, setModalShowVotingPR} from 'Redux/Reduce
 import DetailsModalProgressReport from 'Components/Card/DetailsModalProgressReport';
 
 
-const VotingCard = ({ proposalList, fetchProposalListRequest, walletAddress, totalPages, proposalStatesList, initialState, fetchProgressReport, progressReportList,modalShow, setModalShow, modalShowPR, setModalShowPR }) => {
+const VotingCard = ({ proposalList, fetchProposalListRequest, walletAddress, totalPages, proposalStatesList, initialState, fetchProgressReport, progressReportList,modalShow, setModalShow, modalShowPR, setModalShowPR, fetchRemainingVotesRequest, remainingVotesProposal, remainingVotesPR }) => {
 
     const [selectedTab, setSelectedTab] = useState(initialState);
     const [filteredProposalList, setFilteredProposalList] = useState(proposalList);
@@ -44,35 +44,52 @@ const VotingCard = ({ proposalList, fetchProposalListRequest, walletAddress, tot
     }
 
     useEffect (() => {
-        fetchProgressReport(
+        // fetchProgressReport(
+        //     {
+        //         status: status,
+        //         walletAddress: walletAddress || wallet.getAddress(),
+        //         pageNumber: pageNumber?.[selectedTab] ?? 1
+        //     }        
+        // );
+        fetchRemainingVotesRequest(
             {
-                status: status,
-                walletAddress: walletAddress || wallet.getAddress(),
-                pageNumber: pageNumber?.[selectedTab] ?? 1
+                type: "progress_report"
             }        
         );
-    }, [selectedTab, pageNumber, fetchProgressReport, walletAddress])
+    }, [selectedTab, pageNumber, fetchRemainingVotesRequest])
 
     useEffect(() => {
 
 
-        const filteredProgressReports = (progressReportList[status][(pageNumber?.[selectedTab] - 1) || 0] || []).filter(
-            (proposal) => proposal.progressReportTitle.includes(searchText)
+        // const filteredProgressReports = (progressReportList[status][(pageNumber?.[selectedTab] - 1) || 0] || []).filter(
+        //     (proposal) => proposal.progressReportTitle.includes(searchText)
+        // );
+
+        const filteredProgressReports = remainingVotesPR.filter(
+            (proposal) => proposal.progressReportTitle?.includes(searchText)
         );
+
+        // const filteredProgressReports = [];
 
 
         setFilteredProgressReportList(filteredProgressReports);
-    }, [selectedTab, progressReportList, searchText, pageNumber]);
+    }, [selectedTab, remainingVotesPR, searchText, pageNumber]);
 
     useEffect(() => {
-        fetchProposalListRequest(
+        // fetchProposalListRequest(
+        //     {
+        //         status: status,
+        //         walletAddress: walletAddress || wallet.getAddress(),
+        //         pageNumber: pageNumber?.[selectedTab] ?? 1
+        //     }
+        // );
+
+        fetchRemainingVotesRequest(
             {
-                status: status,
-                walletAddress: walletAddress || wallet.getAddress(),
-                pageNumber: pageNumber?.[selectedTab] ?? 1
-            }
+                type: "proposal"
+            }        
         );
-    }, [selectedTab, pageNumber, fetchProposalListRequest, walletAddress])
+    }, [selectedTab, pageNumber, fetchRemainingVotesRequest])
 
     const setCurrentPages = (status, pageNumber) => {
         setPageNumber(prevState => (
@@ -98,12 +115,16 @@ const VotingCard = ({ proposalList, fetchProposalListRequest, walletAddress, tot
         //     (proposal) => proposal._status === proposalStatusBySelectedTab[selectedTab]
         // ) : proposalList;
 
-        const filteredProposals = (proposalList[status][(pageNumber?.[selectedTab] - 1) || 0] || []).filter(
+        // const filteredProposals = (proposalList[status][(pageNumber?.[selectedTab] - 1) || 0] || []).filter(
+        //     (proposal) => proposal._proposal_title.includes(searchText)
+        // );
+
+        const filteredProposals = remainingVotesProposal.filter(
             (proposal) => proposal._proposal_title.includes(searchText)
         );
 
         setFilteredProposalList(filteredProposals);
-    }, [selectedTab, proposalList, searchText, pageNumber]);
+    }, [selectedTab, remainingVotesProposal, searchText, pageNumber]);
 
     return (
         <>
@@ -183,7 +204,11 @@ const mapStateToProps = state => (
         progressReportList: state.progressReport.progressReportList,
         totalPagesProgressReport: state.progressReport.totalPages,
         modalShow: state.proposals.modalShowVoting,
-        modalShowPR: state.progressReport.modalShowVotingPR
+        modalShowPR: state.progressReport.modalShowVotingPR,
+
+        remainingVotesProposal: state.proposals.remainingVotes,
+        remainingVotesPR: state.progressReport.remainingVotes,
+
 
 
     }
@@ -194,7 +219,9 @@ const mapDispatchToProps = dispatch => (
         fetchProposalListRequest: (payload) => dispatch(fetchProposalListRequest(payload)),
         fetchProgressReport: (payload) => dispatch(fetchProgressReportListRequest(payload)),
         setModalShow: (payload) => dispatch(setModalShowVoting(payload)),
-        setModalShowPR: payload => dispatch(setModalShowVotingPR(payload))
+        setModalShowPR: payload => dispatch(setModalShowVotingPR(payload)),
+        fetchRemainingVotesRequest: payload => dispatch(fetchRemainingVotesRequest(payload))
+        
     }
 )
 

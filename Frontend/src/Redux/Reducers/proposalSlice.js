@@ -441,5 +441,6 @@ export const { submitProposalRequest, submitProposalSuccess, submitProposalFailu
     setModalShowSponsorRequests, setModalShowVoting, 
     fetchVoteResultRequest, fetchVoteResultSuccess, fetchVoteResultFailure,
     fetchProjectAmountsRequest, fetchProjectAmountsSuccess, fetchProjectAmountsFailure,
-    fetchMyProposalListRequest, fetchMyProposalListSuccess, fetchMyProposalListFailure } = proposalSlice.actions;
+    fetchMyProposalListRequest, fetchMyProposalListSuccess, fetchMyProposalListFailure,
+    fetchRemainingVotesRequest, fetchRemainingVotesProposalSuccess, fetchRemainingVotesFailure } = proposalSlice.actions;
 export default proposalSlice.reducer;

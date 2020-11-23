@@ -14,6 +14,7 @@ import voteProposalWorker from './voteProposalWorker';
 import fetchProposalByAddressWorker from './fetchProposalByAddressWorker';
 import fetchProposalVoteResultRequestWorker from './fetchProposalVoteResultRequestWorker';
 import fetchProjectAmountsWorker from './fetchProjectAmountsWorker';
+import fetchRemainingVotesRequestWorker from './fetchRemainingVotesRequestWorker';
 
 export {
     fetchProposalListWorker,
@@ -30,5 +31,6 @@ export {
     voteProposalWorker,
     fetchProposalByAddressWorker,
     fetchProposalVoteResultRequestWorker,
-    fetchProjectAmountsWorker
+    fetchProjectAmountsWorker,
+    fetchRemainingVotesRequestWorker
 }
