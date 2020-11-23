@@ -108,7 +108,9 @@ const initialState = {
             amount: 0,
             count: 0,
         }
-    }
+    },
+
+    remainingVotes: []
 };
 
 const proposalSlice = createSlice({
@@ -381,7 +383,50 @@ const proposalSlice = createSlice({
         fetchMyProposalListFailure(state) {
             return;
         },
+
+
+        fetchRemainingVotesRequest(state) {
+            return;
+        },
+        fetchRemainingVotesProposalSuccess(state, action) {
+            // state.proposalList = action.payload
+            // state.proposalList.
+
+
+            state.remainingVotes = action.payload.response.map (
+                proposal => (
+                    {
+                        _status: proposal._status,
+                        _proposal_title: proposal._proposal_title,
+                        _contributor_address: proposal._contributor_address,
+                        budget: parseInt(proposal.budget),
+                        _timestamp: proposal._timestamp,
+                        ipfsHash: proposal._ipfs_hash,
+                        ipfsKey: proposal._ipfs_key,
+                        approvedVotes: IconConverter.toBigNumber(proposal.approved_votes),
+                        totalVotes: IconConverter.toBigNumber(proposal.total_votes),
+                        approvedPercentage: (!proposal.total_votes || parseInt(proposal.total_votes) === 0) ? 0 : ((proposal.approved_votes / proposal.total_votes) * 100),
+                        completedPercentage: parseInt(IconConverter.toBigNumber(proposal.percentage_completed)),
+                        // if(parseInt(totalVoters) === 0) {
+                        //     return 0;
+                        //   }
+                        //   return (approvedVoters/totalVoters) * 100;
+                    }
+                )
+            );
+
+            return;
+        },
+        fetchRemainingVotesFailure(state) {
+            return;
+        },
     },
+
+    extraReducers: {
+        "account/logout": (state, action) => {
+          state.myProposalList = [];
+        }     
+     }
 })
 
 export const { submitProposalRequest, submitProposalSuccess, submitProposalFailure,
