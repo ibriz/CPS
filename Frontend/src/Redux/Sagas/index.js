@@ -22,7 +22,8 @@ import {
   voteProposalWorker,
   fetchProposalByAddressWorker,
   fetchProposalVoteResultRequestWorker,
-  fetchProjectAmountsWorker
+  fetchProjectAmountsWorker,
+  fetchRemainingVotesRequestWorker
 } from './Proposal';
 
 import {
@@ -56,7 +57,8 @@ import { submitProposalRequest, submitProposalSuccess, fetchProposalListRequest,
   saveDraftRequest, fetchDraftsRequest,
   voteProposal, fetchProposalByAddressRequest,
   fetchVoteResultRequest as fetchProposalVoteResultRequest,
-  fetchProjectAmountsRequest} from '../Reducers/proposalSlice';
+  fetchProjectAmountsRequest,
+  fetchRemainingVotesRequest} from '../Reducers/proposalSlice';
 import { submitProgressReportRequest, submitProgressReportSuccess, fetchProgressReportListRequest, fetchProgressReportDetailRequest,
   fetchDraftsRequest as fetchDraftsRequestProgressReport,
   saveDraftRequest as saveDraftRequestProgressReport,
@@ -138,7 +140,9 @@ yield takeEvery(payPenalty.type, payPenaltyWorker);
 yield takeEvery(fetchUserDataRequest.type, fetchUserDataRequestWorker);
 yield takeEvery(submitUserDataRequest.type, submitUserDataRequestWorker)
 
-yield takeEvery(fetchExpectedGrantRequest.type, fetchExpectedGrantRequestWorker)
+yield takeEvery(fetchExpectedGrantRequest.type, fetchExpectedGrantRequestWorker);
+
+yield takeEvery(fetchRemainingVotesRequest.type, fetchRemainingVotesRequestWorker)
 
 
 

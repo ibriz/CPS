@@ -20,7 +20,7 @@ import {fetchExpectedGrantRequest} from 'Redux/Reducers/fundSlice';
 
 
 
-const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfRemainingFunds, cpfScoreAddress, fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, fetchProjectAmountsRequest, isPrep, isRegistered, myProposalList, fetchExpectedGrantRequest, expectedGrant, sponsorBond, totalCountSponsorRequests }) => {
+const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfRemainingFunds, cpfScoreAddress, fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, fetchProjectAmountsRequest, isPrep, isRegistered, myProposalList, fetchExpectedGrantRequest, expectedGrant, sponsorBond, totalCountSponsorRequests, remainingVotesProposal, remainingVotesPR }) => {
     const [showPayPenaltyConfirmationModal, setShowPayPenaltyConfirmationModal] = useState(false);
     const { isRemainingTimeZero, highestSignificantTime } = useTimer();
 
@@ -59,7 +59,7 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
                 color: '#84C318',
                 title: period === "APPLICATION" ? "Remaining Sponsor Requests" : "Outstanding Votes",
                 // value={`${projectAmounts.Voting.count} (${icxFormat(projectAmounts.Voting.amount)} ICX)`} 
-                value: period === "APPLICATION" ? totalCountSponsorRequests.Pending : 0
+                value: period === "APPLICATION" ? totalCountSponsorRequests.Pending : (remainingVotesProposal.length + remainingVotesPR.length)
             },
             {
                 color: '#1AAABA',
@@ -214,7 +214,11 @@ const mapStateToProps = state => (
         myProposalList: state.proposals.myProposalList,
         expectedGrant: state.fund.expectedGrant,
         sponsorBond: state.fund.sponsorBond,
-        totalCountSponsorRequests: state.proposals.totalCountSponsorRequests
+        totalCountSponsorRequests: state.proposals.totalCountSponsorRequests,
+
+        remainingVotesProposal: state.proposals.remainingVotes,
+        remainingVotesPR: state.progressReport.remainingVotes,
+
 
 
 

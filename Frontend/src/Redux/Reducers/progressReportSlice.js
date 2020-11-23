@@ -294,5 +294,5 @@ fetchDraftsRequest, fetchDraftsSuccess, fetchDraftsFailure, setModalShowVotingPR
 voteProgressReport, 
 fetchVoteResultRequest, fetchVoteResultSuccess, fetchVoteResultFailure,
 fetchProgressReportByProposalRequest, fetchProgressReportByProposalSuccess,
-fetchProgressReportByProposalFailure} = proposalSlice.actions;
+fetchProgressReportByProposalFailure, fetchRemainingVotesPRSuccess} = proposalSlice.actions;
 export default proposalSlice.reducer;
