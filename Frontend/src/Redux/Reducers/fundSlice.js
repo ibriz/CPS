@@ -58,6 +58,13 @@ const fundSlice = createSlice({
             return;
         },
     },
+
+    extraReducers: {
+        "account/logout": (state, action) => {
+          state.expectedGrant = 0;
+          state.sponsorBond = 0;
+        }     
+     }
 })
 
 export const { fetchCPFScoreAddressRequest, fetchCPFScoreAddressSuccess, fetchCPFScoreAddressFailure,
