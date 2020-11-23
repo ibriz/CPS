@@ -12,6 +12,7 @@ const Home = () => {
                 <ProposalCard
                  proposalStatesList = {['Active', 'Voting', 'Completed', 'Disqualified', 'Paused']}
                  initialState = {'Active'}
+                 minHeight = '150px'
                 />
 
             </div>

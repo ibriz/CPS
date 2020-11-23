@@ -12,7 +12,7 @@ import wallet from 'Redux/ICON/FrontEndWallet'
 import DetailsModal from 'Components/Card/DetailsModal';
 import {withRouter} from 'react-router-dom';
 
-const ProposalCard = ({ proposalList, fetchProposalListRequest, walletAddress, totalPages, proposalStatesList, initialState, fetchDraftsRequest, history }) => {
+const ProposalCard = ({ proposalList, fetchProposalListRequest, walletAddress, totalPages, proposalStatesList, initialState, fetchDraftsRequest, history, minHeight }) => {
 
     const [selectedTab, setSelectedTab] = useState(initialState);
     const [filteredProposalList, setFilteredProposalList] = useState(proposalList);
@@ -126,6 +126,7 @@ const ProposalCard = ({ proposalList, fetchProposalListRequest, walletAddress, t
                                 selectedProposal={selectedProposal}
                                 setSelectedProposal={setSelectedProposal}
                                 onClickProposal={(selectedTab === 'Draft') ? onClickProposalDraft : onClickProposal}
+                                minHeight = {minHeight}
 
                             />
 

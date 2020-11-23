@@ -3,11 +3,11 @@ import styles from './ProposalList.module.scss';
 import { Container } from 'react-bootstrap';
 import Proposal from './Proposal';
 
-const ProposalList = ({ proposals, selectedTab, onClickProposal, emptyListMessage, proposalPendingPR = false }) => {
+const ProposalList = ({ proposals, selectedTab, onClickProposal, emptyListMessage, proposalPendingPR = false, minHeight = '100px' }) => {
 
 
     return (
-        <Container fluid style = {proposals.length ? {} : {minHeight: '150px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+        <Container fluid style = {proposals.length ? {} : {minHeight: minHeight, display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
             {
                 proposals.length ? proposals.map((proposal) =>
                     <Proposal

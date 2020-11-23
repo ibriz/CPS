@@ -39,7 +39,8 @@ import {
 
 import {
   fetchCPFScoreAddressWorker,
-  fetchCPFRemainingFundWorker
+  fetchCPFRemainingFundWorker,
+  fetchExpectedGrantRequestWorker
 } from './Fund';
 
 import { fetchPrepWorker, unregisterPrepWorker, registerPrepWorker, payPenaltyWorker } from './PRep';
@@ -65,7 +66,7 @@ import { submitProgressReportRequest, submitProgressReportSuccess, fetchProgress
 } from '../Reducers/progressReportSlice';
 import {fetchPeriodDetailsRequest, updatePeriod} from '../Reducers/periodSlice';
 import { fetchPrepsRequest, unregisterPrep, registerPrep, payPenalty } from '../Reducers/prepsSlice';
-import {fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest} from '../Reducers/fundSlice';
+import {fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, fetchExpectedGrantRequest} from '../Reducers/fundSlice';
 import {fetchUserDataRequest, submitUserDataRequest} from '../Reducers/userSlice';
 import { FiPrinter } from 'react-icons/fi';
 
@@ -137,6 +138,7 @@ yield takeEvery(payPenalty.type, payPenaltyWorker);
 yield takeEvery(fetchUserDataRequest.type, fetchUserDataRequestWorker);
 yield takeEvery(submitUserDataRequest.type, submitUserDataRequestWorker)
 
+yield takeEvery(fetchExpectedGrantRequest.type, fetchExpectedGrantRequestWorker)
 
 
 

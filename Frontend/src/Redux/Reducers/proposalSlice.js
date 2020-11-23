@@ -67,6 +67,14 @@ const initialState = {
 
     },
 
+    totalCountSponsorRequests: {
+        Pending: 0,
+        Approved: 0,
+        Rejected: 0,
+        Disqualified: 0,
+
+    },
+
     proposalByAddress: [],
 
     votesByProposal: [],
@@ -214,6 +222,8 @@ const proposalSlice = createSlice({
                 )
             );
             state.totalPagesSponsorRequests[action.payload.status] = Math.ceil(IconConverter.toNumber(action.payload.response.count) / 10)
+            state.totalCountSponsorRequests[action.payload.status] = IconConverter.toNumber(action.payload.response.count)
+
             return;
         },
         fetchSponsorRequestsListFailure(state) {

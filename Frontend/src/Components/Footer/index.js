@@ -108,7 +108,7 @@ const Footer = () => {
         <Row style = {{marginBottom: '10px'}}>
             <Col md="1"> </Col>
             <Col md = "11" className = {styles.footerColumn}>
-                Copyright © 2020. ICON Foundation
+                Copyright © 2020. <u>ICON Foundation</u>
             </Col>
         </Row>
 

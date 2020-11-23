@@ -50,9 +50,29 @@ const useTimer = () => {
                     second: 0
                 }
             );
-            dispatch(fetchPeriodDetailsRequest());
+            // dispatch(fetchPeriodDetailsRequest());
         }
 
+    }
+
+
+    let highestSignificantTime = {
+        text: 'second',
+        value: 0
+    }
+
+    if (remainingTime.day !== 0) {
+        highestSignificantTime.text = 'day' + (remainingTime.day > 1 ? 's': '');
+        highestSignificantTime.value = remainingTime.day
+    } else if (remainingTime.hour !== 0) {
+        highestSignificantTime.text = 'hour' + (remainingTime.hour > 1 ? 's': '');
+        highestSignificantTime.value = remainingTime.hour
+    } else if (remainingTime.minute !== 0) {
+        highestSignificantTime.text = 'minute' + (remainingTime.minute > 1 ? 's': '');
+        highestSignificantTime.value = remainingTime.minute
+    } else {
+        highestSignificantTime.text = 'second' + (remainingTime.second > 1 ? 's': '');
+        highestSignificantTime.value = remainingTime.second
     }
 
 
@@ -72,7 +92,8 @@ const useTimer = () => {
         period,
         remainingTime,
         remainingTimeSecond: remainingTimeRedux,
-        isRemainingTimeZero: (remainingTime.day === 0) && (remainingTime.hour === 0) && (remainingTime.minute === 0) && (remainingTime.second === 0)
+        isRemainingTimeZero: (remainingTime.day === 0) && (remainingTime.hour === 0) && (remainingTime.minute === 0) && (remainingTime.second === 0),
+        highestSignificantTime
     }
 }
 

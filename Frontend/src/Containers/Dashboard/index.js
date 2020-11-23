@@ -15,18 +15,79 @@ import MyProposalCard from 'Components/MyProposalCard';
 import ProposalPendingPRCard from 'Components/ProposalPendingPRCard';
 import SponsorRequestsCard from 'Components/SponsorRequestsCard';
 import VotingCard from 'Components/VotingCard';
+import {fetchExpectedGrantRequest} from 'Redux/Reducers/fundSlice';
 
 
 
 
-const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfRemainingFunds, cpfScoreAddress, fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, fetchProjectAmountsRequest, isPrep, isRegistered }) => {
+const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfRemainingFunds, cpfScoreAddress, fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, fetchProjectAmountsRequest, isPrep, isRegistered, myProposalList, fetchExpectedGrantRequest, expectedGrant, sponsorBond, totalCountSponsorRequests }) => {
     const [showPayPenaltyConfirmationModal, setShowPayPenaltyConfirmationModal] = useState(false);
-    const { isRemainingTimeZero } = useTimer();
+    const { isRemainingTimeZero, highestSignificantTime } = useTimer();
+
+    let cardInfo;
+
+    if (!isPrep || !isRegistered) {
+        cardInfo = [
+            {
+                color: '#84C318',
+                title: "My Voting Proposals",
+                // value={`${projectAmounts.Voting.count} (${icxFormat(projectAmounts.Voting.amount)} ICX)`} 
+                value: myProposalList.filter(proposal => proposal._status === '_pending').length
+            },
+            {
+                color: '#1AAABA',
+                title: "My Approved Proposals",
+                // value={`${projectAmounts.Active.count + projectAmounts.Paused.count} (${icxFormat(projectAmounts.Active.amount + projectAmounts.Paused.amount)} ICX)`} />
+                value: myProposalList.filter(proposal => ['_active', '_paused'].includes(proposal._status)).length
+            },
+            {
+                color: '#304C89',
+                title: `Disbursement Due in ${highestSignificantTime.value} ${highestSignificantTime.text}`,
+                // value={`${icxFormat(cpfRemainingFunds, true)} ICX`} 
+                value: `${expectedGrant} ICX`
+            },
+            {
+                title: `Remaining of ${period === "APPLICATION" ? 'Application Period' : 'Voting Period'}`,
+                color: '#EF476F',
+                // value={period === "APPLICATION" ? 'Application Period' : 'Voting Period'} />
+                value: `${highestSignificantTime.value} ${highestSignificantTime.text}`
+            }
+        ];
+    } else {
+        cardInfo = [
+            {
+                color: '#84C318',
+                title: period === "APPLICATION" ? "Remaining Sponsor Requests" : "Outstanding Votes",
+                // value={`${projectAmounts.Voting.count} (${icxFormat(projectAmounts.Voting.amount)} ICX)`} 
+                value: period === "APPLICATION" ? totalCountSponsorRequests.Pending : 0
+            },
+            {
+                color: '#1AAABA',
+                title: "My Sponsor Bond",
+                // value={`${projectAmounts.Active.count + projectAmounts.Paused.count} (${icxFormat(projectAmounts.Active.amount + projectAmounts.Paused.amount)} ICX)`} />
+                value: `${sponsorBond} ICX`
+            },
+            {
+                color: '#304C89',
+                title: `Sponsor Reward in  ${highestSignificantTime.value} ${highestSignificantTime.text}`,
+                // value={`${icxFormat(cpfRemainingFunds, true)} ICX`} 
+                value: `${expectedGrant} ICX`
+            },
+            {
+                title: `Remaining of ${period === "APPLICATION" ? 'Application Period' : 'Voting Period'}`,
+                color: '#EF476F',
+                // value={period === "APPLICATION" ? 'Application Period' : 'Voting Period'} />
+                value: ` ${highestSignificantTime.value} ${highestSignificantTime.text}`
+            }
+        ];
+    }
+
 
     useEffect(() => {
         fetchCPFScoreAddressRequest();
         fetchProjectAmountsRequest();
-    }, [fetchCPFScoreAddressRequest, fetchProjectAmountsRequest]);
+        fetchExpectedGrantRequest();
+    }, [fetchCPFScoreAddressRequest, fetchProjectAmountsRequest, fetchExpectedGrantRequest]);
 
     useEffect(() => {
         fetchCPFRemainingFundRequest();
@@ -73,32 +134,25 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
 
             }
             <Row style={{ marginTop: '30px' }}>
-                <Col lg="3" style={{ marginTop: '10px', }} className={styles.infoCardContainer}>
-                    <InfoCard bg="success"
-                        title="Voting Proposals"
-                        value={`${projectAmounts.Voting.count} (${icxFormat(projectAmounts.Voting.amount)} ICX)`} />
-                </Col>
-                <Col lg="3" style={{ marginTop: '10px' }} className={styles.infoCardContainer}>
-                    <InfoCard bg="warning"
-                        title="Active Proposals"
-                        value={`${projectAmounts.Active.count + projectAmounts.Paused.count} (${icxFormat(projectAmounts.Active.amount + projectAmounts.Paused.amount)} ICX)`} />
-                </Col>
-                <Col lg="3" style={{ marginTop: '10px' }} className={styles.infoCardContainer}>
-                    <InfoCard bg="info"
-                        title="CPF Remaining Funds"
-                        value={`${icxFormat(cpfRemainingFunds, true)} ICX`} />
-                </Col>
-                <Col lg="3" style={{ marginTop: '10px' }} className={styles.infoCardContainer}>
-                    <InfoCard bg="danger"
-                        title="Period"
-                        value={period === "APPLICATION" ? 'Application Period' : 'Voting Period'} />
-                </Col>
+                {
+                    cardInfo.map(info =>
+                        <Col lg="3" style={{ marginTop: '10px', }} className={styles.infoCardContainer}>
+                            <InfoCard bg="light"
+                                color={info.color}
+                                title={info.title}
+                                // value={`${projectAmounts.Voting.count} (${icxFormat(projectAmounts.Voting.amount)} ICX)`} 
+                                value={info.value}
+
+                            />
+                        </Col>)
+                }
+
             </Row>
 
             {
-                (!isPrep ||  !isRegistered) && period === 'APPLICATION' &&
+                (!isPrep || !isRegistered) && period === 'APPLICATION' &&
                 <>
-                    <div className = {styles.myProposalHeading}>Proposals Pending Progress Report</div>
+                    <div className={styles.myProposalHeading}>Proposals Pending Progress Report</div>
 
                     <ProposalPendingPRCard />
                 </>
@@ -106,36 +160,36 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
 
 
             {
-                (!isPrep ||  !isRegistered) && 
+                (!isPrep || !isRegistered) &&
                 <>
-                    <div className = {styles.myProposalHeading}>My Proposals</div>
+                    <div className={styles.myProposalHeading}>My Proposals</div>
 
                     <MyProposalCard />
                 </>
             }
 
 
-{
-                (isPrep ||  isRegistered) && 
+            {
+                (isPrep || isRegistered) &&
                 <>
-                    <div className = {styles.myProposalHeading}>Sponsor Requests</div>
+                    <div className={styles.myProposalHeading}>Sponsor Requests</div>
 
                     <SponsorRequestsCard
-                        proposalStatesList = {['Pending', 'Approved', 'Rejected', 'Disqualified']}
-                        initialState = {'Pending'} />
+                        proposalStatesList={['Pending', 'Approved', 'Rejected', 'Disqualified']}
+                        initialState={'Pending'} />
                 </>
             }
 
-{
-                (isPrep ||  isRegistered) && 
+            {
+                (isPrep || isRegistered) &&
                 <>
-                    <div className = {styles.myProposalHeading}>Voting</div>
+                    <div className={styles.myProposalHeading}>Voting</div>
 
                     <VotingCard
-                proposalStatesList = {['Proposals', 'Progress Reports']}
-                initialState = {'Proposals'}
-            />
-            </>
+                        proposalStatesList={['Proposals', 'Progress Reports']}
+                        initialState={'Proposals'}
+                    />
+                </>
             }
 
 
@@ -156,7 +210,12 @@ const mapStateToProps = state => (
         cpfRemainingFunds: state.fund.cpfRemainingFunds,
         cpfScoreAddress: state.fund.cpfScoreAddress,
         isPrep: state.account.isPrep,
-        isRegistered: state.account.isRegistered
+        isRegistered: state.account.isRegistered,
+        myProposalList: state.proposals.myProposalList,
+        expectedGrant: state.fund.expectedGrant,
+        sponsorBond: state.fund.sponsorBond,
+        totalCountSponsorRequests: state.proposals.totalCountSponsorRequests
+
 
 
     }
@@ -166,7 +225,8 @@ const mapDispatchToProps = {
     payPenaltyRequest: payPenalty,
     fetchCPFScoreAddressRequest,
     fetchCPFRemainingFundRequest,
-    fetchProjectAmountsRequest
+    fetchProjectAmountsRequest,
+    fetchExpectedGrantRequest
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
