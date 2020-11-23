@@ -83,11 +83,7 @@ const SlantedHeader = ({ loginRequest, loginPrepRequest }) => {
                         </svg>
 
                     </span>
-                    <div style={{ marginTop: '3px', zIndex: 1000 }}>
-                        {/* <Button variant="outline-light" className = {styles.button} onClick={onClickPrepLogin}>LOGIN PREP</Button>{' '} */}
-                        <Button variant="outline-light" className={styles.button} onClick={onClickLogin}>LOGIN</Button>{' '}
 
-                    </div>
                 </Row>
 
                 <Row className={styles.secondRow}>
@@ -108,7 +104,12 @@ const SlantedHeader = ({ loginRequest, loginPrepRequest }) => {
 
 
         </div>
-                    <img src = {intersect} className = {styles.slantedBackground}></img>
+        <img src = {intersect} className = {styles.slantedBackground}></img>
+        <div style={{ marginTop: '3px', zIndex: 1000, position: 'absolute', top: '8px', right: '10px' }}>
+                        {/* <Button variant="outline-light" className = {styles.button} onClick={onClickPrepLogin}>LOGIN PREP</Button>{' '} */}
+                        <Button variant="outline-light" className={styles.button} onClick={onClickLogin}>LOGIN</Button>{' '}
+
+        </div>
 </>
     )
 }
