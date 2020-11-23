@@ -12,7 +12,8 @@ import login from 'Redux/Sagas/Account/loginWorker';
 
 import iconLogo from 'Assets/Images/icon_white.png';
 import icxLogo from 'Assets/Images/icx_white.png';
-// import intersect from 'Assets/Images/intersect.png'
+
+import intersect from 'Assets/Images/Intersect7.png'
 
 import {NotificationManager} from 'react-notifications';
 
@@ -55,6 +56,7 @@ const SlantedHeader = ({ loginRequest, loginPrepRequest }) => {
     }
 
     return (
+        <>
         <div className={styles.slanted}>
             <Container fluid className = {styles.container}>
                 <Row className={styles.firstRow}>
@@ -89,9 +91,14 @@ const SlantedHeader = ({ loginRequest, loginPrepRequest }) => {
                 </Row>
 
                 <Row className={styles.secondRow}>
-                    <Col xs="6">
+                    <Col xs="8">
                         <ProposalIntro />
                     </Col>
+
+                </Row>
+
+                <Row className={styles.thirdRow}>
+
                     <Col xs="6" className={styles.tabularDataWrapper}>
 
                         <TabularData />
@@ -99,7 +106,10 @@ const SlantedHeader = ({ loginRequest, loginPrepRequest }) => {
                 </Row>
             </Container>
 
+
         </div>
+                    <img src = {intersect} className = {styles.slantedBackground}></img>
+</>
     )
 }
 
