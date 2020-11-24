@@ -87,7 +87,7 @@ const SlantedHeader = ({ loginRequest, loginPrepRequest }) => {
                 </Row>
 
                 <Row className={styles.secondRow}>
-                    <Col xs="8">
+                    <Col md="8">
                         <ProposalIntro />
                     </Col>
 

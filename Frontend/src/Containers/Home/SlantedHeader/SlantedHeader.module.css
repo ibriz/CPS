@@ -191,3 +191,27 @@ align-items: center;
     margin-top: 17px;
 
 }
+
+@media screen and (max-width: 1125px) {
+    .slantedBackground {
+        width: 400px;
+    }
+
+    .slanted {
+        height: auto !important;
+        padding-bottom: 40px;
+    }
+}
+
+@media screen and (max-width: 870px) {
+    .slantedBackground {
+        width: 340px;
+    }
+
+}
+
+@media screen and (max-width: 767px) {
+    .slantedBackground {
+        display: none;
+    }
+}
