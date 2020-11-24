@@ -45,6 +45,7 @@ export async function callKeyStoreWallet({
     method,
     params = {},
 }) {
+    console.log("cpsTreasuryScoreAddressKeyStore", scoreAddress);
     let callBuilder = new IconBuilder.CallBuilder;
 
     let call = callBuilder

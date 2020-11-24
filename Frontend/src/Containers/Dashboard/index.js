@@ -15,12 +15,12 @@ import MyProposalCard from 'Components/MyProposalCard';
 import ProposalPendingPRCard from 'Components/ProposalPendingPRCard';
 import SponsorRequestsCard from 'Components/SponsorRequestsCard';
 import VotingCard from 'Components/VotingCard';
-import {fetchExpectedGrantRequest} from 'Redux/Reducers/fundSlice';
+import {fetchExpectedGrantRequest, fetchCPSTreasuryScoreAddressRequest} from 'Redux/Reducers/fundSlice';
 
 
 
 
-const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfRemainingFunds, cpfScoreAddress, fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, fetchProjectAmountsRequest, isPrep, isRegistered, myProposalList, fetchExpectedGrantRequest, expectedGrant, sponsorBond, totalCountSponsorRequests, remainingVotesProposal, remainingVotesPR }) => {
+const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfRemainingFunds, cpfScoreAddress, fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, fetchProjectAmountsRequest, isPrep, isRegistered, myProposalList, fetchExpectedGrantRequest, expectedGrant, sponsorBond, totalCountSponsorRequests, remainingVotesProposal, remainingVotesPR, fetchCPSTreasuryScoreAddressRequest, cpsTreasuryScoreAddress }) => {
     const [showPayPenaltyConfirmationModal, setShowPayPenaltyConfirmationModal] = useState(false);
     const { isRemainingTimeZero, highestSignificantTime, highestSignificantTimeForGrant } = useTimer();
 
@@ -86,8 +86,14 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
     useEffect(() => {
         fetchCPFScoreAddressRequest();
         fetchProjectAmountsRequest();
-        fetchExpectedGrantRequest();
+        fetchCPSTreasuryScoreAddressRequest();
     }, [fetchCPFScoreAddressRequest, fetchProjectAmountsRequest, fetchExpectedGrantRequest]);
+
+    useEffect(() => {
+        if(cpsTreasuryScoreAddress) {
+            fetchExpectedGrantRequest();
+        }
+    }, [cpsTreasuryScoreAddress, fetchExpectedGrantRequest])
 
     useEffect(() => {
         fetchCPFRemainingFundRequest();
@@ -219,6 +225,8 @@ const mapStateToProps = state => (
         remainingVotesProposal: state.proposals.remainingVotes,
         remainingVotesPR: state.progressReport.remainingVotes,
 
+        cpsTreasuryScoreAddress: state.fund.cpsTreasuryScoreAddress
+
 
 
 
@@ -230,7 +238,8 @@ const mapDispatchToProps = {
     fetchCPFScoreAddressRequest,
     fetchCPFRemainingFundRequest,
     fetchProjectAmountsRequest,
-    fetchExpectedGrantRequest
+    fetchExpectedGrantRequest,
+    fetchCPSTreasuryScoreAddressRequest
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);

@@ -14,7 +14,7 @@ const Vote = ({vote}) => {
                 <Col sm="9" className = {styles.infos}>
                     <Row style={{ alignItems: 'center' }} className={styles.firstRow}>
                         {/* <Badge size="xs" variant={badgeColor[selectedTab]} className={styles.badge}>{selectedTab}</Badge>{' '} */}
-                        <Col lg = "6" xs = "12" style = {{paddingLeft: '0px'}}>
+                        <Col lg = "8" xs = "12" style = {{paddingLeft: '0px'}}>
                         <LowerCardTitle style = {{fontSize:'14px'}}>{vote.sponsorAddress}</LowerCardTitle>
                         </Col>
                         <Col lg = "3" xs = "12">
