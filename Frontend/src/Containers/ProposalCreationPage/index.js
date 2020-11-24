@@ -240,7 +240,6 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                                     <tr>
                                         <th>Milestone Name</th>
                                         <th>Duration</th>
-                                        <th>Budget</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -250,7 +249,6 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                                             <tr>
                                                 <td>{milestone.name}</td>
                                                 <td>{milestone.duration}</td>
-                                                <td>{milestone.budget}</td>
                                                 <td style={{ display: 'flex', justifyContent: 'center' }}> <AiFillDelete onClick={() => {
                                                     setProposal(prevState => {
                                                         const newMilestone = [...prevState.milestones]
