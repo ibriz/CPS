@@ -239,13 +239,17 @@ const proposalSlice = createSlice({
         fetchProgressReportByProposalSuccess(state, action){
             state.progressReportByProposal = action.payload.response.data.map(progressReport => (
                 {
+                    status: progressReport._status,
                     progressReportTitle: progressReport._project_report_title,
-                    // projectTitle: 'New Proposal',
+                    projectTitle: progressReport._proposal_title,
+                    contributorAddress: progressReport._contributor_address,
                     timestamp: progressReport._timestamp,
-                    // ipfsHash: 'bafybeidtxjlihr5rxkbtpa2smuwq7skj7gysuctaohx5lpwju26qt3k2ha',
-                    // status: progressReportMapping.find(mapping =>
-                    //     mapping.status === progressReport._status)?.name,
-                    status: progressReport._status
+                    ipfsHash: progressReport._ipfs_hash,
+                    reportKey: progressReport._report_key,
+                    proposalKey: progressReport._ipfs_key,
+                    approvedVotes: IconConverter.toBigNumber(progressReport.approved_votes),
+                    totalVotes: IconConverter.toBigNumber(progressReport.total_votes),
+                    approvedPercentage: (!progressReport.total_votes || parseInt(progressReport.total_votes) === 0) ? 0 : ((progressReport.approved_votes / progressReport.total_votes) * 100)
                 }
             ));
             state.progressReportByProposal = state.progressReportByProposal.filter(progressReport =>

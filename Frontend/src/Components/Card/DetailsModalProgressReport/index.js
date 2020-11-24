@@ -32,8 +32,10 @@ function DetailsModal(props) {
   const [voteConfirmationShow, setVoteConfirmationShow] = React.useState(false);
 
 
-  const { progressDetail, proposal, status, sponsorRequest = false, approveSponserRequest, rejectSponsorRequest, voting = false, voteProgressReport, progressReport, votesByProposal, fetchVoteResultRequest, approvedPercentage,
+  const { progressDetail, proposal, sponsorRequest = false, approveSponserRequest, rejectSponsorRequest, voting = false, voteProgressReport, progressReport, votesByProposal, fetchVoteResultRequest, approvedPercentage,
     period, remainingTime, approvedVoterPercentage, fetchProgressReportDetailRequest, walletAddress, ...remainingProps } = props;
+
+    const status = progressReportStatusMapping.find(mapping => mapping.status === progressReport?.status)?.name
 
   useEffect(() => {
     props.progressReport && props.fetchProgressReportDetailRequest(
@@ -143,7 +145,7 @@ function DetailsModal(props) {
                 //       </Col>
                 //     </>
                 //   )
-                if (['Voting'].includes(props.status))
+                if (['Voting'].includes(status))
                   return (
                     <>
                       <Col lg="3" xs="12">
