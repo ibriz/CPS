@@ -95,7 +95,7 @@ const SlantedHeader = ({ loginRequest, loginPrepRequest }) => {
 
                 <Row className={styles.thirdRow}>
 
-                    <Col xs="6" className={styles.tabularDataWrapper}>
+                    <Col lg="6" className={styles.tabularDataWrapper}>
 
                         <TabularData />
                     </Col>
