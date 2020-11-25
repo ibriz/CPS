@@ -58,16 +58,16 @@ const Main = ({
           <Route path="/newProgressReport">
             {userRoute(<ProgressReportCreationPage />)}
           </Route>
-          <Route path="/sponsorRequests">
+          {/* <Route path="/sponsorRequests">
             {prepRoute(<SponsorRequests />)}
 
-          </Route>
-          <Route path="/voting">
+          </Route> */}
+          {/* <Route path="/voting">
             {prepRoute(<Voting />)}
-          </Route>
-          <Route path="/backed-projects">
+          </Route> */}
+          {/* <Route path="/backed-projects">
             {prepRoute(<BackedProjects />)}
-          </Route>
+          </Route> */}
           <Route path="/">
             <Dashboard />
           </Route>

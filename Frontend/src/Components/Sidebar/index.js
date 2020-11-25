@@ -92,24 +92,24 @@ const Aside = ({ collapsed, rtl, toggled, handleToggleSidebar, handleCollapsedCh
 
               </MenuItem>
 
-              <MenuItem
+              {/* <MenuItem
                 icon={<FaTachometerAlt />}
 
               >
                 {<span>Sponsor Requests</span>}
                 <Link to="/sponsorRequests" />
 
-              </MenuItem>
-              <MenuItem icon={<FaGem />}
+              </MenuItem> */}
+              {/* <MenuItem icon={<FaGem />}
                 suffix={<Badge size="xl" variant="primary" >3</Badge>}> {<span>Voting</span>}
                 <Link to="/voting" />
 
-              </MenuItem>
-              <MenuItem icon={<FaList />}
+              </MenuItem> */}
+              {/* <MenuItem icon={<FaList />}
               > {<span>Backed Projects</span>}
                 <Link to="/backed-projects" />
 
-              </MenuItem>
+              </MenuItem> */}
 
 
             </Menu>

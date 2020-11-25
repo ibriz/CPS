@@ -3,6 +3,21 @@ import {IconConverter} from 'icon-sdk-js';
 import {proposalStatusMapping} from 'Constants';
 import { voteProgressReport } from './progressReportSlice';
 
+
+const PARAMS = {
+    status: 'status',
+    proposalTitle: 'project_title',
+    contributorAddress: 'contributor_address',
+    totalBudget: 'total_budget',
+    timestamp: 'timestamp',
+    proposalHash: 'ipfs_hash',
+    approvedVotes: 'approved_votes',
+    totalVotes: 'total_votes',
+    percentageCompleted: 'percentage_completed',
+    
+    newProgressReport: 'new_progress_report'
+}
+
 const initialState = {
     numberOfSubmittedProposals: 29,
     totalSubmittedProposalBudget: 1240000,
@@ -138,17 +153,17 @@ const proposalSlice = createSlice({
             state.proposalList[action.payload.status][action.payload.pageNumber - 1] = action.payload.response.data.map (
                 proposal => (
                     {
-                        _status: proposal._status,
-                        _proposal_title: proposal._proposal_title,
-                        _contributor_address: proposal._contributor_address,
-                        budget: parseInt(proposal.budget),
-                        _timestamp: proposal._timestamp,
-                        ipfsHash: proposal._ipfs_hash,
-                        ipfsKey: proposal._ipfs_key,
-                        approvedVotes: IconConverter.toBigNumber(proposal.approved_votes),
-                        totalVotes: IconConverter.toBigNumber(proposal.total_votes),
-                        approvedPercentage: (!proposal.total_votes || parseInt(proposal.total_votes) === 0) ? 0 : ((proposal.approved_votes / proposal.total_votes) * 100),
-                        completedPercentage: parseInt(IconConverter.toBigNumber(proposal.percentage_completed)),
+                        _status: proposal[PARAMS.status],
+                        _proposal_title: proposal[PARAMS.proposalTitle],
+                        _contributor_address: proposal[PARAMS.contributorAddress],
+                        budget: parseInt(proposal[PARAMS.totalBudget]),
+                        _timestamp: proposal[PARAMS.timestamp],
+                        ipfsHash: proposal[PARAMS.proposalHash],
+                        ipfsKey: proposal[PARAMS.proposalHash],
+                        approvedVotes: IconConverter.toBigNumber(proposal[PARAMS.approvedVotes]),
+                        totalVotes: IconConverter.toBigNumber(proposal[PARAMS.totalVotes]),
+                        approvedPercentage: (!proposal[PARAMS.totalVotes] || parseInt(proposal[PARAMS.totalVotes]) === 0) ? 0 : ((proposal[PARAMS.approvedVotes] / proposal[PARAMS.totalVotes]) * 100),
+                        completedPercentage: parseInt(IconConverter.toBigNumber(proposal[PARAMS.percentageCompleted])),
                         // if(parseInt(totalVoters) === 0) {
                         //     return 0;
                         //   }
@@ -213,13 +228,18 @@ const proposalSlice = createSlice({
             state.sponsorRequestsList[action.payload.status][action.payload.pageNumber - 1] = action.payload.response.data.map (
                 proposal => (
                     {
-                        _status: proposal._status,
-                        _proposal_title: proposal._proposal_title,
-                        _contributor_address: proposal._contributor_address,
-                        budget: parseInt(proposal.budget),
-                        _timestamp: proposal._timestamp,
-                        ipfsHash: proposal._ipfs_hash,
-                        ipfsKey: proposal._ipfs_key
+
+                        _status: proposal[PARAMS.status],
+                        _proposal_title: proposal[PARAMS.proposalTitle],
+                        _contributor_address: proposal[PARAMS.contributorAddress],
+                        budget: parseInt(proposal[PARAMS.totalBudget]),
+                        _timestamp: proposal[PARAMS.timestamp],
+                        ipfsHash: proposal[PARAMS.proposalHash],
+                        ipfsKey: proposal[PARAMS.proposalHash],
+                        approvedVotes: IconConverter.toBigNumber(proposal[PARAMS.approvedVotes]),
+                        totalVotes: IconConverter.toBigNumber(proposal[PARAMS.totalVotes]),
+                        approvedPercentage: (!proposal[PARAMS.totalVotes] || parseInt(proposal[PARAMS.totalVotes]) === 0) ? 0 : ((proposal[PARAMS.approvedVotes] / proposal[PARAMS.totalVotes]) * 100),
+                        completedPercentage: parseInt(IconConverter.toBigNumber(proposal[PARAMS.percentageCompleted])),
                     }
                 )
             );
@@ -274,9 +294,9 @@ const proposalSlice = createSlice({
             console.groupEnd();
             state.proposalByAddress = action.payload.response.map(proposal => (
                 {
-                    _proposal_title: proposal._proposal_title,
-                    ipfsKey: proposal._ipfs_key,
-                    newProgressReport: !!parseInt(proposal.new_progress_report)
+                    _proposal_title: proposal[PARAMS.proposalTitle],
+                    ipfsKey: proposal[PARAMS.proposalHash],
+                    newProgressReport: !!parseInt(proposal[PARAMS.newProgressReport])
                 }
             ));
             return;
@@ -353,17 +373,17 @@ const proposalSlice = createSlice({
             state.myProposalList = action.payload.response.data.map (
                 proposal => (
                     {
-                        _status: proposal._status,
-                        _proposal_title: proposal._proposal_title,
-                        _contributor_address: proposal._contributor_address,
-                        budget: parseInt(proposal.budget),
-                        _timestamp: proposal._timestamp,
-                        ipfsHash: proposal._ipfs_hash,
-                        ipfsKey: proposal._ipfs_key,
-                        approvedVotes: IconConverter.toBigNumber(proposal.approved_votes),
-                        totalVotes: IconConverter.toBigNumber(proposal.total_votes),
-                        approvedPercentage: (!proposal.total_votes || parseInt(proposal.total_votes) === 0) ? 0 : ((proposal.approved_votes / proposal.total_votes) * 100),
-                        completedPercentage: parseInt(IconConverter.toBigNumber(proposal.percentage_completed)),
+                        _status: proposal[PARAMS.status],
+                        _proposal_title: proposal[PARAMS.proposalTitle],
+                        _contributor_address: proposal[PARAMS.contributorAddress],
+                        budget: parseInt(proposal[PARAMS.totalBudget]),
+                        _timestamp: proposal[PARAMS.timestamp],
+                        ipfsHash: proposal[PARAMS.proposalHash],
+                        ipfsKey: proposal[PARAMS.proposalHash],
+                        approvedVotes: IconConverter.toBigNumber(proposal[PARAMS.approvedVotes]),
+                        totalVotes: IconConverter.toBigNumber(proposal[PARAMS.totalVotes]),
+                        approvedPercentage: (!proposal[PARAMS.totalVotes] || parseInt(proposal[PARAMS.totalVotes]) === 0) ? 0 : ((proposal[PARAMS.approvedVotes] / proposal[PARAMS.totalVotes]) * 100),
+                        completedPercentage: parseInt(IconConverter.toBigNumber(proposal[PARAMS.percentageCompleted])),
                         // if(parseInt(totalVoters) === 0) {
                         //     return 0;
                         //   }
@@ -396,17 +416,18 @@ const proposalSlice = createSlice({
             state.remainingVotes = action.payload.response.map (
                 proposal => (
                     {
-                        _status: proposal._status,
-                        _proposal_title: proposal._proposal_title,
-                        _contributor_address: proposal._contributor_address,
-                        budget: parseInt(proposal.budget),
-                        _timestamp: proposal._timestamp,
-                        ipfsHash: proposal._ipfs_hash,
-                        ipfsKey: proposal._ipfs_key,
-                        approvedVotes: IconConverter.toBigNumber(proposal.approved_votes),
-                        totalVotes: IconConverter.toBigNumber(proposal.total_votes),
-                        approvedPercentage: (!proposal.total_votes || parseInt(proposal.total_votes) === 0) ? 0 : ((proposal.approved_votes / proposal.total_votes) * 100),
-                        completedPercentage: parseInt(IconConverter.toBigNumber(proposal.percentage_completed)),
+
+                        _status: proposal[PARAMS.status],
+                        _proposal_title: proposal[PARAMS.proposalTitle],
+                        _contributor_address: proposal[PARAMS.contributorAddress],
+                        budget: parseInt(proposal[PARAMS.totalBudget]),
+                        _timestamp: proposal[PARAMS.timestamp],
+                        ipfsHash: proposal[PARAMS.proposalHash],
+                        ipfsKey: proposal[PARAMS.proposalHash],
+                        approvedVotes: IconConverter.toBigNumber(proposal[PARAMS.approvedVotes]),
+                        totalVotes: IconConverter.toBigNumber(proposal[PARAMS.totalVotes]),
+                        approvedPercentage: (!proposal[PARAMS.totalVotes] || parseInt(proposal[PARAMS.totalVotes]) === 0) ? 0 : ((proposal[PARAMS.approvedVotes] / proposal[PARAMS.totalVotes]) * 100),
+                        completedPercentage: parseInt(IconConverter.toBigNumber(proposal[PARAMS.percentageCompleted])),
                         // if(parseInt(totalVoters) === 0) {
                         //     return 0;
                         //   }

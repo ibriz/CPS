@@ -3,6 +3,23 @@ import { createSlice } from '@reduxjs/toolkit';
 import {IconConverter} from 'icon-sdk-js';
 import {progressReportStatusMapping as progressReportMapping} from 'Constants';
 
+
+const PARAMS = {
+    status: 'status',
+    progressReportTitle: 'progress_report_title',
+    proposalTitle: 'project_title',
+    contributorAddress: 'contributor_address',
+    totalBudget: 'total_budget',
+    timestamp: 'timestamp',
+    proposalHash: 'ipfs_hash',
+    reportHash: 'report_hash',
+    approvedVotes: 'approved_votes',
+    totalVotes: 'total_votes',
+    percentageCompleted: 'percentage_completed',
+    
+    newProgressReport: 'new_progress_report'
+}
+
 const progressReportList = [
     {
         _title: "Approved 0 Progress Report",
@@ -141,17 +158,17 @@ const proposalSlice = createSlice({
                 state.progressReportList[action.payload.status][action.payload.pageNumber - 1] = action.payload.response.data.map (
                     progressReport => (
                         {
-                            status: progressReport._status,
-                            progressReportTitle: progressReport._project_report_title,
-                            projectTitle: progressReport._proposal_title,
-                            contributorAddress: progressReport._contributor_address,
-                            timestamp: progressReport._timestamp,
-                            ipfsHash: progressReport._ipfs_hash,
-                            reportKey: progressReport._report_key,
-                            proposalKey: progressReport._ipfs_key,
-                            approvedVotes: IconConverter.toBigNumber(progressReport.approved_votes),
-                            totalVotes: IconConverter.toBigNumber(progressReport.total_votes),
-                            approvedPercentage: (!progressReport.total_votes || parseInt(progressReport.total_votes) === 0) ? 0 : ((progressReport.approved_votes / progressReport.total_votes) * 100)
+                            status: progressReport[PARAMS.status],
+                            progressReportTitle: progressReport[PARAMS.progressReportTitle],
+                            projectTitle: progressReport[PARAMS.proposalTitle],
+                            contributorAddress: progressReport[PARAMS.contributorAddress],
+                            timestamp: progressReport[PARAMS.timestamp],
+                            ipfsHash: progressReport[PARAMS.reportHash],
+                            reportKey: progressReport[PARAMS.reportHash],
+                            proposalKey: progressReport[PARAMS.proposalHash],
+                            approvedVotes: IconConverter.toBigNumber(progressReport[PARAMS.approvedVotes]),
+                            totalVotes: IconConverter.toBigNumber(progressReport[PARAMS.totalVotes]),
+                            approvedPercentage: (!progressReport[PARAMS.totalVotes] || parseInt(progressReport[PARAMS.totalVotes]) === 0) ? 0 : ((progressReport[PARAMS.approvedVotes] / progressReport[PARAMS.totalVotes]) * 100)
                         }
                     )
                 );
@@ -239,17 +256,18 @@ const proposalSlice = createSlice({
         fetchProgressReportByProposalSuccess(state, action){
             state.progressReportByProposal = action.payload.response.data.map(progressReport => (
                 {
-                    status: progressReport._status,
-                    progressReportTitle: progressReport._project_report_title,
-                    projectTitle: progressReport._proposal_title,
-                    contributorAddress: progressReport._contributor_address,
-                    timestamp: progressReport._timestamp,
-                    ipfsHash: progressReport._ipfs_hash,
-                    reportKey: progressReport._report_key,
-                    proposalKey: progressReport._ipfs_key,
-                    approvedVotes: IconConverter.toBigNumber(progressReport.approved_votes),
-                    totalVotes: IconConverter.toBigNumber(progressReport.total_votes),
-                    approvedPercentage: (!progressReport.total_votes || parseInt(progressReport.total_votes) === 0) ? 0 : ((progressReport.approved_votes / progressReport.total_votes) * 100)
+
+                    status: progressReport[PARAMS.status],
+                    progressReportTitle: progressReport[PARAMS.progressReportTitle],
+                    projectTitle: progressReport[PARAMS.proposalTitle],
+                    contributorAddress: progressReport[PARAMS.contributorAddress],
+                    timestamp: progressReport[PARAMS.timestamp],
+                    ipfsHash: progressReport[PARAMS.reportHash],
+                    reportKey: progressReport[PARAMS.reportHash],
+                    proposalKey: progressReport[PARAMS.proposalHash],
+                    approvedVotes: IconConverter.toBigNumber(progressReport[PARAMS.approvedVotes]),
+                    totalVotes: IconConverter.toBigNumber(progressReport[PARAMS.totalVotes]),
+                    approvedPercentage: (!progressReport[PARAMS.totalVotes] || parseInt(progressReport[PARAMS.totalVotes]) === 0) ? 0 : ((progressReport[PARAMS.approvedVotes] / progressReport[PARAMS.totalVotes]) * 100)
                 }
             ));
             state.progressReportByProposal = state.progressReportByProposal.filter(progressReport =>
@@ -268,17 +286,18 @@ const proposalSlice = createSlice({
                 state.remainingVotes = action.payload.response.map (
                     progressReport => (
                         {
-                            status: progressReport._status,
-                            progressReportTitle: progressReport._project_report_title,
-                            projectTitle: progressReport._proposal_title,
-                            contributorAddress: progressReport._contributor_address,
-                            timestamp: progressReport._timestamp,
-                            ipfsHash: progressReport._ipfs_hash,
-                            reportKey: progressReport._report_key,
-                            proposalKey: progressReport._ipfs_key,
-                            approvedVotes: IconConverter.toBigNumber(progressReport.approved_votes),
-                            totalVotes: IconConverter.toBigNumber(progressReport.total_votes),
-                            approvedPercentage: (!progressReport.total_votes || parseInt(progressReport.total_votes) === 0) ? 0 : ((progressReport.approved_votes / progressReport.total_votes) * 100)
+
+                            status: progressReport[PARAMS.status],
+                            progressReportTitle: progressReport[PARAMS.progressReportTitle],
+                            projectTitle: progressReport[PARAMS.proposalTitle],
+                            contributorAddress: progressReport[PARAMS.contributorAddress],
+                            timestamp: progressReport[PARAMS.timestamp],
+                            ipfsHash: progressReport[PARAMS.reportHash],
+                            reportKey: progressReport[PARAMS.reportHash],
+                            proposalKey: progressReport[PARAMS.proposalHash],
+                            approvedVotes: IconConverter.toBigNumber(progressReport[PARAMS.approvedVotes]),
+                            totalVotes: IconConverter.toBigNumber(progressReport[PARAMS.totalVotes]),
+                            approvedPercentage: (!progressReport[PARAMS.totalVotes] || parseInt(progressReport[PARAMS.totalVotes]) === 0) ? 0 : ((progressReport[PARAMS.approvedVotes] / progressReport[PARAMS.totalVotes]) * 100)
                         }
                     )
                 );

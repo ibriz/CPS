@@ -14,13 +14,15 @@ function* submitProposalToScoreWorker({ payload }) {
     // }
 
     const params = {
-        _title: payload.proposal.projectName,
-        _total_budget: parseInt(payload.proposal.totalBudget).toFixed(),
-        sponsor_address: payload.proposal.sponserPrep,
-        _ipfs_hash: payload.response.hash,
-        _ipfs_key: payload.response.ipfsKey,
-        _ipfs_link: `https://gateway.ipfs.io/ipfs/${payload.response.hash}`,
-        project_period: `${payload.proposal.projectDuration}`
+        proposals: {
+            project_title: payload.proposal.projectName,
+            total_budget: parseInt(payload.proposal.totalBudget).toFixed(),
+            sponsor_address: payload.proposal.sponserPrep,
+            ipfs_hash: payload.response.hash,
+            ipfs_link: `https://gateway.ipfs.io/ipfs/${payload.response.hash}`,
+            project_duration: `${payload.proposal.projectDuration}`
+        }
+     
 
     }
 

@@ -107,7 +107,7 @@ function EditMilestoneModal(props) {
                     </Form.Group>
 
 
-                    <Form.Group as={Row} controlId="formPlaintextPassword">
+                    {/* <Form.Group as={Row} controlId="formPlaintextPassword">
                         <AppFormLabel column sm="12">
                             Description
                             </AppFormLabel>
@@ -122,7 +122,7 @@ function EditMilestoneModal(props) {
                                     )
                                 } />
                             </Col>
-                    </Form.Group>
+                    </Form.Group> */}
 
 
                     <Form.Group as={Row} controlId="formPlaintextPassword">
