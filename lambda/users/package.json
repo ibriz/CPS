@@ -1,12 +1,12 @@
 {
-  "name": "register-user",
+  "name": "users",
   "version": "1.0.0",
-  "description": "",
+  "description": "Users module for CPS",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "ibriz.ai",
   "license": "ISC",
   "dependencies": {
     "redis": "^3.0.2",
