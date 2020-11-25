@@ -86,7 +86,9 @@ const ProposalPendingPRCard = ({ myProposalList, fetchMyProposalListRequest, wal
         let filteredProposals
         // if(selectedTab !== 'Draft') 
         // {
-            filteredProposals = proposalPendingProgressReport;
+            filteredProposals = proposalPendingProgressReport.filter(
+                (proposal) => proposal._proposal_title.includes(searchText)
+            );
         // }
 
         // else {

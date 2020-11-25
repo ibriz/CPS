@@ -164,6 +164,8 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                             <Col sm="10" className={styles.inputSameLine}>
                                 <Form.Control size="md" as="select" value={progressReport.projectName} name="projectName" onChange={handleChange} required>
                                     <option selected disabled value="">Select Project</option>
+                                    {/* <option value="dasd">asdasd</option> */}
+
                                     {
                                         currentUserActiveProposals.map((proposal) => 
                                     <option value = {proposal.ipfsKey} disabled = {!proposal.newProgressReport}>{proposal._proposal_title}</option>
@@ -179,7 +181,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                                 Progress Report Name
                             </AppFormLabel>
                             <Col sm="10" className={styles.inputSameLine}>
-                                <Form.Control placeholder="Enter Progress Report Name" size="md" value={progressReport.progressReportTitle} name="progressReportTitle" onChange={handleChange} required />
+                                <Form.Control placeholder="Progress Report Name" size="md" value={progressReport.progressReportTitle} name="progressReportTitle" onChange={handleChange} required />
                             </Col>
                         </Form.Group>
                         <Form.Group as={Row} controlId="formPlaintextEmail">
@@ -187,10 +189,10 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                             <AppFormLabel column sm="2">
                                 Percentage Completed
                             </AppFormLabel>
-                            <Col sm="3" className="col-sm-2" className={styles.inputSameLine}>
+                            <Col sm="4" className="col-sm-2" className={styles.inputSameLine}>
                                 <InputGroup size="md">
 
-                                    <FormControl placeholder="0" type="number" min={0} max={100} value={progressReport.percentageCompleted} name="percentageCompleted" onChange={handleChange} required />
+                                    <FormControl placeholder="Percentage Completed" type="number" min={0} max={100} value={progressReport.percentageCompleted} name="percentageCompleted" onChange={handleChange} required />
                                     <InputGroup.Append>
                                         <InputGroup.Text>%</InputGroup.Text>
                                     </InputGroup.Append>
@@ -199,10 +201,10 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                             <AppFormLabel column sm="3" className={styles.labelSameLine}>
                                 Time Remaining to Completion
                             </AppFormLabel>
-                            <Col sm="4" className={styles.inputSameLine}>
+                            <Col sm="3" className={styles.inputSameLine}>
                                 <InputGroup size="md">
 
-                                    <FormControl placeholder="0" type="number" value={progressReport.timeRemainingToCompletion} name="timeRemainingToCompletion" onChange={handleChange} required />
+                                    <FormControl placeholder = "Time Remaining" type="number" value={progressReport.timeRemainingToCompletion} name="timeRemainingToCompletion" onChange={handleChange} min = {0} max = {6} required />
                                     <InputGroup.Append>
                                         <InputGroup.Text>Months</InputGroup.Text>
                                     </InputGroup.Append>
@@ -270,7 +272,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                                     <Col sm="4" className={styles.inputSameLine}>
                                         <InputGroup size="md">
 
-                                            <FormControl placeholder="0" type="number" value={progressReport.additionalBudget} name="additionalBudget" onChange={handleChange} required />
+                                            <FormControl placeholder = "Additional Budget" type="number" value={progressReport.additionalBudget} name="additionalBudget" onChange={handleChange} min = {0} required />
                                             <InputGroup.Append>
                                                 <InputGroup.Text>ICX</InputGroup.Text>
                                             </InputGroup.Append>
@@ -284,7 +286,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                                     <Col sm="4" className={styles.inputSameLine}>
                                         <InputGroup size="md">
 
-                                            <FormControl placeholder="0" type="number" value={progressReport.additionalTime} name="additionalTime" onChange={handleChange} required />
+                                            <FormControl placeholder="Additional Time" type="number" value={progressReport.additionalTime} name="additionalTime" onChange={handleChange}  min = {0} max = {6} required />
                                             <InputGroup.Append>
                                                 <InputGroup.Text>Months</InputGroup.Text>
                                             </InputGroup.Append>

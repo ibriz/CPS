@@ -83,7 +83,7 @@ function EditMilestoneModal(props) {
                         <Col sm="4" className={styles.inputSameLine}>
                             <InputGroup size="md">
 
-                                <FormControl placeholder="0" type="number" value={milestone.duration} name="duration" onChange={handleChange} required />
+                                <FormControl placeholder="Duration" type="number" min = {0} max = {6} value={milestone.duration} name="duration" onChange={handleChange} required />
                                 <InputGroup.Append>
                                     <InputGroup.Text>Months</InputGroup.Text>
                                 </InputGroup.Append>
