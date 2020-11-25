@@ -8,7 +8,7 @@ export const progressReportStatusMapping = [
     },
     {
         name: 'Rejected',
-        status: '_rejected',
+        status: '_progress_report_rejected',
         badgeColor: 'danger'
     },
     {
@@ -25,6 +25,12 @@ export const progressReportStatusMapping = [
         name: 'Rejected',
         status: '_reject',
         badgeColor: 'danger'
+    },
+
+    {
+        name: 'Abstained',
+        status: '_abstain',
+        badgeColor: 'info'
     },
 
 ];
@@ -45,6 +51,11 @@ export const proposalStatusMapping = [
         name: 'Rejected',
         status: '_reject',
         badgeColor: 'danger'
+    },
+    {
+        name: 'Abstained',
+        status: '_abstain',
+        badgeColor: 'info'
     },
     {
         name: 'Abstained',
