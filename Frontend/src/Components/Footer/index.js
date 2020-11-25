@@ -67,7 +67,7 @@ const Footer = () => {
                     </defs>
                 </svg>
                 <div style = {{marginTop: '20px'}}>iBriz Pvt. Ltd.</div>
-                <div style = {{marginTop: '5px'}}>support@iBriz.ai</div>
+                <div style = {{marginTop: '5px'}}>hello@icon.foundation</div>
 
             </Col>
 
