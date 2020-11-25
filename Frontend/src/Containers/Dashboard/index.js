@@ -20,7 +20,7 @@ import {fetchExpectedGrantRequest, fetchCPSTreasuryScoreAddressRequest} from 'Re
 
 
 
-const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfRemainingFunds, cpfScoreAddress, fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, fetchProjectAmountsRequest, isPrep, isRegistered, myProposalList, fetchExpectedGrantRequest, expectedGrant, sponsorBond, totalCountSponsorRequests, remainingVotesProposal, remainingVotesPR, fetchCPSTreasuryScoreAddressRequest, cpsTreasuryScoreAddress }) => {
+const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfRemainingFunds, cpfScoreAddress, fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, fetchProjectAmountsRequest, isPrep, isRegistered, myProposalList, fetchExpectedGrantRequest, expectedGrant, sponsorBond, totalCountSponsorRequests, remainingVotesProposal, remainingVotesPR, fetchCPSTreasuryScoreAddressRequest, cpsTreasuryScoreAddress, payPenaltyAmount }) => {
     const [showPayPenaltyConfirmationModal, setShowPayPenaltyConfirmationModal] = useState(false);
     const { isRemainingTimeZero, highestSignificantTime, highestSignificantTimeForGrant } = useTimer();
 
@@ -225,7 +225,9 @@ const mapStateToProps = state => (
         remainingVotesProposal: state.proposals.remainingVotes,
         remainingVotesPR: state.progressReport.remainingVotes,
 
-        cpsTreasuryScoreAddress: state.fund.cpsTreasuryScoreAddress
+        cpsTreasuryScoreAddress: state.fund.cpsTreasuryScoreAddress,
+
+        payPenaltyAmount: state.account.penaltyAmount
 
 
 
