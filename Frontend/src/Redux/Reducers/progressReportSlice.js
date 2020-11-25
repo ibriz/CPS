@@ -130,6 +130,10 @@ const initialState = {
     error: null,
     votesByProgressReport: [],
 
+
+    votesBudgetChangeByProgressReport: [],
+
+
     progressReportByProposal: [],
     remainingVotes: []
 };
@@ -249,6 +253,38 @@ const proposalSlice = createSlice({
         fetchVoteResultFailure() {
             return;
         }, 
+
+
+
+        fetchVoteResultBudgetChangeRequest() {
+            return;
+        },
+
+        fetchVoteResultBudgetChangeSuccess(state, action) {
+            state.votesBudgetChangeByProgressReport = action.payload.response.data.map(vote => (
+                {
+                    sponsorAddress: vote.address,
+                    status: progressReportMapping.find(mapping =>
+                        mapping.status === vote.vote)?.name,
+                    timestamp: vote._timestamp
+                }
+            ));
+            state.votesBudgetChangeByProgressReport = state.votesByProgressReport.filter(vote => 
+                vote.status);
+                state.approvedVotesBudgetChange = IconConverter.toBigNumber(action.payload.response.approved_votes);
+                state.totalVotesBudgetChange = IconConverter.toBigNumber(action.payload.response.total_votes);
+                state.rejectedVotesBudgetChange = IconConverter.toBigNumber(action.payload.response.rejected_votes);
+    
+                state.approvedVotersBudgetChange = IconConverter.toBigNumber(action.payload.response.approve_voters);
+                state.rejectedVotersBudgetChange = IconConverter.toBigNumber(action.payload.response.reject_voters);
+                state.totalVotersBudgetChange = IconConverter.toBigNumber(action.payload.response.total_voters);
+
+            
+            return;
+        },  
+        fetchVoteResultBudgetChangeFailure() {
+            return;
+        }, 
         
         fetchProgressReportByProposalRequest() {
             return;
@@ -317,5 +353,6 @@ fetchDraftsRequest, fetchDraftsSuccess, fetchDraftsFailure, setModalShowVotingPR
 voteProgressReport, 
 fetchVoteResultRequest, fetchVoteResultSuccess, fetchVoteResultFailure,
 fetchProgressReportByProposalRequest, fetchProgressReportByProposalSuccess,
-fetchProgressReportByProposalFailure, fetchRemainingVotesPRSuccess} = proposalSlice.actions;
+fetchProgressReportByProposalFailure, fetchRemainingVotesPRSuccess,
+fetchVoteResultBudgetChangeRequest, fetchVoteResultBudgetChangeSuccess, fetchVoteResultBudgetChangeFailure} = proposalSlice.actions;
 export default proposalSlice.reducer;
