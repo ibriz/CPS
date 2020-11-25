@@ -34,14 +34,14 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
         {
             projectName: null,
             category: null,
-            projectDuration: 0,
-            totalBudget: 0,
+            projectDuration: null,
+            totalBudget: null,
             sponserPrep: null,
             description: null,
             milestones: [],
             teamName: null,
             teamEmail: null,
-            teamSize: 0,
+            teamSize: null,
         }
     );
 
@@ -141,7 +141,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                                 Project Name
                             </Form.Label>
                             <Col sm="10" className={styles.inputSameLine}>
-                                <Form.Control placeholder="Enter Project Name" size="md" value={proposal.projectName} name="projectName" onChange={handleChange} required />
+                                <Form.Control placeholder="Project Name" size="md" value={proposal.projectName} name="projectName" onChange={handleChange} required />
                             </Col>
                         </Form.Group>
                         <Form.Group as={Row} controlId="formPlaintextEmail">
@@ -166,7 +166,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                             <Col sm="4" className={styles.inputSameLine}>
                                 <InputGroup size="md">
 
-                                    <FormControl placeholder="0" type="number" value={proposal.projectDuration} name="projectDuration" onChange={handleChange} required />
+                                    <FormControl placeholder="Project Duration" type="number" value={proposal.projectDuration} name="projectDuration" onChange={handleChange} min = {0} max = {6} required />
                                     <InputGroup.Append>
                                         <InputGroup.Text>Months</InputGroup.Text>
                                     </InputGroup.Append>
@@ -183,7 +183,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                             <Col sm="4" className={styles.inputSameLine}>
                                 <InputGroup size="md">
 
-                                    <FormControl placeholder="0" type="number" value={proposal.totalBudget} name="totalBudget" onChange={handleChange} required />
+                                    <FormControl placeholder="Total Budget" min = {0} type="number" value={proposal.totalBudget} name="totalBudget" onChange={handleChange} required />
                                     <InputGroup.Append>
                                         <InputGroup.Text>ICX</InputGroup.Text>
                                     </InputGroup.Append>
@@ -196,7 +196,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                             </Form.Label>
                             <Col sm="4" className={styles.inputSameLine}>
                                 <Form.Control size="md" as="select" value={proposal.sponserPrep} name="sponserPrep" onChange={handleChange} required>
-                                    <option disabled selected>Select PREP</option>
+                                    <option disabled selected value = "">Select PREP</option>
                                     {
                                         preps.map(prep =>
                                             <option value={prep.address}>{prep.name}</option>
@@ -249,7 +249,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                                             <tr>
                                                 <td>{milestone.name}</td>
                                                 <td>{milestone.duration}</td>
-                                                <td style={{ display: 'flex', justifyContent: 'center' }}> <AiFillDelete onClick={() => {
+                                                <td style={{ display: 'flex', justifyContent: 'center' }}> <AiFillDelete style = {{cursor: 'pointer'}} onClick={() => {
                                                     setProposal(prevState => {
                                                         const newMilestone = [...prevState.milestones]
                                                         newMilestone.splice(index, 1);
@@ -263,7 +263,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
 
                                                 }} />
 
-                                                    <FiEdit2 style={{ marginLeft: '10px' }}
+                                                    <FiEdit2 style={{ marginLeft: '10px', cursor: 'pointer' }}
                                                         onClick={() => {
                                                             setEditModalShow(true);
                                                             setEditModalIndex(index);
@@ -293,11 +293,11 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                             <Col sm="2" className={styles.inputSameLine}>
                                 <Form.Control placeholder={"Team Email"} type="email" size={"md"} value={proposal.teamEmail} name="teamEmail" onChange={handleChange} required />
                             </Col>
-                            <Form.Label column sm="2" className={styles.labelSameLine}>
+                            <Form.Label column sm="1" className={styles.labelSameLine}>
                                 Team Size
                             </Form.Label>
-                            <Col sm="1" className={styles.inputSameLine}>
-                                <Form.Control placeholder={0} size={"md"} type="number" value={proposal.teamSize} name="teamSize" onChange={handleChange} required />
+                            <Col sm="2" className={styles.inputSameLine}>
+                                <Form.Control placeholder={"Team Size"} size={"md"} type="number" value={proposal.teamSize} name="teamSize" onChange={handleChange} required />
                             </Col>
 
 

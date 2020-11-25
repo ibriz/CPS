@@ -9,7 +9,9 @@ import constants from './constants';
 // var CPSScore = 'cx724a3cf07c91a12dd7fd4987be130f383168b631';
 // var CPSScore = 'cxdf3c1ea6ba87e21957c63b21a54151a38a6ecb80';
 // var CPSScore = 'cx00c1e2d9b009fca69002c53c1ce3ed377708381e';
-var CPSScore = 'cx6bb0e6683dd326165d42289c12b6bd0eaa596cc9';
+// var CPSScore = 'cx6bb0e6683dd326165d42289c12b6bd0eaa596cc9';
+var CPSScore = 'cx6bb0e6683dd326165d42289c12b6bd0eaa596cc8';
+
 
 
 // var testNet = "https://bicon.tracker.solidwallet.io/v3/address/info?address="
