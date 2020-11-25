@@ -14,7 +14,7 @@ function* submitProposalToScoreWorker({ payload }) {
     // }
 
     const params = {
-        proposals: {
+        _proposals: {
             project_title: payload.proposal.projectName,
             total_budget: parseInt(payload.proposal.totalBudget).toFixed(),
             sponsor_address: payload.proposal.sponserPrep,

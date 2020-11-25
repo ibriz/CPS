@@ -15,7 +15,7 @@ import { fetchSponsorRequestsListRequest } from 'Redux/Reducers/proposalSlice';
 
 const { submit_proposal,
     submit_progress_report,
-    approve_sponsor,
+    sponsor_vote,
     reject_sponsor,
     vote_proposal,
     vote_progress_report,
@@ -131,15 +131,15 @@ export default (event) => {
                     NotificationManager.info("Progress Report Creation Request Sent");
                     break;
 
-                case approve_sponsor:
+                case sponsor_vote:
                     console.log('history');
                     history.push('/');
-                    NotificationManager.info("Proposal Approval Request Sent");
+                    NotificationManager.info("Sponsor Vote Request Sent");
 
                     getResult({
                         txHash: payload.result,
-                        failureMessage: "Proposal Approval Failed",
-                        successMessage: "Proposal Approved Successfully"
+                        failureMessage: "Sponsor Voting Failed",
+                        successMessage: "Sponsor Voted Successfully"
                     }, function(){
 
                         store.dispatch(fetchSponsorRequestsListRequest(
