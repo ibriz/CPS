@@ -23,10 +23,10 @@ const periodSlice = createSlice({
             return;
         },
         fetchPeriodDetailsSuccess(state, action) {
-            state.currentBlock = parseInt(action.payload.response._current_block);
-            state.nextBlock = parseInt(action.payload.response._next_block);
+            state.currentBlock = parseInt(action.payload.response.current_block);
+            state.nextBlock = parseInt(action.payload.response.next_block);
             state.remainingTime = parseInt(action.payload.response.remaining_time);
-            state.period = periodMapping[action.payload.response._period_name];
+            state.period = periodMapping[action.payload.response.period_name];
             state.periodSpan = parseInt(action.payload.response.period_span);
             state.timestamp = Math.floor(Date.now() / 1000);
 

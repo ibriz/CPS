@@ -16,6 +16,7 @@ import { getProposalApprovedPercentage, getProposalApprovedVotersPercentage } fr
 import { icxFormat } from 'helpers';
 import DetailsModalPR from 'Components/Card/DetailsModalProgressReport';
 
+
 function DetailsModal(props) {
 
   const voteOptions = ['Approve', 'Reject', 'Abstain'];
@@ -29,8 +30,11 @@ function DetailsModal(props) {
   const [voteConfirmationShow, setVoteConfirmationShow] = React.useState(false);
 
 
-  const { proposalDetail, proposal, status, sponsorRequest = false, approveSponserRequest, rejectSponsorRequest, voting = false, voteProposal, progressReportByProposal, votesByProposal, fetchVoteResultRequest, approvedPercentage,
+  const { proposalDetail, proposal, sponsorRequest = false, approveSponserRequest, rejectSponsorRequest, voting = false, voteProposal, progressReportByProposal, votesByProposal, fetchVoteResultRequest, approvedPercentage,
     fetchProgressReportByProposalRequest, period, remainingTime, approvedVoterPercentage, fetchProposalDetail, walletAddress, ...remainingProps } = props;
+
+    const status = proposalStatusMapping.find(mapping => mapping.status === proposal?._status)?.name
+
 
     const onClickProgressReport = (porgressReport) => {
       setModalShow(true);
@@ -129,7 +133,7 @@ function DetailsModal(props) {
             {
               ((selectedTab) => {
                 console.log(props.selectedTab);
-                if (['Active', 'Paused'].includes(props.status))
+                if (['Active', 'Paused'].includes(status))
                   return (
                     <>
                       <Col lg="3" xs="12">
@@ -149,7 +153,7 @@ function DetailsModal(props) {
                       </Col>
                     </>
                   )
-                if (['Voting'].includes(props.status))
+                if (['Voting'].includes(status))
                   return (
                     <>
                       {/* <Col xs="12"> */}
@@ -331,7 +335,7 @@ function DetailsModal(props) {
         }
 
         {
-          !sponsorRequest &&
+          // !sponsorRequest &&
           <Row>
             <Col xs="12">
               {

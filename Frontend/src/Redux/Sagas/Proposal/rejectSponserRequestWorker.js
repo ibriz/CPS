@@ -4,10 +4,11 @@ function* rejectSponserRequestWorker({ payload }) {
 
     const params = {
         _ipfs_key: payload.ipfsKey,
+        _vote: '_reject'
     }
 
     sendTransaction({
-        method: 'reject_sponsor',
+        method: 'sponsor_vote',
         params,
     }
     )

@@ -159,7 +159,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                     <Form onSubmit={handleSubmit}>
                         <Form.Group as={Row} controlId="formPlaintextEmail">
                             <AppFormLabel column sm="2">
-                                Project Report Name
+                                Project Name
                             </AppFormLabel>
                             <Col sm="10" className={styles.inputSameLine}>
                                 <Form.Control size="md" as="select" value={progressReport.projectName} name="projectName" onChange={handleChange} required>

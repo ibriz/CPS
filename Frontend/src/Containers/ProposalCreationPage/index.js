@@ -151,7 +151,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                             </Form.Label>
                             <Col sm="4" className={ClassNames("col-sm-2", [styles.inputSameLine])}>
                                 <Form.Control size="md" as="select" value={proposal.category} name="category" onChange={handleChange} required>
-                                    <option selected disabled>Select a category</option>
+                                    <option selected disabled value = "">Select a category</option>
 
                                     <option>Infrastructure</option>
                                     <option>Development</option>

@@ -133,7 +133,7 @@ export default (event) => {
 
                 case approve_sponsor:
                     console.log('history');
-                    history.push('/sponsorRequests');
+                    history.push('/');
                     NotificationManager.info("Proposal Approval Request Sent");
 
                     getResult({
@@ -157,7 +157,7 @@ export default (event) => {
                     // setTimeout(() => window.location.reload(), 800); 
                     break;
                 case reject_sponsor:
-                    history.push('/sponsorRequests');
+                    history.push('/');
                     NotificationManager.info("Proposal Rejection Request Sent");
 
                     getResult({

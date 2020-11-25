@@ -48,6 +48,10 @@
     background-size: auto 350px;
     background-position: top right; */
 
+     background-image: url('../../../Assets/Images/Intersect8.png');
+    background-size: 1400px 360px;
+    background-position: top right;
+
 }
 
 .tabularDataWrapper {
@@ -104,7 +108,7 @@ align-items: center;
     }
 
     .slanted {
-        height: 365px;
+        height: 385px;
     }
 }
 
@@ -185,10 +189,9 @@ align-items: center;
 
 .slantedBackground {
     position: absolute;
-    top: 0;
+    top: 34px;
     right: 0;
     width: 500px;
-    margin-top: 17px;
 
 }
 
@@ -199,7 +202,7 @@ align-items: center;
 
     .slanted {
         height: auto !important;
-        padding-bottom: 55px;
+        padding-bottom: 60px;
     }
 }
 
