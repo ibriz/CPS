@@ -1,3 +1,5 @@
+import store from 'Redux/Store';
+
 export const progressReportStatusMapping = [
     {
         name: 'Approved',

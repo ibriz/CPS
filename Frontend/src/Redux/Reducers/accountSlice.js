@@ -5,7 +5,8 @@ const initialState = {
   isPrep: null,
   isRegistered: false,
   payPenalty: false,
-  loginType: ''
+  loginType: '',
+  penaltyAmount: 15
 };
 
 const accountSlice = createSlice({
@@ -26,6 +27,7 @@ const accountSlice = createSlice({
       state.isPrep = action.payload.isPrep
       state.isRegistered = action.payload.isRegistered
       state.payPenalty = action.payload.payPenalty
+      state.penaltyAmount = action.payload.penaltyAmount
     },
 
   },
