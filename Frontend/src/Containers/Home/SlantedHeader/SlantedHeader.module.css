@@ -94,6 +94,7 @@ align-items: center;
 
     justify-content: space-between;
     width: 100%;
+    flex-wrap: wrap;
 
 }
 
@@ -148,7 +149,7 @@ align-items: center;
 
     .slanted {
         height: 350px;
-        clip-path: polygon(0 0, 100% 0, 100% 88%, 0 100%); 
+        clip-path: polygon(0 0, 100% 0, 100% 94%, 0 100%); 
 
     }
 }
@@ -218,6 +219,22 @@ align-items: center;
 
 @media screen and (max-width: 767px) {
     .slantedBackground {
+        display: none;
+    }
+
+    .headerComp2 {
+        display: none !important;
+    }
+
+    .headerComp1 > * {
+        margin-top: 5px
+    }
+
+}
+
+@media screen and (min-width: 768px) {
+
+    .headerComp1 {
         display: none;
     }
 }
