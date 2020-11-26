@@ -15,6 +15,7 @@ import ConfirmationModal from 'Components/UI/ConfirmationModal';
 import { getProposalApprovedPercentage, getProposalApprovedVotersPercentage } from 'Selectors';
 import { icxFormat } from 'helpers';
 import DetailsModalPR from 'Components/Card/DetailsModalProgressReport';
+import IconService from 'icon-sdk-js';
 
 
 function DetailsModal(props) {
@@ -79,10 +80,11 @@ function DetailsModal(props) {
   }
 
   const onClickApproveSponsorRequest = () => {
+    const {IconConverter} = IconService
     approveSponserRequest(
       {
         ipfsKey: proposal.ipfsKey,
-        sponsorBond: proposalDetail?.totalBudget * 0.1
+        sponsorBond: IconConverter.toBigNumber(proposalDetail?.totalBudget).dividedBy(10)
       }
     );
     // props.onHide();

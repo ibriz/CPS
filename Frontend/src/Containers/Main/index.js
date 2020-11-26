@@ -29,57 +29,65 @@ const Main = ({
   )
 
   const userRoute = (component) => (
-    (!isPrep || !isRegistered )?
+    (!isPrep || !isRegistered) ?
       component :
       <Redirect to='/' />
   )
 
   return (
     <>
-    <main>
-      <div className="btn-toggle" onClick={() => handleToggleSidebar(true)}>
-        <FaBars />
-      </div>
+      <main style = {{display: 'flex', justifyContent: 'space-between', paddingBottom: 0, paddingLeft: 0, paddingRight: 0}}>
+        <div style = {{paddingLeft: '25px', paddingRight: '25px'}}>
+          <div className="btn-toggle" onClick={() => handleToggleSidebar(true)}>
+            <FaBars />
+          </div>
 
-      <div className="block ">
-        <Switch>
-          <Route path="/dashboard">
-            <Dashboard />
-          </Route>
-          <Route path={process.env.PUBLIC_URL + "/proposals"}>
-            {<Proposals />}
-          </Route>
-          <Route path="/progress-reports">
-            {<ProgressReports />}
-          </Route>
-          <Route path="/newProposal">
-            {userRoute(<ProposalCreationPage />)}
-          </Route>
-          <Route path="/newProgressReport">
-            {userRoute(<ProgressReportCreationPage />)}
-          </Route>
-          {/* <Route path="/sponsorRequests">
+          <div className="block ">
+            <Switch>
+              <Route path="/dashboard">
+                <Dashboard />
+              </Route>
+              <Route path={process.env.PUBLIC_URL + "/proposals"}>
+                {<Proposals />}
+              </Route>
+              <Route path="/progress-reports">
+                {<ProgressReports />}
+              </Route>
+              <Route path="/newProposal">
+                {userRoute(<ProposalCreationPage />)}
+              </Route>
+              <Route path="/newProgressReport">
+                {userRoute(<ProgressReportCreationPage />)}
+              </Route>
+              {/* <Route path="/sponsorRequests">
             {prepRoute(<SponsorRequests />)}
 
           </Route> */}
-          {/* <Route path="/voting">
+              {/* <Route path="/voting">
             {prepRoute(<Voting />)}
           </Route> */}
-          {/* <Route path="/backed-projects">
+              {/* <Route path="/backed-projects">
             {prepRoute(<BackedProjects />)}
           </Route> */}
-          <Route path="/">
-            <Dashboard />
-          </Route>
-        </Switch>
+              <Route path="/">
+                <Dashboard />
+              </Route>
+            </Switch>
 
-        {/* <Footer /> */}
-        {/* <Footer /> */}
-      </div>
+            {/* <Footer /> */}
+            {/* <Footer /> */}
+          </div>
+
+
+        </div>
+
+        <Footer />
 
 
 
-    </main>
+
+
+      </main>
     </>
   );
 };
