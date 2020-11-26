@@ -10,13 +10,14 @@
     display: flex;
     justify-content: center;
     position: relative;
+    align-items: center;
 
 }
 
 .account {
     position: absolute;
-right: 1.5%;
-display: flex;
+    right: 0;
+    display: flex;
     align-items: center;
 }
 

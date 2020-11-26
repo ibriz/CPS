@@ -3,6 +3,7 @@ import { callKeyStoreWallet } from '../../ICON/utils';
 import { put, call, select } from 'redux-saga/effects';
 import { loginSuccess } from 'Redux/Reducers/accountSlice';
 import { IconConverter } from 'icon-sdk-js';
+import {iconService} from 'Redux/ICON/utils';
 
 export default function* loginPrepWorker() {
   try {
@@ -24,13 +25,14 @@ export default function* loginPrepWorker() {
     const isRegistered = !!parseInt(IconConverter.toBigNumber(response.isRegistered));
     const payPenalty = !!parseInt(IconConverter.toBigNumber(response.payPenalty));
     const penaltyAmount = parseInt(response.penaltyAmount)
-
+    const walletBalance = yield iconService.getBalance(walletAddress).execute();
 
     yield put(loginSuccess({
       isPrep,
       isRegistered,
       payPenalty,
-      penaltyAmount
+      penaltyAmount,
+      walletBalance
     }));
 
 

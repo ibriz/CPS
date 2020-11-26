@@ -1,4 +1,8 @@
-import { createSlice} from '@reduxjs/toolkit'
+import { createSlice} from '@reduxjs/toolkit';
+import IconService from 'icon-sdk-js';
+
+
+const {IconConverter} = IconService;
 
 const initialState = {
   address: null,
@@ -6,7 +10,8 @@ const initialState = {
   isRegistered: false,
   payPenalty: false,
   loginType: '',
-  penaltyAmount: 15
+  penaltyAmount: 15,
+  walletBalance: 0
 };
 
 const accountSlice = createSlice({
@@ -28,6 +33,8 @@ const accountSlice = createSlice({
       state.isRegistered = action.payload.isRegistered
       state.payPenalty = action.payload.payPenalty
       state.penaltyAmount = action.payload.penaltyAmount
+      state.walletBalance = IconConverter.toBigNumber(action.payload.walletBalance).dividedBy(10**18);
+
     },
 
   },
