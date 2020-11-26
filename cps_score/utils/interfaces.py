@@ -23,7 +23,7 @@ class CPF_TREASURY_INTERFACE(InterfaceScore):
                              _total_added_installment_count: int = 0) -> None: pass
 
     @interface
-    def return_fund_amount(self) -> None: pass
+    def return_fund_amount(self, _address: Address) -> None: pass
 
 
 class CPS_TREASURY_INTERFACE(InterfaceScore):

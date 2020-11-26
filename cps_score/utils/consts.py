@@ -1,3 +1,5 @@
+from iconservice import *
+
 # ================================================
 #  Consts
 # ================================================
@@ -10,7 +12,7 @@ MAJORITY = 0.666
 # Period Interval Time
 BLOCKS_COUNT = 300
 # BURN COIN ADDRESS
-ZERO_WALLET_ADDRESS = 'hx0000000000000000000000000000000000000000'
+ZERO_WALLET_ADDRESS = Address.from_string('hx0000000000000000000000000000000000000000')
 
 # User Defined Db
 PROPOSAL_DB_PREFIX = b'proposal'

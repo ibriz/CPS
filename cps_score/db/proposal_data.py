@@ -48,7 +48,7 @@ class ProposalDataDB:
 
 
 def addDataToProposalDB(prefix: bytes, _proposals: 'ProposalDataDB', proposal_data: 'ProposalDataObject'):
-    _proposals[prefix].ipfs_hash.set(proposal_data.proposal_hash)
+    _proposals[prefix].ipfs_hash.set(proposal_data.ipfs_hash)
     _proposals[prefix].project_title.set(proposal_data.project_title)
     _proposals[prefix].timestamp.set(proposal_data.timestamp)
     _proposals[prefix].total_budget.set(proposal_data.total_budget)
@@ -57,11 +57,14 @@ def addDataToProposalDB(prefix: bytes, _proposals: 'ProposalDataDB', proposal_da
     _proposals[prefix].contributor_address.set(proposal_data.contributor_address)
     _proposals[prefix].status.set(proposal_data.status)
     _proposals[prefix].tx_hash.set(proposal_data.tx_hash)
-    _proposals[prefix].tx_hash.set(proposal_data.percentage_completed)
+    _proposals[prefix].percentage_completed.set(proposal_data.percentage_completed)
+    _proposals[prefix].total_votes.set(0)
+    _proposals[prefix].approved_votes.set(0)
+    _proposals[prefix].rejected_votes.set(0)
 
 
 def getDataFromProposalDB(prefix: bytes, _proposals: 'ProposalDataDB') -> dict:
-    proposal_hash = _proposals[prefix].ipfs_hash.get()
+    ipfs_hash = _proposals[prefix].ipfs_hash.get()
     project_title = _proposals[prefix].project_title.get()
     timestamp = _proposals[prefix].timestamp.get()
     total_budget = _proposals[prefix].total_budget.get()
@@ -83,7 +86,7 @@ def getDataFromProposalDB(prefix: bytes, _proposals: 'ProposalDataDB') -> dict:
     reject_voters = len(_proposals[prefix].reject_voters)
 
     return {
-        'ipfs_hash': proposal_hash,
+        'ipfs_hash': ipfs_hash,
         'project_title': project_title,
         'timestamp': timestamp,
         'total_budget': total_budget,
@@ -106,7 +109,7 @@ def getDataFromProposalDB(prefix: bytes, _proposals: 'ProposalDataDB') -> dict:
 
 
 def createProposalDataObject(proposal_data: dict) -> 'ProposalDataObject':
-    return ProposalDataObject(proposal_hash=proposal_data['proposal_hash'],
+    return ProposalDataObject(ipfs_hash=proposal_data['ipfs_hash'],
                               project_title=proposal_data['project_title'],
                               timestamp=proposal_data['timestamp'],
                               total_budget=proposal_data['total_budget'],
@@ -120,7 +123,7 @@ def createProposalDataObject(proposal_data: dict) -> 'ProposalDataObject':
 
 class ProposalDataObject(object):
     def __init__(self, **kwargs) -> None:
-        self.proposal_hash = kwargs.get('proposal_hash')
+        self.ipfs_hash = kwargs.get('ipfs_hash')
         self.project_title = kwargs.get('project_title')
         self.timestamp = kwargs.get('timestamp')
         self.total_budget = kwargs.get('total_budget')

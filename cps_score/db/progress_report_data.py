@@ -13,7 +13,7 @@ class ProgressReportData(object):
 
         self.budget_adjustment = VarDB("budget_adjustment", db, bool)
         self.additional_budget = VarDB('additional_budget', db, int)
-        self.additional_duration = VarDB('additional_duration', db, int)
+        self.additional_month = VarDB('additional_month', db, int)
 
         self.total_votes = VarDB("total_votes", db, int)
         self.approved_votes = VarDB("approved_votes", db, int)
@@ -48,24 +48,27 @@ class ProgressReportDataDB:
 
 def addDataToProgressReportDB(prefix: bytes, _proposals: 'ProgressReportDataDB',
                               proposal_data: 'ProgressReportDataObject'):
-    _proposals[prefix].ipfs_hash.set(proposal_data.proposal_key)
+    _proposals[prefix].ipfs_hash.set(proposal_data.ipfs_hash)
     _proposals[prefix].report_hash.set(proposal_data.report_hash)
     _proposals[prefix].progress_report_title.set(proposal_data.progress_report_title)
     _proposals[prefix].timestamp.set(proposal_data.timestamp)
     _proposals[prefix].additional_budget.set(proposal_data.additional_budget)
-    _proposals[prefix].additional_duration.set(proposal_data.additional_duration)
+    _proposals[prefix].additional_month.set(proposal_data.additional_month)
     _proposals[prefix].status.set(proposal_data.status)
     _proposals[prefix].tx_hash.set(proposal_data.tx_hash)
     _proposals[prefix].budget_adjustment.set(proposal_data.budget_adjustment)
+    _proposals[prefix].total_votes.set(0)
+    _proposals[prefix].approved_votes.set(0)
+    _proposals[prefix].rejected_votes.set(0)
 
 
 def getDataFromProgressReportDB(prefix: bytes, _proposals: 'ProgressReportDataDB') -> dict:
-    proposal_key = _proposals[prefix].ipfs_hash.get()
+    ipfs_hash = _proposals[prefix].ipfs_hash.get()
     progress_hash = _proposals[prefix].report_hash.get()
     progress_report_title = _proposals[prefix].progress_report_title.get()
     timestamp = _proposals[prefix].timestamp.get()
     additional_budget = _proposals[prefix].additional_budget.get()
-    additional_duration = _proposals[prefix].additional_duration.get()
+    additional_month = _proposals[prefix].additional_month.get()
     status = _proposals[prefix].status.get()
     tx_hash = _proposals[prefix].tx_hash.get()
     budget_adjustment = _proposals[prefix].budget_adjustment.get()
@@ -74,7 +77,7 @@ def getDataFromProgressReportDB(prefix: bytes, _proposals: 'ProgressReportDataDB
     approved_votes = _proposals[prefix].approved_votes.get()
     rejected_votes = _proposals[prefix].rejected_votes.get()
 
-    voters_list = len(_proposals[prefix].voters_list)
+    total_voters = len(_proposals[prefix].voters_list)
     approve_voters = len(_proposals[prefix].approve_voters)
     reject_voters = len(_proposals[prefix].reject_voters)
 
@@ -84,20 +87,21 @@ def getDataFromProgressReportDB(prefix: bytes, _proposals: 'ProgressReportDataDB
     budget_reject_voters = len(_proposals[prefix].budget_reject_voters)
 
     return {
-        'ipfs_hash': proposal_key,
+        'ipfs_hash': ipfs_hash,
         'report_hash': progress_hash,
         'progress_report_title': progress_report_title,
         'timestamp': timestamp,
         'additional_budget': additional_budget,
-        'additional_duration': additional_duration,
+        'additional_month': additional_month,
         'status': status,
         'tx_hash': tx_hash,
         'budget_adjustment': budget_adjustment,
+
         'total_votes': total_votes,
         'approved_votes': approved_votes,
         'rejected_votes': rejected_votes,
 
-        'voters_list': voters_list,
+        'total_voters': total_voters,
         'approve_voters': approve_voters,
         'reject_voters': reject_voters,
 
@@ -111,11 +115,11 @@ def getDataFromProgressReportDB(prefix: bytes, _proposals: 'ProgressReportDataDB
 def createProgressDataObject(progress_report_data: dict) -> 'ProgressReportDataObject':
     return ProgressReportDataObject(ipfs_hash=progress_report_data['ipfs_hash'],
                                     report_hash=progress_report_data['report_hash'],
-                                    progress_report_title=progress_report_data['report_report_title'],
+                                    progress_report_title=progress_report_data['progress_report_title'],
                                     timestamp=progress_report_data['timestamp'],
                                     budget_adjustment=progress_report_data['budget_adjustment'],
                                     additional_budget=progress_report_data['additional_budget'],
-                                    additional_duration=progress_report_data['additional_duration'],
+                                    additional_month=progress_report_data['additional_month'],
                                     status=progress_report_data['status'],
                                     tx_hash=progress_report_data['tx_hash'])
 
@@ -123,12 +127,12 @@ def createProgressDataObject(progress_report_data: dict) -> 'ProgressReportDataO
 class ProgressReportDataObject(object):
 
     def __init__(self, **kwargs) -> None:
-        self.proposal_key = kwargs.get('ipfs_key')
+        self.ipfs_hash = kwargs.get('ipfs_hash')
         self.report_hash = kwargs.get('report_hash')
         self.progress_report_title = kwargs.get('progress_report_title')
         self.timestamp = kwargs.get('timestamp')
         self.additional_budget = kwargs.get('additional_budget')
-        self.additional_duration = kwargs.get('additional_duration')
+        self.additional_month = kwargs.get('additional_month')
         self.budget_adjustment = kwargs.get('budget_adjustment')
         self.status = kwargs.get('status')
         self.tx_hash = kwargs.get('tx_hash')

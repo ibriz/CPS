@@ -15,6 +15,7 @@
 # limitations under the License.
 
 from ..cps_score import *
+from ..utils.consts import *
 from iconservice import *
 
 
@@ -57,7 +58,7 @@ def application_period(func):
 
     @wraps(func)
     def __wrapper(self: object, *args, **kwargs):
-        if self.period_name.get() != "Application Period":
+        if self.period_name.get() != APPLICATION_PERIOD:
             raise NotApplicationPeriodError("Not Application Period")
 
         return func(self, *args, **kwargs)
@@ -71,7 +72,7 @@ def voting_period(func):
 
     @wraps(func)
     def __wrapper(self: object, *args, **kwargs):
-        if self.period_name.get() != "Voting Period":
+        if self.period_name.get() != VOTING_PERIOD:
             raise NotVotingPeriodError("Not Voting Period")
 
         return func(self, *args, **kwargs)
