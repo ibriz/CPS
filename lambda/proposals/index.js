@@ -5,7 +5,9 @@ async function uploadProposal(payload){
 
     var body = JSON.parse(payload);
 
-    const ipfsKey = 'Proposal' + uuidv4();
+    if(!body.type) throw new Error('type of the proposal needs to be specified')
+
+    const ipfsKey = body.type + uuidv4();
         
     body.ipfsKey = ipfsKey;
         

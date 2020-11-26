@@ -9,7 +9,7 @@ async function registerUser(payload){
 
     const body = JSON.parse(payload.body);
 
-    const redisResponse = await setAsync(body.address, payload.body);
+    const redisResponse = await setAsync(`address:${body.address}`, payload.body);
 
     if (!redisResponse) throw new Error("Data couldnot be uploaded in redis");
 
@@ -23,7 +23,7 @@ async function getUser(payload){
 
     const redisKey = payload.queryStringParameters.address;
 
-    return await getAsync(redisKey);
+    return await getAsync(`address:${redisKey}`);
 }
 
 exports.handler = async (event) => {
