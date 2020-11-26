@@ -9,7 +9,7 @@ import ConfirmationModal from 'Components/UI/ConfirmationModal';
 import UserInfoFormModal from './UserInfoFormModal';
 import useTimer from 'Hooks/useTimer';
 
-const Header = ({ address, logout, title, isPrep, isRegistered, unregisterPrep, registerPrep,period, payPenalty, firstName, lastName }) => {
+const Header = ({ address, logout, title, isPrep, isRegistered, unregisterPrep, registerPrep,period, payPenalty, firstName, lastName, walletBalance }) => {
 
     const [modalShow, setModalShow] = React.useState(false);
 
@@ -30,22 +30,30 @@ const Header = ({ address, logout, title, isPrep, isRegistered, unregisterPrep, 
     }
 
     return (
+        <>
         <Row className = {styles.headerContainer} >
-            <span className={styles.heading}>{title}</span>
+            <span className={styles.heading} 
+            // style = {(isPrep && !payPenalty && period === 'APPLICATION') ? {marginTop: '35px'} : {}}
+            >{title}</span>
 
             <div className={styles.account}>
-                <span onClick={() => setModalShow(true)} className = {styles.address }>{(firstName || lastName) ? `${firstName || ''} ${lastName || ''}` : `${address.slice(0,4)}...${address.slice(address.length-2)}`}</span>
+                <span onClick={() => setModalShow(true)} className = {styles.address }>{(firstName || lastName) ? `${firstName || ''} ${lastName || ''}` : `${address.slice(0,4)}...${address.slice(address.length-2)}`} ({walletBalance.toFixed(2)} ICX)</span>
                 {
                     isPrep && isRegistered && !payPenalty && period === 'APPLICATION' && !isRemainingTimeZero &&
                     <Button variant="danger" onClick={() => setShowUnregisterConfirmationModal(true)} style = {{marginRight: '5px', marginLeft: '5px'}}>Unregister Prep</Button>
 
                 }
 
-{
+                {
                     isPrep && !isRegistered && !payPenalty && period === 'APPLICATION' && !isRemainingTimeZero &&
                     <Button variant="success" onClick={() => setShowUnregisterConfirmationModal(true)} style = {{marginRight: '5px', marginLeft: '5px'}}>Register Prep</Button>
 
                 }
+
+
+
+                
+            {/* <span style = {{marginRight: '3px'}} className = "text-primary">Wallet Balance - {walletBalance.toFixed(2)} ICX</span> */}
 
                 <Button variant="info" onClick={onLogout}>Logout</Button>
             </div>
@@ -82,6 +90,12 @@ const Header = ({ address, logout, title, isPrep, isRegistered, unregisterPrep, 
                 onHide={() => setModalShow(false)}
       />
         </Row>
+{/* 
+        <Row>
+        <span>Wallet Balance - {walletBalance.toFixed(2)} ICX</span>
+
+        </Row> */}
+        </>
     )
 }
 
@@ -90,6 +104,8 @@ const mapStateToProps = state => ({
     isPrep: state.account.isPrep,
     isRegistered: state.account.isRegistered,
     payPenalty: state.account.payPenalty,
+    walletBalance: state.account.walletBalance,
+
 
     period: state.period.period,
     firstName: state.user.firstName,

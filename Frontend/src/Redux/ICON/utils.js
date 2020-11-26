@@ -10,9 +10,10 @@ import constants from './constants';
 // var CPSScore = 'cxdf3c1ea6ba87e21957c63b21a54151a38a6ecb80';
 // var CPSScore = 'cx00c1e2d9b009fca69002c53c1ce3ed377708381e';
 // var CPSScore = 'cx6bb0e6683dd326165d42289c12b6bd0eaa596cc9';
-var CPSScore = 'cx9b8405d5b72d4794654c7724b0f1bca1a465474a';
+var CPSScore = 'cx11602f2ced70daf94edb1dac6c0b4c4ebd7856c7';
 
-
+export const provider = new HttpProvider('https://bicon.net.solidwallet.io/api/v3');
+export const iconService = new IconService(provider);
 
 // var testNet = "https://bicon.tracker.solidwallet.io/v3/address/info?address="
 // var mainNet = "https://tracker.icon.foundation/v3/address/info?address="
@@ -56,9 +57,7 @@ export async function callKeyStoreWallet({
         .params(params)
         .build();
 
-    const provider = new HttpProvider('https://bicon.net.solidwallet.io/api/v3');
     // const provider = new HttpProvider('https://zicon.net.solidwallet.io/api/v3');
-    const iconService = new IconService(provider);
     console.log("callKeyStoreWallet start");
     const response = await iconService.call(call).execute();
     console.log("callKeyStoreWallet");

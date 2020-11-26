@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Card, Col, Form, InputGroup, FormControl, Button, Table } from 'react-bootstrap';
+import { Row, Card, Col, Form, InputGroup, FormControl, Button, Table, Alert } from 'react-bootstrap';
 import styles from './ProposalCreationPage.module.css';
 
 import { submitProposalRequest, saveDraftRequest } from 'Redux/Reducers/proposalSlice';
@@ -302,6 +302,11 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
 
 
                         </Form.Group>
+
+                        <Alert variant={'warning'}>
+                            Warning: You need to transfer 50 ICX to submit a proposal
+                        </Alert>
+
 
                         <Form.Group as={Row} controlId="formPlaintextPassword">
                             <Col className = {styles.draftButton}>
