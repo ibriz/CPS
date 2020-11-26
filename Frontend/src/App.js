@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import Layout from './Containers/Layout';
 import Home from './Containers/Home';
-import { Switch, Route} from 'react-router-dom';
+import { Switch, Route, Redirect} from 'react-router-dom';
 import { connect } from 'react-redux'
 import { NotificationContainer} from 'react-notifications';
 import {fetchUserDataRequest} from 'Redux/Reducers/userSlice';
@@ -16,9 +16,9 @@ function App({ address, fetchUserDataRequest }) {
   return (
     <>
       <Switch>
-        <Route path={process.env.PUBLIC_URL + "/"}>
+        <Route exact path={process.env.PUBLIC_URL + "/"}>
           <>
-          {address ? <Layout /> :
+          {
           <>
             <Home />
             <Footer />
@@ -26,6 +26,15 @@ function App({ address, fetchUserDataRequest }) {
           </>}
             </>
         </Route>
+
+        <Route path={process.env.PUBLIC_URL + "/"}>
+          <>
+          {address ? <Layout /> :
+              <Redirect to = "/"></Redirect>
+          }
+            </>
+        </Route>
+
       </Switch>
       <NotificationContainer />
 
