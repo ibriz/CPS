@@ -7,6 +7,7 @@ import {
   SidebarContent,
 } from 'react-pro-sidebar';
 import { FaTachometerAlt, FaGem, FaList } from 'react-icons/fa';
+import {MdDashboard, MdForum} from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import { Badge } from 'react-bootstrap';
 import { connect } from 'react-redux';
@@ -48,7 +49,7 @@ const Aside = ({ collapsed, rtl, toggled, handleToggleSidebar, handleCollapsedCh
         {(!isPrep || !isRegistered) &&
           <Menu iconShape="circle">
             <MenuItem
-              icon={<FaTachometerAlt />}
+              icon={<MdDashboard />}
 
             >
               {<span>Dashboard</span>}
@@ -65,6 +66,12 @@ const Aside = ({ collapsed, rtl, toggled, handleToggleSidebar, handleCollapsedCh
               <Link to="/progress-reports" />
 
             </MenuItem>
+
+            <MenuItem icon={<MdForum />}
+              > {<span>ICON Forum</span>}
+                <a href="https://forum.icon.community/" target = "_blank" />
+
+              </MenuItem> 
           </Menu>
 
         }
@@ -74,7 +81,7 @@ const Aside = ({ collapsed, rtl, toggled, handleToggleSidebar, handleCollapsedCh
           <>
             <Menu iconShape="circle">
               <MenuItem
-                icon={<FaTachometerAlt />}
+                icon={<MdDashboard />}
 
               >
                 {<span>Dashboard</span>}
@@ -110,6 +117,14 @@ const Aside = ({ collapsed, rtl, toggled, handleToggleSidebar, handleCollapsedCh
                 <Link to="/backed-projects" />
 
               </MenuItem> */}
+
+             <MenuItem icon={<MdForum />}
+              > {<span>ICON Forum</span>}
+                <a href="https://forum.icon.community/" target = "_blank" />
+
+              </MenuItem> 
+
+              
 
 
             </Menu>
