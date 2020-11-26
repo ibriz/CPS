@@ -10,7 +10,7 @@
     display: flex;
     justify-content: center;
     position: relative;
-    align-items: center;
+    /* align-items: center; */
 
 }
 
@@ -58,4 +58,29 @@ margin-right: 5px;
         text-align: center;
     }
 
+}
+
+@media screen and (max-width: 767px) {
+    .headerContainer {
+        margin-top: -30px;
+    }
+}
+
+
+@media screen and (max-width: 767px) {
+    .account {
+        display: none !important;
+    }
+
+    .headerComp1 > * {
+        margin-top: 5px
+    }
+
+}
+
+@media screen and (min-width: 768px) {
+
+    .headerComp1 {
+        display: none;
+    }
 }

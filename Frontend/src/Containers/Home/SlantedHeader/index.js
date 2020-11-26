@@ -85,7 +85,19 @@ const SlantedHeader = ({ loginRequest, loginPrepRequest, walletAddress }) => {
                                     </clipPath>
                                 </defs>
                             </svg>
+                            <div className = {styles.headerComp1} style = {{zIndex: 1000}}>
+                            {
+                                walletAddress ?
+                                <>
+                                    <HeaderComponents landingPage />
 
+                                </>
+                                    :
+                                    <Button variant="outline-light" className={styles.button} onClick={onClickLogin}>LOGIN</Button>
+
+                            }
+
+                            </div>
                             {/* <div style = {{zIndex: '1000'}}>
                             {
                                     walletAddress ?
@@ -143,7 +155,7 @@ const SlantedHeader = ({ loginRequest, loginPrepRequest, walletAddress }) => {
 
             {/* <Header title="" /> */}
 
-            <div style={{ marginTop: '3px', zIndex: 1000, position: 'absolute', top: '8px', right: '10px', width: (walletAddress ? '100%' : 'auto') }}>
+            <div style={{ marginTop: '3px', zIndex: 1000, position: 'absolute', top: '8px', right: '10px', width: (walletAddress ? '100%' : 'auto'), display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}  className = {styles.headerComp2}>
                         {/* <Button variant="outline-light" className = {styles.button} onClick={onClickPrepLogin}>LOGIN PREP</Button>{' '} */}
 
 

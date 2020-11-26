@@ -33,7 +33,6 @@ const HeaderComponents = ({ address, logout, title, isPrep, isRegistered, unregi
 
     return (
     <>
-        <div className={styles.account}>
             <span onClick={() => setModalShow(true)} className={styles.address} style = {landingPage ? {color: 'white'} : {}}>{(firstName || lastName) ? `${firstName || ''} ${lastName || ''}` : `${address.slice(0, 4)}...${address.slice(address.length - 2)}`} ({walletBalance.toFixed(2)} ICX)</span>
             {
                 isPrep && isRegistered && !payPenalty && period === 'APPLICATION' && !isRemainingTimeZero &&
@@ -58,7 +57,6 @@ const HeaderComponents = ({ address, logout, title, isPrep, isRegistered, unregi
                 </Link> : null
             }
             <Button variant={landingPage ? "light" : "info"} onClick={onLogout}>Logout</Button>
-        </div>
 
         <ConfirmationModal
             show={showUnregisterConfirmationModal}

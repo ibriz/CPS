@@ -17,10 +17,17 @@ const Header = ({ address, logout, title, isPrep, isRegistered, unregisterPrep, 
         <>
         <Row className = {styles.headerContainer} >
             <span className={styles.heading} 
+            style = {{marginTop: '0px'}}
             // style = {(isPrep && !payPenalty && period === 'APPLICATION') ? {marginTop: '35px'} : {}}
             >{title}</span>
+            <div className = {styles.headerComp1}>
+                <HeaderComponents />
+
+            </div>
+        <div className={styles.account}>
 
             <HeaderComponents />
+        </div>
         
         </Row>
 {/* 
