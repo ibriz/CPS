@@ -35,7 +35,8 @@ import {
   fetchDraftRequestProgressReportWorker,
   voteProgressReportWorker,
   fetchProgressReportVoteResultRequestWorker,
-  fetchProgressReportByProposalRequestWorker
+  fetchProgressReportByProposalRequestWorker,
+  fetchVoteResultBudgetChangeRequestWorker
 } from './ProgressReport';
 
 import {
@@ -65,7 +66,8 @@ import { submitProgressReportRequest, submitProgressReportSuccess, fetchProgress
   saveDraftRequest as saveDraftRequestProgressReport,
   voteProgressReport,
   fetchVoteResultRequest as fetchProgressReportVoteResultRequest,
-  fetchProgressReportByProposalRequest
+  fetchProgressReportByProposalRequest,
+  fetchVoteResultBudgetChangeRequest
 } from '../Reducers/progressReportSlice';
 import {fetchPeriodDetailsRequest, updatePeriod} from '../Reducers/periodSlice';
 import { fetchPrepsRequest, unregisterPrep, registerPrep, payPenalty } from '../Reducers/prepsSlice';
@@ -145,7 +147,9 @@ yield takeEvery(submitUserDataRequest.type, submitUserDataRequestWorker)
 
 yield takeEvery(fetchExpectedGrantRequest.type, fetchExpectedGrantRequestWorker);
 
-yield takeEvery(fetchRemainingVotesRequest.type, fetchRemainingVotesRequestWorker)
+yield takeEvery(fetchRemainingVotesRequest.type, fetchRemainingVotesRequestWorker);
+
+yield takeEvery(fetchVoteResultBudgetChangeRequest.type, fetchVoteResultBudgetChangeRequestWorker)
 
 
 
