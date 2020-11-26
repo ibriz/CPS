@@ -7,6 +7,7 @@ import saveDraftRequestProgressReportWorker from './saveDraftRequestProgressRepo
 import voteProgressReportWorker from './voteProgressReportWorker';
 import fetchProgressReportVoteResultRequestWorker from './fetchProgressReportVoteResultRequestWorker';
 import fetchProgressReportByProposalRequestWorker from './fetchProgressReportByProposalRequestWorker';
+import fetchVoteResultBudgetChangeRequestWorker from './fetchVoteResultBudgetChangeRequestWorker';
 
 export {
     fetchProgressReportListWorker,
@@ -17,6 +18,7 @@ export {
     fetchProgressReportDetailWorker,
     voteProgressReportWorker,
     fetchProgressReportVoteResultRequestWorker,
-    fetchProgressReportByProposalRequestWorker
+    fetchProgressReportByProposalRequestWorker,
+    fetchVoteResultBudgetChangeRequestWorker
 
 }

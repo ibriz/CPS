@@ -66,6 +66,33 @@ export const getProgressReportApprovedVotersPercentage = createSelector(
 );
 
 
+const getApprovedVotesBudgetAdjustment = state => state.progressReport.approvedVotes
+const getTotalVotesBudgetAdjustment = state => state.progressReport.totalVotes
+
+export const getBudgetAdjustmentApprovedPercentage = createSelector(
+  [getApprovedVotesBudgetAdjustment, getTotalVotesBudgetAdjustment],
+  (approvedVotes, totalVotes) => {
+    if(parseInt(totalVotes) === 0) {
+      return 0;
+    }
+    return (approvedVotes/totalVotes) * 100;
+  }
+);
+
+const getApprovedVotersBudgetAdjustment = state => state.progressReport.approvedVoters
+const getTotalVotersBudgetAdjustment = state => state.progressReport.totalVoters
+a
+export const getBudgetAdjustmentApprovedVotersPercentage = createSelector(
+  [getApprovedVotersBudgetAdjustment, getTotalVotersBudgetAdjustment],
+  (approvedVoters, totalVoters) => {
+    if(parseInt(totalVoters) === 0) {
+      return 0;
+    }
+    return (approvedVoters/totalVoters) * 100;
+  }
+);
+
+
 const getProposalByAddress = state => state.proposals.proposalByAddress
 
 export const getNewProgressReportInfo = createSelector(

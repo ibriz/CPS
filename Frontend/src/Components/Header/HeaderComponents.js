@@ -54,10 +54,10 @@ const HeaderComponents = ({ address, logout, title, isPrep, isRegistered, unregi
             {
                 landingPage ?
                 <Link to="/dashboard">
-                    <Button variant="outline-light" className={styles.button} style = {{marginRight: '5px'}}>GO TO CONSOLE</Button>
+                    <Button variant="outline-light" className={styles.button} style = {{marginRight: '5px', marginLeft: '3px'}}>GO TO CONSOLE</Button>
                 </Link> : null
             }
-            <Button variant={landingPage ? "danger" : "info"} onClick={onLogout}>Logout</Button>
+            <Button variant={landingPage ? "light" : "info"} onClick={onLogout}>Logout</Button>
         </div>
 
         <ConfirmationModal
