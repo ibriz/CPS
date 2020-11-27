@@ -11,13 +11,13 @@ const Vote = ({vote}) => {
             <Row className={styles.proposalContainer} 
                     // onClick = {onClick}
                     >
-                <Col sm="9" className = {styles.infos}>
+                <Col sm="12" className = {styles.infos}>
                     <Row style={{ alignItems: 'center' }} className={styles.firstRow}>
                         {/* <Badge size="xs" variant={badgeColor[selectedTab]} className={styles.badge}>{selectedTab}</Badge>{' '} */}
                         <Col lg = "8" xs = "12" style = {{paddingLeft: '0px'}}>
                         <LowerCardTitle style = {{fontSize:'14px'}}>{vote.sponsorAddress}</LowerCardTitle>
                         </Col>
-                        <Col lg = "3" xs = "12">
+                        <Col lg = "3" xs = "12" style = {{display: 'flex', justifyContent: 'flex-end'}}>
 
                         <Badge size="xs" variant={proposalStatusMapping.find(mapping => 
                             mapping.name === vote.status)?.badgeColor} className={styles.badge}>{vote.status}</Badge>{' '}
@@ -35,10 +35,10 @@ const Vote = ({vote}) => {
 
                 </Col>
 
-                <Col lg="3" xs = "12" className = {styles.dateContainer}>
+                {/* <Col lg="3" xs = "12" className = {styles.dateContainer}>
                     <LowerCardInfo>{new Date(vote.timestamp / 1000).toLocaleString()}</LowerCardInfo>
 
-                </Col>
+                </Col> */}
 
             </Row>
 
