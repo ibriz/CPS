@@ -210,13 +210,7 @@ function DetailsModal(props) {
 
                       </Col>
 
-                        </>
-                      }
-
-                      {
-                        progressDetail?.projectTermRevision && 
-                        <>
-                                              <Col lg='1' xs='12'></Col>
+                      <Col lg='1' xs='12'></Col>
                       <Col lg="3" xs="12">
 
                         <ProgressBar
@@ -235,6 +229,7 @@ function DetailsModal(props) {
 
                         </>
                       }
+
                     </>
                   )
                 else
