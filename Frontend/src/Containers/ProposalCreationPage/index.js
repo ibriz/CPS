@@ -377,6 +377,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                 {                 
                         <>
                             <div>Are you sure you want to submit the proposal?</div>
+                            <div className = "text-danger">You need to submit 50 ICX to submit a proposal</div>
                         </> 
                 }
 
