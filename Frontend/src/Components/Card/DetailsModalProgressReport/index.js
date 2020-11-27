@@ -9,14 +9,17 @@ import {
   // approveSponserRequest, rejectSponsorRequest, voteProposal 
 } from 'Redux/Reducers/progressReportSlice';
 import { approveSponserRequest, rejectSponsorRequest, voteProposal } from 'Redux/Reducers/proposalSlice';
-import { voteProgressReport, fetchVoteResultRequest } from 'Redux/Reducers/progressReportSlice';
+import { voteProgressReport, fetchVoteResultRequest, fetchVoteResultBudgetChangeRequest } from 'Redux/Reducers/progressReportSlice';
 import { connect } from 'react-redux';
 import ProgressReportList from './ProgressReportList';
 import { progressReportStatusMapping } from '../../../Constants';
 import VoteList from '../DetailsModal/VoteList';
 import RichTextEditor from 'Components/RichTextEditor';
 import ConfirmationModal from 'Components/UI/ConfirmationModal';
-import { getProgressReportApprovedPercentage, getProgressReportApprovedVotersPercentage } from 'Selectors';
+import {
+  getProgressReportApprovedPercentage, getProgressReportApprovedVotersPercentage,
+  getBudgetAdjustmentApprovedPercentage, getBudgetAdjustmentApprovedVotersPercentage
+} from 'Selectors';
 
 function DetailsModal(props) {
 
@@ -33,9 +36,9 @@ function DetailsModal(props) {
 
 
   const { progressDetail, proposal, sponsorRequest = false, approveSponserRequest, rejectSponsorRequest, voting = false, voteProgressReport, progressReport, votesByProposal, fetchVoteResultRequest, approvedPercentage,
-    period, remainingTime, approvedVoterPercentage, fetchProgressReportDetailRequest, walletAddress, ...remainingProps } = props;
+    period, remainingTime, approvedVoterPercentage, fetchProgressReportDetailRequest, walletAddress, fetchVoteResultBudgetChangeRequest, approvedPercentageBudgetChange, approvedVoterPercentageBudgetChange, votesByBudgetChange, ...remainingProps } = props;
 
-    const status = progressReportStatusMapping.find(mapping => mapping.status === progressReport?.status)?.name
+  const status = progressReportStatusMapping.find(mapping => mapping.status === progressReport?.status)?.name
 
   useEffect(() => {
     props.progressReport && props.fetchProgressReportDetailRequest(
@@ -53,6 +56,10 @@ function DetailsModal(props) {
     if (status === 'Voting') {
       // alert("Voting");
       props.progressReport && fetchVoteResultRequest({
+        reportKey: progressReport.reportKey
+      });
+
+      props.progressReport && fetchVoteResultBudgetChangeRequest({
         reportKey: progressReport.reportKey
       });
     }
@@ -180,6 +187,54 @@ function DetailsModal(props) {
                         }
 
                       </Col>
+
+
+
+                      {
+                        progressDetail?.projectTermRevision && 
+                        <>
+                                              <Col lg='1' xs='12'></Col>
+                      <Col lg="3" xs="12">
+
+                        <ProgressBar
+                          percentage={approvedPercentageBudgetChange} />
+                      </Col>
+
+                      <Col lg="8" xs="12" className={styles.progressTextContainer}>
+                        {
+
+                          <ProgressText>
+                            {approvedPercentageBudgetChange ? `${approvedPercentageBudgetChange.toFixed()}` : 0}% Stake Approved (Budget Change Request)
+                          </ProgressText>
+                        }
+
+                      </Col>
+
+                        </>
+                      }
+
+                      {
+                        progressDetail?.projectTermRevision && 
+                        <>
+                                              <Col lg='1' xs='12'></Col>
+                      <Col lg="3" xs="12">
+
+                        <ProgressBar
+                          percentage={approvedVoterPercentageBudgetChange} />
+                      </Col>
+
+                      <Col lg="8" xs="12" className={styles.progressTextContainer}>
+                        {
+
+                          <ProgressText>
+                            {approvedVoterPercentageBudgetChange ? `${approvedVoterPercentageBudgetChange.toFixed()}` : 0}% Voter Count Approved (Budget Change Request)
+                          </ProgressText>
+                        }
+
+                      </Col>
+
+                        </>
+                      }
                     </>
                   )
                 else
@@ -209,10 +264,10 @@ function DetailsModal(props) {
 
           {/* <Col lg="4" className = "d-none d-lg-block"> */}
           <Col lg="4" xs="12">
-            <Col xs="12" style = {{
-                  paddingLeft: '0px',
-                  paddingRight: '0px'
-                }}>
+            <Col xs="12" style={{
+              paddingLeft: '0px',
+              paddingRight: '0px'
+            }}>
               <DetailsTable
                 title={"Project Details"}
                 data={
@@ -231,7 +286,7 @@ function DetailsModal(props) {
             </Col>
             {
               (progressDetail?.projectTermRevision) &&
-              <Col xs="12" style = {{
+              <Col xs="12" style={{
                 paddingLeft: '0px',
                 paddingRight: '0px'
               }}>
@@ -360,66 +415,91 @@ function DetailsModal(props) {
 
                 </>
             }
-            </>
+          </>
         }
 
         {
-              !sponsorRequest &&
-              <Row>
-                <Col xs="12">
-                  {
-                    (status === 'Voting') ?
-                      <>
-                        <ListTitle>VOTES</ListTitle>
-                        <VoteList
-                          votes={votesByProposal}
-                          progressReport />
-                      </> :
-                      (
-                        null
-                      )
-                  }
-
-                </Col>
-              </Row>
-            }
-
-            <ConfirmationModal
-              show={sponsorConfirmationShow}
-              onHide={() => setSponsorConfirmationShow(false)}
-              heading={sponsorVote === 'approve' ? 'Sponsor Request Approval Confirmation' : 'Sponsor Request Rejection Confirmation'}
-              onConfirm={sponsorVote === 'approve' ?
-                onClickApproveSponsorRequest : onClickRejectSponsorRequest} >
+          !sponsorRequest &&
+          <>
+          <Row>
+            <Col xs="12">
               {
-                (sponsorVote === 'approve') ?
+                (status === 'Voting') ?
                   <>
-                    <div>Are you sure you want to approve the sponsor request?</div>
-                    <div style={{ color: 'red' }}>You will need to transfer {progressDetail.totalBudget * 0.1} ICX for sponsor bond.</div>
+                    <ListTitle>VOTES</ListTitle>
+                    <VoteList
+                      votes={votesByProposal}
+                      progressReport />
                   </> :
-                  <span>Are you sure you want to reject the sponsor request?</span>
+                  (
+                    null
+                  )
               }
 
-            </ConfirmationModal>
+            </Col>
+          </Row>
 
-            <ConfirmationModal
-              show={voteConfirmationShow}
-              onHide={() => setVoteConfirmationShow(false)}
-              heading={'Vote Confirmation'}
-              onConfirm={onSubmitVote} >
-              Are you sure you want to {vote} the proposal?
+          <Row>
+            <Col xs="12">
+              {
+                (status === 'Voting' && progressDetail?.projectTermRevision) ?
+                  <>
+                    <ListTitle>BUDGET CHANGE REQUEST VOTES</ListTitle>
+                    <VoteList
+                      votes={votesByBudgetChange}
+                      progressReport />
+                  </> :
+                  (
+                    null
+                  )
+              }
+
+            </Col>
+          </Row>
+          </>
+            }
+
+        <ConfirmationModal
+          show={sponsorConfirmationShow}
+          onHide={() => setSponsorConfirmationShow(false)}
+          heading={sponsorVote === 'approve' ? 'Sponsor Request Approval Confirmation' : 'Sponsor Request Rejection Confirmation'}
+          onConfirm={sponsorVote === 'approve' ?
+            onClickApproveSponsorRequest : onClickRejectSponsorRequest} >
+          {
+            (sponsorVote === 'approve') ?
+              <>
+                <div>Are you sure you want to approve the sponsor request?</div>
+                <div style={{ color: 'red' }}>You will need to transfer {progressDetail.totalBudget * 0.1} ICX for sponsor bond.</div>
+              </> :
+              <span>Are you sure you want to reject the sponsor request?</span>
+          }
+
         </ConfirmationModal>
 
-          </Modal.Body>
+        <ConfirmationModal
+          show={voteConfirmationShow}
+          onHide={() => setVoteConfirmationShow(false)}
+          heading={'Vote Confirmation'}
+          onConfirm={onSubmitVote} >
+          Are you sure you want to {vote} the proposal?
+        </ConfirmationModal>
+
+      </Modal.Body>
     </Modal>
   );
 }
 
 const mapStateToProps = state => (
-      {
-        progressDetail: state.progressReport.progressReportDetail,
+  {
+    progressDetail: state.progressReport.progressReportDetail,
     votesByProposal: state.progressReport.votesByProgressReport,
+    votesByBudgetChange: state.progressReport.votesBudgetChangeByProgressReport,
+
     approvedPercentage: getProgressReportApprovedPercentage(state),
     approvedVoterPercentage: getProgressReportApprovedVotersPercentage(state),
+
+    approvedPercentageBudgetChange: getBudgetAdjustmentApprovedPercentage(state),
+    approvedVoterPercentageBudgetChange: getBudgetAdjustmentApprovedVotersPercentage(state),
 
     period: state.period.period,
     remainingTime: state.period.remainingTime,
@@ -429,12 +509,13 @@ const mapStateToProps = state => (
 )
 
 const mapDispatchToProps = (dispatch) => (
-      {
-        fetchProgressReportDetailRequest: payload => dispatch(fetchProgressReportDetailRequest(payload)),
+  {
+    fetchProgressReportDetailRequest: payload => dispatch(fetchProgressReportDetailRequest(payload)),
     approveSponserRequest: payload => dispatch(approveSponserRequest(payload)),
     rejectSponsorRequest: payload => dispatch(rejectSponsorRequest(payload)),
     voteProgressReport: payload => dispatch(voteProgressReport(payload)),
-    fetchVoteResultRequest: payload => dispatch(fetchVoteResultRequest(payload))
+    fetchVoteResultRequest: payload => dispatch(fetchVoteResultRequest(payload)),
+    fetchVoteResultBudgetChangeRequest: payload => dispatch(fetchVoteResultBudgetChangeRequest(payload))
 
   }
 )
