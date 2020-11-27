@@ -8,7 +8,7 @@ function* fetchUserDataRequestWorker({payload}) {
     const getAddress = (state) => state.account.address
     const address = yield select(getAddress);
     const response = yield call(getRequest, {
-      url: `redis?address=${address}`,
+      url: `user?address=${address}`,
       method: 'GET'
     });
 
