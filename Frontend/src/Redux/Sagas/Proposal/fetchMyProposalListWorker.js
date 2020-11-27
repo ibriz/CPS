@@ -1,9 +1,9 @@
-import { put, call} from 'redux-saga/effects';
-import {callKeyStoreWallet} from '../../ICON/utils';
+import { put, call } from 'redux-saga/effects';
+import { callKeyStoreWallet } from '../../ICON/utils';
 // import {
 //   getCourseInfo,
 // } from '../services/api';
-import {fetchMyProposalListSuccess, fetchMyProposalListFailure} from '../../Reducers/proposalSlice';
+import { fetchMyProposalListSuccess, fetchMyProposalListFailure } from '../../Reducers/proposalSlice';
 
 const proposalListStatusMapping = {
   'Active': '_active',
@@ -16,14 +16,14 @@ const proposalListStatusMapping = {
   'Rejected': '_rejected'
 }
 
-function* fetchMyProposalListWorker({payload}) {
+function* fetchMyProposalListWorker({ payload }) {
   try {
     const response = yield call(callKeyStoreWallet, {
       method: 'get_proposal_detail_by_wallet',
       params: {
-        _wallet_address: payload.walletAddress    
-    }
-});
+        _wallet_address: payload.walletAddress
+      }
+    });
 
     // const response = {
     //   data: Array(10).fill(0).map((_, index) => (  {
@@ -40,7 +40,28 @@ function* fetchMyProposalListWorker({payload}) {
     //     }
     //     )),
     //     count: 143
-      
+
+    // }
+
+    // const response = {
+    //   data: [
+    //     {
+    //       status: "_pending",
+    //       project_title: "Video Content Marketing - Grow ICON Community",
+    //       total_budget: "10000 ICX" ,
+    //     timestamp: "1600872145290985",
+    //     contributor_address: payload.walletAddress
+    //     },
+
+    //     {
+    //       status: "_active",
+    //       project_title: "ICON Mobile Wallet",
+    //       total_budget: "12000 ICX" ,
+    //     timestamp: "1600872144290885",
+    //     contributor_address: payload.walletAddress
+    //     }
+    //   ],
+    //   count: 3
     // }
     yield put(fetchMyProposalListSuccess(
       {

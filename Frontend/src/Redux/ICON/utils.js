@@ -104,3 +104,24 @@ export function sendTransaction({
         }),
     );
 }
+
+export async function signTransaction() {
+    // const customEvent = new CustomEvent('ICONEX_RELAY_REQUEST', {
+    //     detail: { 
+    //     type: 'REQUEST_SIGNING',
+    //     payload: {
+    //         from: 'hxfd114a60eefa8e2c3de2d00dc5e41b1a0c7e8931',
+    //         hash: '0x9fdbf1540cc680918a2cf379569761440c838af4910f1f836d96730c8a750eff',
+    //     }
+    // }});
+    // window.dispatchEvent(customEvent);
+
+    const customEvent = new CustomEvent('ICONEX_RELAY_REQUEST', {detail: { 
+        type: 'REQUEST_SIGNING',
+        payload: {
+            from: 'hxfd114a60eefa8e2c3de2d00dc5e41b1a0c7e8931',
+            hash: '0x9fdbf1540cc680918a2cf379569761440c838af4910f1f836d96730c8a750eff'
+        }
+    }});
+    window.dispatchEvent(customEvent);
+}
