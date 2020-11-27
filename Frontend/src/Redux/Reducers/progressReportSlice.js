@@ -269,7 +269,7 @@ const proposalSlice = createSlice({
                     timestamp: vote._timestamp
                 }
             ));
-            state.votesBudgetChangeByProgressReport = state.votesByProgressReport.filter(vote => 
+            state.votesBudgetChangeByProgressReport = state.votesBudgetChangeByProgressReport.filter(vote => 
                 vote.status);
                 state.approvedVotesBudgetChange = IconConverter.toBigNumber(action.payload.response.approved_votes);
                 state.totalVotesBudgetChange = IconConverter.toBigNumber(action.payload.response.total_votes);
