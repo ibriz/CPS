@@ -50,7 +50,7 @@ a:first-child > span.socialLink {
 }
 
 
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 992px) {
     .links {
         padding-left: 120px !important;
     }
@@ -65,6 +65,27 @@ a:first-child > span.socialLink {
     }
 
     .links {
+        padding-left: 150px !important;
+    }
+
+}
+
+
+@media screen and (min-width: 992px) {
+    .linksConsole {
+        padding-left: 120px !important;
+    }
+
+    .firstRowConsole {
+        padding-top: 50px;
+        padding-bottom: 60px;
+    }
+
+    .footerColumnConsole {
+        padding-left: 95px !important;  
+    }
+
+    .linksConsole {
         padding-left: 150px !important;
     }
 

@@ -2,23 +2,34 @@ import React from 'react';
 import { Row, Col, Container } from 'react-bootstrap';
 import styles from './Footer.module.scss';
 import ClassNames from 'classnames';
+import {AiFillMediumCircle, AiFillTwitterCircle, AiFillGithub, AiFillFacebook} from 'react-icons/ai';
+import {FaFacebook} from 'react-icons/fa';
+import {SiFacebook} from 'react-icons/si';
 
 const socialLinks = [
     {
         name: "medium",
-        link: "https://google.com"
+        link: "https://google.com",
+        icon: AiFillMediumCircle
     },
     {
         name: "twitter",
-        link: "https://google.com"
+        link: "https://google.com",
+        icon: AiFillTwitterCircle
+
     },
     {
         name: "facebook",
-        link: "https://google.com"
+        link: "https://google.com",
+        icon: SiFacebook,
+        fontSize: '30px'
+
     },
     {
         name: "github",
-        link: "https://google.com"
+        link: "https://google.com",
+        icon: AiFillGithub
+
     }
 ]
 
@@ -42,14 +53,19 @@ const links = [
 
 const Footer = ({console = false}) => {
 
+    const linksStyle = console ? styles.linksConsole : styles.link;
+    const firstRowStyle = console ? styles.firstRowConsole: styles.firstRow;
+    const footerColumnStyles = console ? styles.footerColumnConsole : styles.footerColumn;
+    
+
     const consoleColor = '#262626';
     return (
         <Container fluid className={ClassNames({"bg-info" : !console})}  style = {{ color: console ? consoleColor : '#FFFFFF', marginTop: '40px' , backgroundColor: (console && 'rgba(38, 38, 38, 0.1)')}}>
             
-        <Row className = {ClassNames(styles.firstRow)}>
+        <Row className = {ClassNames(firstRowStyle)}>
             {/* <Col md="1"> </Col> */}
 
-            <Col md="3" xs = "12" className = {styles.footerColumn}>
+            <Col lg="3" xs = "12" className = {ClassNames(footerColumnStyles)}>
                 <svg width="114" height="28" viewBox="0 0 114 28" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g clipPath="url(#clip0)">
                         <path d="M3.76721 8.60689H0.529114V21.931H3.76721V8.60689Z" fill="white"></path>
@@ -73,15 +89,19 @@ const Footer = ({console = false}) => {
 
             </Col>
 
-            <Col md="1"> </Col>
+            <Col lg="1"> </Col>
 
-            <Col md="3" xs = "12" className = {styles.footerColumn}>
+            <Col lg="3" xs = "12" className = {footerColumnStyles}>
                 <div style = {{marginTop: '15px'}}>Find us on</div>
-                <div style = {{display: 'flex', marginTop: '15px'}}>
+                <div style = {{display: 'flex', marginTop: '15px', alignItems: 'center'}}>
                     {
                         socialLinks.map((socialLink) => 
                         <a href = {socialLink.link}  key = {socialLink.name} target = "_blank">
-                        <span className = {ClassNames(styles.socialLink, styles[socialLink.name])}></span>
+                        {
+                            console ? 
+                            <socialLink.icon style = {{fontSize: socialLink.fontSize ? socialLink.fontSize : '35px', color: '#262626'}} /> :
+                            <span className = {ClassNames(styles.socialLink, styles[socialLink.name])}></span>
+                        }
                         </a>)
                     }
 
@@ -92,9 +112,9 @@ const Footer = ({console = false}) => {
 
                 </Col>
 
-             <Col md="1"> </Col>
+             <Col lg="1"> </Col>
 
-            <Col md="3" className = {ClassNames(styles.footerColumn, styles.links)}>
+            <Col lg="3" className = {ClassNames(footerColumnStyles, linksStyle)}>
                 {
                     links.map(link => 
                         <div style = {{marginTop: '10px'}}>
@@ -108,7 +128,7 @@ const Footer = ({console = false}) => {
         </Row>
 
         <Row style = {{marginBottom: '10px'}}>
-            <Col md = "12" className = {styles.footerColumn}>
+            <Col lg = "12" className = {footerColumnStyles}>
                 Copyright © 2020. <u>ICON Foundation</u>
             </Col>
         </Row>
