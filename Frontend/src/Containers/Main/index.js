@@ -81,7 +81,7 @@ const Main = ({
 
         </div>
 
-        <Footer />
+        <Footer console />
 
 
 
