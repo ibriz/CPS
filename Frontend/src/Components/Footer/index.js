@@ -92,7 +92,7 @@ const Footer = ({console = false}) => {
             <Col lg="1"> </Col>
 
             <Col lg="3" xs = "12" className = {footerColumnStyles}>
-                <div style = {{marginTop: '15px'}}>Find us on</div>
+                <div style = {{marginTop: '15px'}}>Find us on:</div>
                 <div style = {{display: 'flex', marginTop: '15px', alignItems: 'center'}}>
                     {
                         socialLinks.map((socialLink) => 

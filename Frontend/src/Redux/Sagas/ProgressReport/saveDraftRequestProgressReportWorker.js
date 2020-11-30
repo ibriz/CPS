@@ -7,10 +7,11 @@ import {ADD_PROGRESS_REPORT_DRAFT_URL} from '../../Constants';
 import {request} from '../helpers';
 import history from 'Router/history';
 import {NotificationManager} from 'react-notifications';
+import {signTransaction} from 'Redux/ICON/utils';
 
 function* saveDraftRequestWorker({payload}) {
   try {
-
+    const signature = yield signTransaction();
     let body = {...payload};
     Object.keys(body).forEach(key => {
         if(body[key] === null || Array.isArray(body[key]) && body[key].length < 1 ) {
@@ -19,6 +20,7 @@ function* saveDraftRequestWorker({payload}) {
     })
     const response = yield call(request, {
       body: body,
+      signature: signature,
       url: ADD_PROGRESS_REPORT_DRAFT_URL,
       method: body.reportKey? "PUT": "POST"
 
