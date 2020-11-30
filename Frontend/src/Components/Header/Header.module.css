@@ -76,6 +76,21 @@ margin-right: 5px;
         margin-top: 5px
     }
 
+    .headerContainer {
+        margin-top: 5px;
+
+    }
+
+
+}
+
+@media screen and (max-width: 1200px) {
+
+    .headerContainer {
+        justify-content: space-between;
+
+    }
+
 }
 
 @media screen and (min-width: 768px) {

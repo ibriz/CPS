@@ -40,12 +40,14 @@ const links = [
 
 ]
 
-const Footer = () => {
+const Footer = ({console = false}) => {
+
+    const consoleColor = '#262626';
     return (
-        <Container fluid className="bg-info"  style = {{ color: '#FFFFFF', marginTop: '40px'}}>
+        <Container fluid className={ClassNames({"bg-info" : !console})}  style = {{ color: console ? consoleColor : '#FFFFFF', marginTop: '40px' , backgroundColor: (console && 'rgba(38, 38, 38, 0.1)')}}>
             
-        <Row className = {ClassNames(styles.firstRow, "bg-info")}>
-            <Col md="1"> </Col>
+        <Row className = {ClassNames(styles.firstRow)}>
+            {/* <Col md="1"> </Col> */}
 
             <Col md="3" xs = "12" className = {styles.footerColumn}>
                 <svg width="114" height="28" viewBox="0 0 114 28" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -96,7 +98,7 @@ const Footer = () => {
                 {
                     links.map(link => 
                         <div style = {{marginTop: '10px'}}>
-                        <a href = {link.link} target="_blank" style = {{color: 'white',fontWeight: '600', fontSize: '0.9375rem', }}>
+                        <a href = {link.link} target="_blank" style = {{color: console ? consoleColor : 'white',fontWeight: '600', fontSize: '0.9375rem', }}>
                         <div>{link.title}</div>
                         </a>
                         </div>)
@@ -106,8 +108,7 @@ const Footer = () => {
         </Row>
 
         <Row style = {{marginBottom: '10px'}}>
-            <Col md="1"> </Col>
-            <Col md = "11" className = {styles.footerColumn}>
+            <Col md = "12" className = {styles.footerColumn}>
                 Copyright © 2020. <u>ICON Foundation</u>
             </Col>
         </Row>
