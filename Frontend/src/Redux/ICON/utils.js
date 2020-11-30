@@ -105,24 +105,32 @@ export function sendTransaction({
     );
 }
 
-export function signTransaction() {
-    // const customEvent = new CustomEvent('ICONEX_RELAY_REQUEST', {
-    //     detail: { 
-    //     type: 'REQUEST_SIGNING',
-    //     payload: {
-    //         from: 'hxfd114a60eefa8e2c3de2d00dc5e41b1a0c7e8931',
-    //         hash: '0x9fdbf1540cc680918a2cf379569761440c838af4910f1f836d96730c8a750eff',
-    //     }
-    // }});
-    // window.dispatchEvent(customEvent);
 
-    // const customEvent = new CustomEvent('ICONEX_RELAY_REQUEST', {detail: { 
-    //     type: 'REQUEST_SIGNING',
-    //     payload: {
-    //         from: 'hxfd114a60eefa8e2c3de2d00dc5e41b1a0c7e8931',
-    //         hash: '9babe5d2911e8e42dfad72a589202767f95c6fab49523cdc16279a7b8f82eab2'
-    //     }
-    // }});
+export function signTransaction() {
+
+  return new Promise((resolve, reject) => {
+      const signature = store.getState().account.signature;
+      if (signature) {
+          resolve(signature);
+          return;
+      }
+      signTransactionFromICONEX();
+
+      const interFunction = () => {
+        const signature = store.getState().account.signature;
+        if (signature) {
+          clearInterval(interFunction);
+          resolve(signature);
+          return;
+            }
+        
+      }
+
+      setInterval(interFunction, 100)
+  })
+}
+
+export function signTransactionFromICONEX() {
 
     window.parent.dispatchEvent(new CustomEvent('ICONEX_RELAY_REQUEST', {
         detail: {
@@ -133,6 +141,4 @@ export function signTransaction() {
             }
         }
     }))
-
-    // window.dispatchEvent(customEvent);
 }

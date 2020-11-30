@@ -4,16 +4,27 @@ async function request({
     url,
     body = {},
     method = "POST",
+    signature = null,
     ipfs = false
 }) {
     const baseURL = ipfs ? IPFS_URL : BASE_URL;
     console.log("request");
 
+    let headers =  {
+        "Content-Type": "application/json",
+    }
+
+    if (signature) {
+        headers = {
+            ...headers,
+            signature: signature
+
+        }
+    }
+
     const response = await fetch(`${baseURL}/${url}`, {
         method: method,
-        headers: {
-            "Content-Type": "application/json"
-        },
+        headers: headers,
         body: JSON.stringify(body)
     });
 
