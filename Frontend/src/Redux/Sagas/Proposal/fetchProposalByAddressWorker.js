@@ -30,8 +30,8 @@ function* fetchProposalByAddressWorker({payload}) {
 
 // const responseActive = [
 //     {
-//         _proposal_title: "Hello Icon",
-//         _ipfs_key: "undefined46c3b07a-2f67-4caa-bc88-6290da31901d",
+//         proposal_title: "Hello Icon",
+//         ipfs_hash: "undefined46c3b07a-2f67-4caa-bc88-6290da31901d",
 //         new_progress_report: '0x01'
 //     },
 

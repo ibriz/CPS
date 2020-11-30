@@ -86,6 +86,11 @@ export default (event) => {
             store.dispatch(login({ address: payload }));
             break;
 
+        case 'RESPONSE_SIGNING':
+            console.log("RESPONSE_SIGNING", JSON.stringify(payload));
+            console.log(JSON.stringify(payload));
+            break;
+
         case 'RESPONSE_JSON-RPC':
             console.log(payload);
 

@@ -105,7 +105,7 @@ export function sendTransaction({
     );
 }
 
-export async function signTransaction() {
+export function signTransaction() {
     // const customEvent = new CustomEvent('ICONEX_RELAY_REQUEST', {
     //     detail: { 
     //     type: 'REQUEST_SIGNING',
@@ -116,12 +116,23 @@ export async function signTransaction() {
     // }});
     // window.dispatchEvent(customEvent);
 
-    const customEvent = new CustomEvent('ICONEX_RELAY_REQUEST', {detail: { 
-        type: 'REQUEST_SIGNING',
-        payload: {
-            from: 'hxfd114a60eefa8e2c3de2d00dc5e41b1a0c7e8931',
-            hash: '0x9fdbf1540cc680918a2cf379569761440c838af4910f1f836d96730c8a750eff'
+    // const customEvent = new CustomEvent('ICONEX_RELAY_REQUEST', {detail: { 
+    //     type: 'REQUEST_SIGNING',
+    //     payload: {
+    //         from: 'hxfd114a60eefa8e2c3de2d00dc5e41b1a0c7e8931',
+    //         hash: '9babe5d2911e8e42dfad72a589202767f95c6fab49523cdc16279a7b8f82eab2'
+    //     }
+    // }});
+
+    window.parent.dispatchEvent(new CustomEvent('ICONEX_RELAY_REQUEST', {
+        detail: {
+            type: 'REQUEST_SIGNING',
+            payload: {
+                from: store.getState().account.address,
+                hash: "9babe5d2911e8e42dfad72a589202767f95c6fab49523cdc16279a7b8f92eab2",
+            }
         }
-    }});
-    window.dispatchEvent(customEvent);
+    }))
+
+    // window.dispatchEvent(customEvent);
 }
