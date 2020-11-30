@@ -1,10 +1,11 @@
-import { login, logout, loginPrepRequest } from '../Reducers/accountSlice';
+import { login, logout, loginPrepRequest, signTransaction } from '../Reducers/accountSlice';
 import { takeEvery } from 'redux-saga/effects'
 
 import {
   loginWorker,
   logoutWorker,
-  loginPrepWorker
+  loginPrepWorker,
+  signTransactionWorker
 } from './Account';
 
 import {
@@ -78,6 +79,7 @@ import { FiPrinter } from 'react-icons/fi';
 function* rootSaga() {
 
   yield takeEvery(login.type, loginWorker);
+  yield takeEvery(signTransaction.type, signTransactionWorker);
   yield takeEvery(logout.type, logoutWorker);
   yield takeEvery(loginPrepRequest.type, loginPrepWorker)
 

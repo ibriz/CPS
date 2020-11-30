@@ -1,5 +1,5 @@
 import store from '../../Store';
-import { login } from '../../Reducers/accountSlice';
+import { login, signTransaction } from '../../Reducers/accountSlice';
 import history from '../../../Router/history';
 import { NotificationManager } from 'react-notifications';
 import constants from '../constants';
@@ -89,6 +89,8 @@ export default (event) => {
         case 'RESPONSE_SIGNING':
             console.log("RESPONSE_SIGNING", JSON.stringify(payload));
             console.log(JSON.stringify(payload));
+            store.dispatch(signTransaction({ signature: payload }));
+
             break;
 
         case 'RESPONSE_JSON-RPC':

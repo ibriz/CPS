@@ -11,7 +11,8 @@ const initialState = {
   payPenalty: false,
   loginType: '',
   penaltyAmount: 15,
-  walletBalance: 0
+  walletBalance: 0, 
+  signature: null
 };
 
 const accountSlice = createSlice({
@@ -23,6 +24,7 @@ const accountSlice = createSlice({
     },
     logout(state) {
       state.address = null;
+      state.signature = null;
     },
     loginRequest(state) {
     },
@@ -37,8 +39,12 @@ const accountSlice = createSlice({
 
     },
 
+    signTransaction(state, action) {
+      state.signature = action.payload.signature
+    }
+
   },
 })
 
-export const { login, logout, loginRequest, loginPrepRequest, loginSuccess  } = accountSlice.actions;
+export const { login, logout, loginRequest, loginPrepRequest, loginSuccess, signTransaction } = accountSlice.actions;
 export default accountSlice.reducer;
