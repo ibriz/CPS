@@ -52,7 +52,7 @@ const useTimer = () => {
         let timestamp = Math.floor(Date.now() / 1000);
         var d = remainingTime - (timestamp - timestampRedux);
         if (remainingTime > 0 && d > 0) {
-            console.log("timestampRedux");
+            // console.log("timestampRedux");
             var r = {};                                                                
             var s = {                                                                 
                 day: 86400,   
@@ -70,7 +70,7 @@ const useTimer = () => {
             });
 
             // for example: {year:0,month:0,week:1,day:2,hour:34,minute:56,second:7}
-            console.log(r);
+            // console.log(r);
 
             setRemainingTime(r);
         } else {
