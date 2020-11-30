@@ -97,7 +97,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                 address: walletAddress
             });
         }
-        history.push('/');
+        // history.push('/');
     }
 
     // useEffect(() => {
