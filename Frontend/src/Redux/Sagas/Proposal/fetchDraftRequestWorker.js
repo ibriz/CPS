@@ -1,4 +1,4 @@
-import { call, put} from 'redux-saga/effects';
+import { call, put, select} from 'redux-saga/effects';
 // import {
 //   getCourseInfo,
 // } from '../services/api';
@@ -13,11 +13,14 @@ function* fetchDraftRequestWorker({payload}) {
     //   url: `redis/proposals?address=${payload.walletAddress}`,
     //   method: 'GET'
     // });
+    const getAddress = (state) => state.account.address
+    const walletAddress = yield select(getAddress);
 
     const response = [
       {
         ipfsHash: 'dsfsdfsdf',
-        proposalName: 'Hello World'
+        proposalName: 'Hello World',
+        contributorAddress: walletAddress
       }
     ]
     yield put(fetchDraftsSuccess(
