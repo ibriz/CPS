@@ -17,7 +17,7 @@ import {updateProposalStatus} from 'Redux/Reducers/proposalSlice';
 import {NotificationManager} from 'react-notifications';
 import ConfirmationModal from 'Components/UI/ConfirmationModal';
 import Header from 'Components/Header';
-
+import {requestIPFS} from 'Redux/Sagas/helpers';
 
 const ProgressReportCreationPage = ({ submitProgressReport, history, submittingProgressReport, fetchProposalListRequest, updateProposalStatus, currentUserActiveProposals, saveDraftRequest, location, walletAddress, fetchProposalByAddressRequest }) => {
 
@@ -42,7 +42,18 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
 
         }
     );
+    const [progressReportIPFS, setProgressReportIPFS] = React.useState({});
+
     let [submissionConfirmationShow, setSubmissionConfirmationShow] = React.useState(false);
+
+    async function fetchDraft() {
+        const progressReportIPFS = await requestIPFS({
+            hash: draftProgressReport.reportHash,
+          //   method: 'GET'
+          });
+
+        setProgressReportIPFS(progressReportIPFS);
+    }
 
     useEffect(() => {
         setProposal(proposal => (
@@ -52,6 +63,12 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
             }
         ))
     }, [ipfsKey])
+
+    useEffect(() => {
+        if(isDraft) {
+            fetchDraft();
+        }
+    }, [location])
 
 
     useEffect(() => {
@@ -76,11 +93,12 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                 {
                     ...progressReport,
                     ...draftProgressReport,
+                    progressReportIPFS,
                     projectName: draftProgressReport.proposalKey
                 }
             ));
         }
-    }, [location]);
+    }, [location, progressReportIPFS]);
 
 
     const saveChanges = () => {

@@ -21,7 +21,8 @@ function* fetchDraftRequestWorker({payload}) {
         ipfsHash: 'dsfsdfsdf',
         proposalName: 'Hello World',
         progressReportName: 'ProgressReport1',
-        contributorAddress: walletAddress
+        contributorAddress: walletAddress,
+        hash: 'wrwerwer1232132'
       }
     ]
 
