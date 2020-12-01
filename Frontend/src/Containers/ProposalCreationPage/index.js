@@ -75,7 +75,9 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
     }, [location, proposalIPFS])
 
     useEffect(() => {
-        fetchDraft();
+        if(isDraft) {
+            fetchDraft();
+        }
     }, [location])
 
 

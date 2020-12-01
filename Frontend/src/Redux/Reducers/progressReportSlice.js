@@ -210,14 +210,15 @@ const proposalSlice = createSlice({
             return;
         },
         fetchDraftsSuccess(state, payload) {
-            state.progressReportList["Draft"] = payload.payload.response.map(progressReport => (
+            state.progressReportList["Draft"] = payload.payload.response.map((progressReport, index) => (
                 {
                     status: 'draft',
                     progressReportTitle: progressReport.progressReportName,
                     projectTitle: progressReport.proposalName,
                     contributorAddress: progressReport.contributorAddress,
+                    index: index,
                     // ipfsHash: progressReport[PARAMS.reportHash],
-                    // reportKey: progressReport[PARAMS.reportHash],
+                    reportHash: progressReport.hash,
 
                     // timestamp: progressReport[PARAMS.timestamp],
                     // proposalKey: progressReport[PARAMS.proposalHash],
