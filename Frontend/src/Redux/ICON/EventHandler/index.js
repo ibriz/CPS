@@ -89,6 +89,7 @@ export default (event) => {
         case 'RESPONSE_SIGNING':
             console.log("RESPONSE_SIGNING", JSON.stringify(payload));
             console.log(JSON.stringify(payload));
+            // console.log("getRaw", payload.getProperties());
             store.dispatch(signTransaction({ signature: payload }));
 
             break;

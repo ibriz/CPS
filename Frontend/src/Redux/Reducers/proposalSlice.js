@@ -277,8 +277,12 @@ const proposalSlice = createSlice({
         fetchDraftsRequest(state) {
             return;
         },
-        fetchDraftsSuccess(state, payload) {
-            state.proposalList["Draft"] = payload.payload.response.data;
+        fetchDraftsSuccess(state, action) {
+            state.proposalList["Draft"] = action.payload.response.map(proposal => ({
+                projectName: proposal.proposalName,
+                ipfsHash: proposal.ipfsHash,
+                _status: 'draft'
+            }));
         },
         fetchDraftsFailure(state) {
             return;
