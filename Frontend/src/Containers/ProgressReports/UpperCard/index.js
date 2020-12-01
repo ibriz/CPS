@@ -1,17 +1,17 @@
 import React, { useEffect } from 'react';
 import styles from './UpperCard.module.scss';
-import { Row, Col, Card, Button } from 'react-bootstrap';
-import {connect} from 'react-redux';
-import {Link} from 'react-router-dom';
+import { Row, Col, Card, Button, Container } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import useTimer from 'Hooks/useTimer';
-import {updatePeriod} from 'Redux/Reducers/periodSlice';
+import { updatePeriod } from 'Redux/Reducers/periodSlice';
 import ConfirmationModal from 'Components/UI/ConfirmationModal';
-import {getNewProgressReportInfo} from 'Selectors';
-import {fetchProposalByAddressRequest} from 'Redux/Reducers/proposalSlice';
+import { getNewProgressReportInfo } from 'Selectors';
+import { fetchProposalByAddressRequest } from 'Redux/Reducers/proposalSlice';
 
-const UpperCard = ({numberOfSubmittedProposals, updatePeriod, sponsorRequest, voting, isPrep, isRegistered, walletAddress, fetchProposalByAddressRequest, newProgressReportInfo }) => {
+const UpperCard = ({ numberOfSubmittedProposals, updatePeriod, sponsorRequest, voting, isPrep, isRegistered, walletAddress, fetchProposalByAddressRequest, newProgressReportInfo }) => {
 
-    const {period, remainingTime, remainingTimeSecond} = useTimer();
+    const { period, remainingTime, remainingTimeSecond } = useTimer();
     let [periodConfirmationShow, setPeriodConfirmationShow] = React.useState(false);
 
     let button;
@@ -30,16 +30,16 @@ const UpperCard = ({numberOfSubmittedProposals, updatePeriod, sponsorRequest, vo
     }
 
     if (remainingTimeSecond === 0) {
-        button = <Button variant="primary" className={styles.createProposalButton} onClick = {onClickUpdatePeriod}>UPDATE PERIOD </Button>
+        button = <Button variant="primary" className={styles.createProposalButton} onClick={onClickUpdatePeriod}>UPDATE PERIOD </Button>
         text = <span className={styles.proposalNumber}>Click button to trigger {period === 'APPLICATION' ? 'Voting' : 'Application'} Period</span>
 
     } else if (sponsorRequest || voting || (isPrep && isRegistered)) {
         text = null;
         button = null;
-        
+
     } else if (period === 'APPLICATION') {
 
-        if(newProgressReportInfo.totalProgressReportCount === 0) {
+        if (newProgressReportInfo.totalProgressReportCount === 0) {
             text = <span className={styles.proposalNumber}>You have no active proposal</span>
             button = <span className={styles.proposalNumber}>You need to have active proposal to create new progress report</span>
         }
@@ -53,10 +53,10 @@ const UpperCard = ({numberOfSubmittedProposals, updatePeriod, sponsorRequest, vo
         else {
             button = <Link to="/newProgressReport">
 
-            <Button variant="info" className={styles.createProposalButton}>CREATE NEW PROGRESS REPORT</Button>
-        </Link>
+                <Button variant="info" className={styles.createProposalButton}>CREATE NEW PROGRESS REPORT</Button>
+            </Link>
 
-        text = <span className={styles.proposalNumber}>You have created progress report for <b>{newProgressReportInfo.totalProgressReportCount - newProgressReportInfo.canCreateNewProgressReportCount}</b> out of <b>{newProgressReportInfo.totalProgressReportCount}</b> active proposals. </span>
+            text = <span className={styles.proposalNumber}>You have created progress report for <b>{newProgressReportInfo.totalProgressReportCount - newProgressReportInfo.canCreateNewProgressReportCount}</b> out of <b>{newProgressReportInfo.totalProgressReportCount}</b> active proposals. </span>
         }
 
 
@@ -66,40 +66,78 @@ const UpperCard = ({numberOfSubmittedProposals, updatePeriod, sponsorRequest, vo
 
     }
 
+    const remainingTimeText = <span className={styles.proposalTitle}><b>{(period === 'VOTING') ? 'PROGRESS REPORT SUBMISSION OPENS IN' : 'PROGRESS REPORT SUBMISSION DEADLINE IN'}</b></span>;
+    const remainingTimeValue = <span className={styles.proposalTitle}><b>{remainingTime.day}</b> DAYS <b>{remainingTime.hour}</b> HOURS <b>{remainingTime.minute}</b> MINUTES <b>{remainingTime.second}</b> SECONDS</span>;
+
+
+
     return (
         <Row>
-                <Col>
-                    <Card className = {styles.upperCard}>
-                        <Card.Body>
-                            <Row className={styles.upperCardRow}>
-                                <span className={styles.proposalTitle}><b>{(period === 'VOTING') ? 'PROGRESS REPORT SUBMISSION OPENS IN' : 'PROGRESS REPORT SUBMISSION DEADLINE IN'}</b></span>
+            <Col>
+                <Card className={styles.upperCard}>
+                    <Card.Body>
+                        {/* <Row className={styles.upperCardRow}>
+                                {remainingTimeText}
                                 {text}
 
                             </Row>
                             <Row className={styles.upperCardRow}>
-                                <span className={styles.proposalTitle}><b>{remainingTime.day}</b> DAYS <b>{remainingTime.hour}</b> HOURS <b>{remainingTime.minute}</b> MINUTES <b>{remainingTime.second}</b> SECONDS</span>
+                                {remainingTimeValue}
+                                {button}
+                            </Row> */}
+
+                        <Container className={styles.desktopContainer}>
+                            <Row style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                {remainingTimeText}
+                                {text}
+
+                            </Row>
+
+                            <Row style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                {remainingTimeValue}
                                 {button}
                             </Row>
-                        </Card.Body>
-                    </Card>
-                </Col>
 
-                <ConfirmationModal
+                        </Container>
+
+                        <Row className={styles.mobileContainer}>
+                            <Col xl="6" style={{ alignItems: 'flex-start' }}>
+
+                                {remainingTimeText}
+                                {remainingTimeValue}
+
+
+
+                            </Col>
+
+                            <Col xl="6" style={{ alignItems: 'flex-start', marginTop: '10px' }}>
+                                {text}
+                                {
+                                    button
+                                }
+
+                            </Col>
+                        </Row>
+                    </Card.Body>
+                </Card>
+            </Col>
+
+            <ConfirmationModal
                 show={periodConfirmationShow}
                 onHide={() => setPeriodConfirmationShow(false)}
                 heading={'Period Update Confirmation'}
                 onConfirm={() => {
                     updatePeriod();
                 }} >
-                {                 
-                        <>
-                            <div>Are you sure you want to trigger period update?</div>
-                        </> 
+                {
+                    <>
+                        <div>Are you sure you want to trigger period update?</div>
+                    </>
                 }
 
             </ConfirmationModal>
 
-            </Row>
+        </Row>
     );
 }
 
