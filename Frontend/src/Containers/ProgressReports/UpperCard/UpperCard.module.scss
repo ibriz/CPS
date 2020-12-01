@@ -23,6 +23,12 @@
 
 .upperCard {
     margin-top: 20px;
+
+    div[class^="col"] {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
 }
 
 @media screen and (min-width: 992px) {
@@ -31,4 +37,16 @@
         padding-right: 2.2rem;
     }
 
+}
+
+@media screen and (max-width: 1199px) {
+    .desktopContainer {
+        display: none;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    .mobileContainer {
+        display: none !important;
+    }
 }

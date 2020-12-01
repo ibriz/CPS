@@ -90,3 +90,9 @@ a:first-child > span.socialLink {
     }
 
 }
+
+@media screen and (max-width: 991px) {
+    .firstRow, .firstRowConsole {
+        padding-top: 20px !important;
+    }
+}
