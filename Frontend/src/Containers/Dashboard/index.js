@@ -29,7 +29,7 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
     if (!isPrep || !isRegistered) {
         cardInfo = [
             {
-                color: '#84C318',
+                color: '#1AAABA',
                 title: "My Voting Proposals",
                 // value={`${projectAmounts.Voting.count} (${icxFormat(projectAmounts.Voting.amount)} ICX)`} 
                 value: myProposalList.filter(proposal => proposal._status === '_pending').length
@@ -41,14 +41,14 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
                 value: myProposalList.filter(proposal => ['_active', '_paused'].includes(proposal._status)).length
             },
             {
-                color: '#304C89',
+                color: '#1AAABA',
                 title: `Disbursement Due in ${highestSignificantTimeForGrant.value} ${highestSignificantTimeForGrant.text}`,
                 // value={`${icxFormat(cpfRemainingFunds, true)} ICX`} 
                 value: `${expectedGrant} ICX`
             },
             {
                 title: `Remaining of ${period === "APPLICATION" ? 'Application Period' : 'Voting Period'}`,
-                color: '#EF476F',
+                color: '#1AAABA',
                 // value={period === "APPLICATION" ? 'Application Period' : 'Voting Period'} />
                 value: `${highestSignificantTime.value} ${highestSignificantTime.text}`
             }
@@ -56,7 +56,7 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
     } else {
         cardInfo = [
             {
-                color: '#84C318',
+                color: '#1AAABA',
                 title: period === "APPLICATION" ? "Remaining Sponsor Requests" : "Outstanding Votes",
                 // value={`${projectAmounts.Voting.count} (${icxFormat(projectAmounts.Voting.amount)} ICX)`} 
                 value: period === "APPLICATION" ? totalCountSponsorRequests.Pending : (remainingVotesProposal.length + remainingVotesPR.length)
@@ -68,14 +68,14 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
                 value: `${sponsorBond} ICX`
             },
             {
-                color: '#304C89',
+                color: '#1AAABA',
                 title: `Sponsor Reward in  ${highestSignificantTimeForGrant.value} ${highestSignificantTimeForGrant.text}`,
                 // value={`${icxFormat(cpfRemainingFunds, true)} ICX`} 
                 value: `${expectedGrant} ICX`
             },
             {
                 title: `Remaining of ${period === "APPLICATION" ? 'Application Period' : 'Voting Period'}`,
-                color: '#EF476F',
+                color: '#1AAABA',
                 // value={period === "APPLICATION" ? 'Application Period' : 'Voting Period'} />
                 value: ` ${highestSignificantTime.value} ${highestSignificantTime.text}`
             }
