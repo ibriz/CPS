@@ -33,6 +33,12 @@ export const progressReportStatusMapping = [
         badgeColor: 'info'
     },
 
+    {
+        name: 'Draft',
+        status: 'draft',
+        badgeColor: 'info'
+    },
+
 ];
 
 

@@ -9,10 +9,17 @@ import {getRequest} from '../helpers';
 function* fetchDraftRequestWorker({payload}) {
   console.log("fetchDraftRequestWorker");
   try {
-    const response = yield call(getRequest, {
-      url: `redis/proposals?address=${payload.walletAddress}`,
-      method: 'GET'
-    });
+    // const response = yield call(getRequest, {
+    //   url: `redis/proposals?address=${payload.walletAddress}`,
+    //   method: 'GET'
+    // });
+
+    const response = [
+      {
+        ipfsHash: 'dsfsdfsdf',
+        proposalName: 'Hello World'
+      }
+    ]
     yield put(fetchDraftsSuccess(
       {
         response,
