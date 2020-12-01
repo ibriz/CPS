@@ -19,6 +19,7 @@ import RichTextEditor from '../../Components/RichTextEditor';
 
 import LoaderModal from '../../Components/UI/LoaderModal';
 import ConfirmationModal from 'Components/UI/ConfirmationModal';
+import {requestIPFS} from 'Redux/Sagas/helpers';
 
 const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fetchPrepsRequest, preps, saveDraftRequest, walletAddress, location }) => {
 
@@ -30,6 +31,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
     let [submissionConfirmationShow, setSubmissionConfirmationShow] = React.useState(false);
     const [editModalShow, setEditModalShow] = React.useState(false);
     const [editModalIndex, setEditModalIndex] = React.useState();
+    const [proposalIPFS, setProposalIPFS] = React.useState({});
     const [proposal, setProposal] = useState(
         {
             projectName: null,
@@ -45,6 +47,15 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
         }
     );
 
+    async function fetchDraft() {
+        const proposalIPFS = await requestIPFS({
+            hash: draftProposal.ipfsHash,
+          //   method: 'GET'
+          });
+
+        setProposalIPFS(proposalIPFS);
+    }
+
     useEffect(() => {
         fetchPrepsRequest();
 
@@ -52,14 +63,22 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
 
     useEffect(() => {
         if (isDraft) {
+
             setProposal(prevState => (
                 {
                     ...proposal,
+                    ...proposalIPFS,
                     ...draftProposal
                 }
             ));
         }
+    }, [location, proposalIPFS])
+
+    useEffect(() => {
+        fetchDraft();
     }, [location])
+
+
 
     // const [proposal, setProposal] = useState(
     //     {

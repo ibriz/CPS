@@ -69,7 +69,7 @@ const Aside = ({ collapsed, rtl, toggled, handleToggleSidebar, handleCollapsedCh
 
             <MenuItem icon={<MdForum />}
               > {<span>ICON Forum</span>}
-                <a href="https://forum.icon.community/" target = "_blank" />
+                <a href="https://forum.icon.community/c/contribution-proposals/45" target = "_blank" />
 
               </MenuItem> 
           </Menu>
@@ -120,7 +120,7 @@ const Aside = ({ collapsed, rtl, toggled, handleToggleSidebar, handleCollapsedCh
 
              <MenuItem icon={<MdForum />}
               > {<span>ICON Forum</span>}
-                <a href="https://forum.icon.community/" target = "_blank" />
+                <a href="https://forum.icon.community/c/contribution-proposals/45" target = "_blank" />
 
               </MenuItem> 
 

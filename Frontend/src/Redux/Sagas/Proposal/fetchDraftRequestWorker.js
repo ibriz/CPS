@@ -18,7 +18,7 @@ function* fetchDraftRequestWorker({payload}) {
 
     const response = [
       {
-        ipfsHash: 'dsfsdfsdf',
+        ipfsHash: 'bafybeigrlxuip3cfwfvxpnpuk43yzteg5o6lyln6vhe6gysg7fhq4bqxmi',
         proposalName: 'Hello World',
         contributorAddress: walletAddress
       }
