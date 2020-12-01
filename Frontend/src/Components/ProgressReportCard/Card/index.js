@@ -84,11 +84,7 @@ const ProgressReportCard = ({progressReportList, fetchProgressReport, walletAddr
         else {
             filteredProgressReports = progressReportList[selectedTab].map((progressReport, index) => (
                 {
-                    progressReportTitle: progressReport.progressReportTitle || 'Untitled Progress Report',
-                    timestamp: new Date() * 1000,
-                    projectTitle: proposalByAddress.find((proposal) => 
-                        proposal.ipfsKey === progressReport.proposalKey)?._proposal_title,
-                    index: index,
+                    ...progressReport
 
                 }
             ))

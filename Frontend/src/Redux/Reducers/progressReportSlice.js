@@ -210,7 +210,22 @@ const proposalSlice = createSlice({
             return;
         },
         fetchDraftsSuccess(state, payload) {
-            state.progressReportList["Draft"] = payload.payload.response.data;
+            state.progressReportList["Draft"] = payload.payload.response.map(progressReport => (
+                {
+                    status: 'draft',
+                    progressReportTitle: progressReport.progressReportName,
+                    projectTitle: progressReport.proposalName,
+                    contributorAddress: progressReport.contributorAddress,
+                    // ipfsHash: progressReport[PARAMS.reportHash],
+                    // reportKey: progressReport[PARAMS.reportHash],
+
+                    // timestamp: progressReport[PARAMS.timestamp],
+                    // proposalKey: progressReport[PARAMS.proposalHash],
+                    // approvedVotes: IconConverter.toBigNumber(progressReport[PARAMS.approvedVotes]),
+                    // totalVotes: IconConverter.toBigNumber(progressReport[PARAMS.totalVotes]),
+                    // approvedPercentage: (!progressReport[PARAMS.totalVotes] || parseInt(progressReport[PARAMS.totalVotes]) === 0) ? 0 : ((progressReport[PARAMS.approvedVotes] / progressReport[PARAMS.totalVotes]) * 100)
+                }
+            ));
         },
         fetchDraftsFailure(state) {
             return;

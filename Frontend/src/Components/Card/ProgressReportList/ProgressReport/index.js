@@ -7,7 +7,7 @@ import ProgressBar from '../../../UI/ProgressBar';
 import LowerCardTitle from '../../../UI/LowerCardList/LowerCardTitle';
 import LowerCardInfo from '../../../UI/LowerCardList/LowerCardInfo';
 import Budget from '../../../UI/LowerCardList/Budget';
-import {progressReportStatusMapping} from 'Constants';
+import { progressReportStatusMapping } from 'Constants';
 
 
 const badgeColor = {
@@ -22,7 +22,7 @@ const badgeColor = {
 const ProgressReport = ({ progressReport, selectedTab, showProject = true, onClick }) => {
     return (
         <>
-            <Row className={styles.proposalContainer} onClick = {onClick}>
+            <Row className={styles.proposalContainer} onClick={onClick}>
                 <Col sm="9" className={styles.infos}>
                     <Row style={{ alignItems: 'center' }} className={styles.firstRow}>
                         <Badge size="xs" variant={progressReportStatusMapping.find(mapping => mapping.status === progressReport.status).badgeColor} className={styles.badge}>{progressReportStatusMapping.find(mapping => mapping.status === progressReport.status).name}</Badge>{' '}
@@ -43,10 +43,14 @@ const ProgressReport = ({ progressReport, selectedTab, showProject = true, onCli
                     </Row>
                 </Col>
 
-                <Col md="3" xs = "12" className={styles.progressBar} >
-                    <ProgressText>{progressReport.approvedPercentage ? progressReport.approvedPercentage.toFixed() : 0}% Approved</ProgressText>
-                    <ProgressBar percentage = {progressReport.approvedPercentage} />
-                </Col>
+                {
+                    progressReportStatusMapping.find(mapping => mapping.status === progressReport.status).name !== 'Draft' &&
+                    <Col md="3" xs="12" className={styles.progressBar} >
+                        <ProgressText>{progressReport.approvedPercentage ? progressReport.approvedPercentage.toFixed() : 0}% Approved</ProgressText>
+                        <ProgressBar percentage={progressReport.approvedPercentage} />
+                    </Col>
+                }
+
             </Row>
             <hr className={styles.horizontalRule} />
         </>
