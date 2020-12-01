@@ -278,10 +278,26 @@ const proposalSlice = createSlice({
             return;
         },
         fetchDraftsSuccess(state, action) {
-            state.proposalList["Draft"] = action.payload.response.map(proposal => ({
-                projectName: proposal.proposalName,
+            state.proposalList["Draft"] = action.payload.response.map((proposal, index) => ({
+                // projectName: proposal.proposalName,
+                // ipfsHash: proposal.ipfsHash,
+                // _status: 'draft',
+
+
+                _status: 'draft',
+                _proposal_title: proposal.proposalName,
                 ipfsHash: proposal.ipfsHash,
-                _status: 'draft'
+                _contributor_address: proposal.contributorAddress,
+                index
+
+
+                // budget: parseInt(proposal[PARAMS.totalBudget]),
+                // _timestamp: proposal[PARAMS.timestamp],
+                // ipfsKey: proposal[PARAMS.proposalHash],
+                // approvedVotes: IconConverter.toBigNumber(proposal[PARAMS.approvedVotes]),
+                // totalVotes: IconConverter.toBigNumber(proposal[PARAMS.totalVotes]),
+                // approvedPercentage: (!proposal[PARAMS.totalVotes] || parseInt(proposal[PARAMS.totalVotes]) === 0) ? 0 : ((proposal[PARAMS.approvedVotes] / proposal[PARAMS.totalVotes]) * 100),
+                // completedPercentage: parseInt(IconConverter.toBigNumber(proposal[PARAMS.percentageCompleted])),
             }));
         },
         fetchDraftsFailure(state) {

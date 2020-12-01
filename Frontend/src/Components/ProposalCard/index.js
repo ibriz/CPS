@@ -88,11 +88,7 @@ const ProposalCard = ({ proposalList, fetchProposalListRequest, walletAddress, t
         else {
             filteredProposals = proposalList[selectedTab].map((proposal, index) => (
                 {
-                    _proposal_title: proposal.projectName || 'Untitled Proposal',
-                    _contributor_address: walletAddress,
-                    _timestamp: new Date() * 1000,
-                    budget: proposal.totalBudget,
-                    index: index
+                    ...proposal
                 }
             ))
         }

@@ -104,6 +104,12 @@ export const proposalStatusMapping = [
         badgeColor: 'danger'
     },
 
+    {
+        name: 'Draft',
+        status: 'draft',
+        badgeColor: 'info'
+    },
+
 ];
 
 export const payPenaltyAmount = 10;
