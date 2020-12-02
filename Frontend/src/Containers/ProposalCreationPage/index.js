@@ -43,7 +43,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
         if (proposal.totalBudget == null ) {
             document.getElementById("totalBudget").setCustomValidity(`Enter Total Budget between 0 and remaining CPF Fund (currently ${cpfRemainingFunds} ICX)`);
         }
-        else if ((proposal.totalBudget < 0) || (proposal.totalBudget > cpfRemainingFunds)) {
+        else if ((proposal.totalBudget < 0) || (proposal.totalBudget > parseInt(cpfRemainingFunds))) {
             document.getElementById("totalBudget").setCustomValidity(`Total Budget should be between 0 and CPF remaining Fund (currently  ${cpfRemainingFunds} ICX)`);
 
         } else {
@@ -229,7 +229,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                                 <InputGroup size="md">
 
                                     <FormControl placeholder="Total Budget" 
-                                    // min = {0} max = {parseInt(cpfRemainingFunds)} 
+                                    min = {0} max = {parseInt(cpfRemainingFunds)} 
                                     type="number" value={proposal.totalBudget} name="totalBudget" onChange={handleChange} id = "totalBudget" required
                                       />
                                     <InputGroup.Append>
