@@ -56,10 +56,10 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
     useEffect(() => {
         if (document.getElementById("additionalBudget")) {
             if (progressReport.additionalBudget == null) {
-                document.getElementById("additionalBudget").setCustomValidity(`Enter Total Budget between 0 and remaining CPF Fund (currently ${cpfRemainingFunds} ICX)`);
+                document.getElementById("additionalBudget").setCustomValidity(`Enter Additional Budget between 0 and remaining CPF Fund (currently ${cpfRemainingFunds} ICX)`);
             }
             else if ((progressReport.additionalBudget < 0) || (progressReport.additionalBudget > parseInt(cpfRemainingFunds))) {
-                document.getElementById("additionalBudget").setCustomValidity(`Total Budget should be between 0 and CPF remaining Fund (currently  ${cpfRemainingFunds} ICX)`);
+                document.getElementById("additionalBudget").setCustomValidity(`Total Additional should be between 0 and CPF remaining Fund (currently  ${cpfRemainingFunds} ICX)`);
 
             } else {
                 document.getElementById("additionalBudget").setCustomValidity("");

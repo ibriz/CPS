@@ -66,8 +66,8 @@ export const getProgressReportApprovedVotersPercentage = createSelector(
 );
 
 
-const getApprovedVotesBudgetAdjustment = state => state.progressReport.approvedVotes
-const getTotalVotesBudgetAdjustment = state => state.progressReport.totalVotes
+const getApprovedVotesBudgetAdjustment = state => state.progressReport.approvedVotesBudgetChange
+const getTotalVotesBudgetAdjustment = state => state.progressReport.totalVotesBudgetChange
 
 export const getBudgetAdjustmentApprovedPercentage = createSelector(
   [getApprovedVotesBudgetAdjustment, getTotalVotesBudgetAdjustment],
@@ -79,8 +79,8 @@ export const getBudgetAdjustmentApprovedPercentage = createSelector(
   }
 );
 
-const getApprovedVotersBudgetAdjustment = state => state.progressReport.approvedVoters
-const getTotalVotersBudgetAdjustment = state => state.progressReport.totalVoters
+const getApprovedVotersBudgetAdjustment = state => state.progressReport.approvedVotesBudgetChange
+const getTotalVotersBudgetAdjustment = state => state.progressReport.totalVotersBudgetChange
 
 export const getBudgetAdjustmentApprovedVotersPercentage = createSelector(
   [getApprovedVotersBudgetAdjustment, getTotalVotersBudgetAdjustment],
