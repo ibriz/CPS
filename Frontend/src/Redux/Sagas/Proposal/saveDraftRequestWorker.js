@@ -14,7 +14,8 @@ function* saveDraftRequestWorker({payload}) {
 
   const signature = yield signTransaction();
   console.log("signature", signature);
-    let body = {...payload};
+    let body = {...payload,
+      type: "Proposal"};
     Object.keys(body).forEach(key => {
         if(body[key] === null || Array.isArray(body[key]) && body[key].length < 1 ) {
             delete body[key]

@@ -7,5 +7,5 @@ export const PROGRESS_REPORT_ADD_URL = 'proposals';
 
 export const IMAGE_UPLOAD_URL = 'image/upload';
 
-export const ADD_PROPOSAL_DRAFT_URL = 'redis/proposal';
+export const ADD_PROPOSAL_DRAFT_URL = 'draft';
 export const ADD_PROGRESS_REPORT_DRAFT_URL = 'redis/report';
