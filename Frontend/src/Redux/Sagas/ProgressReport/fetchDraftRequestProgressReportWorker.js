@@ -27,7 +27,7 @@ function* fetchDraftRequestWorker({payload}) {
     ]
 
     // const response = yield call(getRequest, {
-    //   url: `redis/user/reports?address=${payload.walletAddress}`,
+    //   url: `draft?address=${payload.walletAddress}&type=ProgressReport`,
     //   method: 'GET'
     // });
     yield put(fetchDraftsSuccess(

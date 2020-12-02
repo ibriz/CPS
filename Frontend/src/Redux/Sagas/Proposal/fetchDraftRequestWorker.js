@@ -10,7 +10,7 @@ function* fetchDraftRequestWorker({payload}) {
   console.log("fetchDraftRequestWorker");
   try {
     // const response = yield call(getRequest, {
-    //   url: `redis/proposals?address=${payload.walletAddress}`,
+    //   url: `draft?address=${payload.walletAddress}&type=Proposal`,
     //   method: 'GET'
     // });
     const getAddress = (state) => state.account.address

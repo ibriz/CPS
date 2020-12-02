@@ -12,7 +12,8 @@ import {signTransaction} from 'Redux/ICON/utils';
 function* saveDraftRequestWorker({payload}) {
   try {
     const signature = yield signTransaction();
-    let body = {...payload};
+    let body = {...payload,
+      type: "ProgressReport"};
     Object.keys(body).forEach(key => {
         if(body[key] === null || Array.isArray(body[key]) && body[key].length < 1 ) {
             delete body[key]
