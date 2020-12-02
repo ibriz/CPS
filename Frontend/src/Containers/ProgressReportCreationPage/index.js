@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Row, Card, Col, Form, InputGroup, FormControl, Button } from 'react-bootstrap';
 import styles from './ProposalCreationPage.module.css';
+import { fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest } from 'Redux/Reducers/fundSlice';
 
 import { submitProgressReportRequest, saveDraftRequest } from '../../Redux/Reducers/progressReportSlice';
 import { connect } from 'react-redux';
@@ -12,14 +13,14 @@ import RichTextEditor from 'Components/RichTextEditor';
 
 import LoaderModal from '../../Components/UI/LoaderModal';
 // import {getCurrentUserActiveProposals} from 'Selectors';
-import {fetchProposalListRequest, fetchProposalByAddressRequest} from 'Redux/Reducers/proposalSlice';
-import {updateProposalStatus} from 'Redux/Reducers/proposalSlice';
-import {NotificationManager} from 'react-notifications';
+import { fetchProposalListRequest, fetchProposalByAddressRequest } from 'Redux/Reducers/proposalSlice';
+import { updateProposalStatus } from 'Redux/Reducers/proposalSlice';
+import { NotificationManager } from 'react-notifications';
 import ConfirmationModal from 'Components/UI/ConfirmationModal';
 import Header from 'Components/Header';
-import {requestIPFS} from 'Redux/Sagas/helpers';
+import { requestIPFS } from 'Redux/Sagas/helpers';
 
-const ProgressReportCreationPage = ({ submitProgressReport, history, submittingProgressReport, fetchProposalListRequest, updateProposalStatus, currentUserActiveProposals, saveDraftRequest, location, walletAddress, fetchProposalByAddressRequest }) => {
+const ProgressReportCreationPage = ({ submitProgressReport, history, submittingProgressReport, fetchProposalListRequest, updateProposalStatus, currentUserActiveProposals, saveDraftRequest, location, walletAddress, fetchProposalByAddressRequest, fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, cpfScoreAddress, cpfRemainingFunds }) => {
 
 
     const {
@@ -44,13 +45,39 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
     );
     const [progressReportIPFS, setProgressReportIPFS] = React.useState({});
 
+
+    useEffect(() => {
+        fetchCPFRemainingFundRequest();
+        fetchCPFScoreAddressRequest();
+
+    }, [fetchCPFRemainingFundRequest, cpfScoreAddress, fetchCPFScoreAddressRequest]);
+
+
+    useEffect(() => {
+        if (document.getElementById("additionalBudget")) {
+            if (progressReport.additionalBudget == null) {
+                document.getElementById("additionalBudget").setCustomValidity(`Enter Total Budget between 0 and remaining CPF Fund (currently ${cpfRemainingFunds} ICX)`);
+            }
+            else if ((progressReport.additionalBudget < 0) || (progressReport.additionalBudget > parseInt(cpfRemainingFunds))) {
+                document.getElementById("additionalBudget").setCustomValidity(`Total Budget should be between 0 and CPF remaining Fund (currently  ${cpfRemainingFunds} ICX)`);
+
+            } else {
+                document.getElementById("additionalBudget").setCustomValidity("");
+            }
+
+        }
+
+    })
+
+
+
     let [submissionConfirmationShow, setSubmissionConfirmationShow] = React.useState(false);
 
     async function fetchDraft() {
         const progressReportIPFS = await requestIPFS({
             hash: draftProgressReport.reportHash,
-          //   method: 'GET'
-          });
+            //   method: 'GET'
+        });
 
         setProgressReportIPFS(progressReportIPFS);
     }
@@ -65,7 +92,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
     }, [ipfsKey])
 
     useEffect(() => {
-        if(isDraft) {
+        if (isDraft) {
             fetchDraft();
         }
     }, [location])
@@ -88,7 +115,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
 
     useEffect(() => {
 
-        if(isDraft) {
+        if (isDraft) {
             setProposal(prevState => (
                 {
                     ...progressReport,
@@ -102,7 +129,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
 
 
     const saveChanges = () => {
-        if(!progressReport.projectName) {
+        if (!progressReport.projectName) {
             NotificationManager.error("Please choose a project before saving");
             return;
         }
@@ -170,7 +197,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
 
     return (
         <div className={styles.proposalCreationPage}>
-            <Header title = "Create New Progress Report"/>
+            <Header title="Create New Progress Report" />
 
             <Row className={styles.cardContainer}>
                 <Card className={styles.card}>
@@ -185,9 +212,9 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                                     {/* <option value="dasd">asdasd</option> */}
 
                                     {
-                                        currentUserActiveProposals.map((proposal) => 
-                                    <option value = {proposal.ipfsKey} disabled = {!proposal.newProgressReport}>{proposal._proposal_title}</option>
-                                    
+                                        currentUserActiveProposals.map((proposal) =>
+                                            <option value={proposal.ipfsKey} disabled={!proposal.newProgressReport}>{proposal._proposal_title}</option>
+
 
                                         )
                                     }
@@ -222,7 +249,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                             <Col sm="3" className={styles.inputSameLine}>
                                 <InputGroup size="md">
 
-                                    <FormControl placeholder = "Time Remaining" type="number" value={progressReport.timeRemainingToCompletion} name="timeRemainingToCompletion" onChange={handleChange} min = {0} max = {6} required />
+                                    <FormControl placeholder="Time Remaining" type="number" value={progressReport.timeRemainingToCompletion} name="timeRemainingToCompletion" onChange={handleChange} min={0} max={6} required />
                                     <InputGroup.Append>
                                         <InputGroup.Text>Months</InputGroup.Text>
                                     </InputGroup.Append>
@@ -290,7 +317,8 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                                     <Col sm="4" className={styles.inputSameLine}>
                                         <InputGroup size="md">
 
-                                            <FormControl placeholder = "Additional Budget" type="number" value={progressReport.additionalBudget} name="additionalBudget" onChange={handleChange} min = {0} required />
+                                            <FormControl placeholder="Additional Budget" type="number" value={progressReport.additionalBudget} name="additionalBudget" onChange={handleChange} min={0} required
+                                                id="additionalBudget" />
                                             <InputGroup.Append>
                                                 <InputGroup.Text>ICX</InputGroup.Text>
                                             </InputGroup.Append>
@@ -304,7 +332,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                                     <Col sm="4" className={styles.inputSameLine}>
                                         <InputGroup size="md">
 
-                                            <FormControl placeholder="Additional Time" type="number" value={progressReport.additionalTime} name="additionalTime" onChange={handleChange}  min = {0} max = {6} required />
+                                            <FormControl placeholder="Additional Time" type="number" value={progressReport.additionalTime} name="additionalTime" onChange={handleChange} min={0} max={6} required />
                                             <InputGroup.Append>
                                                 <InputGroup.Text>Months</InputGroup.Text>
                                             </InputGroup.Append>
@@ -337,8 +365,8 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                         }
 
                         <Form.Group as={Row} controlId="formPlaintextPassword">
-                            <Col className = {styles.draftButton}>
-                                <Button variant="outline-info" onClick = {saveChanges}>SAVE CHANGES</Button>{' '}
+                            <Col className={styles.draftButton}>
+                                <Button variant="outline-info" onClick={saveChanges}>SAVE CHANGES</Button>{' '}
                             </Col>
                             <Col className={styles.saveButton}>
                                 <Button variant="info" type="submit">SUBMIT</Button>
@@ -363,10 +391,10 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                         }
                     )
                 }} >
-                {                 
-                        <>
-                            <div>Are you sure you want to submit the progress report?</div>
-                        </> 
+                {
+                    <>
+                        <div>Are you sure you want to submit the progress report?</div>
+                    </>
                 }
 
             </ConfirmationModal>
@@ -380,7 +408,10 @@ const mapDispatchToProps = dispatch => (
         fetchProposalListRequest: (payload) => dispatch(fetchProposalListRequest(payload)),
         updateProposalStatus: payload => dispatch(updateProposalStatus(payload)),
         saveDraftRequest: payload => dispatch(saveDraftRequest(payload)),
-        fetchProposalByAddressRequest: payload => dispatch(fetchProposalByAddressRequest(payload))
+        fetchProposalByAddressRequest: payload => dispatch(fetchProposalByAddressRequest(payload)),
+
+        fetchCPFScoreAddressRequest: payload => dispatch(fetchCPFScoreAddressRequest(payload)),
+        fetchCPFRemainingFundRequest: payload => dispatch(fetchCPFRemainingFundRequest(payload)),
 
     }
 );
@@ -389,7 +420,10 @@ const mapStateToProps = state => (
     {
         submittingProgressReport: state.progressReport.submittingProgressReport,
         currentUserActiveProposals: state.proposals.proposalByAddress,
-        walletAddress: state.account.address
+        walletAddress: state.account.address,
+
+        cpfRemainingFunds: state.fund.cpfRemainingFunds,
+        cpfScoreAddress: state.fund.cpfScoreAddress,
     }
 )
 
