@@ -79,7 +79,7 @@ export const getBudgetAdjustmentApprovedPercentage = createSelector(
   }
 );
 
-const getApprovedVotersBudgetAdjustment = state => state.progressReport.approvedVotesBudgetChange
+const getApprovedVotersBudgetAdjustment = state => state.progressReport.approvedVotersBudgetChange
 const getTotalVotersBudgetAdjustment = state => state.progressReport.totalVotersBudgetChange
 
 export const getBudgetAdjustmentApprovedVotersPercentage = createSelector(
