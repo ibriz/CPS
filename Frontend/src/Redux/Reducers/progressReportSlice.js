@@ -277,6 +277,7 @@ const proposalSlice = createSlice({
         },
 
         fetchVoteResultBudgetChangeSuccess(state, action) {
+            console.log("budgetChangeRequest", action.payload.response.data);
             state.votesBudgetChangeByProgressReport = action.payload.response.data.map(vote => (
                 {
                     sponsorAddress: vote.address,
@@ -285,8 +286,8 @@ const proposalSlice = createSlice({
                     timestamp: vote._timestamp
                 }
             ));
-            state.votesBudgetChangeByProgressReport = state.votesBudgetChangeByProgressReport.filter(vote => 
-                vote.status);
+            // state.votesBudgetChangeByProgressReport = state.votesBudgetChangeByProgressReport.filter(vote => 
+            //     vote.status);
                 state.approvedVotesBudgetChange = IconConverter.toBigNumber(action.payload.response.approved_votes);
                 state.totalVotesBudgetChange = IconConverter.toBigNumber(action.payload.response.total_votes);
                 state.rejectedVotesBudgetChange = IconConverter.toBigNumber(action.payload.response.rejected_votes);
