@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Row, Card, Col, Form, InputGroup, FormControl, Button, Table, Alert } from 'react-bootstrap';
 import styles from './ProposalCreationPage.module.css';
+import {fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest} from 'Redux/Reducers/fundSlice';
 
 import { submitProposalRequest, saveDraftRequest } from 'Redux/Reducers/proposalSlice';
 import { fetchPrepsRequest } from '../../Redux/Reducers/prepsSlice';
@@ -21,7 +22,7 @@ import LoaderModal from '../../Components/UI/LoaderModal';
 import ConfirmationModal from 'Components/UI/ConfirmationModal';
 import {requestIPFS} from 'Redux/Sagas/helpers';
 
-const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fetchPrepsRequest, preps, saveDraftRequest, walletAddress, location }) => {
+const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fetchPrepsRequest, preps, saveDraftRequest, walletAddress, location, fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, cpfScoreAddress, cpfRemainingFunds }) => {
 
     const {
         draftProposal,
@@ -32,6 +33,28 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
     const [editModalShow, setEditModalShow] = React.useState(false);
     const [editModalIndex, setEditModalIndex] = React.useState();
     const [proposalIPFS, setProposalIPFS] = React.useState({});
+
+    useEffect(() => {
+        fetchCPFRemainingFundRequest();
+    }, [fetchCPFRemainingFundRequest, cpfScoreAddress]);
+
+
+    useEffect(() => {
+        if (proposal.totalBudget == null ) {
+            document.getElementById("totalBudget").setCustomValidity(`Enter Total Budget between 0 and remaining CPF Fund (currently ${cpfRemainingFunds} ICX)`);
+        }
+        else if ((proposal.totalBudget < 0) || (proposal.totalBudget > cpfRemainingFunds)) {
+            document.getElementById("totalBudget").setCustomValidity(`Total Budget should be between 0 and CPF remaining Fund (currently  ${cpfRemainingFunds} ICX)`);
+
+        } else {
+            document.getElementById("totalBudget").setCustomValidity("");
+        }
+
+    })
+
+
+
+
     const [proposal, setProposal] = useState(
         {
             projectName: null,
@@ -58,6 +81,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
 
     useEffect(() => {
         fetchPrepsRequest();
+        fetchCPFScoreAddressRequest();
 
     }, [])
 
@@ -204,7 +228,10 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                             <Col sm="4" className={styles.inputSameLine}>
                                 <InputGroup size="md">
 
-                                    <FormControl placeholder="Total Budget" min = {0} type="number" value={proposal.totalBudget} name="totalBudget" onChange={handleChange} required />
+                                    <FormControl placeholder="Total Budget" 
+                                    // min = {0} max = {parseInt(cpfRemainingFunds)} 
+                                    type="number" value={proposal.totalBudget} name="totalBudget" onChange={handleChange} id = "totalBudget" required
+                                      />
                                     <InputGroup.Append>
                                         <InputGroup.Text>ICX</InputGroup.Text>
                                     </InputGroup.Append>
@@ -213,7 +240,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
 
 
                             <Form.Label column sm="2" className={styles.labelSameLine}>
-                                Sponser PRep
+                                Sponsor PRep
                             </Form.Label>
                             <Col sm="4" className={styles.inputSameLine}>
                                 <Form.Control size="md" as="select" value={proposal.sponserPrep} name="sponserPrep" onChange={handleChange} required>
@@ -226,6 +253,8 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                                     }
                                 </Form.Control>
                             </Col>
+
+
                         </Form.Group>
 
                         <Form.Group as={Row} controlId="formPlaintextPassword">
@@ -243,6 +272,8 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                                             })
                                         )
                                     } />
+
+                                    
                             </Col>
                         </Form.Group>
 
@@ -411,7 +442,10 @@ const mapDispatchToProps = dispatch => (
     {
         submitProposal: (payload) => dispatch(submitProposalRequest(payload)),
         fetchPrepsRequest: payload => dispatch(fetchPrepsRequest(payload)),
-        saveDraftRequest: payload => dispatch(saveDraftRequest(payload))
+        saveDraftRequest: payload => dispatch(saveDraftRequest(payload)),
+
+        fetchCPFScoreAddressRequest: payload => dispatch(fetchCPFScoreAddressRequest(payload)),
+        fetchCPFRemainingFundRequest: payload => dispatch(fetchCPFRemainingFundRequest(payload)),
     }
 );
 
@@ -419,7 +453,9 @@ const mapStateToProps = state => (
     {
         submittingProposal: state.proposals.submittingProposal,
         preps: state.preps.preps,
-        walletAddress: state.account.address
+        walletAddress: state.account.address,
+        cpfRemainingFunds: state.fund.cpfRemainingFunds,
+        cpfScoreAddress: state.fund.cpfScoreAddress,
     }
 )
 
