@@ -138,7 +138,7 @@ const MyProposalCard = ({ myProposalList, fetchMyProposalListRequest, walletAddr
                                 selectedProposal={selectedProposal}
                                 setSelectedProposal={setSelectedProposal}
                                 onClickProposal={(selectedTab === 'Draft') ? onClickProposalDraft : onClickProposal}
-                                emptyListMessage = "No Proposal Pending Progress Report"
+                                emptyListMessage = "No Proposal"
 
                             />
 
