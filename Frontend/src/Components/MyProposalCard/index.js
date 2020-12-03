@@ -4,7 +4,7 @@ import styles from './ProposalCard.module.scss';
 import TabBar from 'Components/Card/TabBar';
 import ProposalList from 'Components/Card/ProposalList';
 import { connect } from 'react-redux';
-import { fetchMyProposalListRequest, fetchDraftsRequest } from 'Redux/Reducers/proposalSlice';
+import { fetchMyProposalListRequest, fetchDraftsRequest,fetchProposalByAddressRequest } from 'Redux/Reducers/proposalSlice';
 import Pagination from 'Components/Card/Pagination';
 import proposalStates from './proposalStates';
 // import { select } from 'redux-saga/effects';
@@ -13,7 +13,7 @@ import DetailsModal from 'Components/Card/DetailsModal';
 import {withRouter} from 'react-router-dom';
 import {getProposalPendingProgressReport} from 'Selectors';
 
-const MyProposalCard = ({ myProposalList, fetchMyProposalListRequest, walletAddress, totalPages, proposalStatesList, initialState, fetchDraftsRequest, history, proposalPendingProgressReport : {proposalPendingProgressReport, proposalNotPendingProgressReport} }) => {
+const MyProposalCard = ({ myProposalList, fetchMyProposalListRequest, walletAddress, totalPages, proposalStatesList, initialState, fetchDraftsRequest, history, proposalPendingProgressReport : {proposalPendingProgressReport, proposalNotPendingProgressReport}, fetchProposalByAddressRequest }) => {
 
     const [selectedTab, setSelectedTab] = useState();
     const [filteredProposalList, setFilteredProposalList] = useState(myProposalList);
@@ -48,6 +48,12 @@ const MyProposalCard = ({ myProposalList, fetchMyProposalListRequest, walletAddr
                     // pageNumber: pageNumber?.[selectedTab] ?? 1
                 }
             );
+
+            fetchProposalByAddressRequest(
+                {
+                    walletAddress: walletAddress || wallet.getAddress(),
+                }
+            );
         // } else {
         //     fetchDraftsRequest(
         //         {
@@ -76,23 +82,11 @@ const MyProposalCard = ({ myProposalList, fetchMyProposalListRequest, walletAddr
 
     useEffect(() => {
 
-
-
-        // const filteredProposals = (selectedTab !== 'All') ? proposalList.filter(
-        //     (proposal) => proposal._status === proposalStatusBySelectedTab[selectedTab]
-        // ) : proposalList;
-        let filteredProposals
-        // if(selectedTab !== 'Draft') 
-        // {
-            filteredProposals = proposalNotPendingProgressReport.filter(
+            let filteredProposals = proposalPendingProgressReport.filter(
                 (proposal) => proposal._proposal_title.includes(searchText)
             );
 
-            let proposalPendingPRList = proposalPendingProgressReport.filter(
-                (proposal) => proposal._proposal_title.includes(searchText)
-            );
-
-            setProposalPendingPRList(proposalPendingPRList);
+            setFilteredProposalList(filteredProposals);
         // }
 
         // else {
@@ -108,7 +102,7 @@ const MyProposalCard = ({ myProposalList, fetchMyProposalListRequest, walletAddr
         // }
 
 
-        setFilteredProposalList(filteredProposals);
+        // setFilteredProposalList(filteredProposals);
 
 
     }, [selectedTab, myProposalList, searchText, pageNumber, walletAddress]);
@@ -136,20 +130,6 @@ const MyProposalCard = ({ myProposalList, fetchMyProposalListRequest, walletAddr
                             <hr style={{ marginTop: '-9px' }} />
 
                             <ProposalList
-                                proposals={proposalPendingPRList}
-                                selectedTab={selectedTab}
-                                searchText={searchText}
-                                modalShow={modalShow}
-                                setModalShow={setModalShow}
-                                selectedProposal={selectedProposal}
-                                setSelectedProposal={setSelectedProposal}
-                                onClickProposal={(selectedTab === 'Draft') ? onClickProposalDraft : onClickProposal}
-                                emptyListMessage = "No Proposal Pending Progress Report"
-                                proposalPendingPRSameList
-
-                            />
-
-                            <ProposalList
                                 proposals={filteredProposalList}
                                 selectedTab={selectedTab}
                                 searchText={searchText}
@@ -158,10 +138,9 @@ const MyProposalCard = ({ myProposalList, fetchMyProposalListRequest, walletAddr
                                 selectedProposal={selectedProposal}
                                 setSelectedProposal={setSelectedProposal}
                                 onClickProposal={(selectedTab === 'Draft') ? onClickProposalDraft : onClickProposal}
+                                emptyListMessage = "No Proposal Pending Progress Report"
 
                             />
-
-                            
 
                             {/* <Pagination
                                 currentPage={pageNumber?.[selectedTab]}
@@ -197,7 +176,9 @@ const mapStateToProps = state => (
 const mapDispatchToProps = dispatch => (
     {
         fetchMyProposalListRequest: (payload) => dispatch(fetchMyProposalListRequest(payload)),
-        fetchDraftsRequest: payload => dispatch(fetchDraftsRequest(payload))
+        fetchDraftsRequest: payload => dispatch(fetchDraftsRequest(payload)),
+        fetchProposalByAddressRequest: payload => dispatch(fetchProposalByAddressRequest(payload)),
+
     }
 )
 
