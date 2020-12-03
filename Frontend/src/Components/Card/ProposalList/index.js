@@ -3,7 +3,7 @@ import styles from './ProposalList.module.scss';
 import { Container } from 'react-bootstrap';
 import Proposal from './Proposal';
 
-const ProposalList = ({ proposals, selectedTab, onClickProposal, emptyListMessage, proposalPendingPR = false, minHeight = '100px' }) => {
+const ProposalList = ({ proposals, selectedTab, onClickProposal, emptyListMessage, proposalPendingPR = false, proposalPendingPRSameList = false, minHeight = '100px' }) => {
 
 
     return (
@@ -15,6 +15,7 @@ const ProposalList = ({ proposals, selectedTab, onClickProposal, emptyListMessag
                         proposal={proposal}
                         selectedTab={selectedTab}
                         proposalPendingPR = {proposalPendingPR}
+                        proposalPendingPRSameList = {proposalPendingPRSameList}
                         onClick={() => onClickProposal(proposal)}
                         
                     />

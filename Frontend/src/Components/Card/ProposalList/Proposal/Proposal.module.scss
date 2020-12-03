@@ -107,6 +107,7 @@
 }
 
 .secondRow {
+    align-items: center;
     --gap: 12px !important;
     display: inline-flex !important;
     flex-wrap: wrap !important;
@@ -207,7 +208,12 @@
 
   .createProposalButton {
     font-size: 0.95rem !important;
-    padding: 5px !important;
+    padding-top: 1px !important;
+    padding-bottom: 1px !important;
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+
+
 }
 
 @media screen and (min-width: 992px) {

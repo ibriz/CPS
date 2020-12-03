@@ -28,7 +28,7 @@ const badgeColor = {
 
 }
 
-const Proposal = ({ proposal, selectedTab, onClick, proposalPendingPR = false }) => {
+const Proposal = ({ proposal, selectedTab, onClick, proposalPendingPR = false, proposalPendingPRSameList }) => {
     return (
         <>
             <Row className={styles.proposalContainer} onClick={onClick}>
@@ -42,7 +42,21 @@ const Proposal = ({ proposal, selectedTab, onClick, proposalPendingPR = false })
                         <LowerCardInfo className={"proposalInfo2"}>Started from: {new Date(proposal._timestamp / 1000).toLocaleDateString()}</LowerCardInfo>
                         <Budget>
                             Budget: {icxFormat(proposal.budget)} ICX
-                    </Budget>
+                        </Budget>
+
+                        {
+                                        ["Active", "Paused"].includes(proposalStatusMapping.find(mapping => mapping.status === proposal._status).name) && proposalPendingPRSameList &&
+                                            <>
+                                                <Link to={{
+                                                        pathname: "/newProgressReport",
+                                                        // search: "?sort=name",
+                                                        // hash: "#the-hash",
+                                                        ipfsKey: proposal.ipfsKey
+                                                    }}>
+                                                <Button variant="info" className={styles.createProposalButton} >Create Progress Report</Button>
+                                                </Link>
+                                            </>
+                        }
 
                     </Row>
 

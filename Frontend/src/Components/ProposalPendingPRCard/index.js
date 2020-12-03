@@ -13,7 +13,7 @@ import DetailsModal from 'Components/Card/DetailsModal';
 import {withRouter} from 'react-router-dom';
 import {getProposalPendingProgressReport} from 'Selectors';
 
-const ProposalPendingPRCard = ({ myProposalList, fetchMyProposalListRequest, walletAddress, totalPages, proposalStatesList, initialState, fetchDraftsRequest, history, fetchProposalByAddressRequest, proposalPendingProgressReport }) => {
+const ProposalPendingPRCard = ({ myProposalList, fetchMyProposalListRequest, walletAddress, totalPages, proposalStatesList, initialState, fetchDraftsRequest, history, fetchProposalByAddressRequest, proposalPendingProgressReport : {proposalPendingProgressReport, proposalNotPendingProgressReport} }) => {
 
     const [selectedTab, setSelectedTab] = useState();
     const [filteredProposalList, setFilteredProposalList] = useState(proposalPendingProgressReport);
