@@ -30,10 +30,22 @@ function* fetchProposalByAddressWorker({payload}) {
 
 // const responseActive = [
 //     {
-//         proposal_title: "Hello Icon",
+//         project_title: "Video Content Marketing - Grow ICON Community",
 //         ipfs_hash: "undefined46c3b07a-2f67-4caa-bc88-6290da31901d",
 //         new_progress_report: '0x01'
 //     },
+
+//     {
+//       project_title: "ICON Mobile Wallet",
+//       ipfs_hash: "undefined46c3b07a-2f67-4caa-bc88-6290da31901e",
+//       new_progress_report: '0x01'
+//   },
+
+//   {
+//     project_title: "Video Content Marketing",
+//     ipfs_hash: "undefined46c3b07a-2f67-4caa-bc88-6290da31901i",
+//     new_progress_report: '0x01'
+// }
 
 // ]
 

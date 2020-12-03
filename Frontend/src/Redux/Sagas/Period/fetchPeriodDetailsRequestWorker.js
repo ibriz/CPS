@@ -12,10 +12,10 @@ function* fetchPeriodDetailsRequestWorker({payload}) {
 });
 
 // const response = {
-//     _current_block: 1000,
-//     _next_block: 10000,
-//     remaining_time: 86500,
-//     _period_name: 'Voting Period',
+//     current_block: 1000,
+//     next_block: 10000,
+//     remaining_time: 106500,
+//     period_name: 'Voting Period',
 // }
 
 console.log("fetchPeriodDetailsRequestWorker3");
