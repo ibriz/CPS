@@ -116,12 +116,29 @@ export const getProposalPendingProgressReport = createSelector(
   [getProposalByAddress, getMyProposals],
   (proposalByAddress, myProposals) => {
 
+    const pendingProposalIPFSList = []
+
     const activePausedProposals = myProposals.filter(proposal => {
       const status = proposalStatusMapping.find(mapping => mapping.status === proposal._status).name;
       return (status === 'Active' || status === 'Paused' );
 
     });
-    const proposalPendingProgressReport = activePausedProposals.filter(proposal => proposalByAddress.find(item => item.ipfsKey === proposal.ipfsKey)?.newProgressReport === true );
-    return proposalPendingProgressReport;
+    const proposalPendingProgressReport = activePausedProposals.filter(proposal => {
+      
+      const flag = proposalByAddress.find(
+      item => item.ipfsKey === proposal.ipfsKey)?.newProgressReport === true ;
+
+      if (flag) {
+        pendingProposalIPFSList.push(proposal.ipfsKey);
+      }
+
+      return flag;
+      
+    }
+      );
+
+    const proposalNotPendingProgressReport = myProposals.filter(proposal => !pendingProposalIPFSList.includes(proposal.ipfsKey));
+    return {proposalPendingProgressReport, proposalNotPendingProgressReport}
+    ;
   }
 );

@@ -11,8 +11,9 @@ import proposalStates from './proposalStates';
 import wallet from 'Redux/ICON/FrontEndWallet'
 import DetailsModal from 'Components/Card/DetailsModal';
 import {withRouter} from 'react-router-dom';
+import {getProposalPendingProgressReport} from 'Selectors';
 
-const MyProposalCard = ({ myProposalList, fetchMyProposalListRequest, walletAddress, totalPages, proposalStatesList, initialState, fetchDraftsRequest, history }) => {
+const MyProposalCard = ({ myProposalList, fetchMyProposalListRequest, walletAddress, totalPages, proposalStatesList, initialState, fetchDraftsRequest, history, proposalPendingProgressReport : {proposalPendingProgressReport, proposalNotPendingProgressReport} }) => {
 
     const [selectedTab, setSelectedTab] = useState();
     const [filteredProposalList, setFilteredProposalList] = useState(myProposalList);
@@ -20,6 +21,9 @@ const MyProposalCard = ({ myProposalList, fetchMyProposalListRequest, walletAddr
     const [pageNumber, setPageNumber] = useState();
     const [modalShow, setModalShow] = React.useState(false);
     const [selectedProposal, setSelectedProposal] = React.useState();
+
+    const [proposalPendingPRList, setProposalPendingPRList] = useState(proposalPendingProgressReport);
+
 
     const onClickProposal = (proposal) => {
         setModalShow(true);
@@ -80,9 +84,15 @@ const MyProposalCard = ({ myProposalList, fetchMyProposalListRequest, walletAddr
         let filteredProposals
         // if(selectedTab !== 'Draft') 
         // {
-            filteredProposals = myProposalList.filter(
+            filteredProposals = proposalNotPendingProgressReport.filter(
                 (proposal) => proposal._proposal_title.includes(searchText)
             );
+
+            let proposalPendingPRList = proposalPendingProgressReport.filter(
+                (proposal) => proposal._proposal_title.includes(searchText)
+            );
+
+            setProposalPendingPRList(proposalPendingPRList);
         // }
 
         // else {
@@ -99,6 +109,8 @@ const MyProposalCard = ({ myProposalList, fetchMyProposalListRequest, walletAddr
 
 
         setFilteredProposalList(filteredProposals);
+
+
     }, [selectedTab, myProposalList, searchText, pageNumber, walletAddress]);
 
     return (
@@ -122,6 +134,21 @@ const MyProposalCard = ({ myProposalList, fetchMyProposalListRequest, walletAddr
 
                             /> 
                             <hr style={{ marginTop: '-9px' }} />
+
+                            <ProposalList
+                                proposals={proposalPendingPRList}
+                                selectedTab={selectedTab}
+                                searchText={searchText}
+                                modalShow={modalShow}
+                                setModalShow={setModalShow}
+                                selectedProposal={selectedProposal}
+                                setSelectedProposal={setSelectedProposal}
+                                onClickProposal={(selectedTab === 'Draft') ? onClickProposalDraft : onClickProposal}
+                                emptyListMessage = "No Proposal Pending Progress Report"
+                                proposalPendingPRSameList
+
+                            />
+
                             <ProposalList
                                 proposals={filteredProposalList}
                                 selectedTab={selectedTab}
@@ -133,6 +160,8 @@ const MyProposalCard = ({ myProposalList, fetchMyProposalListRequest, walletAddr
                                 onClickProposal={(selectedTab === 'Draft') ? onClickProposalDraft : onClickProposal}
 
                             />
+
+                            
 
                             {/* <Pagination
                                 currentPage={pageNumber?.[selectedTab]}
@@ -159,7 +188,9 @@ const mapStateToProps = state => (
     {
         myProposalList: state.proposals.myProposalList,
         walletAddress: state.account.address,
-        totalPages: state.proposals.totalPages
+        totalPages: state.proposals.totalPages,
+        proposalPendingProgressReport: getProposalPendingProgressReport(state)
+
     }
 )
 
