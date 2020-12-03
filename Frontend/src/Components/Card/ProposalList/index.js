@@ -15,7 +15,7 @@ const ProposalList = ({ proposals, selectedTab, onClickProposal, emptyListMessag
                         proposal={proposal}
                         selectedTab={selectedTab}
                         proposalPendingPR = {proposalPendingPR}
-                        proposalPendingPRSameList = {proposalPendingPRSameList}
+                        proposalPendingPRSameList = {proposal.pendingPR}
                         onClick={() => onClickProposal(proposal)}
                         
                     />

@@ -135,10 +135,18 @@ export const getProposalPendingProgressReport = createSelector(
       return flag;
       
     }
-      );
+      ).map(proposal => ({
+        ...proposal,
+        pendingPR: true
+      }));
 
-    const proposalNotPendingProgressReport = myProposals.filter(proposal => !pendingProposalIPFSList.includes(proposal.ipfsKey));
-    return {proposalPendingProgressReport, proposalNotPendingProgressReport}
+    const proposalNotPendingProgressReport = myProposals.filter(proposal => !pendingProposalIPFSList.includes(proposal.ipfsKey)).map(proposal => (
+      {
+        ...proposal,
+        pendingPR: false
+      }
+    ));
+    return {proposalPendingProgressReport : [...proposalPendingProgressReport, ...proposalNotPendingProgressReport], proposalNotPendingProgressReport}
     ;
   }
 );

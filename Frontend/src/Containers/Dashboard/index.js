@@ -155,14 +155,14 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
 
             </Row>
 
-            {
+            {/* {
                 (!isPrep || !isRegistered) && period === 'APPLICATION' &&
                 <>
                     <div className={styles.myProposalHeading}>Proposals Pending Progress Report</div>
 
                     <ProposalPendingPRCard />
                 </>
-            }
+            } */}
 
 
             {

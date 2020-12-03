@@ -28,7 +28,7 @@ const badgeColor = {
 
 }
 
-const Proposal = ({ proposal, selectedTab, onClick, proposalPendingPR = false, proposalPendingPRSameList }) => {
+const Proposal = ({ proposal, selectedTab, onClick, proposalPendingPR = false, proposalPendingPRSameList = false }) => {
     return (
         <>
             <Row className={styles.proposalContainer} onClick={onClick}>
