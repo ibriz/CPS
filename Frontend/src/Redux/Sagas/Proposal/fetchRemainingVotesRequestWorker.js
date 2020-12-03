@@ -34,7 +34,7 @@ function* fetchRemainingVotesRequestWorker({ payload }) {
         //         total_votes: "0xa2a15d09519be00000",
         //         completed_percentage: "0x20"
         //     }
-        //     ));
+        //     ));a
         // }
 
         // else {
@@ -51,6 +51,97 @@ function* fetchRemainingVotesRequestWorker({ payload }) {
         //         total_votes: "0xa2a15d09519be00000"
         //     }
         //     ))
+        // }
+        // let response;
+        // if(payload.type === "proposal") {
+        //  response = [
+        //     {
+        //         status: "_pending",
+        //         project_title: "Video Content Marketing - Grow ICON Community",
+        //         total_budget: "10000 ICX" ,
+        //       timestamp: "1600872145290985",
+        //       contributor_address: walletAddress,
+        //       ipfs_hash: 'undefined46c3b07a-2f67-4caa-bc88-6290da31901d'
+        //       },
+      
+        //       {
+        //         status: "_pending",
+        //         project_title: "ICON Mobile Wallet",
+        //         total_budget: "12000 ICX" ,
+        //       timestamp: "1600872144290885",
+        //       contributor_address: walletAddress,
+        //       ipfs_hash: 'undefined46c3b07a-2f67-4caa-bc88-6290da31901e'
+      
+        //       },
+      
+      
+        //       {
+        //         status: "_pending",
+        //         project_title: "New Proposal 1",
+        //         total_budget: "12000 ICX" ,
+        //       timestamp: "1600872144290885",
+        //       contributor_address: walletAddress,
+        //       ipfs_hash: 'undefined46c3b07a-2f67-4caa-bc88-6290da31901f'
+      
+        //       },
+        //       {
+        //         status: "_pending",
+        //         project_title: "New Proposal 2",
+        //         total_budget: "12000 ICX" ,
+        //       timestamp: "1600872144290885",
+        //       contributor_address: walletAddress,
+        //       ipfs_hash: 'undefined46c3b07a-2f67-4caa-bc88-6290da31901g'
+      
+        //       },
+      
+        //       {
+        //         status: "_pending",
+        //         project_title: "Video Content Marketing",
+        //         total_budget: "10000 ICX" ,
+        //       timestamp: "1600872145290985",
+        //       contributor_address: walletAddress,
+        //       ipfs_hash: 'undefined46c3b07a-2f67-4caa-bc88-6290da31901i'
+        //       },
+      
+        //       {
+        //         status: "_pending",
+        //         project_title: "New Proposal",
+        //         total_budget: "12000 ICX" ,
+        //       timestamp: "1600872144290885",
+        //       contributor_address: walletAddress,
+        //       ipfs_hash: 'undefined46c3b07a-2f67-4caa-bc88-6290da31901h'
+      
+        //       },
+      
+
+        //     ];
+        // } else {
+
+        //  response = [
+
+        //     {
+        //         status: "_waiting",
+        //         project_title: "ICON Mobile Wallet",
+        //         total_budget: "12000 ICX" ,
+        //         progress_report_title: 'UI Design Completed',
+        //       timestamp: "1600872144290885",
+        //       contributor_address: walletAddress,
+        //       report_hash: 'bafybeifq7tbbe4khohvbsfwhrnqolpueogqkfsisngpn6t3tsdwallbmkm'
+      
+        //       },
+        //     {
+        //         status: "_waiting",
+        //         project_title: "Video Content Marketing - Grow ICON Community",
+        //         progress_report_title: 'First Draft Completed',
+        //         // total_budget: "10000 ICX" ,
+        //       timestamp: "1600872145290985",
+        //       contributor_address: walletAddress,
+        //       report_hash: 'bafybeictkcf2ryihvlzyizvvjkxlmbql6jiozeqnm3j5mlficbaour6kxq'
+        //       },
+    
+      
+
+        //     ];
         // }
 
 

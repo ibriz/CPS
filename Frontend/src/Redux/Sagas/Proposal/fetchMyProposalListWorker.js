@@ -45,23 +45,67 @@ function* fetchMyProposalListWorker({ payload }) {
 
     // const response = {
     //   data: [
-    //     {
-    //       status: "_pending",
-    //       project_title: "Video Content Marketing - Grow ICON Community",
-    //       total_budget: "10000 ICX" ,
-    //     timestamp: "1600872145290985",
-    //     contributor_address: payload.walletAddress
-    //     },
+
 
     //     {
     //       status: "_active",
     //       project_title: "ICON Mobile Wallet",
     //       total_budget: "12000 ICX" ,
     //     timestamp: "1600872144290885",
-    //     contributor_address: payload.walletAddress
-    //     }
+    //     contributor_address: payload.walletAddress,
+    //     ipfs_hash: 'undefined46c3b07a-2f67-4caa-bc88-6290da31901e'
+
+    //     },
+
+
+    //     {
+    //       status: "_sponsor_pending",
+    //       project_title: "New Proposal 1",
+    //       total_budget: "12000 ICX" ,
+    //     timestamp: "1600872144290885",
+    //     contributor_address: payload.walletAddress,
+    //     ipfs_hash: 'undefined46c3b07a-2f67-4caa-bc88-6290da31901f'
+
+    //     },
+    //     {
+    //       status: "_pending",
+    //       project_title: "New Proposal 2",
+    //       total_budget: "12000 ICX" ,
+    //     timestamp: "1600872144290885",
+    //     contributor_address: payload.walletAddress,
+    //     ipfs_hash: 'undefined46c3b07a-2f67-4caa-bc88-6290da31901g'
+
+    //     },
+
+    //     {
+    //       status: "_active",
+    //       project_title: "Video Content Marketing",
+    //       total_budget: "10000 ICX" ,
+    //     timestamp: "1600872145290985",
+    //     contributor_address: payload.walletAddress,
+    //     ipfs_hash: 'undefined46c3b07a-2f67-4caa-bc88-6290da31901i'
+    //     },
+
+    //     {
+    //       status: "_rejected",
+    //       project_title: "New Proposal",
+    //       total_budget: "12000 ICX" ,
+    //     timestamp: "1600872144290885",
+    //     contributor_address: payload.walletAddress,
+    //     ipfs_hash: 'undefined46c3b07a-2f67-4caa-bc88-6290da31901h'
+
+    //     },
+
+    //     {
+    //       status: "_active",
+    //       project_title: "Video Content Marketing - Grow ICON Community",
+    //       total_budget: "10000 ICX" ,
+    //     timestamp: "1600872145290985",
+    //     contributor_address: payload.walletAddress,
+    //     ipfs_hash: 'undefined46c3b07a-2f67-4caa-bc88-6290da31901d'
+    //     },
     //   ],
-    //   count: 3
+    //   count: 2
     // }
     yield put(fetchMyProposalListSuccess(
       {
