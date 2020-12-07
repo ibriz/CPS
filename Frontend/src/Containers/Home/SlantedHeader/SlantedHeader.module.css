@@ -112,7 +112,13 @@ align-items: center;
     }
 
     .slanted {
-        height: 385px;
+        height: 410px;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    .slanted {
+        height: 385px
     }
 }
 
