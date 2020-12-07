@@ -9,8 +9,8 @@ function* fetchCPFRemainingFundWorker({payload}) {
     const cpfScoreAddress = yield select(getCPFScoreAddress);
 
     const response = yield call(callKeyStoreWallet, {
-        method: 'get_total_fund',
-        scoreAddress: cpfScoreAddress
+        method: 'get_remaining_fund',
+        // scoreAddress: cpfScoreAddress
 });
 
 
