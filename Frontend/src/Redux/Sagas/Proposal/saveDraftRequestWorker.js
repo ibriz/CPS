@@ -12,10 +12,11 @@ import {signTransaction} from 'Redux/ICON/utils';
 function* saveDraftRequestWorker({payload}) {
   try {
 
-  const signature = yield signTransaction();
-  console.log("signature", signature);
+  // const signature = yield signTransaction();
+  // console.log("signature", signature);
     let body = {...payload,
-      type: "Proposal"};
+      type: "Proposal",
+      proposalName: payload.projectName};
     Object.keys(body).forEach(key => {
         if(body[key] === null || Array.isArray(body[key]) && body[key].length < 1 ) {
             delete body[key]
@@ -23,7 +24,7 @@ function* saveDraftRequestWorker({payload}) {
     })
     const response = yield call(request, {
       body: body,
-      signature: signature,
+      // signature: signature,
       url: ADD_PROPOSAL_DRAFT_URL,
       method: body.proposalKey? "PUT": "POST"
     });
