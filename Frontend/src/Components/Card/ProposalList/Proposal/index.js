@@ -8,9 +8,9 @@ import LowerCardTitle from '../../../UI/LowerCardList/LowerCardTitle';
 import LowerCardInfo from '../../../UI/LowerCardList/LowerCardInfo';
 import Budget from '../../../UI/LowerCardList/Budget';
 import { icxFormat } from 'helpers';
-import {proposalStatusMapping} from 'Constants';
+import { proposalStatusMapping } from 'Constants';
 import ClassNames from 'classnames';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const badgeColor = {
     'Voting': 'warning',
@@ -39,83 +39,91 @@ const Proposal = ({ proposal, selectedTab, onClick, proposalPendingPR = false, p
                     </Row>
                     <Row className={styles.secondRow}>
                         <LowerCardInfo>{`${proposal._contributor_address.slice(0, 4)}...${proposal._contributor_address.slice(proposal._contributor_address.length - 3)}`}</LowerCardInfo>
-                        <LowerCardInfo className={"proposalInfo2"}>Started from: {new Date(proposal._timestamp / 1000).toLocaleDateString()}</LowerCardInfo>
-                        <Budget>
-                            Budget: {icxFormat(proposal.budget)} ICX
-                        </Budget>
 
                         {
-                                        ["Active", "Paused"].includes(proposalStatusMapping.find(mapping => mapping.status === proposal._status).name) && proposalPendingPRSameList &&
-                                            <>
-                                                <Link to={{
-                                                        pathname: "/newProgressReport",
-                                                        // search: "?sort=name",
-                                                        // hash: "#the-hash",
-                                                        ipfsKey: proposal.ipfsKey
-                                                    }}>
-                                                <Button variant="info" className={styles.createProposalButton} >Create Progress Report</Button>
-                                                </Link>
-                                            </>
+                            proposalStatusMapping.find(mapping => mapping.status === proposal._status).name !== 'Draft' &&
+                            <>
+                                <LowerCardInfo className={"proposalInfo2"}>Started from: {new Date(proposal._timestamp / 1000).toLocaleDateString()}</LowerCardInfo>
+
+                                <Budget>
+                                    Budget: {icxFormat(proposal.budget)} ICX
+                            </Budget>
+                            </>
+                        }
+
+
+                        {
+                            ["Active", "Paused"].includes(proposalStatusMapping.find(mapping => mapping.status === proposal._status).name) && proposalPendingPRSameList &&
+                            <>
+                                <Link to={{
+                                    pathname: "/newProgressReport",
+                                    // search: "?sort=name",
+                                    // hash: "#the-hash",
+                                    ipfsKey: proposal.ipfsKey
+                                }}>
+                                    <Button variant="info" className={styles.createProposalButton} >Create Progress Report</Button>
+                                </Link>
+                            </>
                         }
 
                     </Row>
 
                 </Col>
                 {
-                                    !proposalPendingPR &&
-                                    <Col md={proposalPendingPR ? "4" : "3"} xs = "12" className={styles.progressBar} >
-                    
+                    !proposalPendingPR &&
+                    <Col md={proposalPendingPR ? "4" : "3"} xs="12" className={styles.progressBar} >
 
-                                    {
-                                        ["Voting"].includes(proposalStatusMapping.find(mapping => mapping.status === proposal._status).name) &&
-                                            <>
-            
-                                                <ProgressText>{proposal.approvedPercentage ? `${proposal.approvedPercentage.toFixed()}` : 0}% Stake Approved</ProgressText>
-                                                <ProgressBar percentage={proposal.approvedPercentage} />
-                                            </>
-                                    }
-            
-                                    {
-                                        ["Active", "Paused"].includes(proposalStatusMapping.find(mapping => mapping.status === proposal._status).name) && !proposalPendingPR &&
-                                            <>
-            
-                                                <ProgressText>{proposal.completedPercentage ? `${proposal.completedPercentage.toFixed()}` : 0}% Completed</ProgressText>
-                                                <ProgressBar percentage={proposal.completedPercentage} />
-                                            </>
-                                    }
-            
-            
-            
-            
-              
-            
-            
-                            </Col>
+
+                        {
+                            ["Voting"].includes(proposalStatusMapping.find(mapping => mapping.status === proposal._status).name) &&
+                            <>
+
+                                <ProgressText>{proposal.approvedPercentage ? `${proposal.approvedPercentage.toFixed()}` : 0}% Stake Approved</ProgressText>
+                                <ProgressBar percentage={proposal.approvedPercentage} />
+                            </>
+                        }
+
+                        {
+                            ["Active", "Paused"].includes(proposalStatusMapping.find(mapping => mapping.status === proposal._status).name) && !proposalPendingPR &&
+                            <>
+
+                                <ProgressText>{proposal.completedPercentage ? `${proposal.completedPercentage.toFixed()}` : 0}% Completed</ProgressText>
+                                <ProgressBar percentage={proposal.completedPercentage} />
+                            </>
+                        }
+
+
+
+
+
+
+
+                    </Col>
                 }
 
-{
-                                    proposalPendingPR &&
-                                    <Col lg="4" xs = "12" className={ClassNames(styles.progressBar, styles.createProgressReportButtonContainer)} >
-            
-                                    {
-                                        ["Active", "Paused"].includes(proposalStatusMapping.find(mapping => mapping.status === proposal._status).name) && proposalPendingPR &&
-                                            <>
-                                                <Link to={{
-                                                        pathname: "/newProgressReport",
-                                                        // search: "?sort=name",
-                                                        // hash: "#the-hash",
-                                                        ipfsKey: proposal.ipfsKey
-                                                    }}>
-                                                <Button variant="info" className={styles.createProposalButton} >CREATE NEW PROGRESS REPORT</Button>
-                                                </Link>
-                                            </>
-                                    }
-            
-            
-              
-            
-            
-                            </Col>
+                {
+                    proposalPendingPR &&
+                    <Col lg="4" xs="12" className={ClassNames(styles.progressBar, styles.createProgressReportButtonContainer)} >
+
+                        {
+                            ["Active", "Paused"].includes(proposalStatusMapping.find(mapping => mapping.status === proposal._status).name) && proposalPendingPR &&
+                            <>
+                                <Link to={{
+                                    pathname: "/newProgressReport",
+                                    // search: "?sort=name",
+                                    // hash: "#the-hash",
+                                    ipfsKey: proposal.ipfsKey
+                                }}>
+                                    <Button variant="info" className={styles.createProposalButton} >CREATE NEW PROGRESS REPORT</Button>
+                                </Link>
+                            </>
+                        }
+
+
+
+
+
+                    </Col>
                 }
 
 
