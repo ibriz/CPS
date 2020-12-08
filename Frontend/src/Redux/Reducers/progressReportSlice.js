@@ -215,10 +215,12 @@ const proposalSlice = createSlice({
                     status: 'draft',
                     progressReportTitle: progressReport.progressReportName,
                     projectTitle: progressReport.proposalName,
-                    contributorAddress: progressReport.contributorAddress,
+                    contributorAddress: payload.payload.contributorAddress,
                     index: index,
                     // ipfsHash: progressReport[PARAMS.reportHash],
-                    reportHash: progressReport.hash,
+                    reportHash: progressReport.ipfsHash,
+                    ipfsUrl: progressReport.ipfsUrl,
+                    ipfsKey: progressReport.ipfsKey
 
                     // timestamp: progressReport[PARAMS.timestamp],
                     // proposalKey: progressReport[PARAMS.proposalHash],
