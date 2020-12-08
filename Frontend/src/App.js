@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import { NotificationContainer} from 'react-notifications';
 import {fetchUserDataRequest} from 'Redux/Reducers/userSlice';
 import Footer from 'Components/Footer';
+import { Helmet } from "react-helmet";
 
 function App({ address, fetchUserDataRequest }) {
 
@@ -22,6 +23,10 @@ function App({ address, fetchUserDataRequest }) {
           <>
             <Home />
             <Footer />
+
+            <Helmet>
+                  <title>CPS</title>
+            </Helmet>
 
           </>}
             </>

@@ -15,6 +15,7 @@ import Voting from '../Voting';
 import BackedProjects from '../BackedProjects';
 import { connect } from 'react-redux';
 import Footer from 'Components/Footer';
+import { Helmet } from "react-helmet";
 
 const Main = ({
   handleToggleSidebar,
@@ -36,8 +37,8 @@ const Main = ({
 
   return (
     <>
-      <main style = {{display: 'flex', justifyContent: 'space-between', paddingBottom: 0, paddingLeft: 0, paddingRight: 0}}>
-        <div style = {{paddingLeft: '25px', paddingRight: '25px'}}>
+      <main style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: 0, paddingLeft: 0, paddingRight: 0 }}>
+        <div style={{ paddingLeft: '25px', paddingRight: '25px' }}>
           <div className="btn-toggle" onClick={() => handleToggleSidebar(true)}>
             <FaBars />
           </div>
@@ -46,18 +47,33 @@ const Main = ({
             <Switch>
               <Route path="/dashboard">
                 <Dashboard />
+                <Helmet>
+                  <title>CPS - Dashboard</title>
+                </Helmet>
               </Route>
               <Route path={process.env.PUBLIC_URL + "/proposals"}>
                 {<Proposals />}
+                <Helmet>
+                  <title>CPS - Proposals</title>
+                </Helmet>
               </Route>
               <Route path="/progress-reports">
                 {<ProgressReports />}
+                <Helmet>
+                  <title>CPS - Progress Reports</title>
+                </Helmet>
               </Route>
               <Route path="/newProposal">
                 {userRoute(<ProposalCreationPage />)}
+                <Helmet>
+                  <title>CPS - Create New Proposal</title>
+                </Helmet>
               </Route>
               <Route path="/newProgressReport">
                 {userRoute(<ProgressReportCreationPage />)}
+                <Helmet>
+                  <title>CPS - Create New Progress Report</title>
+                </Helmet>
               </Route>
               {/* <Route path="/sponsorRequests">
             {prepRoute(<SponsorRequests />)}
@@ -71,6 +87,9 @@ const Main = ({
           </Route> */}
               <Route path="/">
                 <Dashboard />
+                <Helmet>
+                  <title>CPS - Dashboard</title>
+                </Helmet>
               </Route>
             </Switch>
 
