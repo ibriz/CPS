@@ -18,14 +18,16 @@ function* fetchDraftRequestWorker({payload}) {
 
     const response = [
       {
-        ipfsHash: 'bafybeigrlxuip3cfwfvxpnpuk43yzteg5o6lyln6vhe6gysg7fhq4bqxmi',
-        proposalName: 'Hello World',
-        contributorAddress: walletAddress
+        proposalName: "CPS4",
+        ipfsHash: "bafybeidl63hdrd447z2fymqikhqv5gzbjnbomxftpzit5asqhtxcqmmdiu",
+        ipfsUrl: "https://gateway.ipfs.io/ipfs/bafybeidl63hdrd447z2fymqikhqv5gzbjnbomxftpzit5asqhtxcqmmdiu",
+        ipfsKey: "Proposalc27bb223-4c96-4783-a6e7-3916bc7dea2f"
       }
     ]
     yield put(fetchDraftsSuccess(
       {
         response,
+        contributorAddress: walletAddress,
       }
     ));
   } catch (error) {

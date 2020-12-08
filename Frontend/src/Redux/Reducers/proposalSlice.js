@@ -287,7 +287,9 @@ const proposalSlice = createSlice({
                 _status: 'draft',
                 _proposal_title: proposal.proposalName,
                 ipfsHash: proposal.ipfsHash,
-                _contributor_address: proposal.contributorAddress,
+                ipfsUrl: proposal.ipfsUrl,
+                ipfsKey: proposal.ipfsKey,
+                _contributor_address: action.payload.contributorAddress,
                 index
 
 
