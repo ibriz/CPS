@@ -37,7 +37,11 @@ const ProgressReport = ({ progressReport, selectedTab, showProject = true, onCli
                             )
                         }
 
-                        <LowerCardInfo className={"proposalInfo2"}>Started from: {new Date(progressReport.timestamp / 1000).toLocaleDateString()}</LowerCardInfo>
+                        {
+                            progressReportStatusMapping.find(mapping => mapping.status === progressReport.status).name !== 'Draft' &&
+                            <LowerCardInfo className={"proposalInfo2"}>Started from: {new Date(progressReport.timestamp / 1000).toLocaleDateString()}</LowerCardInfo>
+
+                        }
 
 
                     </Row>
