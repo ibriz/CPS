@@ -11,7 +11,6 @@ const ProposalList = ({ proposals, selectedTab, onClickProposal, emptyListMessag
             {
                 proposals.length ? proposals.map((proposal) =>
                     <Proposal
-                        key = {proposal.ipfsKey}
                         proposal={proposal}
                         selectedTab={selectedTab}
                         proposalPendingPR = {proposalPendingPR}
