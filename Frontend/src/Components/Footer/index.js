@@ -3,31 +3,31 @@ import { Row, Col, Container } from 'react-bootstrap';
 import styles from './Footer.module.scss';
 import ClassNames from 'classnames';
 import { AiFillMediumCircle, AiFillTwitterCircle, AiFillGithub, AiFillFacebook } from 'react-icons/ai';
-import { FaFacebook } from 'react-icons/fa';
+import { FaTelegram } from 'react-icons/fa';
 import { SiFacebook } from 'react-icons/si';
 
 const socialLinks = [
     {
         name: "medium",
-        link: "https://google.com",
+        link: "https://medium.com/helloiconworld",
         icon: AiFillMediumCircle
     },
     {
         name: "twitter",
-        link: "https://google.com",
+        link: "https://twitter.com/helloiconworld",
         icon: AiFillTwitterCircle
 
     },
     {
-        name: "facebook",
-        link: "https://google.com",
-        icon: SiFacebook,
-        fontSize: '30px'
+        name: "telegram",
+        link: "https://t.me/iconannounce",
+        icon: FaTelegram,
+        fontSize: '33px'
 
     },
     {
         name: "github",
-        link: "https://google.com",
+        link: "https://github.com/icon-project",
         icon: AiFillGithub
 
     }
@@ -65,7 +65,7 @@ const Footer = ({ console = false }) => {
             <Row className={ClassNames(firstRowStyle)}>
                 {/* <Col md="1"> </Col> */}
 
-                <Col lg="3" xs="12" className={ClassNames(footerColumnStyles)}>
+                <Col lg="4" xs="12" className={ClassNames(footerColumnStyles)}>
                     {
                         console ?
                             <svg width="114" height="28" viewBox="0 0 114 28" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -108,14 +108,16 @@ const Footer = ({ console = false }) => {
                                 </defs>
                             </svg>
                     }
-                    <div style={{ marginTop: '20px' }}>iBriz Pvt. Ltd.</div>
+                    <div style={{ marginTop: '20px' }}>Built by:</div>
+                    <div style={{ }}><a href = "https://iconosphere.io/" style = {console ? {color: consoleColor, textDecoration: 'underline'} : {color: 'white', textDecoration: 'underline'}} target = "_blank">iBriz-ICONOsphere P-rep</a></div>
+                    <div style={{ }}><a href = "https://tracker.icon.foundation/address/hx231a795d1c719b9edf35c46b9daa4e0b5a1e83aa" style = {console ? {color: consoleColor, textDecoration: 'underline'} : {color: 'white', textDecoration: 'underline'}} target = "_blank">Support us with your votes</a></div>
                     <div style={{ marginTop: '5px' }}>hello@icon.foundation</div>
 
                 </Col>
 
                 <Col lg="1"> </Col>
 
-                <Col lg="3" xs="12" className={footerColumnStyles}>
+                <Col lg="3" xs="12" className={footerColumnStyles} style = {{paddingLeft: '80px !important'}}>
                     <div style={{ marginTop: '15px' }}>Find us on:</div>
                     <div style={{ display: 'flex', marginTop: '15px', alignItems: 'center' }}>
                         {
@@ -123,7 +125,7 @@ const Footer = ({ console = false }) => {
                                 <a href={socialLink.link} key={socialLink.name} target="_blank">
                                     {
                                         console ?
-                                            <socialLink.icon style={{ fontSize: socialLink.fontSize ? socialLink.fontSize : '35px', color: '#262626' }} /> :
+                                            <socialLink.icon style={{ fontSize: socialLink.fontSize ? socialLink.fontSize : '35px', color: consoleColor }} /> :
                                             <span className={ClassNames(styles.socialLink, styles[socialLink.name])}></span>
                                     }
                                 </a>)
@@ -135,8 +137,11 @@ const Footer = ({ console = false }) => {
                     </div>
 
                 </Col>
+                    {
+                        !console &&
+                            <Col lg="1"> </Col>
 
-                <Col lg="1"> </Col>
+                    }
 
                 <Col lg="3" className={ClassNames(footerColumnStyles, linksStyle)}>
                     {
@@ -153,7 +158,7 @@ const Footer = ({ console = false }) => {
 
             <Row style={{ marginBottom: '10px' }}>
                 <Col lg="12" className={footerColumnStyles}>
-                    Copyright © 2020. <u>ICON Foundation</u>
+                    Copyright © 2020. <u><a href = "https://icon.foundation/" target = "_blank" style = {console ? {color: consoleColor, textDecoration: 'underline'} : {color: 'white', textDecoration: 'underline'}}>ICON Foundation</a></u>
                 </Col>
             </Row>
 
