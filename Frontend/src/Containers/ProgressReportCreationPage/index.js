@@ -148,7 +148,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                 proposalKey: progressReport.projectName
             });
         }
-        history.push('/');
+        history.push('/progress-reports');
     }
 
 
@@ -209,7 +209,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                             <Col sm="10" className={styles.inputSameLine}>
                                 <Form.Control size="md" as="select" value={progressReport.projectName} name="projectName" onChange={handleChange} required>
                                     <option selected disabled value="">Select Project</option>
-                                    {/* <option value="dasd">asdasd</option> */}
+                                    {/* <option value="dasd">New Project</option> */}
 
                                     {
                                         currentUserActiveProposals.map((proposal) =>
