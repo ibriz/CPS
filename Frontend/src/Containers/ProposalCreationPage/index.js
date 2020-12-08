@@ -133,7 +133,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
             saveDraftRequest({
                 ...proposal,
                 address: walletAddress,
-                proposalKey: proposal.proposalKey
+                proposalKey: proposal.ipfsKey
             });
         }
         else {
@@ -142,7 +142,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                 address: walletAddress
             });
         }
-        // history.push('/');
+        history.push('/proposals');
     }
 
     // useEffect(() => {

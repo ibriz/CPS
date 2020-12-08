@@ -281,11 +281,11 @@ const proposalSlice = createSlice({
             state.proposalList["Draft"] = action.payload.response.map((proposal, index) => ({
                 // projectName: proposal.proposalName,
                 // ipfsHash: proposal.ipfsHash,
-                // _status: 'draft',
+                // _status: 'draft',||
 
 
                 _status: 'draft',
-                _proposal_title: proposal.proposalName,
+                _proposal_title: proposal.proposalName || 'Untitled Proposal',
                 ipfsHash: proposal.ipfsHash,
                 ipfsUrl: proposal.ipfsUrl,
                 ipfsKey: proposal.ipfsKey,
