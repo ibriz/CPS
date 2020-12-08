@@ -41,7 +41,7 @@ const HeaderComponents = ({ address, logout, title, isPrep, isRegistered, unregi
             }
 
             {
-                isPrep && !isRegistered && !payPenalty && period === 'APPLICATION' && !isRemainingTimeZero &&
+                isPrep && !isRegistered && !payPenalty && !isRemainingTimeZero &&
                 <Button variant="success" onClick={() => setShowUnregisterConfirmationModal(true)} style={{ marginRight: '5px', marginLeft: '5px' }}>Register Prep</Button>
 
             }

@@ -300,7 +300,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                                         proposal.milestones.map((milestone, index) =>
                                             <tr>
                                                 <td>{milestone.name}</td>
-                                                <td>{milestone.duration}</td>
+                                    <           td>{milestone.duration} month{milestone.duration > 1 && 's'}</td>
                                                 <td style={{ display: 'flex', justifyContent: 'center' }}> <AiFillDelete style = {{cursor: 'pointer'}} onClick={() => {
                                                     setProposal(prevState => {
                                                         const newMilestone = [...prevState.milestones]
