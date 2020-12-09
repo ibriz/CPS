@@ -17,7 +17,7 @@ const Vote = ({vote}) => {
                         <Col lg = "8" xs = "12" style = {{paddingLeft: '0px'}}>
                         <LowerCardTitle style = {{fontSize:'14px'}}>{vote.sponsorAddress}</LowerCardTitle>
                         </Col>
-                        <Col lg = "3" xs = "12" style = {{display: 'flex', justifyContent: 'flex-end'}}>
+                        <Col lg = "3" xs = "12" className = {styles.badgeContainer}>
 
                         <Badge size="xs" variant={proposalStatusMapping.find(mapping => 
                             mapping.name === vote.status)?.badgeColor} className={styles.badge}>{vote.status}</Badge>{' '}
