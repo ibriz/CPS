@@ -134,7 +134,7 @@ function DetailsModal(props) {
 
             {
               ((selectedTab) => {
-                console.log(props.selectedTab);
+                // console.log(props.selectedTab);
                 if (['Active', 'Paused'].includes(status))
                   return (
                     <>

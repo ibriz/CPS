@@ -5,7 +5,7 @@ import {progressReportStatusMapping} from 'Constants';
 
 function* fetchPeriodDetailsRequestWorker({payload}) {
   try {
-      console.log("fetchPeriodDetailsRequestWorker");
+      // console.log("fetchPeriodDetailsRequestWorker");
 
     const response = yield call(callKeyStoreWallet, {
         method: 'get_period_status'
@@ -18,7 +18,7 @@ function* fetchPeriodDetailsRequestWorker({payload}) {
 //     period_name: 'Voting Period',
 // }
 
-console.log("fetchPeriodDetailsRequestWorker3");
+// console.log("fetchPeriodDetailsRequestWorker3");
 
 
 
