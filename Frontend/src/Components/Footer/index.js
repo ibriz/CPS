@@ -127,7 +127,7 @@ const Footer = ({ console = false }) => {
                             </svg>
                     }
                     <div style={{ marginTop: '20px' }}>Built by:</div>
-                    <div style={{ }}><a href = "https://iconosphere.io/" style = {console ? {color: consoleColor, textDecoration: 'underline'} : {color: 'white', textDecoration: 'underline'}} target = "_blank">iBriz-ICONOsphere P-rep</a></div>
+                    <div style={{ }}><a href = "https://iconosphere.io/" style = {console ? {color: consoleColor, textDecoration: 'underline'} : {color: 'white', textDecoration: 'underline'}} target = "_blank">iBriz-ICONOsphere P-Rep</a></div>
                     <div style={{ marginTop: '5px' }}><a href = "https://tracker.icon.foundation/address/hx231a795d1c719b9edf35c46b9daa4e0b5a1e83aa" style = {console ? {color: consoleColor, textDecoration: 'underline'} : {color: 'white', textDecoration: 'underline'}} target = "_blank">
                         {/* Support us with your votes */}
                         <Button variant={console ? "outline-dark" : "outline-light"} style = {{marginLeft: '0px', paddingTop: '3px', paddingBottom: '3px'}}> Support us with your votes</Button>{' '}
@@ -139,7 +139,7 @@ const Footer = ({ console = false }) => {
 
                 <Col lg="1"> </Col>
 
-                <Col lg="3" xs="12" className={footerColumnStyles} style = {{paddingLeft: '80px !important'}}>
+                <Col lg="3" xs="12" className={ClassNames(footerColumnStyles, styles.socialColumn)} style = {{paddingLeft: '45px !important'}}>
                     <div style={{ marginTop: '15px' }}>Find us on:</div>
                     <div style={{ display: 'flex', marginTop: '15px', alignItems: 'center' }}>
                         {
