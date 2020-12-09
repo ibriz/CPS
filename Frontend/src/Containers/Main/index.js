@@ -42,7 +42,8 @@ const Main = ({
   const applicationPeriodRoute = (component) => (
     (period == 'APPLICATION' && !isRemainingTimeZero) ?
       component :
-      <Redirect to='/' />
+      // <Redirect to='/' />
+      component
   )
 
   return (
