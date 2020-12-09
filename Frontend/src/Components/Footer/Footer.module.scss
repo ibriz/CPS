@@ -89,6 +89,10 @@ a:first-child > span.socialLink {
         padding-left: 150px !important;
     }
 
+    .socialColumn {
+        padding-left: 40px !important
+    }
+
 }
 
 @media screen and (max-width: 991px) {
@@ -96,3 +100,5 @@ a:first-child > span.socialLink {
         padding-top: 20px !important;
     }
 }
+
+
