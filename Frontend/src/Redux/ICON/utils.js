@@ -48,7 +48,7 @@ export async function callKeyStoreWallet({
     method,
     params = {},
 }) {
-    console.log("cpsTreasuryScoreAddressKeyStore", scoreAddress);
+    // console.log("cpsTreasuryScoreAddressKeyStore", scoreAddress);
     let callBuilder = new IconBuilder.CallBuilder;
 
     let call = callBuilder
@@ -58,10 +58,10 @@ export async function callKeyStoreWallet({
         .build();
 
     // const provider = new HttpProvider('https://zicon.net.solidwallet.io/api/v3');
-    console.log("callKeyStoreWallet start");
+    // console.log("callKeyStoreWallet start");
     const response = await iconService.call(call).execute();
-    console.log("callKeyStoreWallet");
-    console.log(response);
+    // console.log("callKeyStoreWallet");
+    // console.log(response);
     return response;
 }
 
@@ -130,14 +130,22 @@ export function signTransaction() {
   })
 }
 
-export function signTransactionFromICONEX() {
+function getRanHex(size) {
+    return(
+        [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('')
+    )
+}
 
+export function signTransactionFromICONEX() {
+    
     window.parent.dispatchEvent(new CustomEvent('ICONEX_RELAY_REQUEST', {
         detail: {
             type: 'REQUEST_SIGNING',
             payload: {
                 from: store.getState().account.address,
-                hash: "9babe5d2911e8e42dfad72a589202767f95c6fab49523cdc16279a7b8f92eab2",
+                // hash: "9babe5d2911e8e42dfad72a589202767f95c6fab49523cdc1621607529890125", //64 characters
+                hash: getRanHex(51) + new Date().getTime()
+
             }
         }
     }))
