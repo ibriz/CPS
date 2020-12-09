@@ -16,12 +16,16 @@ import BackedProjects from '../BackedProjects';
 import { connect } from 'react-redux';
 import Footer from 'Components/Footer';
 import { Helmet } from "react-helmet";
+import useTimer from 'Hooks/useTimer';
 
 const Main = ({
   handleToggleSidebar,
   isPrep,
-  isRegistered
+  isRegistered,
+  period
 }) => {
+
+  const {isRemainingTimeZero} = useTimer();
 
   const prepRoute = (component) => (
     (isPrep && isRegistered) ?
@@ -31,6 +35,12 @@ const Main = ({
 
   const userRoute = (component) => (
     (!isPrep || !isRegistered) ?
+      component :
+      <Redirect to='/' />
+  )
+
+  const applicationPeriodRoute = (component) => (
+    (period == 'APPLICATION' && !isRemainingTimeZero) ?
       component :
       <Redirect to='/' />
   )
@@ -64,16 +74,30 @@ const Main = ({
                 </Helmet>
               </Route>
               <Route path="/newProposal">
-                {userRoute(<ProposalCreationPage />)}
-                <Helmet>
-                  <title>CPS - Create New Proposal</title>
-                </Helmet>
+                {applicationPeriodRoute(
+                  <>
+                    {userRoute(<ProposalCreationPage />)}
+                    <Helmet>
+                      <title>CPS - Create New Proposal</title>
+                    </Helmet>
+                  </>
+
+                )
+                }
+
               </Route>
               <Route path="/newProgressReport">
-                {userRoute(<ProgressReportCreationPage />)}
-                <Helmet>
-                  <title>CPS - Create New Progress Report</title>
-                </Helmet>
+                {
+                  applicationPeriodRoute(
+                    <>
+                      {userRoute(<ProgressReportCreationPage />)}
+                      <Helmet>
+                        <title>CPS - Create New Progress Report</title>
+                      </Helmet>
+                    </>
+                  )
+                }
+
               </Route>
               {/* <Route path="/sponsorRequests">
             {prepRoute(<SponsorRequests />)}
@@ -116,7 +140,8 @@ const Main = ({
 const mapStateToProps = state => (
   {
     isPrep: state.account.isPrep,
-    isRegistered: state.account.isRegistered
+    isRegistered: state.account.isRegistered,
+    period: state.period.period
 
   }
 )
