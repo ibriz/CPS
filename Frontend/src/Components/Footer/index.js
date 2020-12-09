@@ -144,7 +144,7 @@ const Footer = ({ console = false }) => {
                     <div style={{ display: 'flex', marginTop: '15px', alignItems: 'center' }}>
                         {
                             socialLinks.map((socialLink) =>
-                                <a href={socialLink.link} key={socialLink.name} target="_blank">
+                                <a href={socialLink.link} key={socialLink.name} target="_blank" style = {{zIndex: 1000}}>
                                     {
                                         console ?
                                             <socialLink.icon style={{ fontSize: socialLink.fontSize ? socialLink.fontSize : '35px', color: consoleColor }} /> :
