@@ -44,6 +44,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
         }
     );
     const [progressReportIPFS, setProgressReportIPFS] = React.useState({});
+    let [draftConfirmationShow, setDraftConfirmationShow] = React.useState(false);
 
 
     useEffect(() => {
@@ -369,7 +370,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
 
                         <Form.Group as={Row} controlId="formPlaintextPassword">
                             <Col className={styles.draftButton}>
-                                <Button variant="outline-info" onClick={saveChanges}>SAVE CHANGES</Button>{' '}
+                                <Button variant="outline-info" onClick={() => setDraftConfirmationShow(true)}>SAVE CHANGES</Button>{' '}
                             </Col>
                             <Col className={styles.saveButton}>
                                 <Button variant="info" type="submit">SUBMIT</Button>
@@ -398,6 +399,21 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                     <>
                         <div>Are you sure you want to submit the progress report?</div>
                     </>
+                }
+
+            </ConfirmationModal>
+
+            <ConfirmationModal
+                show={draftConfirmationShow}
+                onHide={() => setDraftConfirmationShow(false)}
+                heading={'Draft Submission Confirmation'}
+                onConfirm={() => {
+                    saveChanges()
+                }} >
+                {                 
+                        <>
+                            <div>Are you sure you want to save the changes?</div>
+                        </> 
                 }
 
             </ConfirmationModal>

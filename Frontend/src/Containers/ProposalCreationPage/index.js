@@ -30,6 +30,8 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
     } = location;
     const [modalShow, setModalShow] = React.useState(false);
     let [submissionConfirmationShow, setSubmissionConfirmationShow] = React.useState(false);
+    let [draftConfirmationShow, setDraftConfirmationShow] = React.useState(false);
+
     const [editModalShow, setEditModalShow] = React.useState(false);
     const [editModalIndex, setEditModalIndex] = React.useState();
     const [proposalIPFS, setProposalIPFS] = React.useState({});
@@ -362,7 +364,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
 
                         <Form.Group as={Row} controlId="formPlaintextPassword">
                             <Col className = {styles.draftButton}>
-                                <Button variant="outline-info" onClick={saveChanges}>SAVE CHANGES</Button>{' '}
+                                <Button variant="outline-info" onClick={() => setDraftConfirmationShow(true)}>SAVE CHANGES</Button>{' '}
                             </Col>
                             <Col className={styles.saveButton}>
                                 <Button variant="info" type="submit">SUBMIT</Button>
@@ -430,6 +432,21 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                         <>
                             <div>Are you sure you want to submit the proposal?</div>
                             <div className = "text-danger">You need to submit 50 ICX to submit a proposal</div>
+                        </> 
+                }
+
+            </ConfirmationModal>
+
+            <ConfirmationModal
+                show={draftConfirmationShow}
+                onHide={() => setDraftConfirmationShow(false)}
+                heading={'Draft Submission Confirmation'}
+                onConfirm={() => {
+                    saveChanges()
+                }} >
+                {                 
+                        <>
+                            <div>Are you sure you want to save the changes?</div>
                         </> 
                 }
 
