@@ -140,7 +140,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                 address: walletAddress,
                 proposalKey: progressReport.proposalKey,
                 reportKey: progressReport.reportKey,
-                proposalName: currentUserActiveProposals.find(proposal => proposal.ipfsKey === progressReport.projectName)._proposal_title
+                proposalName: currentUserActiveProposals.find(proposal => proposal.ipfsKey === progressReport.projectName)?._proposal_title
             });
         }
         else {
