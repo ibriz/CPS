@@ -40,10 +40,8 @@ const Main = ({
   )
 
   const applicationPeriodRoute = (component) => (
-    (period == 'APPLICATION' && !isRemainingTimeZero) ?
-      component :
-      // <Redirect to='/' />
-      component
+    (period !== 'VOTING') ?component : <Redirect to='/' />
+      // component
   )
 
   return (
