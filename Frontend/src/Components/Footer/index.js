@@ -2,7 +2,7 @@ import React from 'react';
 import { Row, Col, Container, Button } from 'react-bootstrap';
 import styles from './Footer.module.scss';
 import ClassNames from 'classnames';
-import { AiFillMediumCircle, AiFillTwitterCircle, AiFillGithub, AiFillFacebook } from 'react-icons/ai';
+import { AiFillMediumCircle, AiFillTwitterCircle, AiFillGithub, AiFillFacebook, AiFillRedditCircle } from 'react-icons/ai';
 import { FaTelegram } from 'react-icons/fa';
 import { SiFacebook } from 'react-icons/si';
 
@@ -29,6 +29,24 @@ const socialLinks = [
         name: "github",
         link: "https://github.com/icon-project",
         icon: AiFillGithub
+
+    },
+
+    {
+        name: "facebook",
+        link: "https://www.facebook.com/helloicon/",
+        icon: SiFacebook,
+        fontSize: '30px'
+
+
+    },
+
+    {
+        name: "reddit",
+        link: "https://www.reddit.com/r/helloicon/",
+        icon: AiFillRedditCircle,
+        // fontSize: '30px'
+
 
     }
 ]
