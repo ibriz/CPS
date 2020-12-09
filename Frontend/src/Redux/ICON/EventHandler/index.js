@@ -10,6 +10,7 @@ import { setModalShowVotingPR } from 'Redux/Reducers/progressReportSlice';
 // import { fetchPeriodDetailsRequest } from 'Redux/Reducers/periodSlice';
 import { loginPrepRequest } from 'Redux/Reducers/accountSlice';
 import { fetchSponsorRequestsListRequest } from 'Redux/Reducers/proposalSlice';
+import { fetchRemainingVotesRequest } from 'Redux/Reducers/proposalSlice';
 
 // import { loginSuccess } from 'Redux/Reducers/accountSlice';
 
@@ -199,7 +200,11 @@ export default (event) => {
                         txHash: payload.result,
                         failureMessage: "Vote Proposal Failed",
                         successMessage: "Proposal Vote Succeded"
-                    });
+                    }, fetchRemainingVotesRequest(
+                        {
+                            type: "proposal"
+                        }        
+                    ));
                     store.dispatch(setModalShowVoting(false));
 
                     // result = await iconService.getTransactionResult().execute();
@@ -210,7 +215,11 @@ export default (event) => {
                         txHash: payload.result,
                         failureMessage: "Vote Progress Report Failed",
                         successMessage: "Progress Report Vote Succeded"
-                    });
+                    }, fetchRemainingVotesRequest(
+                        {
+                            type: "progress_report"
+                        }        
+                    ));
                     store.dispatch(setModalShowVotingPR(false));
 
                     // result = await iconService.getTransactionResult().execute();
