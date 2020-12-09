@@ -213,8 +213,8 @@ const proposalSlice = createSlice({
             state.progressReportList["Draft"] = payload.payload.response.map((progressReport, index) => (
                 {
                     status: 'draft',
-                    progressReportTitle: progressReport.progressReportName,
-                    projectTitle: progressReport.proposalName,
+                    progressReportTitle: progressReport.progressReportName || 'Untitled Progress Report',
+                    projectTitle: progressReport.proposalName || 'Untitled Proposal',
                     contributorAddress: payload.payload.contributorAddress,
                     index: index,
                     // ipfsHash: progressReport[PARAMS.reportHash],

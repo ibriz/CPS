@@ -14,7 +14,7 @@ function* saveDraftRequestWorker({payload}) {
     // const signature = yield signTransaction();
     let body = {...payload,
       type: "ProgressReport",
-    proposalName: payload.projectName,
+    proposalName: payload.proposalName,
   progressReportName: payload.progressReportTitle};
     Object.keys(body).forEach(key => {
         if(body[key] === null || Array.isArray(body[key]) && body[key].length < 1 ) {
@@ -25,7 +25,7 @@ function* saveDraftRequestWorker({payload}) {
       body: body,
       // signature: signature,
       url: ADD_PROGRESS_REPORT_DRAFT_URL,
-      method: body.reportKey? "PUT": "POST"
+      method: body.ipfsKey? "PUT": "POST"
 
     });
     NotificationManager.success("Draft Succesfully saved")

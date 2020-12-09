@@ -120,8 +120,8 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                 {
                     ...progressReport,
                     ...draftProgressReport,
-                    progressReportIPFS,
-                    projectName: draftProgressReport.proposalKey
+                    ...progressReportIPFS,
+                    projectName: progressReportIPFS.projectName
                 }
             ));
         }
@@ -138,14 +138,17 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                 ...progressReport,
                 address: walletAddress,
                 proposalKey: progressReport.proposalKey,
-                reportKey: progressReport.reportKey
+                reportKey: progressReport.reportKey,
+                proposalName: currentUserActiveProposals.find(proposal => proposal.ipfsKey === progressReport.projectName)._proposal_title
             });
         }
         else {
             saveDraftRequest({
                 ...progressReport,
                 address: walletAddress,
-                proposalKey: progressReport.projectName
+                proposalKey: progressReport.projectName,
+                proposalName: currentUserActiveProposals.find(proposal => proposal.ipfsKey === progressReport.projectName)._proposal_title
+
             });
         }
         history.push('/progress-reports');
@@ -419,6 +422,12 @@ const mapDispatchToProps = dispatch => (
 const mapStateToProps = state => (
     {
         submittingProgressReport: state.progressReport.submittingProgressReport,
+        // currentUserActiveProposals: [...state.proposals.proposalByAddress, {
+        //     ipfsKey: 'adas',
+        //     _proposal_title: 'New Proposal',
+        //     newProgressReport: true
+        // }],
+
         currentUserActiveProposals: state.proposals.proposalByAddress,
         walletAddress: state.account.address,
 
