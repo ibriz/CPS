@@ -149,7 +149,7 @@ export default (event) => {
                     },  function(){
                         store.dispatch( fetchProposalByAddressRequest(
                             {
-                                walletAddress: state.getState().account.address,
+                                walletAddress: store.getstate().getState().account.address,
                             }));
                         store.dispatch(  fetchProgressReportListRequest(
                             {
