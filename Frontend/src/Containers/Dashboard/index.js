@@ -17,9 +17,6 @@ import SponsorRequestsCard from 'Components/SponsorRequestsCard';
 import VotingCard from 'Components/VotingCard';
 import {fetchExpectedGrantRequest, fetchCPSTreasuryScoreAddressRequest} from 'Redux/Reducers/fundSlice';
 
-
-
-
 const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfRemainingFunds, cpfScoreAddress, fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, fetchProjectAmountsRequest, isPrep, isRegistered, myProposalList, fetchExpectedGrantRequest, expectedGrant, sponsorBond, totalCountSponsorRequests, remainingVotesProposal, remainingVotesPR, fetchCPSTreasuryScoreAddressRequest, cpsTreasuryScoreAddress, payPenaltyAmount }) => {
     const [showPayPenaltyConfirmationModal, setShowPayPenaltyConfirmationModal] = useState(false);
     const { isRemainingTimeZero, highestSignificantTime, highestSignificantTimeForGrant } = useTimer();
@@ -44,7 +41,7 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
                 color: '#1AAABA',
                 title: `Disbursement Due in ${highestSignificantTimeForGrant.value} ${highestSignificantTimeForGrant.text}`,
                 // value={`${icxFormat(cpfRemainingFunds, true)} ICX`} 
-                value: `${expectedGrant} ICX`
+                value: `${icxFormat(expectedGrant, true)} ICX`
             },
             {
                 title: `Remaining of ${period === "APPLICATION" ? 'Application Period' : 'Voting Period'}`,
@@ -65,13 +62,13 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
                 color: '#1AAABA',
                 title: "My Sponsor Bond",
                 // value={`${projectAmounts.Active.count + projectAmounts.Paused.count} (${icxFormat(projectAmounts.Active.amount + projectAmounts.Paused.amount)} ICX)`} />
-                value: `${sponsorBond} ICX`
+                value: `${icxFormat(sponsorBond, true)} ICX`
             },
             {
                 color: '#1AAABA',
                 title: `Sponsor Reward in  ${highestSignificantTimeForGrant.value} ${highestSignificantTimeForGrant.text}`,
                 // value={`${icxFormat(cpfRemainingFunds, true)} ICX`} 
-                value: `${expectedGrant} ICX`
+                value: `${icxFormat(expectedGrant, true)} ICX`
             },
             {
                 title: `Remaining of ${period === "APPLICATION" ? 'Application Period' : 'Voting Period'}`,
