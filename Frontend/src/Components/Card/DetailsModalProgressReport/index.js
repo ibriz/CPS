@@ -20,6 +20,7 @@ import {
   getProgressReportApprovedPercentage, getProgressReportApprovedVotersPercentage,
   getBudgetAdjustmentApprovedPercentage, getBudgetAdjustmentApprovedVotersPercentage
 } from 'Selectors';
+import { icxFormat } from 'helpers';
 
 function DetailsModal(props) {
 
@@ -291,7 +292,7 @@ function DetailsModal(props) {
                     [
                       {
                         key: 'Additional Budget',
-                        value: progressDetail?.additionalBudget ? `${progressDetail?.additionalBudget} ICX` : 'N/A'
+                        value: progressDetail?.additionalBudget ? `${icxFormat(progressDetail?.additionalBudget)} ICX` : 'N/A'
                       },
                       {
                         key: 'Additional Time',
