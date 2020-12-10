@@ -29,9 +29,12 @@ function* fetchCPFScoreAddressWorker({ payload }) {
         scoreAddress: cpsTreasuryScoreAddress
 
       });
+      console.log("iscpsTreasuryScoreAddress", isPrep, isRegistered, isPrep && isRegistered, response)
 
       yield put(fetchExpectedGrantSuccess({
-        response
+        response: {
+          ...response,
+        }
       }));
     }
   } catch (error) {
