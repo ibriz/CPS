@@ -173,7 +173,7 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
 
 
             {
-                (isPrep || isRegistered) &&
+                (isPrep && isRegistered) &&
                 <>
                     <div className={styles.myProposalHeading}>Sponsor Requests</div>
 
@@ -184,7 +184,7 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
             }
 
             {
-                (isPrep || isRegistered) &&
+                (isPrep && isRegistered) &&
                 <>
                     <div className={styles.myProposalHeading}>Voting</div>
 
