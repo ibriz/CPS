@@ -20,7 +20,7 @@ const socialLinks = [
     },
     {
         name: "telegram",
-        link: "https://t.me/iconannounce",
+        link: "https://t.me/hello_iconworld",
         icon: FaTelegram,
         fontSize: '33px'
 
