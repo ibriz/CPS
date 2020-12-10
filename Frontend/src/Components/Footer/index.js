@@ -133,7 +133,7 @@ const Footer = ({ console = false }) => {
                         <Button variant={console ? "outline-dark" : "outline-light"} style = {{marginLeft: '0px', paddingTop: '3px', paddingBottom: '3px'}}> Support us with your votes</Button>{' '}
 
                         </a></div>
-                    <div style={{ marginTop: '5px' }}>hello@icon.foundation</div>
+                    <div style={{ marginTop: '5px' }}><a href = "mailto:hello@icon.foundation" target = "_blank" style = {{color: console ? consoleColor : 'white'}}>hello@icon.foundation</a></div>
 
                 </Col>
 
