@@ -5,7 +5,7 @@ import { NotificationManager } from 'react-notifications';
 import constants from '../constants';
 import IconService from 'icon-sdk-js';
 import { HttpProvider } from 'icon-sdk-js';
-import { setModalShowSponsorRequests, setModalShowVoting } from 'Redux/Reducers/proposalSlice';
+import { setModalShowSponsorRequests, setModalShowVoting, fetchProposalByAddressRequest } from 'Redux/Reducers/proposalSlice';
 import { setModalShowVotingPR } from 'Redux/Reducers/progressReportSlice';
 // import { fetchPeriodDetailsRequest } from 'Redux/Reducers/periodSlice';
 import { loginPrepRequest } from 'Redux/Reducers/accountSlice';
@@ -147,14 +147,19 @@ export default (event) => {
                         failureMessage: "Progress Report Creation Failed",
                         successMessage: "Progress Report Created Successfully"
                     },  function(){
-
+                        store.dispatch( fetchProposalByAddressRequest(
+                            {
+                                walletAddress: state.getState().account.address,
+                            }));
                         store.dispatch(  fetchProgressReportListRequest(
                             {
                                 status: "Voting",
                                 walletAddress: store.getState().account.address,
                                 pageNumber: 1
                             }        
-                        ))
+                        ));
+
+
                         return true;
 
                     });
