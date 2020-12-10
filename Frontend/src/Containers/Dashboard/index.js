@@ -90,7 +90,7 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
         if(cpsTreasuryScoreAddress) {
             fetchExpectedGrantRequest();
         }
-    }, [cpsTreasuryScoreAddress, fetchExpectedGrantRequest])
+    }, [cpsTreasuryScoreAddress, fetchExpectedGrantRequest, isPrep, isRegistered])
 
     useEffect(() => {
         fetchCPFRemainingFundRequest();
