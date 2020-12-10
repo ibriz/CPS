@@ -386,7 +386,7 @@ function DetailsModal(props) {
           onHide={() => setVoteConfirmationShow(false)}
           heading={'Vote Confirmation'}
           onConfirm={onSubmitVote} >
-          Are you sure you want to {vote} the proposal?
+          Are you sure you want to {vote.toLowerCase()} the proposal?
         </ConfirmationModal>
 
         <DetailsModalPR
