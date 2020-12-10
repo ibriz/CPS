@@ -224,11 +224,11 @@ export default (event) => {
                         failureMessage: "Vote Proposal Failed",
                         successMessage: "Proposal Vote Succeded"
                     }, function(){
-                        fetchRemainingVotesRequest(
+                        store.dispatch(fetchRemainingVotesRequest(
                             {
                                 type: "proposal"
                             }        
-                        )
+                        ));
                         return true;
 
                     });
@@ -243,11 +243,11 @@ export default (event) => {
                         failureMessage: "Vote Progress Report Failed",
                         successMessage: "Progress Report Vote Succeded"
                     }, function(){
-                        fetchRemainingVotesRequest(
+                        store.dispatch(fetchRemainingVotesRequest(
                             {
                                 type: "progress_report"
                             }        
-                        )
+                        ));
                         return true;
 
                     });
