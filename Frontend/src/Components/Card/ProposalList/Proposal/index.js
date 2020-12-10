@@ -11,6 +11,8 @@ import { icxFormat } from 'helpers';
 import { proposalStatusMapping } from 'Constants';
 import ClassNames from 'classnames';
 import { Link } from 'react-router-dom';
+import {connect} from 'react-redux';
+import useTimer from 'Hooks/useTimer';
 
 const badgeColor = {
     'Voting': 'warning',
@@ -28,7 +30,9 @@ const badgeColor = {
 
 }
 
-const Proposal = ({ proposal, selectedTab, onClick, proposalPendingPR = false, proposalPendingPRSameList = false }) => {
+const Proposal = ({ proposal, selectedTab, onClick, proposalPendingPR = false, proposalPendingPRSameList = false, period }) => {
+
+    const {isRemainingTimeZero} = useTimer();
     return (
         <>
             <Row className={styles.proposalContainer} onClick={onClick}>
@@ -53,7 +57,7 @@ const Proposal = ({ proposal, selectedTab, onClick, proposalPendingPR = false, p
 
 
                         {
-                            ["Active", "Paused"].includes(proposalStatusMapping.find(mapping => mapping.status === proposal._status).name) && proposalPendingPRSameList &&
+                            ["Active", "Paused"].includes(proposalStatusMapping.find(mapping => mapping.status === proposal._status).name) && proposalPendingPRSameList && (period === "APPLICATION") && !isRemainingTimeZero &&
                             <>
                                 <Link to={{
                                     pathname: "/newProgressReport",
@@ -134,4 +138,10 @@ const Proposal = ({ proposal, selectedTab, onClick, proposalPendingPR = false, p
     )
 }
 
-export default Proposal;
+const mapStateToProps = state => (
+    {
+        period: state.period.period
+    }
+)
+
+export default connect(mapStateToProps)(Proposal);
