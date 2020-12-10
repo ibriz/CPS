@@ -58,13 +58,8 @@ const links = [
     },
 
     {
-        title: "Terms of Use",
-        link: "https://google.com"
-    },
-
-    {
-        title: "Privacy Policy",
-        link: "https://google.com"
+        title: "ICON Forum",
+        link: "https://forum.icon.community/c/contribution-proposals/45"
     },
 
 ]
