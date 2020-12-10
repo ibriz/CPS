@@ -9,8 +9,9 @@ import { setModalShowSponsorRequests, setModalShowVoting } from 'Redux/Reducers/
 import { setModalShowVotingPR } from 'Redux/Reducers/progressReportSlice';
 // import { fetchPeriodDetailsRequest } from 'Redux/Reducers/periodSlice';
 import { loginPrepRequest } from 'Redux/Reducers/accountSlice';
-import { fetchSponsorRequestsListRequest } from 'Redux/Reducers/proposalSlice';
+import { fetchSponsorRequestsListRequest, fetchProposalListRequest } from 'Redux/Reducers/proposalSlice';
 import { fetchRemainingVotesRequest } from 'Redux/Reducers/proposalSlice';
+import {fetchProgressReportListRequest} from 'Redux/Reducers/progressReportSlice';
 
 // import { loginSuccess } from 'Redux/Reducers/accountSlice';
 
@@ -120,6 +121,17 @@ export default (event) => {
                         successMessage: "Proposal Created Successfully",
 
 
+                    }, function(){
+
+                        store.dispatch( fetchProposalListRequest(
+                            {
+                                status: "Pending",
+                                walletAddress: store.getState().account.address,
+                                pageNumber: 1
+                            }
+                        ));
+                        return true;
+
                     });
 
                     break;
@@ -134,6 +146,17 @@ export default (event) => {
                         txHash: payload.result,
                         failureMessage: "Progress Report Creation Failed",
                         successMessage: "Progress Report Created Successfully"
+                    },  function(){
+
+                        store.dispatch(  fetchProgressReportListRequest(
+                            {
+                                status: "Voting",
+                                walletAddress: store.getState().account.address,
+                                pageNumber: 1
+                            }        
+                        ))
+                        return true;
+
                     });
 
                     // window.location.reload();
@@ -200,11 +223,15 @@ export default (event) => {
                         txHash: payload.result,
                         failureMessage: "Vote Proposal Failed",
                         successMessage: "Proposal Vote Succeded"
-                    }, fetchRemainingVotesRequest(
-                        {
-                            type: "proposal"
-                        }        
-                    ));
+                    }, function(){
+                        fetchRemainingVotesRequest(
+                            {
+                                type: "proposal"
+                            }        
+                        )
+                        return true;
+
+                    });
                     store.dispatch(setModalShowVoting(false));
 
                     // result = await iconService.getTransactionResult().execute();
@@ -215,11 +242,15 @@ export default (event) => {
                         txHash: payload.result,
                         failureMessage: "Vote Progress Report Failed",
                         successMessage: "Progress Report Vote Succeded"
-                    }, fetchRemainingVotesRequest(
-                        {
-                            type: "progress_report"
-                        }        
-                    ));
+                    }, function(){
+                        fetchRemainingVotesRequest(
+                            {
+                                type: "progress_report"
+                            }        
+                        )
+                        return true;
+
+                    });
                     store.dispatch(setModalShowVotingPR(false));
 
                     // result = await iconService.getTransactionResult().execute();
