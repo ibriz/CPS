@@ -14,7 +14,7 @@ export const progressReportStatusMapping = [
     {
         name: 'Voting',
         status: '_waiting',
-        badgeColor: 'warning'
+        badgeColor: 'primary'
     },
     {
         name: 'Approved',
@@ -46,7 +46,7 @@ export const proposalStatusMapping = [
     {
         name: 'Active',
         status: '_active',
-        badgeColor: 'primary'
+        badgeColor: 'success'
     },
     {
         name: 'Approved',
@@ -71,7 +71,7 @@ export const proposalStatusMapping = [
     {
         name: 'Voting',
         status: '_pending',
-        badgeColor: 'warning'
+        badgeColor: 'primary'
     },
     {
         name: 'Pending',
@@ -81,7 +81,7 @@ export const proposalStatusMapping = [
     {
         name: 'Completed',
         status: '_completed',
-        badgeColor: 'success'
+        badgeColor: 'dark'
     },
     {
         name: 'Disqualified',
