@@ -14,7 +14,7 @@ class InterfaceSystemScore(InterfaceScore):
 
 class CPF_TREASURY_INTERFACE(InterfaceScore):
     @interface
-    def transfer_proposal_fund_to_cps_treasury(self, _ipfs_key: str, _total_installment_count: int, _title: str,
+    def transfer_proposal_fund_to_cps_treasury(self, _ipfs_key: str, _total_installment_count: int,
                                                _sponsor_address: Address, _contributor_address: Address,
                                                _total_budget: int = 0) -> None: pass
 
@@ -24,6 +24,9 @@ class CPF_TREASURY_INTERFACE(InterfaceScore):
 
     @interface
     def return_fund_amount(self, _address: Address) -> None: pass
+
+    @interface
+    def get_total_fund(self) -> int: pass
 
 
 class CPS_TREASURY_INTERFACE(InterfaceScore):
