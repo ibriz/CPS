@@ -9,6 +9,7 @@ class ProposalData(object):
         self.timestamp = VarDB('timestamp', db, int)
         self.total_budget = VarDB('total_budget', db, int)
         self.project_duration = VarDB('project_duration', db, int)
+        self.approved_reports = VarDB('approved_reports', db, int)
         self.sponsor_address = VarDB('sponsor_address', db, Address)
         self.contributor_address = VarDB('contributor_address', db, Address)
         self.status = VarDB('status', db, str)
@@ -61,6 +62,7 @@ def addDataToProposalDB(prefix: bytes, _proposals: 'ProposalDataDB', proposal_da
     _proposals[prefix].total_votes.set(0)
     _proposals[prefix].approved_votes.set(0)
     _proposals[prefix].rejected_votes.set(0)
+    _proposals[prefix].approved_reports.set(0)
 
 
 def getDataFromProposalDB(prefix: bytes, _proposals: 'ProposalDataDB') -> dict:
@@ -69,6 +71,7 @@ def getDataFromProposalDB(prefix: bytes, _proposals: 'ProposalDataDB') -> dict:
     timestamp = _proposals[prefix].timestamp.get()
     total_budget = _proposals[prefix].total_budget.get()
     project_duration = _proposals[prefix].project_duration.get()
+    approved_reports = _proposals[prefix].approved_reports.get()
     sponsor_address = _proposals[prefix].sponsor_address.get()
     contributor_address = _proposals[prefix].contributor_address.get()
     status = _proposals[prefix].status.get()
@@ -91,6 +94,7 @@ def getDataFromProposalDB(prefix: bytes, _proposals: 'ProposalDataDB') -> dict:
         'timestamp': timestamp,
         'total_budget': total_budget,
         'project_duration': project_duration,
+        'approved_reports': approved_reports,
         'sponsor_address': sponsor_address,
         'contributor_address': contributor_address,
         'status': status,

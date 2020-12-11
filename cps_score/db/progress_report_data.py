@@ -27,6 +27,7 @@ class ProgressReportData(object):
         self.budget_rejected_votes = VarDB("budget_rejected_votes", db, int)
         self.budget_approve_voters = ArrayDB("budget_approve_voters", db, Address)
         self.budget_reject_voters = ArrayDB("budget_reject_voters", db, Address)
+        self.budget_adjustment_status = VarDB("budget_adjustment_status", db, str)
 
 
 class ProgressReportDataDB:
@@ -57,6 +58,7 @@ def addDataToProgressReportDB(prefix: bytes, _proposals: 'ProgressReportDataDB',
     _proposals[prefix].status.set(proposal_data.status)
     _proposals[prefix].tx_hash.set(proposal_data.tx_hash)
     _proposals[prefix].budget_adjustment.set(proposal_data.budget_adjustment)
+    _proposals[prefix].budget_adjustment.set(proposal_data.budget_adjustment_status)
     _proposals[prefix].total_votes.set(0)
     _proposals[prefix].approved_votes.set(0)
     _proposals[prefix].rejected_votes.set(0)
@@ -85,6 +87,7 @@ def getDataFromProgressReportDB(prefix: bytes, _proposals: 'ProgressReportDataDB
     budget_rejected_votes = _proposals[prefix].budget_rejected_votes.get()
     budget_approve_voters = len(_proposals[prefix].budget_approve_voters)
     budget_reject_voters = len(_proposals[prefix].budget_reject_voters)
+    budget_adjustment_status = _proposals[prefix].budget_adjustment_status.get()
 
     return {
         'ipfs_hash': ipfs_hash,
@@ -108,7 +111,8 @@ def getDataFromProgressReportDB(prefix: bytes, _proposals: 'ProgressReportDataDB
         'budget_approved_votes': budget_approved_votes,
         'budget_rejected_votes': budget_rejected_votes,
         'budget_approve_voters': budget_approve_voters,
-        'budget_reject_voters': budget_reject_voters
+        'budget_reject_voters': budget_reject_voters,
+        'budget_adjustment_status': budget_adjustment_status
     }
 
 
@@ -118,6 +122,7 @@ def createProgressDataObject(progress_report_data: dict) -> 'ProgressReportDataO
                                     progress_report_title=progress_report_data['progress_report_title'],
                                     timestamp=progress_report_data['timestamp'],
                                     budget_adjustment=progress_report_data['budget_adjustment'],
+                                    budget_adjustment_status=progress_report_data['budget_adjustment_status'],
                                     additional_budget=progress_report_data['additional_budget'],
                                     additional_month=progress_report_data['additional_month'],
                                     status=progress_report_data['status'],
@@ -134,5 +139,6 @@ class ProgressReportDataObject(object):
         self.additional_budget = kwargs.get('additional_budget')
         self.additional_month = kwargs.get('additional_month')
         self.budget_adjustment = kwargs.get('budget_adjustment')
+        self.budget_adjustment_status = kwargs.get('budget_adjustment_status')
         self.status = kwargs.get('status')
         self.tx_hash = kwargs.get('tx_hash')
