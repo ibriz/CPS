@@ -9,7 +9,8 @@
   "author": "ibriz.ai",
   "license": "ISC",
   "dependencies": {
-    "@fleekhq/fleek-storage-js": "^1.0.3",
+    "@fleekhq/fleek-storage-js": "^1.0.4",
+    "lambda-multipart-parser": "0.0.2",
     "uuid": "^8.3.1"
   }
 }
