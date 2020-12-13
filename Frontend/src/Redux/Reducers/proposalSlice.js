@@ -15,7 +15,8 @@ const PARAMS = {
     totalVotes: 'total_votes',
     percentageCompleted: 'percentage_completed',
     
-    newProgressReport: 'new_progress_report'
+    newProgressReport: 'new_progress_report',
+    lastProgressReport: 'last_progress_report'
 }
 
 const initialState = {
@@ -318,7 +319,8 @@ const proposalSlice = createSlice({
                 {
                     _proposal_title: proposal[PARAMS.proposalTitle],
                     ipfsKey: proposal[PARAMS.proposalHash],
-                    newProgressReport: !!parseInt(proposal[PARAMS.newProgressReport])
+                    newProgressReport: !!parseInt(proposal[PARAMS.newProgressReport]),
+                    lastProgressReport: !!parseInt(proposal[PARAMS.lastProgressReport]),
                 }
             ));
             return;
