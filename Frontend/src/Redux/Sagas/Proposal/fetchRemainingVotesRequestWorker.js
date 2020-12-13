@@ -126,7 +126,7 @@ function* fetchRemainingVotesRequestWorker({ payload }) {
         //         progress_report_title: 'UI Design Completed',
         //       timestamp: "1600872144290885",
         //       contributor_address: walletAddress,
-        //       report_hash: 'bafybeifq7tbbe4khohvbsfwhrnqolpueogqkfsisngpn6t3tsdwallbmkm'
+        //       report_hash: 'bafybeiho7fxjtoswo3zv7p6fxr4k3v5q5ndzx2nue5qg4r3vh7d2jrmvnm'
       
         //       },
         //     {
@@ -136,7 +136,7 @@ function* fetchRemainingVotesRequestWorker({ payload }) {
         //         // total_budget: "10000 ICX" ,
         //       timestamp: "1600872145290985",
         //       contributor_address: walletAddress,
-        //       report_hash: 'bafybeictkcf2ryihvlzyizvvjkxlmbql6jiozeqnm3j5mlficbaour6kxq'
+        //       report_hash: 'bafybeial2hgrp2lxqj6hwwvjd7bqwb76ihunmferr24e4bozlhbfcnp5s4'
         //       },
     
       
