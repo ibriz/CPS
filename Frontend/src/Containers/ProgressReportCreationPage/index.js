@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Card, Col, Form, InputGroup, FormControl, Button } from 'react-bootstrap';
+import { Row, Card, Col, Form, InputGroup, FormControl, Button, Alert } from 'react-bootstrap';
 import styles from './ProposalCreationPage.module.css';
 import { fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest } from 'Redux/Reducers/fundSlice';
 
@@ -46,6 +46,9 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
     const [progressReportIPFS, setProgressReportIPFS] = React.useState({});
     let [draftConfirmationShow, setDraftConfirmationShow] = React.useState(false);
 
+    const isTimeRemainingNotZero = progressReport.timeRemainingToCompletion && (progressReport.timeRemainingToCompletion != 0);
+    const isTaskRemaining = progressReport.percentageCompleted && (progressReport.percentageCompleted != 100);
+    const isLastReport = currentUserActiveProposals.find(proposal => proposal.ipfsKey === progressReport.projectName)?.lastProgressReport;
 
     useEffect(() => {
         fetchCPFRemainingFundRequest();
@@ -368,6 +371,41 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                             </>
                         }
 
+                        {
+                            isLastReport &&
+                            <Alert variant={'info'}>
+                                Note: This is the last progress report.
+                            </Alert>
+                        }
+
+                        {
+                            isLastReport &&
+                            ( isTimeRemainingNotZero || isTaskRemaining) &&
+                            !progressReport.projectTermRevision &&
+                            <Alert variant={'warning'}>
+                                <span>Warning: This is the last progress report</span>
+
+                                {
+                                    isTaskRemaining &&
+                                    <span> and the completed percentage is {progressReport.percentageCompleted}%</span>
+
+                                }
+                                {
+                                    isTimeRemainingNotZero &&
+                                    <span> and the time remaining to completion is {progressReport.timeRemainingToCompletion} months</span>
+                                }
+
+                                <span>. Do you consider having a project term revision?</span>
+                            </Alert>
+                        }
+
+                        {
+                            isLastReport && isTimeRemainingNotZero && progressReport.projectTermRevision && progressReport.timeRemainingToCompletion !== progressReport.additionalTime &&
+                            <Alert variant = "primary">
+                                Note: Recommended additional time: {progressReport.timeRemainingToCompletion} month (The time remaining to completion).
+                            </Alert>
+                        }
+
                         <Form.Group as={Row} controlId="formPlaintextPassword">
                             <Col className={styles.draftButton}>
                                 <Button variant="outline-info" onClick={() => setDraftConfirmationShow(true)}>SAVE CHANGES</Button>{' '}
@@ -410,10 +448,10 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                 onConfirm={() => {
                     saveChanges()
                 }} >
-                {                 
-                        <>
-                            <div>Are you sure you want to save the changes?</div>
-                        </> 
+                {
+                    <>
+                        <div>Are you sure you want to save the changes?</div>
+                    </>
                 }
 
             </ConfirmationModal>
