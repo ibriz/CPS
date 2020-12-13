@@ -9,7 +9,7 @@ async function registerUser(payload){
 
     const body = JSON.parse(payload.body);
 
-    const redisResponse = await setAsync(`address:${body.address}`, payload.body);
+    const redisResponse = await setAsync(`users:address:${body.address}`, payload.body);
 
     if (!redisResponse) throw new Error("Data couldnot be uploaded in redis");
 
@@ -23,7 +23,7 @@ async function getUser(payload){
 
     const redisKey = payload.queryStringParameters.address;
 
-    return await getAsync(`address:${redisKey}`);
+    return await getAsync(`users:address:${redisKey}`);
 }
 
 exports.handler = async (event) => {
@@ -45,7 +45,8 @@ exports.handler = async (event) => {
         const response = {
             statusCode: statusCode,
             headers: {
-                'Access-Control-Allow-Origin': '*'
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': '*'
             },
             body: user
         };
@@ -58,7 +59,8 @@ exports.handler = async (event) => {
         return {
             statusCode: err.statusCode ? err.statusCode : 500,
             headers: {
-                'Access-Control-Allow-Origin': '*'
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': '*'
             },
             body: JSON.stringify({
                 error: err.name ? err.name : 'Exception',
