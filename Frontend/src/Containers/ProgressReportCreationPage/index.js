@@ -40,6 +40,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
             additionalTime: null,
             revisionDescription: null,
             additionalResources: null,
+            isLastProgressReport: false
 
         }
     );
@@ -55,6 +56,15 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
         fetchCPFScoreAddressRequest();
 
     }, [fetchCPFRemainingFundRequest, cpfScoreAddress, fetchCPFScoreAddressRequest]);
+
+    useEffect(() => {
+        setProposal(prevState =>
+            ({
+                ...prevState,
+                isLastProgressReport: isLastReport
+            })
+        );
+    }, [currentUserActiveProposals, progressReport.projectName]);
 
 
     useEffect(() => {

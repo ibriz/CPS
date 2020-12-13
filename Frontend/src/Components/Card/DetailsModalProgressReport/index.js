@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Button, Col, Row, Container, Badge, ButtonGroup } from 'react-bootstrap';
+import { Modal, Button, Col, Row, Container, Badge, ButtonGroup, Alert } from 'react-bootstrap';
 import { Header, Address, DetailsTable, Description, MilestoneTable, ListTitle } from '../../UI/DetailsModal';
 import styles from './DetailsModal.module.css';
 import ProgressBar from '../../UI/ProgressBar';
@@ -330,6 +330,7 @@ function DetailsModal(props) {
               !votesByProposal.some(vote => vote.sponsorAddress === walletAddress) ?
 
                 <>
+
                   {
                     progressDetail?.projectTermRevision &&
                     <Row>
@@ -367,6 +368,8 @@ function DetailsModal(props) {
                         </Row>
                       </Col>
 
+
+
                       <Row>
                         <Col xs="12" style={{ display: 'flex', justifyContent: 'center' }}>
 
@@ -400,6 +403,12 @@ function DetailsModal(props) {
                     </Col>
 
                   </Row>
+                  {
+                    progressDetail?.isLastProgressReport &&
+                  <Alert variant = "info" style = {{marginTop: '10px'}}>
+                        Note: This is the last progress report for this proposal.
+                  </Alert>
+                  }
 
                   <Row style={{ justifyContent: 'center' }}>
                     <Button variant="primary" onClick={() => setVoteConfirmationShow(true)} style={{ marginTop: '10px', width: '150px' }}>Submit Vote</Button>
