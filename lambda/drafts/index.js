@@ -5,8 +5,9 @@ const { promisify } = require('util');
 
 const client = redis.createClient(process.env.REDIS_URL);
 
-const setAsync = promisify(client.hmset).bind(client);
-const getAllAsync = promisify(client.hgetall).bind(client);
+const getAsync = promisify(client.get).bind(client);
+const setAsync = promisify(client.set).bind(client);
+const getAllProposalAsync = promisify(client.keys).bind(client);
 
 async function uploadDraftToIPFS(payload) {
 
@@ -28,6 +29,7 @@ async function uploadDraftToIPFS(payload) {
     uploadedProposal.ipfsKey = body.ipfsKey;
     uploadedProposal.address = body.address;
     uploadedProposal.type = body.type;
+    uploadedProposal.proposalName = body.proposalName;
 
     return uploadedProposal;
 }
@@ -50,6 +52,7 @@ async function updateDraftToIPFS(payload) {
     updatedProposal.ipfsKey = body.ipfsKey;
     updatedProposal.address = body.address;
     updatedProposal.type = body.type;
+    updatedProposal.proposalName = body.proposalName;
 
     console.log(updatedProposal);
 
@@ -58,20 +61,30 @@ async function updateDraftToIPFS(payload) {
 
 async function addHashToRedis(proposal) {
 
-    const redisResponse = await setAsync(`address:${proposal.address}:type:${proposal.type}`, 
-                                            `drafts:${proposal.ipfsKey}`, 
-                                            'https://gateway.ipfs.io/ipfs/' + proposal.hash);
+    const redisObject = {
+        proposalName: proposal.proposalName,
+        ipfsHash: proposal.hash,
+        ipfsUrl: 'https://gateway.ipfs.io/ipfs/' + proposal.hash,
+        ipfsKey: proposal.ipfsKey
+    }
+
+    if (proposal.type == 'ProgressReport') {
+        redisObject.progressReportName = proposal.progressReportName;
+    }
+
+    const redisResponse = await setAsync(`address:${proposal.address}:type:${proposal.type}:drafts:${proposal.ipfsKey}`,
+        JSON.stringify(redisObject));
 
     if (!redisResponse) throw new Error("Data couldnot be uploaded in redis");
 
     console.log("Response from Redis" + redisResponse);
 
-    console.log(await getAllAsync(`drafts`));
-
     return JSON.stringify({ redisResponse: redisResponse });
 }
 
 async function getUserDrafts(payload) {
+
+    let userDrafts = [];
 
     if (!payload.queryStringParameters.address)
         return new Error('address of the user is required');
@@ -81,11 +94,23 @@ async function getUserDrafts(payload) {
 
     const { address, type } = payload.queryStringParameters;
 
-    const drafts = await getAllAsync(`address:${address}:type:${type}`);
+    const drafts = await getAllProposalAsync(`address:${address}:type:${type}:drafts:*`);
 
     console.log(drafts);
 
-    return drafts;
+    for (const draft of drafts) {
+        const draftDetails = await getAsync(draft);
+
+        const userDraft = JSON.parse(draftDetails);
+
+        if( userDrafts.indexOf(userDraft) === -1) {
+            userDrafts.push(userDraft);
+        }
+    }
+
+    console.log(userDrafts);
+
+    return userDrafts;
 }
 
 exports.handler = async (event) => {
@@ -115,7 +140,8 @@ exports.handler = async (event) => {
         const response = {
             statusCode: responseCode,
             headers: {
-                'Access-Control-Allow-Origin': '*'
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': '*'
             },
             body: JSON.stringify(drafts)
         };
@@ -129,7 +155,8 @@ exports.handler = async (event) => {
         return {
             statusCode: err.statusCode ? err.statusCode : 500,
             headers: {
-                'Access-Control-Allow-Origin': '*'
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': '*'
             },
             body: JSON.stringify({
                 error: err.name ? err.name : 'Exception',
