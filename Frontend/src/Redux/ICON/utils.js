@@ -4,7 +4,7 @@ import ids from './constants.js';
 import store from '../Store';
 import { customRequestRPC } from './CustomEvents';
 import constants from './constants';
-
+import { signTransaction as signTransactionRequest } from 'Redux/Reducers/accountSlice';
 
 // var CPSScore = 'cx724a3cf07c91a12dd7fd4987be130f383168b631';
 // var CPSScore = 'cxdf3c1ea6ba87e21957c63b21a54151a38a6ecb80';
@@ -109,18 +109,26 @@ export function sendTransaction({
 export function signTransaction() {
 
   return new Promise((resolve, reject) => {
-      const signature = store.getState().account.signature;
-      if (signature) {
-          resolve(signature);
-          return;
-      }
-      signTransactionFromICONEX();
+
+
+    //   const signature = store.getState().account.signature;
+    //   if (signature) {
+    //       resolve(signature);
+    //       return;
+    //   }
+    store.dispatch(signTransactionRequest({ signature: null }));
+
+      const payload = getRanHex(51) + new Date().getTime();
+      signTransactionFromICONEX(payload);
 
       const interFunction = () => {
         const signature = store.getState().account.signature;
         if (signature) {
           clearInterval(interFunction);
-          resolve(signature);
+          resolve({
+              signature, 
+              payload
+          });
           return;
             }
         
@@ -136,7 +144,7 @@ function getRanHex(size) {
     )
 }
 
-export function signTransactionFromICONEX() {
+export function signTransactionFromICONEX(hash) {
     
     window.parent.dispatchEvent(new CustomEvent('ICONEX_RELAY_REQUEST', {
         detail: {
@@ -144,9 +152,8 @@ export function signTransactionFromICONEX() {
             payload: {
                 from: store.getState().account.address,
                 // hash: "9babe5d2911e8e42dfad72a589202767f95c6fab49523cdc1621607529890125", //64 characters
-                hash: getRanHex(51) + new Date().getTime()
-
-            }
+                hash: hash,
+            },
         }
     }))
 }
