@@ -1,4 +1,5 @@
 import {BASE_URL, IPFS_URL} from '../Constants';
+import { NotificationManager } from 'react-notifications';
 
 async function request({
     url,
@@ -7,7 +8,8 @@ async function request({
     signature = null,
     ipfs = false,
     payload = null,
-    address = null
+    address = null,
+    failureMessage = null
 }) {
     const baseURL = ipfs ? IPFS_URL : BASE_URL;
     console.log("request");
@@ -35,7 +37,15 @@ async function request({
     console.log("response");
     console.log(response);
 
+
+
     const responseJSON = await response.json();
+
+    if (response.status <200 || response.status>400) {
+        NotificationManager.error(responseJSON.message ,failureMessage ?? "Request Failed");
+
+
+    }
     return responseJSON;
 };
 
