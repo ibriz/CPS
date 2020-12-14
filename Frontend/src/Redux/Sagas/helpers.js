@@ -43,8 +43,7 @@ async function request({
 
     if (response.status <200 || response.status>400) {
         NotificationManager.error(responseJSON.message ,failureMessage ?? "Request Failed");
-
-
+        throw new Error(responseJSON.message);
     }
     return responseJSON;
 };
