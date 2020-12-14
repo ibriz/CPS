@@ -1,4 +1,4 @@
-export const BASE_URL = 'https://ti58hrgi66.execute-api.us-east-2.amazonaws.com/cps';
+export const BASE_URL = 'https://u7hj3y857d.execute-api.us-east-2.amazonaws.com/cps';
 export const IPFS_URL = 'https://gateway.ipfs.io/ipfs';
 
 export const PROPOSAL_ADD_URL = 'proposals';
