@@ -183,7 +183,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
             <Row className={styles.cardContainer}>
                 <Card className={styles.card}>
                     <Form onSubmit={handleSubmit}>
-                        <Form.Group as={Row} controlId="formPlaintextEmail">
+                        <Form.Group as={Row} >
                             <Form.Label column sm="2">
                                 Project Name
                             </Form.Label>
@@ -191,7 +191,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                                 <Form.Control placeholder="Project Name" size="md" value={proposal.projectName} name="projectName" onChange={handleChange} required />
                             </Col>
                         </Form.Group>
-                        <Form.Group as={Row} controlId="formPlaintextEmail">
+                        <Form.Group as={Row} >
 
                             <Form.Label column sm="2">
                                 Category
@@ -222,7 +222,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
 
                         </Form.Group>
 
-                        <Form.Group as={Row} controlId="formPlaintextPassword">
+                        <Form.Group as={Row} >
 
                             <Form.Label column sm="2" >
                                 Total Budget
@@ -259,7 +259,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
 
                         </Form.Group>
 
-                        <Form.Group as={Row} controlId="formPlaintextPassword">
+                        <Form.Group as={Row} >
                             <Form.Label column sm="12">
                                 Description
                             </Form.Label>
@@ -279,7 +279,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                             </Col>
                         </Form.Group>
 
-                        <Form.Group as={Row} controlId="formPlaintextPassword">
+                        <Form.Group as={Row} >
                             <Form.Label column sm="12">
                                 Milestones
                             </Form.Label>
@@ -332,7 +332,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                         }
 
 
-                        <Form.Group as={Row} controlId="formPlaintextEmail">
+                        <Form.Group as={Row} >
                             <Form.Label column sm="2">
                                 Team Name
                             </Form.Label>
@@ -362,7 +362,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                         </Alert>
 
 
-                        <Form.Group as={Row} controlId="formPlaintextPassword">
+                        <Form.Group as={Row} >
                             <Col className = {styles.draftButton}>
                                 <Button variant="outline-info" onClick={() => setDraftConfirmationShow(true)}>SAVE CHANGES</Button>{' '}
                             </Col>
