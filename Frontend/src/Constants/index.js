@@ -81,7 +81,7 @@ export const proposalStatusMapping = [
     {
         name: 'Completed',
         status: '_completed',
-        badgeColor: 'dark'
+        badgeColor: 'completed'
     },
     {
         name: 'Disqualified',
