@@ -5,7 +5,9 @@ async function request({
     body = {},
     method = "POST",
     signature = null,
-    ipfs = false
+    ipfs = false,
+    payload = null,
+    address = null
 }) {
     const baseURL = ipfs ? IPFS_URL : BASE_URL;
     console.log("request");
@@ -17,7 +19,9 @@ async function request({
     if (signature) {
         headers = {
             ...headers,
-            signature: signature
+            signature: signature,
+            payload: payload,
+            address: address
 
         }
     }
