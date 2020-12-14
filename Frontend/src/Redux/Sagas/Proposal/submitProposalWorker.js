@@ -11,10 +11,10 @@ export const getAddress = (state) => state.account.address
 
 function* submitProposalWorker({payload}) {
   try {
-    const {
-      signature, 
-      payload: hash
-    } = yield signTransaction();
+    // const {
+    //   signature, 
+    //   payload: hash
+    // } = yield signTransaction();
 
     const getAddress = (state) => state.account.address
     const walletAddress = yield select(getAddress);
@@ -27,9 +27,10 @@ function* submitProposalWorker({payload}) {
         type: "proposal"
       },
       url: PROPOSAL_ADD_URL,
-      signature: signature,
-      payload: hash,
-      address: walletAddress
+      failureMessage: "Submit Proposal Failed"
+      // signature: signature,
+      // payload: hash,
+      // address: walletAddress
     });
     yield put(submitProposalSuccess(
       {
