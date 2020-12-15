@@ -1,5 +1,7 @@
 import {BASE_URL, IPFS_URL} from '../Constants';
 import { NotificationManager } from 'react-notifications';
+import {signTransaction} from 'Redux/ICON/utils';
+import store from 'Redux/Store';
 
 async function request({
     url,
@@ -9,7 +11,8 @@ async function request({
     ipfs = false,
     payload = null,
     address = null,
-    failureMessage = null
+    failureMessage = null,
+    requireSigning = false
 }) {
     const baseURL = ipfs ? IPFS_URL : BASE_URL;
     console.log("request");
@@ -18,12 +21,18 @@ async function request({
         "Content-Type": "application/json",
     }
 
-    if (signature) {
+    if (requireSigning) {
+
+        const {
+            signature, 
+            payload
+          } = await signTransaction();
+
         headers = {
             ...headers,
             signature: signature,
             payload: payload,
-            address: address
+            address: store.getState().account.address
 
         }
     }
