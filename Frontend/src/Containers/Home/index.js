@@ -10,7 +10,7 @@ const Home = () => {
             <SlantedHeader />
             <div className={styles.proposalCard}>
                 <ProposalCard
-                 proposalStatesList = {['Active', 'Voting', 'Completed', 'Disqualified', 'Paused']}
+                 proposalStatesList = {['Active', 'Paused', 'Voting', 'Completed', 'Disqualified']}
                  initialState = {'Active'}
                  minHeight = '150px'
                 />
