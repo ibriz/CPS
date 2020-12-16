@@ -120,7 +120,7 @@ function DetailsModal(props) {
             <Col sm="12">
 
               <Address>
-                Project Name- {progressDetail?.progressReportTitle || 'N/A'}
+                Project Name- {progressReport?.projectTitle || 'N/A'}
               </Address>
             </Col>
           </Row>
