@@ -22,6 +22,8 @@ function* saveDraftRequestWorker({payload}) {
             delete body[key]
         }   
     })
+    NotificationManager.info("Draft Save Request Sent")
+
     const response = yield call(request, {
       body: body,
       // signature: signature,
