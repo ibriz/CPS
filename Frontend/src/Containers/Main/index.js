@@ -73,28 +73,23 @@ const Main = ({
                 </Helmet>
               </Route>
               <Route path="/newProposal">
-                {applicationPeriodRoute(
                   <>
                     {userRoute(<ProposalCreationPage />)}
                     <Helmet>
                       <title>CPS - Create New Proposal</title>
                     </Helmet>
                   </>
-
-                )
                 }
 
               </Route>
               <Route path="/newProgressReport">
                 {
-                  applicationPeriodRoute(
                     <>
                       {userRoute(<ProgressReportCreationPage />)}
                       <Helmet>
                         <title>CPS - Create New Progress Report</title>
                       </Helmet>
                     </>
-                  )
                 }
 
               </Route>
