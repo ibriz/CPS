@@ -8,6 +8,7 @@ import { updatePeriod } from 'Redux/Reducers/periodSlice';
 import ConfirmationModal from 'Components/UI/ConfirmationModal';
 import { getNewProgressReportInfo } from 'Selectors';
 import { fetchProposalByAddressRequest } from 'Redux/Reducers/proposalSlice';
+import { FaDraft2Digital } from 'react-icons/fa';
 
 const UpperCard = ({ numberOfSubmittedProposals, updatePeriod, sponsorRequest, voting, isPrep, isRegistered, walletAddress, fetchProposalByAddressRequest, newProgressReportInfo }) => {
 
@@ -37,15 +38,15 @@ const UpperCard = ({ numberOfSubmittedProposals, updatePeriod, sponsorRequest, v
         text = null;
         button = null;
 
-    } else if (period === 'APPLICATION') {
+    } else {
 
         if (newProgressReportInfo.totalProgressReportCount === 0) {
-            text = <span className={styles.proposalNumber}>You have no active proposal</span>
-            button = <span className={styles.proposalNumber}>You need to have active proposal to create new progress report</span>
+            text = <span className={styles.proposalNumber}>You have no active or paused proposal</span>
+            button = <span className={styles.proposalNumber}>You need to have active or paused proposal to {period === 'APPLICATION' ? 'create new progress report' : 'create progress report draft'}</span>
         }
 
-        else if (newProgressReportInfo.canCreateNewProgressReportCount === 0) {
-            text = <span className={styles.proposalNumber}>You have created progress report for all of your active proposals.</span>
+        else if (newProgressReportInfo.canCreateNewProgressReportCount === 0 && period === 'APPLICATION') {
+            text = <span className={styles.proposalNumber}>You have created progress report for all of your active or paused proposals.</span>
             button = null
         }
 
@@ -53,18 +54,26 @@ const UpperCard = ({ numberOfSubmittedProposals, updatePeriod, sponsorRequest, v
         else {
             button = <Link to="/newProgressReport">
 
-                <Button variant="info" className={styles.createProposalButton}>CREATE NEW PROGRESS REPORT</Button>
+                <Button variant="info" className={styles.createProposalButton}>{period === 'APPLICATION' ? 'CREATE NEW PROGRESS REPORT' : 'CREATE PROGRESS REPORT DRAFT'}</Button>
             </Link>
+            if (period === 'APPLICATION')
+            {
+                text = <span className={styles.proposalNumber}>You have created progress report for <b>{newProgressReportInfo.totalProgressReportCount - newProgressReportInfo.canCreateNewProgressReportCount}</b> out of <b>{newProgressReportInfo.totalProgressReportCount}</b> active proposals. </span>
 
-            text = <span className={styles.proposalNumber}>You have created progress report for <b>{newProgressReportInfo.totalProgressReportCount - newProgressReportInfo.canCreateNewProgressReportCount}</b> out of <b>{newProgressReportInfo.totalProgressReportCount}</b> active proposals. </span>
+            }
+            else {
+                text = <span className={styles.proposalNumber}> This is voting period. You can still create progress report draft. </span>
+
+            }
         }
 
 
-    } else {
-        button = null;
-        text = null;
+    } 
+    // else {
+    //     button = null;
+    //     text = null;
 
-    }
+    // }
 
     const remainingTimeText = <span className={styles.proposalTitle}><b>{(period === 'VOTING') ? 'PROGRESS REPORT SUBMISSION OPENS IN' : 'PROGRESS REPORT SUBMISSION DEADLINE IN'}</b></span>;
     const remainingTimeValue = <span className={styles.proposalTitle}><b>{remainingTime.day}</b> DAYS <b>{remainingTime.hour}</b> HOURS <b>{remainingTime.minute}</b> MINUTES <b>{remainingTime.second}</b> SECONDS</span>;
