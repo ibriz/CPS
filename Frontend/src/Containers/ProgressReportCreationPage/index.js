@@ -19,6 +19,7 @@ import { NotificationManager } from 'react-notifications';
 import ConfirmationModal from 'Components/UI/ConfirmationModal';
 import Header from 'Components/Header';
 import { requestIPFS } from 'Redux/Sagas/helpers';
+import InfoIcon from "Components/InfoIcon";
 
 const ProgressReportCreationPage = ({ submitProgressReport, history, submittingProgressReport, fetchProposalListRequest, updateProposalStatus, currentUserActiveProposals, saveDraftRequest, location, walletAddress, fetchProposalByAddressRequest, fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, cpfScoreAddress, cpfRemainingFunds }) => {
 
@@ -222,11 +223,13 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
             <Row className={styles.cardContainer}>
                 <Card className={styles.card}>
                     <Form onSubmit={handleSubmit}>
-                        <Form.Group as={Row} controlId="formPlaintextEmail">
-                            <AppFormLabel column sm="2">
+                        <Form.Group as={Row} controlId="formPlaintextEmail" className = {styles.maxWidthLabel}>
+                            <AppFormLabel column lg="3">
                                 Project Name
+                                <span className = {styles.required}></span>
+                                <InfoIcon description = "The project for which the progress report is being submitted"/>   
                             </AppFormLabel>
-                            <Col sm="10" className={styles.inputSameLine}>
+                            <Col lg="9" className={styles.inputSameLine}>
                                 <Form.Control size="md" as="select" value={progressReport.projectName} name="projectName" id="projectName" onChange={handleChange} required>
                                     <option selected disabled value="">Select Project</option>
                                     {/* <option value="dasd">New Project</option> */}
@@ -241,20 +244,25 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                                 </Form.Control>                            </Col>
                         </Form.Group>
 
-                        <Form.Group as={Row} controlId="formPlaintextEmail">
-                            <AppFormLabel column sm="2">
+                        <Form.Group as={Row} controlId="formPlaintextEmail" className = {styles.maxWidthLabel}>
+                            <AppFormLabel column lg="3">
+                                
                                 Progress Report Name
+                                <span className = {styles.required}></span>
+                                <InfoIcon description = "A suitable name for the progress report"/>  
                             </AppFormLabel>
-                            <Col sm="10" className={styles.inputSameLine}>
+                            <Col lg="9" className={styles.inputSameLine}>
                                 <Form.Control placeholder="Progress Report Name" size="md" value={progressReport.progressReportTitle} name="progressReportTitle" id="progressReportTitle" onChange={handleChange} required />
                             </Col>
                         </Form.Group>
-                        <Form.Group as={Row} controlId="formPlaintextEmail">
+                        <Form.Group as={Row} controlId="formPlaintextEmail" className = {styles.maxWidthLabel}>
 
-                            <AppFormLabel column sm="2">
+                            <AppFormLabel column lg="3">
                                 Percentage Completed
+                                <span className = {styles.required}></span>
+                                <InfoIcon description = "The completed percentage of the project"/>  
                             </AppFormLabel>
-                            <Col sm="4" className="col-sm-2" className={styles.inputSameLine}>
+                            <Col lg="" className="col-lg-2" className={styles.inputSameLine}>
                                 <InputGroup size="md">
 
                                     <FormControl placeholder="Percentage Completed" type="number" min={0} max={100} value={progressReport.percentageCompleted} name="percentageCompleted" id="percentageCompleted" onChange={handleChange} required />
@@ -263,10 +271,12 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                                     </InputGroup.Append>
                                 </InputGroup>
                             </Col>
-                            <AppFormLabel column sm="3" className={styles.labelSameLine}>
+                            <AppFormLabel column lg="3" className={styles.labelSameLine}>
                                 Time Remaining to Completion
+                                <span className = {styles.required}></span>
+                                <InfoIcon description = "The estimated remaining time for the project"/>  
                             </AppFormLabel>
-                            <Col sm="3" className={styles.inputSameLine}>
+                            <Col lg="3" className={styles.inputSameLine}>
                                 <InputGroup size="md">
 
                                     <FormControl placeholder="Time Remaining" type="number" value={progressReport.timeRemainingToCompletion} name="timeRemainingToCompletion" id="timeRemainingToCompletion" onChange={handleChange} min={0} max={6} required />
@@ -279,10 +289,12 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                         </Form.Group>
 
                         <Form.Group as={Row} controlId="formPlaintextPassword">
-                            <AppFormLabel column sm="12">
+                            <AppFormLabel column lg="12">
                                 Description
+                                <InfoIcon description = "A detailed description for the progress report"/>  
+
                             </AppFormLabel>
-                            <Col sm="12">
+                            <Col lg="12">
                                 <RichTextEditor
                                     required
                                     onChange={(data) =>
@@ -297,23 +309,25 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                         </Form.Group>
 
                         {/* <Form.Group as={Row} controlId="formPlaintextEmail">
-                            <AppFormLabel column sm="2">
+                            <AppFormLabel column lg="2">
                                 Additional Resources
                             </AppFormLabel>
 
-                            <Col sm="4" className={styles.inputSameLine}>
+                            <Col lg="4" className={styles.inputSameLine}>
                                 <Form.Control placeholder={"Link to additional resources on IPFS"} size={"md"} value={progressReport.additionalResources} name="additionalResources" onChange={handleChange} required />
                             </Col>
 
 
                         </Form.Group> */}
 
-                        <Form.Group as={Row} controlId="formPlaintextPassword">
+                        <Form.Group as={Row} controlId="formPlaintextPassword" className = {styles.maxWidthLabelPTR}>
 
-                            <AppFormLabel column sm="2" >
+                            <AppFormLabel column lg="3" >
                                 Project Term Revision
+                                <span className = {styles.required}></span>
+                                <InfoIcon description = "Whether the project requires additional budget or additional time for completion"/>  
                             </AppFormLabel>
-                            <Col sm="4" className={styles.inputSameLine}>
+                            <Col lg="4" className={styles.inputSameLine}>
                                 <Form.Check
                                     checked={progressReport.projectTermRevision}
                                     onChange={handleCheckedChange}
@@ -332,10 +346,12 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                             <>
                                 <Form.Group as={Row} controlId="formPlaintextPassword">
 
-                                    <AppFormLabel column sm="2" >
+                                    <AppFormLabel column lg="2" >
                                         Additional Budget
+                                        <span className = {styles.required}></span>
+                                        <InfoIcon description = "Additional budget required (in ICX) for completion"/>  
                             </AppFormLabel>
-                                    <Col sm="4" className={styles.inputSameLine}>
+                                    <Col lg="4" className={styles.inputSameLine}>
                                         <InputGroup size="md">
 
                                             <FormControl placeholder="Additional Budget" type="number" value={progressReport.additionalBudget} name="additionalBudget" onChange={handleChange} min={0} required
@@ -347,10 +363,12 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                                     </Col>
 
 
-                                    <AppFormLabel column sm="2" className={styles.labelSameLine}>
+                                    <AppFormLabel column lg="2" className={styles.labelSameLine}>
                                         Additional Time
-                            </AppFormLabel>
-                                    <Col sm="4" className={styles.inputSameLine}>
+                                        <span className = {styles.required}></span>
+                                        <InfoIcon description = "Additional time required (in months) for completion"/>  
+                                    </AppFormLabel>
+                                    <Col lg="4" className={styles.inputSameLine}>
                                         <InputGroup size="md">
 
                                             <FormControl placeholder="Additional Time" type="number" value={progressReport.additionalTime} name="additionalTime" id="additionalTime" onChange={handleChange} min={0} max={6} required />
@@ -363,10 +381,12 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
 
 
                                 <Form.Group as={Row} controlId="formPlaintextPassword">
-                                    <AppFormLabel column sm="12">
+                                    <AppFormLabel column lg="12">
                                         Revision Description
+                                        <InfoIcon description = "Reason for requiring additional time and additional budget"/>  
+
                             </AppFormLabel>
-                                    <Col sm="12">
+                                    <Col lg="12">
                                         <RichTextEditor
                                             required
                                             onChange={(data) =>
