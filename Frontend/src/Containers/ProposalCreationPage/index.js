@@ -40,23 +40,6 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
         fetchCPFRemainingFundRequest();
     }, [fetchCPFRemainingFundRequest, cpfScoreAddress]);
 
-
-    useEffect(() => {
-        if (proposal.totalBudget == null ) {
-            document.getElementById("totalBudget").setCustomValidity(`Enter Total Budget between 0 and remaining CPF Fund (currently ${cpfRemainingFunds} ICX)`);
-        }
-        else if ((proposal.totalBudget < 0) || (proposal.totalBudget > parseInt(cpfRemainingFunds))) {
-            document.getElementById("totalBudget").setCustomValidity(`Total Budget should be between 0 and CPF remaining Fund (currently  ${cpfRemainingFunds} ICX)`);
-
-        } else {
-            document.getElementById("totalBudget").setCustomValidity("");
-        }
-
-    })
-
-
-
-
     const [proposal, setProposal] = useState(
         {
             projectName: null,
@@ -72,6 +55,19 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
         }
     );
 
+    useEffect(() => {
+        if (proposal.totalBudget == null ) {
+            document.getElementById("totalBudget").setCustomValidity(`Enter Total Budget between 0 and remaining CPF Fund (currently ${cpfRemainingFunds} ICX)`);
+        }
+        else if ((proposal.totalBudget < 0) || (proposal.totalBudget > parseInt(cpfRemainingFunds))) {
+            document.getElementById("totalBudget").setCustomValidity(`Total Budget should be between 0 and CPF remaining Fund (currently  ${cpfRemainingFunds} ICX)`);
+
+        } else {
+            document.getElementById("totalBudget").setCustomValidity("");
+        }
+
+    }, [proposal.totalBudget]);
+
     async function fetchDraft() {
         const proposalIPFS = await requestIPFS({
             hash: draftProposal.ipfsHash,
@@ -86,6 +82,8 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
         fetchCPFScoreAddressRequest();
 
     }, [])
+
+
 
     useEffect(() => {
         if (isDraft) {
@@ -171,6 +169,8 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                 [name]: value
             })
         );
+
+        document.getElementById(name) && document.getElementById(name).reportValidity();
     }
 
     return (
@@ -182,13 +182,13 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
             </Row> */}
             <Row className={styles.cardContainer}>
                 <Card className={styles.card}>
-                    <Form onSubmit={handleSubmit}>
+                    <Form onSubmit={handleSubmit} id = "form">
                         <Form.Group as={Row} >
                             <Form.Label column sm="2">
                                 Project Name
                             </Form.Label>
                             <Col sm="10" className={styles.inputSameLine}>
-                                <Form.Control placeholder="Project Name" size="md" value={proposal.projectName} name="projectName" onChange={handleChange} required />
+                                <Form.Control placeholder="Project Name" size="md" value={proposal.projectName} name="projectName" id="projectName" onChange={handleChange} required />
                             </Col>
                         </Form.Group>
                         <Form.Group as={Row} >
@@ -197,7 +197,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                                 Category
                             </Form.Label>
                             <Col sm="4" className={ClassNames("col-sm-2", [styles.inputSameLine])}>
-                                <Form.Control size="md" as="select" value={proposal.category} name="category" onChange={handleChange} required>
+                                <Form.Control size="md" as="select" value={proposal.category} name="category" id="category" onChange={handleChange} required>
                                     <option selected disabled value = "">Select a category</option>
 
                                     <option>Infrastructure</option>
@@ -213,7 +213,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                             <Col sm="4" className={styles.inputSameLine}>
                                 <InputGroup size="md">
 
-                                    <FormControl placeholder="Project Duration" type="number" value={proposal.projectDuration} name="projectDuration" onChange={handleChange} min = {0} max = {6} required />
+                                    <FormControl placeholder="Project Duration" type="number" value={proposal.projectDuration} name="projectDuration" id = "projectDuration" onChange={handleChange} min = {0} max = {6} required />
                                     <InputGroup.Append>
                                         <InputGroup.Text>Months</InputGroup.Text>
                                     </InputGroup.Append>
@@ -232,7 +232,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
 
                                     <FormControl placeholder="Total Budget" 
                                     min = {0} max = {parseInt(cpfRemainingFunds)} 
-                                    type="number" value={proposal.totalBudget} name="totalBudget" onChange={handleChange} id = "totalBudget" required
+                                    type="number" value={proposal.totalBudget} name="totalBudget" id="totalBudget" onChange={handleChange} id = "totalBudget" required
                                       />
                                     <InputGroup.Append>
                                         <InputGroup.Text>ICX</InputGroup.Text>
@@ -245,7 +245,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                                 Sponsor PRep
                             </Form.Label>
                             <Col sm="4" className={styles.inputSameLine}>
-                                <Form.Control size="md" as="select" value={proposal.sponserPrep} name="sponserPrep" onChange={handleChange} required>
+                                <Form.Control size="md" as="select" value={proposal.sponserPrep} name="sponserPrep" id="sponserPrep" onChange={handleChange} required>
                                     <option disabled selected value = "">Select PREP</option>
                                     {
                                         preps.map(prep =>
@@ -338,20 +338,20 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                             </Form.Label>
 
                             <Col sm="3" className={styles.inputSameLine}>
-                                <Form.Control placeholder={"Team Name"} size={"md"} value={proposal.teamName} name="teamName" onChange={handleChange} required />
+                                <Form.Control placeholder={"Team Name"} size={"md"} value={proposal.teamName} name="teamName" id="teamName" onChange={handleChange} required />
                             </Col>
                             <Form.Label column sm="2" className={styles.labelSameLine}>
                                 Team Email
                             </Form.Label>
 
                             <Col sm="2" className={styles.inputSameLine}>
-                                <Form.Control placeholder={"Team Email"} type="email" size={"md"} value={proposal.teamEmail} name="teamEmail" onChange={handleChange} required />
+                                <Form.Control placeholder={"Team Email"} type="email" size={"md"} value={proposal.teamEmail} name="teamEmail" id="teamEmail" onChange={handleChange} required />
                             </Col>
                             <Form.Label column sm="1" className={styles.labelSameLine}>
                                 Team Size
                             </Form.Label>
                             <Col sm="2" className={styles.inputSameLine}>
-                                <Form.Control placeholder={"Team Size"} size={"md"} type="number" value={proposal.teamSize} name="teamSize" onChange={handleChange} required />
+                                <Form.Control placeholder={"Team Size"} size={"md"} type="number" value={proposal.teamSize} name="teamSize" min = {0} id="teamSize" onChange={handleChange} required  />
                             </Col>
 
 
