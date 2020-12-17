@@ -172,9 +172,12 @@ const proposalSlice = createSlice({
                             proposalKey: progressReport[PARAMS.proposalHash],
                             approvedVotes: IconConverter.toBigNumber(progressReport[PARAMS.approvedVotes]),
                             totalVotes: IconConverter.toBigNumber(progressReport[PARAMS.totalVotes]),
-                            approvedPercentage: (!progressReport[PARAMS.totalVotes] || parseInt(progressReport[PARAMS.totalVotes]) === 0) ? 0 : ((progressReport[PARAMS.approvedVotes] / progressReport[PARAMS.totalVotes]) * 100)
+                            approvedPercentage: (!progressReport[PARAMS.totalVotes] || parseInt(progressReport[PARAMS.totalVotes]) === 0) ? 0 : ((progressReport[PARAMS.approvedVotes] / progressReport[PARAMS.totalVotes]) * 100),
+                            approvedVotesPercentageCount: (!progressReport["total_voters"] || parseInt(progressReport["total_voters"]) === 0) ? 0 : ((progressReport["approve_voters"] / progressReport["total_voters"]) * 100),
                         }
                     )
+                ).sort( (a,b) => 
+                (b.timestamp - a.timestamp)
                 );
                 state.totalPages[action.payload.status] = Math.ceil(IconConverter.toNumber(action.payload.response.count) / 10)
 
@@ -322,9 +325,13 @@ const proposalSlice = createSlice({
                     proposalKey: progressReport[PARAMS.proposalHash],
                     approvedVotes: IconConverter.toBigNumber(progressReport[PARAMS.approvedVotes]),
                     totalVotes: IconConverter.toBigNumber(progressReport[PARAMS.totalVotes]),
-                    approvedPercentage: (!progressReport[PARAMS.totalVotes] || parseInt(progressReport[PARAMS.totalVotes]) === 0) ? 0 : ((progressReport[PARAMS.approvedVotes] / progressReport[PARAMS.totalVotes]) * 100)
+                    approvedPercentage: (!progressReport[PARAMS.totalVotes] || parseInt(progressReport[PARAMS.totalVotes]) === 0) ? 0 : ((progressReport[PARAMS.approvedVotes] / progressReport[PARAMS.totalVotes]) * 100),
+                    approvedVotesPercentageCount: (!progressReport["total_voters"] || parseInt(progressReport["total_voters"]) === 0) ? 0 : ((progressReport["approve_voters"] / progressReport["total_voters"]) * 100),
+
                 }
-            ));
+            )).sort( (a,b) => 
+            (b.timestamp - a.timestamp)
+            );;
             state.progressReportByProposal = state.progressReportByProposal.filter(progressReport =>
                 progressReport.progressReportTitle !== '')
             return;
@@ -355,7 +362,9 @@ const proposalSlice = createSlice({
                             approvedPercentage: (!progressReport[PARAMS.totalVotes] || parseInt(progressReport[PARAMS.totalVotes]) === 0) ? 0 : ((progressReport[PARAMS.approvedVotes] / progressReport[PARAMS.totalVotes]) * 100)
                         }
                     )
-                );
+                ).sort( (a,b) => 
+                (b.timestamp - a.timestamp)
+                );;
 
         },
 

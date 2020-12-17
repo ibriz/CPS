@@ -171,6 +171,8 @@ const proposalSlice = createSlice({
                         //   return (approvedVoters/totalVoters) * 100;
                     }
                 )
+            ).sort( (a,b) => 
+            (b._timestamp - a._timestamp)
             );
             console.log(fetchProposalListSuccess);
             // console.log(Math.ceil(IconConverter.toNumber(action.payload.response[0].count) / 10));
@@ -243,6 +245,8 @@ const proposalSlice = createSlice({
                         completedPercentage: parseInt(IconConverter.toBigNumber(proposal[PARAMS.percentageCompleted])),
                     }
                 )
+            ).sort( (a,b) => 
+            (b._timestamp - a._timestamp)
             );
             state.totalPagesSponsorRequests[action.payload.status] = Math.ceil(IconConverter.toNumber(action.payload.response.count) / 10)
             state.totalCountSponsorRequests[action.payload.status] = IconConverter.toNumber(action.payload.response.count)
@@ -414,6 +418,8 @@ const proposalSlice = createSlice({
                         //   return (approvedVoters/totalVoters) * 100;
                     }
                 )
+            ).sort( (a,b) => 
+            (b._timestamp - a._timestamp)
             );
             console.log(fetchProposalListSuccess);
             // console.log(Math.ceil(IconConverter.toNumber(action.payload.response[0].count) / 10));
@@ -458,6 +464,8 @@ const proposalSlice = createSlice({
                         //   return (approvedVoters/totalVoters) * 100;
                     }
                 )
+            ).sort( (a,b) => 
+            (b._timestamp - a._timestamp)
             );
 
             return;
