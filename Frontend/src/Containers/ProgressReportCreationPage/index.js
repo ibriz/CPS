@@ -81,7 +81,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
 
         }
 
-    })
+    }, [progressReport.additionalBudget])
 
 
 
@@ -198,6 +198,9 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                 [name]: value
             })
         );
+
+        document.getElementById(name) && document.getElementById(name).reportValidity();
+
     }
 
     const handleCheckedChange = (event) => {
@@ -224,7 +227,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                                 Project Name
                             </AppFormLabel>
                             <Col sm="10" className={styles.inputSameLine}>
-                                <Form.Control size="md" as="select" value={progressReport.projectName} name="projectName" onChange={handleChange} required>
+                                <Form.Control size="md" as="select" value={progressReport.projectName} name="projectName" id="projectName" onChange={handleChange} required>
                                     <option selected disabled value="">Select Project</option>
                                     {/* <option value="dasd">New Project</option> */}
 
@@ -243,7 +246,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                                 Progress Report Name
                             </AppFormLabel>
                             <Col sm="10" className={styles.inputSameLine}>
-                                <Form.Control placeholder="Progress Report Name" size="md" value={progressReport.progressReportTitle} name="progressReportTitle" onChange={handleChange} required />
+                                <Form.Control placeholder="Progress Report Name" size="md" value={progressReport.progressReportTitle} name="progressReportTitle" id="progressReportTitle" onChange={handleChange} required />
                             </Col>
                         </Form.Group>
                         <Form.Group as={Row} controlId="formPlaintextEmail">
@@ -254,7 +257,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                             <Col sm="4" className="col-sm-2" className={styles.inputSameLine}>
                                 <InputGroup size="md">
 
-                                    <FormControl placeholder="Percentage Completed" type="number" min={0} max={100} value={progressReport.percentageCompleted} name="percentageCompleted" onChange={handleChange} required />
+                                    <FormControl placeholder="Percentage Completed" type="number" min={0} max={100} value={progressReport.percentageCompleted} name="percentageCompleted" id="percentageCompleted" onChange={handleChange} required />
                                     <InputGroup.Append>
                                         <InputGroup.Text>%</InputGroup.Text>
                                     </InputGroup.Append>
@@ -266,7 +269,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                             <Col sm="3" className={styles.inputSameLine}>
                                 <InputGroup size="md">
 
-                                    <FormControl placeholder="Time Remaining" type="number" value={progressReport.timeRemainingToCompletion} name="timeRemainingToCompletion" onChange={handleChange} min={0} max={6} required />
+                                    <FormControl placeholder="Time Remaining" type="number" value={progressReport.timeRemainingToCompletion} name="timeRemainingToCompletion" id="timeRemainingToCompletion" onChange={handleChange} min={0} max={6} required />
                                     <InputGroup.Append>
                                         <InputGroup.Text>Months</InputGroup.Text>
                                     </InputGroup.Append>
@@ -315,6 +318,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                                     checked={progressReport.projectTermRevision}
                                     onChange={handleCheckedChange}
                                     name="projectTermRevision"
+                                    id="projectTermRevision"
                                     type="switch"
                                     id="custom-switch"
                                     label=""
@@ -349,7 +353,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                                     <Col sm="4" className={styles.inputSameLine}>
                                         <InputGroup size="md">
 
-                                            <FormControl placeholder="Additional Time" type="number" value={progressReport.additionalTime} name="additionalTime" onChange={handleChange} min={0} max={6} required />
+                                            <FormControl placeholder="Additional Time" type="number" value={progressReport.additionalTime} name="additionalTime" id="additionalTime" onChange={handleChange} min={0} max={6} required />
                                             <InputGroup.Append>
                                                 <InputGroup.Text>Months</InputGroup.Text>
                                             </InputGroup.Append>
