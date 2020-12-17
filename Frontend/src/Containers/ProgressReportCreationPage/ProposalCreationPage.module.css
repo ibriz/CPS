@@ -14,6 +14,12 @@
     font-size: 0.95rem;
 }
 
+.required:after {
+    content: '*';
+    color: red;
+    margin-left: 2px;
+}
+
 .cardContainer {
     justify-content: center;
     margin-top: 10px;
@@ -37,13 +43,16 @@
     font-size: 0.85rem;
     line-height: 17px;
     color: #262626;
+
+    display: flex;
+    align-items: center;
 }
 
 .card input, .card select {
     font-size: 0.86rem;
 }
 
-@media(min-width: 768px) {
+@media(min-width: 992px) {
     .inputSameLine {
         padding-left: 0px !important;
 
@@ -79,5 +88,19 @@ padding-right: 0px;
 .saveButton {
     justify-content: flex-end;
     display: flex;
+}
+
+@media screen and (min-width: 992px) {
+    .maxWidthLabel label:first-child {
+        max-width: 20%;
+        min-width: 20%;
+
+    }
+
+    .maxWidthLabelPTR label:first-child {
+        max-width: 19%;
+        min-width: 19%;
+
+    }
 }
 
