@@ -186,7 +186,7 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
             {
                 (isPrep && isRegistered) &&
                 <>
-                    <div className={styles.myProposalHeading}>Voting</div>
+                    <div className={styles.myProposalHeading}>Pending Votes</div>
 
                     <VotingCard
                         proposalStatesList={['Proposals', 'Progress Reports']}
