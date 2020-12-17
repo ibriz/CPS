@@ -30,12 +30,12 @@ const UpperCard = ({ numberOfSubmittedProposals, updatePeriod, sponsorRequest, v
     } else {
         button = <Link to="/newProposal">
 
-            <Button variant="info" className={styles.createProposalButton}>CREATE NEW PROPOSAL</Button>
+            <Button variant="info" className={styles.createProposalButton}>{period === 'APPLICATION' ? 'CREATE NEW PROPOSAL' : 'CREATE PROPOSAL DRAFT'}</Button>
         </Link>
 
-        text = <span className={styles.proposalNumber}>{numberOfSubmittedProposals} Proposals submitted</span>
-
-        text = <span className={styles.proposalNumber}>Create a New Proposal</span>
+        // text = <span className={styles.proposalNumber}>{numberOfSubmittedProposals} Proposals submitted</span>
+         
+        text = <span className={styles.proposalNumber}>{period === 'APPLICATION' ? 'Create a New Proposal' : 'This is voting period. You can still create a proposal draft'}</span>
 
     } 
     // else {
