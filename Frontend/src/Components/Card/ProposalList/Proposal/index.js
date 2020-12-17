@@ -47,7 +47,7 @@ const Proposal = ({ proposal, selectedTab, onClick, proposalPendingPR = false, p
                         {
                             proposalStatusMapping.find(mapping => mapping.status === proposal._status).name !== 'Draft' &&
                             <>
-                                <LowerCardInfo className={"proposalInfo2"}>Started from: {new Date(proposal._timestamp / 1000).toLocaleDateString()}</LowerCardInfo>
+                                <LowerCardInfo className={"proposalInfo2"}>Submitted on: {new Date(proposal._timestamp / 1000).toLocaleDateString()}</LowerCardInfo>
 
                                 <Budget>
                                     Budget: {icxFormat(proposal.budget)} ICX
