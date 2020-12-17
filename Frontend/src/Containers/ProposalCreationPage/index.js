@@ -12,7 +12,8 @@ import AddMilestoneModal from './AddMilestoneModal';
 import EditMileStoneModal from './EditMilestoneModal';
 import ClassNames from 'classnames';
 
-import { AiFillDelete } from 'react-icons/ai';
+import { AiFillDelete, AiFillInfoCircle } from 'react-icons/ai';
+import InfoIcon from 'Components/InfoIcon';
 import { FiEdit2 } from 'react-icons/fi';
 import Header from 'Components/Header';
 
@@ -184,9 +185,12 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                 <Card className={styles.card}>
                     <Form onSubmit={handleSubmit} id = "form">
                         <Form.Group as={Row} >
-                            <Form.Label column sm="2">
-                                Project Name
+                            <Form.Label column sm="2" >
+                                Project Name 
+                                <span className = {styles.required}></span>
+                                <InfoIcon description = "A suitable name for the project"/>   
                             </Form.Label>
+                            
                             <Col sm="10" className={styles.inputSameLine}>
                                 <Form.Control placeholder="Project Name" size="md" value={proposal.projectName} name="projectName" id="projectName" onChange={handleChange} required />
                             </Col>
@@ -195,6 +199,8 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
 
                             <Form.Label column sm="2">
                                 Category
+                                <span className = {styles.required}></span>
+                                <InfoIcon description = "The category the project falls into"/>   
                             </Form.Label>
                             <Col sm="4" className={ClassNames("col-sm-2", [styles.inputSameLine])}>
                                 <Form.Control size="md" as="select" value={proposal.category} name="category" id="category" onChange={handleChange} required>
@@ -209,6 +215,8 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                             </Col>
                             <Form.Label column sm="2" className={styles.labelSameLine}>
                                 Project Duration
+                                <span className = {styles.required}></span>
+                                <InfoIcon description = "The expected time (in months) to complete the project (can be upto 6 months)"/>   
                             </Form.Label>
                             <Col sm="4" className={styles.inputSameLine}>
                                 <InputGroup size="md">
@@ -226,6 +234,8 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
 
                             <Form.Label column sm="2" >
                                 Total Budget
+                                <span className = {styles.required}></span>
+                                <InfoIcon description = "The expected budget for the project."/>   
                             </Form.Label>
                             <Col sm="4" className={styles.inputSameLine}>
                                 <InputGroup size="md">
@@ -243,6 +253,8 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
 
                             <Form.Label column sm="2" className={styles.labelSameLine}>
                                 Sponsor PRep
+                                <span className = {styles.required}></span>
+                                <InfoIcon description = "The Prep Sponsor for the project."/>   
                             </Form.Label>
                             <Col sm="4" className={styles.inputSameLine}>
                                 <Form.Control size="md" as="select" value={proposal.sponserPrep} name="sponserPrep" id="sponserPrep" onChange={handleChange} required>
@@ -262,6 +274,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                         <Form.Group as={Row} >
                             <Form.Label column sm="12">
                                 Description
+                                <InfoIcon description = "A detailed description for the project"/>   
                             </Form.Label>
                             <Col sm="12">
                                 <RichTextEditor
@@ -282,6 +295,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                         <Form.Group as={Row} >
                             <Form.Label column sm="12">
                                 Milestones
+                                <InfoIcon description = "Milestone for the project"/>   
                             </Form.Label>
                             <Col sm="12">
                                 <Button variant="light" onClick={() => setModalShow(true)}>Add Milestone</Button>
@@ -335,6 +349,8 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                         <Form.Group as={Row} >
                             <Form.Label column sm="2">
                                 Team Name
+                                <span className = {styles.required}></span>
+                                <InfoIcon description = "Project Team Name"/>   
                             </Form.Label>
 
                             <Col sm="3" className={styles.inputSameLine}>
@@ -342,6 +358,8 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                             </Col>
                             <Form.Label column sm="2" className={styles.labelSameLine}>
                                 Team Email
+                                <span className = {styles.required}></span>
+                                <InfoIcon description = "Email of the Team"/>   
                             </Form.Label>
 
                             <Col sm="2" className={styles.inputSameLine}>
@@ -349,9 +367,10 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                             </Col>
                             <Form.Label column sm="1" className={styles.labelSameLine}>
                                 Team Size
+                                <InfoIcon description = "Size of the Team"/>   
                             </Form.Label>
                             <Col sm="2" className={styles.inputSameLine}>
-                                <Form.Control placeholder={"Team Size"} size={"md"} type="number" value={proposal.teamSize} name="teamSize" min = {0} id="teamSize" onChange={handleChange} required  />
+                                <Form.Control placeholder={"Team Size"} size={"md"} type="number" value={proposal.teamSize} name="teamSize" min = {0} id="teamSize" onChange={handleChange}  />
                             </Col>
 
 
