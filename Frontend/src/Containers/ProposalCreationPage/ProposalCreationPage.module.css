@@ -17,6 +17,12 @@
 .cardContainer {
     justify-content: center;
     margin-top: 10px;
+
+}
+
+.cardContainer label {
+    display: flex;
+    align-items: center;
 }
 
 .proposalCreationPage {
@@ -79,5 +85,11 @@ padding-right: 0px;
 .saveButton {
     justify-content: flex-end;
     display: flex;
+}
+
+.required:after {
+    content: '*';
+    color: red;
+    margin-left: 2px;
 }
 
