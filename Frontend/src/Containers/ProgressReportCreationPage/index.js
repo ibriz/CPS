@@ -20,6 +20,8 @@ import ConfirmationModal from 'Components/UI/ConfirmationModal';
 import Header from 'Components/Header';
 import { requestIPFS } from 'Redux/Sagas/helpers';
 import InfoIcon from "Components/InfoIcon";
+import Popup from 'Components/Popup';
+import useTimer from 'Hooks/useTimer';
 
 const ProgressReportCreationPage = ({ submitProgressReport, history, submittingProgressReport, fetchProposalListRequest, updateProposalStatus, currentUserActiveProposals, saveDraftRequest, location, walletAddress, fetchProposalByAddressRequest, fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, cpfScoreAddress, cpfRemainingFunds }) => {
 
@@ -45,6 +47,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
 
         }
     );
+    const {period} = useTimer();
     const [progressReportIPFS, setProgressReportIPFS] = React.useState({});
     let [draftConfirmationShow, setDraftConfirmationShow] = React.useState(false);
 
@@ -442,10 +445,28 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
 
                         <Form.Group as={Row} controlId="formPlaintextPassword">
                             <Col className={styles.draftButton}>
-                                <Button variant="outline-info" onClick={() => setDraftConfirmationShow(true)}>SAVE CHANGES</Button>{' '}
+                                <Popup 
+                                    component = {<Button variant="outline-info" onClick={() => setDraftConfirmationShow(true)}>SAVE AS DRAFT</Button>}
+                                    popOverText = "Save changes and continue later."
+                                    placement = "right"
+                                />
                             </Col>
                             <Col className={styles.saveButton}>
-                                <Button variant="info" type="submit">SUBMIT</Button>
+                                {
+                                    period === "APPLICATION" ?
+                                        <Button variant="info" type="submit">SUBMIT</Button>
+
+                                        :
+
+                                    <Popup 
+                                    component = {<span className="d-inline-block">
+
+                                                 <Button variant="info" type="submit" disabled style={{ pointerEvents: 'none' }}>SUBMIT</Button>
+                                             </span>}
+                                    popOverText = "You can submit in the next application period."
+                                    placement = "left"
+                                    />
+                                }
                             </Col>
                         </Form.Group>
                     </Form>
