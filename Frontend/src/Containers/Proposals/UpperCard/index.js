@@ -27,7 +27,7 @@ const UpperCard = ({ numberOfSubmittedProposals, updatePeriod, sponsorRequest, v
         text = null;
         button = null;
 
-    } else if (period === 'APPLICATION') {
+    } else {
         button = <Link to="/newProposal">
 
             <Button variant="info" className={styles.createProposalButton}>CREATE NEW PROPOSAL</Button>
@@ -37,11 +37,12 @@ const UpperCard = ({ numberOfSubmittedProposals, updatePeriod, sponsorRequest, v
 
         text = <span className={styles.proposalNumber}>Create a New Proposal</span>
 
-    } else {
-        button = null;
-        text = null;
+    } 
+    // else {
+    //     button = null;
+    //     text = null;
 
-    }
+    // }
 
     const remainingTimeText = <>
         {
