@@ -38,7 +38,8 @@ function DetailsModal(props) {
 
     const status = proposalStatusMapping.find(mapping => mapping.status === proposal?._status)?.name
 
-
+    const prepName = proposalDetail?.sponserPrepName ? proposalDetail?.sponserPrepName : preps.find(prep => prep.address == proposalDetail?.sponserPrep)?.name;
+    
     const onClickProgressReport = (porgressReport) => {
       setModalShow(true);
       setSelectedProgressReport(porgressReport);
@@ -252,7 +253,7 @@ function DetailsModal(props) {
                     },
                     {
                       key: 'Sponsor Prep',
-                      value: preps.find(prep => prep.address == proposalDetail?.sponserPrep)?.name ? preps.find(prep => prep.address == proposalDetail?.sponserPrep)?.name : `${proposalDetail?.sponserPrep?.slice(0, 6)}...` || 'N/A'
+                      value: prepName ? prepName : `${proposalDetail?.sponserPrep?.slice(0, 6)}...` || 'N/A'
                     },
                     {
                       key: 'Team Name',

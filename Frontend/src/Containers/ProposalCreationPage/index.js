@@ -51,6 +51,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
             projectDuration: null,
             totalBudget: null,
             sponserPrep: null,
+            sponserPrepName: null,
             description: null,
             milestones: [],
             teamName: null,
@@ -58,6 +59,15 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
             teamSize: null,
         }
     );
+
+    useEffect(() => {
+        setProposal(proposal => (
+            {
+                ...proposal,
+                sponserPrepName: preps.find(prep => prep.address == proposal.sponserPrep)?.name
+            }
+        ))
+    }, [proposal.sponserPrep])
 
     useEffect(() => {
         if (proposal.totalBudget == null) {
