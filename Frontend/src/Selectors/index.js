@@ -39,6 +39,31 @@ export const getProposalApprovedVotersPercentage = createSelector(
   }
 );
 
+
+const getRejectedVotes = state => state.proposals.rejectedVotes
+
+export const getProposalRejectedPercentage = createSelector(
+  [getRejectedVotes, getTotalVotes],
+  (approvedVotes, totalVotes) => {
+    if(parseInt(totalVotes) === 0) {
+      return 0;
+    }
+    return (approvedVotes/totalVotes) * 100;
+  }
+);
+
+const getRejectedVoters = state => state.proposals.rejectedVoters
+
+export const getProposalRejectedVotersPercentage = createSelector(
+  [getRejectedVoters, getTotalVoters],
+  (approvedVoters, totalVoters) => {
+    if(parseInt(totalVoters) === 0) {
+      return 0;
+    }
+    return (approvedVoters/totalVoters) * 100;
+  }
+);
+
 const getApprovedVotesPR = state => state.progressReport.approvedVotes
 const getTotalVotesPR = state => state.progressReport.totalVotes
 
