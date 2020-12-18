@@ -5,9 +5,10 @@ import { fetchProposalListRequest, fetchProjectAmountsRequest } from 'Redux/Redu
 import wallet from 'Redux/ICON/FrontEndWallet';
 import {fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest} from 'Redux/Reducers/fundSlice';
 import {icxFormat} from 'helpers';
+import useTimer from 'Hooks/useTimer';
 
 const TabularData = ({ numberOfPendingProposals, numberOfSubmittedProposals, totalPendingProposalBudge, totalSubmittedProposalBudget, cpfRemainingFunds, numberOfApprovedProposals, totalApprovedProposalBudget, fetchProposalListRequest, walletAddress,totalCount, fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, cpfScoreAddress, fetchProjectAmountsRequest, projectAmounts }) => {
-
+    const {period} = useTimer();
     useEffect(() => {
         fetchCPFScoreAddressRequest();
         fetchProjectAmountsRequest();
@@ -18,6 +19,10 @@ const TabularData = ({ numberOfPendingProposals, numberOfSubmittedProposals, tot
     }, [fetchCPFRemainingFundRequest, cpfScoreAddress])
 
     const tabularData = [
+        {
+            key: 'Period',
+            value: period === 'APPLICATION' ? 'Application Period' : 'Voting Period'
+        },
         {
             key: 'Voting Proposals',
             value: `${projectAmounts.Voting.count} (${icxFormat(projectAmounts.Voting.amount)} ICX)`
