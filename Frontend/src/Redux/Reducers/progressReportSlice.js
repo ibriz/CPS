@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import {IconConverter} from 'icon-sdk-js';
 import {progressReportStatusMapping as progressReportMapping} from 'Constants';
-
+import {calculatePercentage} from 'helpers';
 
 const PARAMS = {
     status: 'status',
@@ -13,8 +13,15 @@ const PARAMS = {
     timestamp: 'timestamp',
     proposalHash: 'ipfs_hash',
     reportHash: 'report_hash',
+
     approvedVotes: 'approved_votes',
     totalVotes: 'total_votes',
+    rejectedVotes: 'rejected_votes',
+
+    approvedVoters: 'approve_voters',
+    totalVoters: 'total_voters',
+    rejectedVoters: 'reject_voters',
+
     percentageCompleted: 'percentage_completed',
     
     newProgressReport: 'new_progress_report'
@@ -172,8 +179,23 @@ const proposalSlice = createSlice({
                             proposalKey: progressReport[PARAMS.proposalHash],
                             approvedVotes: IconConverter.toBigNumber(progressReport[PARAMS.approvedVotes]),
                             totalVotes: IconConverter.toBigNumber(progressReport[PARAMS.totalVotes]),
-                            approvedPercentage: (!progressReport[PARAMS.totalVotes] || parseInt(progressReport[PARAMS.totalVotes]) === 0) ? 0 : ((progressReport[PARAMS.approvedVotes] / progressReport[PARAMS.totalVotes]) * 100),
-                            approvedVotesPercentageCount: (!progressReport["total_voters"] || parseInt(progressReport["total_voters"]) === 0) ? 0 : ((progressReport["approve_voters"] / progressReport["total_voters"]) * 100),
+                            approvedPercentage: calculatePercentage({
+                                total: progressReport[PARAMS.totalVotes],
+                                actual: progressReport[PARAMS.approvedVotes]
+                            }),
+                            approvedVotesPercentageCount: calculatePercentage({
+                                total: progressReport[PARAMS.totalVoters],
+                                actual: progressReport[PARAMS.approvedVoters]
+                            }),
+
+                            rejectedPercentage: calculatePercentage({
+                                total: progressReport[PARAMS.totalVotes],
+                                actual: progressReport[PARAMS.rejectedVotes]
+                            }),
+                            rejectedVotesPercentageCount: calculatePercentage({
+                                total: progressReport[PARAMS.totalVoters],
+                                actual: progressReport[PARAMS.rejectedVoters]
+                            }),
                         }
                     )
                 ).sort( (a,b) => 
@@ -325,8 +347,17 @@ const proposalSlice = createSlice({
                     proposalKey: progressReport[PARAMS.proposalHash],
                     approvedVotes: IconConverter.toBigNumber(progressReport[PARAMS.approvedVotes]),
                     totalVotes: IconConverter.toBigNumber(progressReport[PARAMS.totalVotes]),
-                    approvedPercentage: (!progressReport[PARAMS.totalVotes] || parseInt(progressReport[PARAMS.totalVotes]) === 0) ? 0 : ((progressReport[PARAMS.approvedVotes] / progressReport[PARAMS.totalVotes]) * 100),
-                    approvedVotesPercentageCount: (!progressReport["total_voters"] || parseInt(progressReport["total_voters"]) === 0) ? 0 : ((progressReport["approve_voters"] / progressReport["total_voters"]) * 100),
+
+                    approvedPercentage: calculatePercentage({
+                        total: progressReport[PARAMS.totalVotes],
+                        actual: progressReport[PARAMS.approvedVotes]
+                    }),
+                    approvedVotesPercentageCount: calculatePercentage({
+                        total: progressReport[PARAMS.totalVoters],
+                        actual: progressReport[PARAMS.approvedVoters]
+                    }),
+
+                    
 
                 }
             )).sort( (a,b) => 
