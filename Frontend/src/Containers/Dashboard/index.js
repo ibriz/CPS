@@ -15,7 +15,7 @@ import MyProposalCard from 'Components/MyProposalCard';
 import ProposalPendingPRCard from 'Components/ProposalPendingPRCard';
 import SponsorRequestsCard from 'Components/SponsorRequestsCard';
 import VotingCard from 'Components/VotingCard';
-import {fetchExpectedGrantRequest, fetchCPSTreasuryScoreAddressRequest} from 'Redux/Reducers/fundSlice';
+import { fetchExpectedGrantRequest, fetchCPSTreasuryScoreAddressRequest } from 'Redux/Reducers/fundSlice';
 
 const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfRemainingFunds, cpfScoreAddress, fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, fetchProjectAmountsRequest, isPrep, isRegistered, myProposalList, fetchExpectedGrantRequest, expectedGrant, sponsorBond, totalCountSponsorRequests, remainingVotesProposal, remainingVotesPR, fetchCPSTreasuryScoreAddressRequest, cpsTreasuryScoreAddress, payPenaltyAmount }) => {
     const [showPayPenaltyConfirmationModal, setShowPayPenaltyConfirmationModal] = useState(false);
@@ -87,7 +87,7 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
     }, [fetchCPFScoreAddressRequest, fetchProjectAmountsRequest, fetchExpectedGrantRequest]);
 
     useEffect(() => {
-        if(cpsTreasuryScoreAddress) {
+        if (cpsTreasuryScoreAddress) {
             fetchExpectedGrantRequest();
         }
     }, [cpsTreasuryScoreAddress, fetchExpectedGrantRequest, isPrep, isRegistered])
@@ -137,6 +137,10 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
 
             }
             <Row style={{ marginTop: '30px' }}>
+                <Col xs="12">
+                    <div className = {styles.period}>Period: {period === "APPLICATION" ? 'Application Period' : 'Voting Period'}</div>
+                </Col>
+
                 {
                     cardInfo.map(info =>
                         <Col lg="3" style={{ marginTop: '10px', }} className={styles.infoCardContainer}>
