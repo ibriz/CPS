@@ -11,8 +11,9 @@ import { icxFormat } from 'helpers';
 import { proposalStatusMapping } from 'Constants';
 import ClassNames from 'classnames';
 import { Link } from 'react-router-dom';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import useTimer from 'Hooks/useTimer';
+import ProgressBarCombined from 'Components/Card/ProgressBarCombined';
 
 const badgeColor = {
     'Voting': 'warning',
@@ -32,7 +33,7 @@ const badgeColor = {
 
 const Proposal = ({ proposal, selectedTab, onClick, proposalPendingPR = false, proposalPendingPRSameList = false, period }) => {
 
-    const {isRemainingTimeZero} = useTimer();
+    const { isRemainingTimeZero } = useTimer();
     return (
         <>
             <Row className={styles.proposalContainer} onClick={onClick}>
@@ -82,8 +83,20 @@ const Proposal = ({ proposal, selectedTab, onClick, proposalPendingPR = false, p
                             ["Voting"].includes(proposalStatusMapping.find(mapping => mapping.status === proposal._status).name) &&
                             <>
 
-                                <ProgressText>{proposal.approvedPercentage ? `${proposal.approvedPercentage.toFixed()}` : 0}% Stake Approved</ProgressText>
-                                <ProgressBar percentage={proposal.approvedPercentage} />
+                                {/* <ProgressText>{proposal.approvedPercentage ? `${proposal.approvedPercentage.toFixed()}` : 0}% Stake Approved</ProgressText>
+                                <ProgressBar percentage={proposal.approvedPercentage} /> */}
+
+                                    <ProgressText>Stake- {proposal.approvedPercentage ? proposal.approvedPercentage.toFixed() : 0}% approved, {proposal.rejectedPercentage ? proposal.rejectedPercentage.toFixed() : 0}% rejected</ProgressText>
+                                    <ProgressBarCombined
+                                        approvedPercentage={proposal.approvedPercentage}
+                                        rejectedPercentage={proposal.rejectedPercentage}
+                                    />
+
+                                    <ProgressText>Voter count- {proposal.approvedVotesPercentageCount ? proposal.approvedVotesPercentageCount.toFixed() : 0}% approved, {proposal.rejectedVotesPercentageCount ? proposal.rejectedVotesPercentageCount.toFixed() : 0}% rejected</ProgressText>
+                                    <ProgressBarCombined
+                                        approvedPercentage={proposal.approvedVotesPercentageCount}
+                                        rejectedPercentage={proposal.rejectedVotesPercentageCount}
+                                    />
                             </>
                         }
 
