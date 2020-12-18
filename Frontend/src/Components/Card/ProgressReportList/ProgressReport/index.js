@@ -8,6 +8,7 @@ import LowerCardTitle from '../../../UI/LowerCardList/LowerCardTitle';
 import LowerCardInfo from '../../../UI/LowerCardList/LowerCardInfo';
 import Budget from '../../../UI/LowerCardList/Budget';
 import { progressReportStatusMapping } from 'Constants';
+import ProgressBarCombined from 'Components/Card/ProgressBarCombined';
 
 
 const badgeColor = {
@@ -48,14 +49,23 @@ const ProgressReport = ({ progressReport, selectedTab, showProject = true, onCli
                 </Col>
 
                 {
-                    progressReportStatusMapping.find(mapping => mapping.status === progressReport.status).name !== 'Draft' && progressReportStatusMapping.find(mapping => mapping.status === progressReport.status).name !== 'Rejected' &&
+                    progressReportStatusMapping.find(mapping => mapping.status === progressReport.status).name !== 'Draft' && 
                     <Col md="3" xs="12" className={styles.progressBar} >
-                        <ProgressText>{progressReport.approvedPercentage ? progressReport.approvedPercentage.toFixed() : 0}% Stake Approved</ProgressText>
-                        <ProgressBar percentage={progressReport.approvedPercentage} />
+                        <ProgressText>Stake- {progressReport.approvedPercentage ? progressReport.approvedPercentage.toFixed() : 0}% approved, {progressReport.rejectedPercentage ? progressReport.rejectedPercentage.toFixed() : 0}% rejected</ProgressText>
+                        <ProgressBarCombined 
+                          approvedPercentage = {progressReport.approvedPercentage}
+                          rejectedPercentage = {progressReport.rejectedPercentage}
+                          />
+
+                        <ProgressText>Voter count- {progressReport.approvedVotesPercentageCount ? progressReport.approvedVotesPercentageCount.toFixed() : 0}% approved, {progressReport.rejectedVotesPercentageCount ? progressReport.rejectedVotesPercentageCount.toFixed() : 0}% rejected</ProgressText>
+                        <ProgressBarCombined 
+                          approvedPercentage = {progressReport.approvedVotesPercentageCount}
+                          rejectedPercentage = {progressReport.rejectedVotesPercentageCount}
+                          />
                     </Col>
                 }
 
-{
+{/* {
                     progressReportStatusMapping.find(mapping => mapping.status === progressReport.status).name !== 'Draft' && progressReportStatusMapping.find(mapping => mapping.status === progressReport.status).name === 'Rejected' && progressReport.approvedVotesPercentageCount > progressReport.approvedPercentage &&
                     <Col md="3" xs="12" className={styles.progressBar} >
                         <ProgressText>{progressReport.approvedPercentage ? progressReport.approvedPercentage.toFixed() : 0}% Stake Approved</ProgressText>
@@ -63,13 +73,13 @@ const ProgressReport = ({ progressReport, selectedTab, showProject = true, onCli
                     </Col>
                 }
 
-{
+                {
                     progressReportStatusMapping.find(mapping => mapping.status === progressReport.status).name !== 'Draft' && progressReportStatusMapping.find(mapping => mapping.status === progressReport.status).name === 'Rejected' && progressReport.approvedPercentage >= progressReport.approvedVotesPercentageCount &&
                     <Col md="3" xs="12" className={styles.progressBar} >
                         <ProgressText>{progressReport.approvedVotesPercentageCount ? progressReport.approvedVotesPercentageCount.toFixed() : 0}% Voter Count Approved</ProgressText>
                         <ProgressBar percentage={progressReport.approvedVotesPercentageCount} />
                     </Col>
-                }
+                } */}
 
             </Row>
             <hr className={styles.horizontalRule} />
