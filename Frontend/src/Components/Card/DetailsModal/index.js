@@ -18,6 +18,7 @@ import { icxFormat } from 'helpers';
 import DetailsModalPR from 'Components/Card/DetailsModalProgressReport';
 import IconService from 'icon-sdk-js';
 import ProgressBarCombined from 'Components/Card/ProgressBarCombined';
+import { fetchPrepsRequest } from 'Redux/Reducers/prepsSlice';
 
 function DetailsModal(props) {
 
@@ -33,7 +34,7 @@ function DetailsModal(props) {
 
 
   const { proposalDetail, proposal, sponsorRequest = false, approveSponserRequest, rejectSponsorRequest, voting = false, voteProposal, progressReportByProposal, votesByProposal, fetchVoteResultRequest, approvedPercentage,
-    fetchProgressReportByProposalRequest, period, remainingTime, approvedVoterPercentage, fetchProposalDetail, walletAddress, rejectedPercentage, rejectedVoterPercentage, ...remainingProps } = props;
+    fetchProgressReportByProposalRequest, period, remainingTime, approvedVoterPercentage, fetchProposalDetail, walletAddress, rejectedPercentage, rejectedVoterPercentage, fetchPrepsRequest, preps, ...remainingProps } = props;
 
     const status = proposalStatusMapping.find(mapping => mapping.status === proposal?._status)?.name
 
@@ -42,6 +43,10 @@ function DetailsModal(props) {
       setModalShow(true);
       setSelectedProgressReport(porgressReport);
   }
+
+  useEffect(() => {
+    fetchPrepsRequest();
+  }, [])
 
   useEffect(() => {
     props.proposal && props.fetchProposalDetail(
@@ -247,7 +252,7 @@ function DetailsModal(props) {
                     },
                     {
                       key: 'Sponsor Prep',
-                      value: `${proposalDetail?.sponserPrep?.slice(0, 6)}...` || 'N/A'
+                      value: preps.find(prep => prep.address == proposalDetail?.sponserPrep)?.name ? preps.find(prep => prep.address == proposalDetail?.sponserPrep)?.name : `${proposalDetail?.sponserPrep?.slice(0, 6)}...` || 'N/A'
                     },
                     {
                       key: 'Team Name',
@@ -426,7 +431,10 @@ const mapStateToProps = state => (
 
     period: state.period.period,
     remainingTime: state.period.remainingTime,
-    walletAddress: state.account.address
+    walletAddress: state.account.address,
+
+    preps: state.preps.preps,
+
   }
 )
 
@@ -437,7 +445,9 @@ const mapDispatchToProps = (dispatch) => (
     rejectSponsorRequest: payload => dispatch(rejectSponsorRequest(payload)),
     voteProposal: payload => dispatch(voteProposal(payload)),
     fetchVoteResultRequest: payload => dispatch(fetchVoteResultRequest(payload)),
-    fetchProgressReportByProposalRequest: payload => dispatch(fetchProgressReportByProposalRequest(payload))
+    fetchProgressReportByProposalRequest: payload => dispatch(fetchProgressReportByProposalRequest(payload)),
+    fetchPrepsRequest: payload => dispatch(fetchPrepsRequest(payload)),
+
   }
 )
 
