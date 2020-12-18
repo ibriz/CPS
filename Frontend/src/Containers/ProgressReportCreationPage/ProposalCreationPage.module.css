@@ -104,3 +104,12 @@ padding-right: 0px;
     }
 }
 
+.fakeInput {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    left: 15px;
+    z-index: -1000;
+
+}
+
