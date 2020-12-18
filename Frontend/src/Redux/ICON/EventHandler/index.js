@@ -186,6 +186,13 @@ export default (event) => {
                                 pageNumber: 1
                             }
                         ));
+                        store.dispatch(fetchSponsorRequestsListRequest(
+                            {
+                                status: "Approved",
+                                walletAddress: store.getState().account.address,
+                                pageNumber: 1
+                            }
+                        ));
                         return true;
 
                     });
@@ -206,6 +213,13 @@ export default (event) => {
                         store.dispatch(fetchSponsorRequestsListRequest(
                             {
                                 status: "Pending",
+                                walletAddress: store.getState().account.address,
+                                pageNumber: 1
+                            }
+                        ));
+                        store.dispatch(fetchSponsorRequestsListRequest(
+                            {
+                                status: "Approved",
                                 walletAddress: store.getState().account.address,
                                 pageNumber: 1
                             }
