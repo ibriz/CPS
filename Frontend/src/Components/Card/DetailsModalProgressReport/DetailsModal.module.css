@@ -23,3 +23,7 @@
 .rejectButton {
     margin-left: 10px;
 }
+
+.progressBarContainer > div {
+    margin-left: 3px
+}

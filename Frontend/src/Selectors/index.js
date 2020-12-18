@@ -66,6 +66,57 @@ export const getProgressReportApprovedVotersPercentage = createSelector(
 );
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const getRejectedVotesPR = state => state.progressReport.rejectedVotes
+
+export const getProgressReportRejectedPercentage = createSelector(
+  [getRejectedVotesPR, getTotalVotesPR],
+  (approvedVotes, totalVotes) => {
+    if(parseInt(totalVotes) === 0) {
+      return 0;
+    }
+    return (approvedVotes/totalVotes) * 100;
+  }
+);
+
+const getRejectedVotersPR = state => state.progressReport.rejectedVoters
+
+export const getProgressReportRejectedVotersPercentage = createSelector(
+  [getRejectedVotersPR, getTotalVotersPR],
+  (approvedVoters, totalVoters) => {
+    if(parseInt(totalVoters) === 0) {
+      return 0;
+    }
+    return (approvedVoters/totalVoters) * 100;
+  }
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const getApprovedVotesBudgetAdjustment = state => state.progressReport.approvedVotesBudgetChange
 const getTotalVotesBudgetAdjustment = state => state.progressReport.totalVotesBudgetChange
 
@@ -84,6 +135,30 @@ const getTotalVotersBudgetAdjustment = state => state.progressReport.totalVoters
 
 export const getBudgetAdjustmentApprovedVotersPercentage = createSelector(
   [getApprovedVotersBudgetAdjustment, getTotalVotersBudgetAdjustment],
+  (approvedVoters, totalVoters) => {
+    if(parseInt(totalVoters) === 0) {
+      return 0;
+    }
+    return (approvedVoters/totalVoters) * 100;
+  }
+);
+
+const getRejectedVotesBudgetAdjustment = state => state.progressReport.rejectedVotesBudgetChange
+
+export const getBudgetAdjustmentRejectedPercentage = createSelector(
+  [getRejectedVotesBudgetAdjustment, getTotalVotesBudgetAdjustment],
+  (approvedVotes, totalVotes) => {
+    if(parseInt(totalVotes) === 0) {
+      return 0;
+    }
+    return (approvedVotes/totalVotes) * 100;
+  }
+);
+
+const getRejectedVotersBudgetAdjustment = state => state.progressReport.rejectedVotersBudgetChange
+
+export const getBudgetAdjustmentRejectedVotersPercentage = createSelector(
+  [getRejectedVotersBudgetAdjustment, getTotalVotersBudgetAdjustment],
   (approvedVoters, totalVoters) => {
     if(parseInt(totalVoters) === 0) {
       return 0;

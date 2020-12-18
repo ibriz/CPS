@@ -7,3 +7,10 @@ export const icxFormat = (amount, decimal) => {
     }
 
 }
+
+export const calculatePercentage = ({
+    total,
+    actual
+}) => {
+    return ((!total || parseInt(total) === 0) ? 0 : ((actual / total) * 100));
+}

@@ -18,9 +18,12 @@ import RichTextEditor from 'Components/RichTextEditor';
 import ConfirmationModal from 'Components/UI/ConfirmationModal';
 import {
   getProgressReportApprovedPercentage, getProgressReportApprovedVotersPercentage,
-  getBudgetAdjustmentApprovedPercentage, getBudgetAdjustmentApprovedVotersPercentage
+  getBudgetAdjustmentApprovedPercentage, getBudgetAdjustmentApprovedVotersPercentage,
+  getProgressReportRejectedPercentage, getProgressReportRejectedVotersPercentage,
+  getBudgetAdjustmentRejectedPercentage, getBudgetAdjustmentRejectedVotersPercentage
 } from 'Selectors';
 import { icxFormat } from 'helpers';
+import ProgressBarCombined from 'Components/Card/ProgressBarCombined';
 
 function DetailsModal(props) {
 
@@ -37,7 +40,7 @@ function DetailsModal(props) {
 
 
   const { progressDetail, proposal, sponsorRequest = false, approveSponserRequest, rejectSponsorRequest, voting = false, voteProgressReport, progressReport, votesByProposal, fetchVoteResultRequest, approvedPercentage,
-    period, remainingTime, approvedVoterPercentage, fetchProgressReportDetailRequest, walletAddress, fetchVoteResultBudgetChangeRequest, approvedPercentageBudgetChange, approvedVoterPercentageBudgetChange, votesByBudgetChange, ...remainingProps } = props;
+    period, remainingTime, approvedVoterPercentage, fetchProgressReportDetailRequest, walletAddress, fetchVoteResultBudgetChangeRequest, approvedPercentageBudgetChange, approvedVoterPercentageBudgetChange, votesByBudgetChange,rejectedPercentage, rejectedVotersPercentage, rejectedPercentageBudgetChange, rejectedVoterPercentageBudgetChange, ...remainingProps } = props;
 
   const status = progressReportStatusMapping.find(mapping => mapping.status === progressReport?.status)?.name
 
@@ -54,7 +57,6 @@ function DetailsModal(props) {
 
 
   useEffect(() => {
-    if (status === 'Voting') {
       // alert("Voting");
       props.progressReport && fetchVoteResultRequest({
         reportKey: progressReport.reportKey
@@ -63,7 +65,7 @@ function DetailsModal(props) {
       props.progressReport && fetchVoteResultBudgetChangeRequest({
         reportKey: progressReport.reportKey
       });
-    }
+
   }, [props.progressReport, props.show])
 
   const onSubmitVote = () => {
@@ -153,37 +155,43 @@ function DetailsModal(props) {
                 //       </Col>
                 //     </>
                 //   )
-                if (['Voting'].includes(status))
+                if (['Voting', 'Approved', 'Rejected'].includes(status))
                   return (
                     <>
-                      <Col lg="3" xs="12">
+                      <Col lg="3" xs="12" className = {styles.progressBarContainer}>
 
-                        <ProgressBar
-                          percentage={approvedPercentage} />
+                        {/* <ProgressBar
+                          percentage={approvedPercentage} /> */}
+                          <ProgressBarCombined 
+                          approvedPercentage = {approvedPercentage}
+                          rejectedPercentage = {rejectedPercentage}
+                          />
                       </Col>
 
                       <Col lg="8" xs="12" className={styles.progressTextContainer}>
                         {
 
                           <ProgressText>
-                            {approvedPercentage ? `${approvedPercentage.toFixed()}` : 0}% Stake Approved
+                             Stake- {approvedPercentage ? `${approvedPercentage.toFixed()}` : 0}% approved, {rejectedPercentage ? `${rejectedPercentage.toFixed()}` : 0}% rejected 
                             </ProgressText>
                         }
 
                       </Col>
 
                       <Col lg='1' xs='12'></Col>
-                      <Col lg="3" xs="12">
+                      <Col lg="3" xs="12" className = {styles.progressBarContainer}>
 
-                        <ProgressBar
-                          percentage={approvedVoterPercentage} />
+                    <ProgressBarCombined 
+                          approvedPercentage = {approvedVoterPercentage}
+                          rejectedPercentage = {rejectedVotersPercentage}
+                          />
                       </Col>
 
                       <Col lg="8" xs="12" className={styles.progressTextContainer}>
                         {
 
                           <ProgressText>
-                            {approvedVoterPercentage ? `${approvedVoterPercentage.toFixed()}` : 0}% Voter Count Approved
+                            Voter Count- {approvedVoterPercentage ? `${approvedVoterPercentage.toFixed()}` : 0}% approved, {rejectedVotersPercentage ? `${rejectedVotersPercentage.toFixed()}` : 0}% rejected
                           </ProgressText>
                         }
 
@@ -195,34 +203,38 @@ function DetailsModal(props) {
                         progressDetail?.projectTermRevision && 
                         <>
                                               <Col lg='1' xs='12'></Col>
-                      <Col lg="3" xs="12">
+                      <Col lg="3" xs="12" className = {styles.progressBarContainer}>
 
-                        <ProgressBar
-                          percentage={approvedPercentageBudgetChange} />
+                        <ProgressBarCombined 
+                          approvedPercentage = {approvedPercentageBudgetChange}
+                          rejectedPercentage = {rejectedPercentageBudgetChange}
+                          />
                       </Col>
 
                       <Col lg="8" xs="12" className={styles.progressTextContainer}>
                         {
 
                           <ProgressText>
-                            {approvedPercentageBudgetChange ? `${approvedPercentageBudgetChange.toFixed()}` : 0}% Stake Approved (Budget Change Request)
+                            Stake- {approvedPercentageBudgetChange ? `${approvedPercentageBudgetChange.toFixed()}` : 0}% approved, {rejectedPercentageBudgetChange ? `${rejectedPercentageBudgetChange.toFixed()}` : 0}% rejected (Budget Change Request)
                           </ProgressText>
                         }
 
                       </Col>
 
                       <Col lg='1' xs='12'></Col>
-                      <Col lg="3" xs="12">
+                      <Col lg="3" xs="12" className = {styles.progressBarContainer}>
 
-                        <ProgressBar
-                          percentage={approvedVoterPercentageBudgetChange} />
+                      <ProgressBarCombined 
+                          approvedPercentage = {approvedVoterPercentageBudgetChange}
+                          rejectedPercentage = {rejectedVoterPercentageBudgetChange}
+                          />
                       </Col>
 
                       <Col lg="8" xs="12" className={styles.progressTextContainer}>
                         {
 
                           <ProgressText>
-                            {approvedVoterPercentageBudgetChange ? `${approvedVoterPercentageBudgetChange.toFixed()}` : 0}% Voter Count Approved (Budget Change Request)
+                              Voter count- {approvedVoterPercentageBudgetChange ? `${approvedVoterPercentageBudgetChange.toFixed()}` : 0}% approved, {rejectedVoterPercentageBudgetChange ? `${rejectedVoterPercentageBudgetChange.toFixed()}` : 0}% rejected (Budget Change Request)
                           </ProgressText>
                         }
 
@@ -502,9 +514,14 @@ const mapStateToProps = state => (
 
     approvedPercentage: getProgressReportApprovedPercentage(state),
     approvedVoterPercentage: getProgressReportApprovedVotersPercentage(state),
+    rejectedPercentage: getProgressReportRejectedPercentage(state),
+    rejectedVotersPercentage: getProgressReportRejectedVotersPercentage(state),
 
     approvedPercentageBudgetChange: getBudgetAdjustmentApprovedPercentage(state),
     approvedVoterPercentageBudgetChange: getBudgetAdjustmentApprovedVotersPercentage(state),
+
+    rejectedPercentageBudgetChange: getBudgetAdjustmentRejectedPercentage(state),
+    rejectedVoterPercentageBudgetChange: getBudgetAdjustmentRejectedVotersPercentage(state),
 
     period: state.period.period,
     remainingTime: state.period.remainingTime,
