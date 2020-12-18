@@ -12,11 +12,12 @@ import { proposalStatusMapping } from '../../../Constants';
 import VoteList from './VoteList';
 import RichTextEditor from 'Components/RichTextEditor';
 import ConfirmationModal from 'Components/UI/ConfirmationModal';
-import { getProposalApprovedPercentage, getProposalApprovedVotersPercentage } from 'Selectors';
+import { getProposalApprovedPercentage, getProposalApprovedVotersPercentage,
+  getProposalRejectedPercentage, getProposalRejectedVotersPercentage } from 'Selectors';
 import { icxFormat } from 'helpers';
 import DetailsModalPR from 'Components/Card/DetailsModalProgressReport';
 import IconService from 'icon-sdk-js';
-
+import ProgressBarCombined from 'Components/Card/ProgressBarCombined';
 
 function DetailsModal(props) {
 
@@ -32,7 +33,7 @@ function DetailsModal(props) {
 
 
   const { proposalDetail, proposal, sponsorRequest = false, approveSponserRequest, rejectSponsorRequest, voting = false, voteProposal, progressReportByProposal, votesByProposal, fetchVoteResultRequest, approvedPercentage,
-    fetchProgressReportByProposalRequest, period, remainingTime, approvedVoterPercentage, fetchProposalDetail, walletAddress, ...remainingProps } = props;
+    fetchProgressReportByProposalRequest, period, remainingTime, approvedVoterPercentage, fetchProposalDetail, walletAddress, rejectedPercentage, rejectedVoterPercentage, ...remainingProps } = props;
 
     const status = proposalStatusMapping.find(mapping => mapping.status === proposal?._status)?.name
 
@@ -161,15 +162,21 @@ function DetailsModal(props) {
                       {/* <Col xs="12"> */}
                       <Col lg="3" xs="12">
 
-                        <ProgressBar
-                          percentage={approvedPercentage} />
+                        {/* <ProgressBar
+                          percentage={approvedPercentage} /> */}
+
+
+                    <ProgressBarCombined 
+                          approvedPercentage = {approvedPercentage}
+                          rejectedPercentage = {rejectedPercentage}
+                          />
                       </Col>
 
                       <Col lg="8" xs="12" className={styles.progressTextContainer}>
                         {
 
                           <ProgressText>
-                            {approvedPercentage ? `${approvedPercentage.toFixed()}` : 0}% Stake Approved
+                            Stake- {approvedPercentage ? `${approvedPercentage.toFixed()}` : 0}% approved, {rejectedPercentage ? `${rejectedPercentage.toFixed()}` : 0}% rejected
                             </ProgressText>
                         }
 
@@ -178,15 +185,20 @@ function DetailsModal(props) {
                       <Col lg='1' xs='12'></Col>
                       <Col lg="3" xs="12">
 
-                        <ProgressBar
-                          percentage={approvedVoterPercentage} />
+                        {/* <ProgressBar
+                          percentage={approvedVoterPercentage} /> */}
+
+                      <ProgressBarCombined 
+                          approvedPercentage = {approvedVoterPercentage}
+                          rejectedPercentage = {rejectedVoterPercentage}
+                          />
                       </Col>
 
                       <Col lg="8" xs="12" className={styles.progressTextContainer}>
                         {
 
                           <ProgressText>
-                            {approvedVoterPercentage ? `${approvedVoterPercentage.toFixed()}` : 0}% Voter Count Approved
+                            Voter count- {approvedVoterPercentage ? `${approvedVoterPercentage.toFixed()}` : 0}% approved, {rejectedVoterPercentage ? `${rejectedVoterPercentage.toFixed()}` : 0}% rejected
                           </ProgressText>
                         }
 
@@ -408,6 +420,10 @@ const mapStateToProps = state => (
     votesByProposal: state.proposals.votesByProposal,
     approvedPercentage: getProposalApprovedPercentage(state),
     approvedVoterPercentage: getProposalApprovedVotersPercentage(state),
+
+    rejectedPercentage: getProposalRejectedPercentage(state),
+    rejectedVoterPercentage: getProposalRejectedVotersPercentage(state),
+
     period: state.period.period,
     remainingTime: state.period.remainingTime,
     walletAddress: state.account.address

@@ -173,21 +173,21 @@ const proposalSlice = createSlice({
                         // approvedPercentage: (!proposal[PARAMS.totalVotes] || parseInt(proposal[PARAMS.totalVotes]) === 0) ? 0 : ((proposal[PARAMS.approvedVotes] / proposal[PARAMS.totalVotes]) * 100),
 
                         approvedPercentage: calculatePercentage({
-                            total: progressReport[PARAMS.totalVotes],
-                            actual: progressReport[PARAMS.approvedVotes]
+                            total: proposal[PARAMS.totalVotes],
+                            actual: proposal[PARAMS.approvedVotes]
                         }),
                         approvedVotesPercentageCount: calculatePercentage({
-                            total: progressReport[PARAMS.totalVoters],
-                            actual: progressReport[PARAMS.approvedVoters]
+                            total: proposal[PARAMS.totalVoters],
+                            actual: proposal[PARAMS.approvedVoters]
                         }),
 
                         rejectedPercentage: calculatePercentage({
-                            total: progressReport[PARAMS.totalVotes],
-                            actual: progressReport[PARAMS.rejectedVotes]
+                            total: proposal[PARAMS.totalVotes],
+                            actual: proposal[PARAMS.rejectedVotes]
                         }),
                         rejectedVotesPercentageCount: calculatePercentage({
-                            total: progressReport[PARAMS.totalVoters],
-                            actual: progressReport[PARAMS.rejectedVoters]
+                            total: proposal[PARAMS.totalVoters],
+                            actual: proposal[PARAMS.rejectedVoters]
                         }),
 
                         completedPercentage: parseInt(IconConverter.toBigNumber(proposal[PARAMS.percentageCompleted])),
@@ -270,21 +270,21 @@ const proposalSlice = createSlice({
                         // approvedPercentage: (!proposal[PARAMS.totalVotes] || parseInt(proposal[PARAMS.totalVotes]) === 0) ? 0 : ((proposal[PARAMS.approvedVotes] / proposal[PARAMS.totalVotes]) * 100),
 
                         approvedPercentage: calculatePercentage({
-                            total: progressReport[PARAMS.totalVotes],
-                            actual: progressReport[PARAMS.approvedVotes]
+                            total: proposal[PARAMS.totalVotes],
+                            actual: proposal[PARAMS.approvedVotes]
                         }),
                         approvedVotesPercentageCount: calculatePercentage({
-                            total: progressReport[PARAMS.totalVoters],
-                            actual: progressReport[PARAMS.approvedVoters]
+                            total: proposal[PARAMS.totalVoters],
+                            actual: proposal[PARAMS.approvedVoters]
                         }),
 
                         rejectedPercentage: calculatePercentage({
-                            total: progressReport[PARAMS.totalVotes],
-                            actual: progressReport[PARAMS.rejectedVotes]
+                            total: proposal[PARAMS.totalVotes],
+                            actual: proposal[PARAMS.rejectedVotes]
                         }),
                         rejectedVotesPercentageCount: calculatePercentage({
-                            total: progressReport[PARAMS.totalVoters],
-                            actual: progressReport[PARAMS.rejectedVoters]
+                            total: proposal[PARAMS.totalVoters],
+                            actual: proposal[PARAMS.rejectedVoters]
                         }),
 
                         completedPercentage: parseInt(IconConverter.toBigNumber(proposal[PARAMS.percentageCompleted])),
@@ -458,21 +458,21 @@ const proposalSlice = createSlice({
                         // approvedPercentage: (!proposal[PARAMS.totalVotes] || parseInt(proposal[PARAMS.totalVotes]) === 0) ? 0 : ((proposal[PARAMS.approvedVotes] / proposal[PARAMS.totalVotes]) * 100),
 
                         approvedPercentage: calculatePercentage({
-                            total: progressReport[PARAMS.totalVotes],
-                            actual: progressReport[PARAMS.approvedVotes]
+                            total: proposal[PARAMS.totalVotes],
+                            actual: proposal[PARAMS.approvedVotes]
                         }),
                         approvedVotesPercentageCount: calculatePercentage({
-                            total: progressReport[PARAMS.totalVoters],
-                            actual: progressReport[PARAMS.approvedVoters]
+                            total: proposal[PARAMS.totalVoters],
+                            actual: proposal[PARAMS.approvedVoters]
                         }),
 
                         rejectedPercentage: calculatePercentage({
-                            total: progressReport[PARAMS.totalVotes],
-                            actual: progressReport[PARAMS.rejectedVotes]
+                            total: proposal[PARAMS.totalVotes],
+                            actual: proposal[PARAMS.rejectedVotes]
                         }),
                         rejectedVotesPercentageCount: calculatePercentage({
-                            total: progressReport[PARAMS.totalVoters],
-                            actual: progressReport[PARAMS.rejectedVoters]
+                            total: proposal[PARAMS.totalVoters],
+                            actual: proposal[PARAMS.rejectedVoters]
                         }),
 
                         completedPercentage: parseInt(IconConverter.toBigNumber(proposal[PARAMS.percentageCompleted])),
@@ -523,23 +523,23 @@ const proposalSlice = createSlice({
                         // approvedPercentage: (!proposal[PARAMS.totalVotes] || parseInt(proposal[PARAMS.totalVotes]) === 0) ? 0 : ((proposal[PARAMS.approvedVotes] / proposal[PARAMS.totalVotes]) * 100),
 
                         approvedPercentage: calculatePercentage({
-                            total: progressReport[PARAMS.totalVotes],
-                            actual: progressReport[PARAMS.approvedVotes]
+                            total: proposal[PARAMS.totalVotes],
+                            actual: proposal[PARAMS.approvedVotes]
                         }),
                         approvedVotesPercentageCount: calculatePercentage({
-                            total: progressReport[PARAMS.totalVoters],
-                            actual: progressReport[PARAMS.approvedVoters]
+                            total: proposal[PARAMS.totalVoters],
+                            actual: proposal[PARAMS.approvedVoters]
                         }),
 
                         rejectedPercentage: calculatePercentage({
-                            total: progressReport[PARAMS.totalVotes],
-                            actual: progressReport[PARAMS.rejectedVotes]
+                            total: proposal[PARAMS.totalVotes],
+                            actual: proposal[PARAMS.rejectedVotes]
                         }),
                         rejectedVotesPercentageCount: calculatePercentage({
-                            total: progressReport[PARAMS.totalVoters],
-                            actual: progressReport[PARAMS.rejectedVoters]
+                            total: proposal[PARAMS.totalVoters],
+                            actual: proposal[PARAMS.rejectedVoters]
                         }),
-                        
+
                         completedPercentage: parseInt(IconConverter.toBigNumber(proposal[PARAMS.percentageCompleted])),
                         // if(parseInt(totalVoters) === 0) {
                         //     return 0;
