@@ -219,6 +219,25 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
         );
     }
 
+    useEffect(() => {
+        if(!progressReport.description) {
+            document.getElementById("description").setCustomValidity(`Please write a description`);
+        } else {
+            document.getElementById("description").setCustomValidity(``);
+        }
+    }, [progressReport.description])
+
+    useEffect(() => {
+        if (progressReport.projectTermRevision) {
+            if(!progressReport.revisionDescription) {
+                document.getElementById("revisionDescription").setCustomValidity(`Please write a revision description`);
+            } else {
+                document.getElementById("revisionDescription").setCustomValidity(``);
+            }
+        }
+
+    }, [progressReport.revisionDescription, progressReport.projectTermRevision])
+
     return (
         <div className={styles.proposalCreationPage}>
             <Header title="Create New Progress Report" />
@@ -295,6 +314,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                             <AppFormLabel column lg="12">
                                 Description
                                 <InfoIcon description = "A detailed description for the progress report"/>  
+                                <span className = {styles.required}></span>
 
                             </AppFormLabel>
                             <Col lg="12">
@@ -308,6 +328,8 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                                             })
                                         )
                                     } />
+                        <input className = {styles.fakeInput} style = {{left: '15px'}} id = "description" />
+
                             </Col>
                         </Form.Group>
 
@@ -386,6 +408,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                                 <Form.Group as={Row} controlId="formPlaintextPassword">
                                     <AppFormLabel column lg="12">
                                         Revision Description
+                                        <span className = {styles.required}></span>
                                         <InfoIcon description = "Reason for requiring additional time and additional budget"/>  
 
                             </AppFormLabel>
@@ -400,6 +423,8 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                                                     })
                                                 )
                                             } />
+                            <input className = {styles.fakeInput} style = {{left: '15px'}} id = "revisionDescription" />
+
                                     </Col>
                                 </Form.Group>
 
