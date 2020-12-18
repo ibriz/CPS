@@ -82,6 +82,22 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
 
     }, [proposal.totalBudget]);
 
+    useEffect(() => {
+        if(proposal.milestones.length < 1) {
+            document.getElementById("milestones").setCustomValidity(`You need to have at least one milestone`);
+        } else {
+            document.getElementById("milestones").setCustomValidity(``);
+        }
+    }, [proposal.milestones])
+
+    useEffect(() => {
+        if(!proposal.description) {
+            document.getElementById("description").setCustomValidity(`Please write a description`);
+        } else {
+            document.getElementById("description").setCustomValidity(``);
+        }
+    }, [proposal.description])
+
     async function fetchDraft() {
         const proposalIPFS = await requestIPFS({
             hash: draftProposal.ipfsHash,
@@ -287,9 +303,10 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                         <Form.Group as={Row} >
                             <Form.Label column sm="12">
                                 Description
+                                <span className={styles.required}></span>
                                 <InfoIcon description="A detailed description for the project" />
                             </Form.Label>
-                            <Col sm="12">
+                            <Col sm="12" style = {{position: 'relative'}}>
                                 <RichTextEditor
                                     required
                                     onChange={(data) =>
@@ -299,7 +316,10 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                                                 description: data
                                             })
                                         )
-                                    } />
+                                    } >
+                                    </RichTextEditor>
+                                    <input className = {styles.milestoneFakeInput} style = {{left: '15px'}} id = "description" />
+
 
 
                             </Col>
@@ -308,10 +328,11 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                         <Form.Group as={Row} >
                             <Form.Label column sm="12">
                                 Milestones
+                                <span className={styles.required}></span>
                                 <InfoIcon description="Milestone for the project" />
                             </Form.Label>
-                            <Col sm="12">
-                                <Button variant="light" onClick={() => setModalShow(true)}>Add Milestone</Button>
+                            <Col sm="12" >
+                                <Button variant="light" onClick={() => setModalShow(true)} style = {{position: 'relative'}}>Add Milestone <input className = {styles.milestoneFakeInput} id = "milestones" /></Button>
                             </Col>
                         </Form.Group>
 
