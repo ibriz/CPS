@@ -12,7 +12,8 @@ async function request({
     payload = null,
     address = null,
     failureMessage = null,
-    requireSigning = false
+    requireSigning = false,
+    requestSentMessage = "Request Sent"
 }) {
     const baseURL = ipfs ? IPFS_URL : BASE_URL;
     console.log("request");
@@ -27,6 +28,10 @@ async function request({
             signature, 
             payload
           } = await signTransaction();
+
+          if(requestSentMessage) {
+              NotificationManager.info(requestSentMessage);
+          }
 
         headers = {
             ...headers,
