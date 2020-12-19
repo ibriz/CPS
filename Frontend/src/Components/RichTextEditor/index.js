@@ -1,11 +1,39 @@
-import React from 'react';
+import React, {useState} from 'react';
 import CKEditor from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import ImageUploadAdapter from '../../helpers/ImageUploadAdapter';
 
+export function modelElementToPlainText( element ) {
+	if ( element.is( 'text' ) || element.is( 'textProxy' ) ) {
+		return element.data;
+	}
+
+	let text = '';
+	let prev = null;
+
+	for ( const child of element.getChildren() ) {
+		const childText = modelElementToPlainText( child );
+
+		// If last block was finish, start from new line.
+		if ( prev && prev.is( 'element' ) ) {
+			text += '\n';
+		}
+
+		text += childText;
+
+		prev = child;
+	}
+
+	return text;
+}
+
 const RichTextEditor = ({onChange}) => {
 
+    const [numberOfWords, setNumberOfWords] = useState(0);
+    const [numberOfCharacters, setNumberOfCharacters] = useState(0);
+
     return(
+        <>
         <CKEditor
         id="editor1"
         editor={ClassicEditor}
@@ -17,6 +45,15 @@ const RichTextEditor = ({onChange}) => {
             const data = editor.getData();
             console.log({ event, editor, data });
             onChange(data);
+
+            const txt = modelElementToPlainText( editor.model.document.getRoot() );
+            const detectedWords = txt.match( new RegExp( '[\\p{L}\\p{N}\\p{M}\\p{Pd}\\p{Pc}]+', 'gu' ) ) || [];
+            const numberOfWords = detectedWords.length
+            const numberOfCharacters = txt.replace( /\n/g, '' ).length;
+            console.log("wordCount", numberOfWords, "character count", numberOfCharacters );
+
+            setNumberOfWords(numberOfWords);
+            setNumberOfCharacters(numberOfCharacters)
 
         }}
         onBlur={(event, editor) => {
@@ -34,6 +71,8 @@ const RichTextEditor = ({onChange}) => {
         }
         }
     />
+    <div style = {{height: 'auto', border: '1px solid', borderTop: 'none', borderRadius: '2px', borderTopLeftRadius: 0, borderTopRightRadius: 0, borderColor: '#c4c4c4', paddingLeft: '5px' }}>{numberOfWords} words, {numberOfCharacters} characters</div>
+    </>
     )
 
 }
