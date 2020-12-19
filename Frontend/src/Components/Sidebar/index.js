@@ -11,8 +11,18 @@ import {MdDashboard, MdForum} from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import { Badge } from 'react-bootstrap';
 import { connect } from 'react-redux';
+import {withRouter} from 'react-router-dom';
 
-const Aside = ({ collapsed, rtl, toggled, handleToggleSidebar, handleCollapsedChange, isPrep, isRegistered }) => {
+const Aside = ({ collapsed, rtl, toggled, handleToggleSidebar, handleCollapsedChange, isPrep, isRegistered, history }) => {
+  const highlightedStyle = {background: 'rgba(38, 38, 38, 0.1)'};
+  const pathName = history.location.pathname;
+
+  const getHighlightedStyle = (
+    routes
+  ) => {
+    return routes.includes(pathName) ? highlightedStyle : {} ;
+  }
+
   return (
     <ProSidebar
       collapsed={collapsed}
@@ -50,6 +60,8 @@ const Aside = ({ collapsed, rtl, toggled, handleToggleSidebar, handleCollapsedCh
           <Menu iconShape="circle">
             <MenuItem
               icon={<MdDashboard />}
+              style = {getHighlightedStyle(['/dashboard'])}
+              
 
             >
               {<span>Dashboard</span>}
@@ -57,11 +69,14 @@ const Aside = ({ collapsed, rtl, toggled, handleToggleSidebar, handleCollapsedCh
 
             </MenuItem>
             <MenuItem icon={<FaGem />}
+              style = {getHighlightedStyle(['/proposals', '/newProposal'])}
+
               > {<span>Proposals</span>}
               <Link to={process.env.PUBLIC_URL + "/proposals"} />
 
             </MenuItem>
-            <MenuItem icon={<FaList />}
+            <MenuItem icon={<FaList /> } style = {getHighlightedStyle(['/progress-reports', '/newProgressReport'])}
+
             > {<span>Progress Reports</span>}
               <Link to="/progress-reports" />
 
@@ -81,19 +96,20 @@ const Aside = ({ collapsed, rtl, toggled, handleToggleSidebar, handleCollapsedCh
           <>
             <Menu iconShape="circle">
               <MenuItem
-                icon={<MdDashboard />}
+                icon={<MdDashboard 
+                />} style = {getHighlightedStyle(['/dashboard'])}
 
               >
                 {<span>Dashboard</span>}
                 <Link to="/dashboard" />
 
               </MenuItem>
-              <MenuItem icon={<FaGem />}
+              <MenuItem icon={<FaGem />} style = {getHighlightedStyle(['/proposals'])}
                 > {<span>Proposals</span>}
                 <Link to={process.env.PUBLIC_URL + "/proposals"} />
 
               </MenuItem>
-              <MenuItem icon={<FaList />}
+              <MenuItem icon={<FaList />} style = {getHighlightedStyle(['/progress-reports'])}
               > {<span>Progress Reports</span>}
                 <Link to="/progress-reports" />
 
@@ -178,4 +194,4 @@ const mapStateToProps = state => (
   }
 )
 
-export default connect(mapStateToProps)(Aside);
+export default withRouter(connect(mapStateToProps)(Aside));
