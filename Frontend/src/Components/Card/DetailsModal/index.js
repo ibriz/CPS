@@ -113,8 +113,9 @@ function DetailsModal(props) {
       size="lg"
       aria-labelledby="contained-modal-title-vcenter"
       centered
+      
     >
-      <Modal.Header closeButton className={styles.modalHeader}>
+      <Modal.Header closeButton className={styles.modalHeader} style = {modalShow ? {backgroundColor: '#DDDDDD'} : {}}>
         <Container fluid className={styles.container}>
           <Row>
             <Col sm="12">
@@ -222,7 +223,7 @@ function DetailsModal(props) {
         </Container>
 
       </Modal.Header>
-      <Modal.Body className={styles.modalBody}>
+      <Modal.Body className={styles.modalBody} style = {modalShow ? {backgroundColor: '#DDDDDD'} : {}}>
         <Row>
           <Col lg="8" xs="12">
             {/* <div dangerouslySetInnerHTML={{ __html: description }} /> */}
