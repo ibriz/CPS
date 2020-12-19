@@ -2,10 +2,11 @@ import { call, put, select} from 'redux-saga/effects';
 // import {
 //   getCourseInfo,
 // } from '../services/api';
-import {submitProposalSuccess, submitProposalFailure} from '../../Reducers/proposalSlice';
+import {submitProposalSuccess, submitProposalFailure, setSubmittingProposal} from '../../Reducers/proposalSlice';
 import {PROPOSAL_ADD_URL} from '../../Constants';
 import {request} from '../helpers';
 import {signTransaction} from 'Redux/ICON/utils';
+import store from 'Redux/Store';
 
 export const getAddress = (state) => state.account.address
 
@@ -27,7 +28,9 @@ function* submitProposalWorker({payload}) {
         type: "proposal"
       },
       url: PROPOSAL_ADD_URL,
-      failureMessage: "Submit Proposal Failed"
+      failureMessage: "Submit Proposal Failed",
+      requireSigning: true,
+      callBackAfterSigning: () => store.dispatch(setSubmittingProposal(true))
       // signature: signature,
       // payload: hash,
       // address: walletAddress
