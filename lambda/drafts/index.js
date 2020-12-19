@@ -76,8 +76,8 @@ async function addHashToRedis(proposal) {
     const redisResponse = await setAsync(`address:${proposal.address}:type:${proposal.type}:drafts:${proposal.ipfsKey}`,
         JSON.stringify(redisObject));
 
-    if (!redisResponse) throw new Error("Data couldnot be uploaded in redis");
-    console.log("Response from Redis" + redisResponse);
+    if (!redisResponse) throw new Error('Data couldnot be uploaded in redis');
+    console.log('Response from Redis' + redisResponse);
 
     return JSON.stringify({ redisResponse: redisResponse });
 }
@@ -97,7 +97,7 @@ async function getUserDrafts(payload) {
     for (const draft of drafts) {
         const draftDetails = await getAsync(draft);
         const userDraft = JSON.parse(draftDetails);
-        if( userDrafts.indexOf(userDraft) === -1) {
+        if (userDrafts.indexOf(userDraft) === -1) {
             userDrafts.push(userDraft);
         }
     }
