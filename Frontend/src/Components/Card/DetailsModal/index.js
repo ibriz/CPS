@@ -19,6 +19,7 @@ import DetailsModalPR from 'Components/Card/DetailsModalProgressReport';
 import IconService from 'icon-sdk-js';
 import ProgressBarCombined from 'Components/Card/ProgressBarCombined';
 import { fetchPrepsRequest } from 'Redux/Reducers/prepsSlice';
+import useTimer from 'Hooks/useTimer';
 
 function DetailsModal(props) {
 
@@ -29,6 +30,7 @@ function DetailsModal(props) {
   const [sponsorVote, setSponsorVote] = useState('');
   const [modalShow, setModalShow] = React.useState(false);
   const [selectedProgressReport, setSelectedProgressReport] = React.useState();
+  const {remainingTime: remainingTimer} = useTimer();
 
   const [voteConfirmationShow, setVoteConfirmationShow] = React.useState(false);
 
@@ -290,6 +292,19 @@ function DetailsModal(props) {
             }
           </Col>
         </Row>
+        {
+          (status === 'Voting') &&
+        <Row>
+            <Col xs="12">
+                <div style = {{textAlign: 'center', color: '#262626', marginBottom: '5px', fontSize: '1rem'}}>
+                  <>
+                  {period === 'APPLICATION' ? 'Voting starts in ' : 'Voting ends in '}
+                  </>
+                  <b>{remainingTimer.day}</b> days <b>{remainingTimer.hour}</b> hours <b>{remainingTimer.minute}</b> minutes <b>{remainingTimer.second}</b> seconds
+                  </div>
+            </Col>
+        </Row>
+        }
 
         {
           sponsorRequest && (status === 'Pending') && (period === 'APPLICATION') && (remainingTime > 0) &&
