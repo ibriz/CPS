@@ -24,6 +24,7 @@ import {
 } from 'Selectors';
 import { icxFormat } from 'helpers';
 import ProgressBarCombined from 'Components/Card/ProgressBarCombined';
+import useTimer from 'Hooks/useTimer';
 
 function DetailsModal(props) {
 
@@ -37,6 +38,7 @@ function DetailsModal(props) {
 
 
   const [voteConfirmationShow, setVoteConfirmationShow] = React.useState(false);
+  const {remainingTime: remainingTimer} = useTimer();
 
 
   const { progressDetail, proposal, sponsorRequest = false, approveSponserRequest, rejectSponsorRequest, voting = false, voteProgressReport, progressReport, votesByProposal, fetchVoteResultRequest, approvedPercentage,
@@ -317,6 +319,20 @@ function DetailsModal(props) {
             }
           </Col>
         </Row>
+
+        {
+          (status === 'Voting') &&
+        <Row>
+            <Col xs="12">
+                <div style = {{textAlign: 'center', color: '#262626', marginBottom: '5px', fontWeight: '600', fontSize: '1rem'}}>
+                  <>
+                  {period === 'APPLICATION' ? 'Voting starts in ' : 'Voting ends in '}
+                  </>
+                  <b>{remainingTimer.day}</b> days <b>{remainingTimer.hour}</b> hours <b>{remainingTimer.minute}</b> minutes <b>{remainingTime.second}</b> seconds
+                  </div>
+            </Col>
+        </Row>
+        }
 
         {
           sponsorRequest && (status === 'Pending') &&
