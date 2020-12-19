@@ -158,6 +158,28 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
 
     }
 
+    const onClickSaveDraft = () => {
+        let allGood = true;
+        Object.keys(proposal).map(key => {
+            if(document.getElementById(key)) {
+                console.log("keyProposal", key, proposal[key], document.getElementById(key).checkValidity())
+                if((!Array.isArray(proposal[key]) && proposal[key]) || (Array.isArray(proposal[key]) && proposal[key].length > 0 )) {
+                    if (!document.getElementById(key).checkValidity()) {
+                        document.getElementById(key).reportValidity();
+                        allGood = false;
+                    }
+                }
+            } else {
+                console.log("keyProposalNot",key)
+            }
+
+        })
+        if(!allGood) {
+            return;
+        }
+        setDraftConfirmationShow(true);
+    }
+
     const saveChanges = () => {
         if (isDraft) {
             saveDraftRequest({
@@ -418,7 +440,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                         <Form.Group as={Row} >
                             <Col className={styles.draftButton}>
                             <Popup 
-                                    component = {<Button variant="outline-info" onClick={() => setDraftConfirmationShow(true)}>SAVE AS DRAFT</Button>}
+                                    component = {<Button variant="outline-info" onClick={onClickSaveDraft}>SAVE AS DRAFT</Button>}
                                     popOverText = "Save changes and continue later."
                                     placement = "right"
                                 />
