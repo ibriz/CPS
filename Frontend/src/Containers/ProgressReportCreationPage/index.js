@@ -55,6 +55,12 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
     const isTaskRemaining = progressReport.percentageCompleted && (progressReport.percentageCompleted != 100);
     const isLastReport = currentUserActiveProposals.find(proposal => proposal.ipfsKey === progressReport.projectName)?.lastProgressReport;
 
+    const [descriptionWords, setDescriptionWords] = React.useState(0);
+    const [descriptionCharacters, setDescriptionCharacters] = React.useState(0);
+
+    const [revisionDescriptionWords, setRevisionDescriptionWords] = React.useState(0);
+    const [revisionDescriptionCharacters, setRevisionDescriptionCharacters] = React.useState(0);
+
     useEffect(() => {
         fetchCPFRemainingFundRequest();
         fetchCPFScoreAddressRequest();
@@ -91,7 +97,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
     const onClickSaveDraft = () => {
         let allGood = true;
         Object.keys(progressReport).map(key => {
-            if(document.getElementById(key)) {
+            if(document.getElementById(key) && key !== 'description' && key !== 'revisionDescription') {
                 console.log("keyProposal", key, progressReport[key], document.getElementById(key).checkValidity())
                 if((!Array.isArray(progressReport[key]) && progressReport[key]) || (Array.isArray(progressReport[key]) && progressReport[key].length > 0 )) {
                     if (!document.getElementById(key).checkValidity()) {
@@ -243,23 +249,33 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
     }
 
     useEffect(() => {
+        const minimumNumberOfWords = 100;
+
         if(!progressReport.description) {
-            document.getElementById("description").setCustomValidity(`Please write a description`);
-        } else {
+            document.getElementById("description").setCustomValidity(`Please write a description of minimum ${minimumNumberOfWords} words.`);
+        } else if (descriptionWords < minimumNumberOfWords) {
+            document.getElementById("description").setCustomValidity(`Description should be a minimum of ${minimumNumberOfWords} words`);
+        } else{
             document.getElementById("description").setCustomValidity(``);
+
         }
-    }, [progressReport.description])
+
+    }, [progressReport.description, descriptionWords])
 
     useEffect(() => {
+        const minimumNumberOfWords = 100;
+
         if (progressReport.projectTermRevision) {
             if(!progressReport.revisionDescription) {
-                document.getElementById("revisionDescription").setCustomValidity(`Please write a revision description`);
+                document.getElementById("revisionDescription").setCustomValidity(`Please write a revision description of minimum ${minimumNumberOfWords} words.`);
+            } else if (revisionDescriptionWords < minimumNumberOfWords) {
+                document.getElementById("revisionDescription").setCustomValidity(`Revision Description should be a minimum of ${minimumNumberOfWords} words`);
             } else {
                 document.getElementById("revisionDescription").setCustomValidity(``);
             }
         }
 
-    }, [progressReport.revisionDescription, progressReport.projectTermRevision])
+    }, [progressReport.revisionDescription, progressReport.projectTermRevision, revisionDescriptionWords])
 
     return (
         <div className={styles.proposalCreationPage}>
@@ -350,7 +366,11 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                                                 description: data
                                             })
                                         )
-                                    } />
+                                    }
+                                    setWords = {setDescriptionWords}
+                                    setCharacters = {setDescriptionCharacters}
+                                    
+                                    />
                         <input className = {styles.fakeInput} style = {{left: '15px'}} id = "description" />
 
                             </Col>
@@ -445,7 +465,10 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                                                         revisionDescription: data
                                                     })
                                                 )
-                                            } />
+                                            }
+                                            setWords = {setRevisionDescriptionWords}
+                                            setCharacters = {setRevisionDescriptionCharacters}
+                                        />
                             <input className = {styles.fakeInput} style = {{left: '15px'}} id = "revisionDescription" />
 
                                     </Col>
