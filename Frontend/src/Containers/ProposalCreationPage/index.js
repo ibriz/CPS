@@ -40,6 +40,10 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
     const [editModalIndex, setEditModalIndex] = React.useState();
     const [proposalIPFS, setProposalIPFS] = React.useState({});
 
+    const [descriptionWords, setDescriptionWords] = React.useState(0);
+    const [descriptionCharacters, setDescriptionCharacters] = React.useState(0);
+
+
     useEffect(() => {
         fetchCPFRemainingFundRequest();
     }, [fetchCPFRemainingFundRequest, cpfScoreAddress]);
@@ -91,12 +95,15 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
     }, [proposal.milestones])
 
     useEffect(() => {
+        const minimumNumberOfWords = 100
         if(!proposal.description) {
-            document.getElementById("description").setCustomValidity(`Please write a description`);
+            document.getElementById("description").setCustomValidity(`Please write a description of minimum ${minimumNumberOfWords} words.`);
+        } else if (descriptionWords < minimumNumberOfWords) {
+            document.getElementById("description").setCustomValidity(`Description should be a minimum of ${minimumNumberOfWords} words`);
         } else {
             document.getElementById("description").setCustomValidity(``);
         }
-    }, [proposal.description])
+    }, [proposal.description, descriptionWords])
 
     async function fetchDraft() {
         const proposalIPFS = await requestIPFS({
@@ -161,7 +168,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
     const onClickSaveDraft = () => {
         let allGood = true;
         Object.keys(proposal).map(key => {
-            if(document.getElementById(key)) {
+            if(document.getElementById(key) && key !== 'description') {
                 console.log("keyProposal", key, proposal[key], document.getElementById(key).checkValidity())
                 if((!Array.isArray(proposal[key]) && proposal[key]) || (Array.isArray(proposal[key]) && proposal[key].length > 0 )) {
                     if (!document.getElementById(key).checkValidity()) {
@@ -337,8 +344,10 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                                                 ...prevState,
                                                 description: data
                                             })
-                                        )
-                                    } >
+                                        )                                   
+                                    } 
+                                    setWords = {setDescriptionWords}
+                                    setCharacters = {setDescriptionCharacters}>
                                     </RichTextEditor>
                                     <input className = {styles.milestoneFakeInput} style = {{left: '15px'}} id = "description" />
 
