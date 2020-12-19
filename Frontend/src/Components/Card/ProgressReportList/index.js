@@ -3,7 +3,7 @@ import styles from './ProposalList.module.scss';
 import { Container} from 'react-bootstrap';
 import ProgressReport from './ProgressReport';
 
-const ProjectReportList = ({projectReports, selectedTab, onClickProgressReport}) => {
+const ProjectReportList = ({projectReports, selectedTab, onClickProgressReport, isModal = false}) => {
     return (
         <Container fluid>
             {
@@ -13,6 +13,7 @@ const ProjectReportList = ({projectReports, selectedTab, onClickProgressReport})
                         progressReport = {progressReport}
                         selectedTab = {selectedTab}
                         onClick={() => onClickProgressReport(progressReport)}
+                        isModal= {isModal}
 
                         />
 

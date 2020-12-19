@@ -366,6 +366,7 @@ function DetailsModal(props) {
                       <ProgressReportList
                         projectReports={progressReportByProposal}
                         onClickProgressReport={onClickProgressReport}
+                        isModal
                         />
                     </>
                   ) :
