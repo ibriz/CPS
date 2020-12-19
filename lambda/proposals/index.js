@@ -113,10 +113,14 @@ exports.handler = async (event) => {
             if (event.path === process.env.PROPOSAL_PATH) {
                 proposal = await uploadProposal(body);
 
-                const sponsor = JSON.parse(await getAsync(`users:address:${body.sponsor_address}`));
-                console.log(sponsor);
+                const sponsorData = await getAsync(`users:address:${body.sponsor_address}`);
 
-                if (sponsor.enableEmailNotifications) await send_email(sponsor.email, body);
+                if (sponsorData != null) {
+                    const sponsor = JSON.parse(sponsorData);
+                    console.log(sponsor);
+
+                    if (sponsor.enableEmailNotifications) await send_email(sponsor.email, body);
+                }
             } else {
                 proposal = await uploadFile(event);
             }
