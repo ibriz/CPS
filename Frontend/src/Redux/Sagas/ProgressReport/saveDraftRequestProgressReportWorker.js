@@ -26,15 +26,15 @@ function* saveDraftRequestWorker({payload}) {
       // signature: signature,
       url: ADD_PROGRESS_REPORT_DRAFT_URL,
       method: body.ipfsKey? "PUT": "POST",
-      requireSigning: true
-
+      requireSigning: true,
+      requestSentMessage: "Draft Save Request Sent"
 
     });
     NotificationManager.success("Draft Succesfully saved")
     yield put(saveDraftSuccess(
     ));
   } catch (error) {
-    NotificationManager.erro("Draft save failed");
+    NotificationManager.error("Draft save failed");
 
     yield put(saveDraftFailure());
   }

@@ -22,14 +22,14 @@ function* saveDraftRequestWorker({payload}) {
             delete body[key]
         }   
     })
-    NotificationManager.info("Draft Save Request Sent")
 
     const response = yield call(request, {
       body: body,
       // signature: signature,
       url: ADD_PROPOSAL_DRAFT_URL,
       method: body.proposalKey? "PUT": "POST",
-      requireSigning: true
+      requireSigning: true,
+      requestSentMessage: "Draft Save Request Sent"
     });
     NotificationManager.success("Draft Succesfully saved")
     yield put(saveDraftSuccess(
