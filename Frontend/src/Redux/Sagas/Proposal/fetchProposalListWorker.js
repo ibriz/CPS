@@ -11,7 +11,7 @@ const proposalListStatusMapping = {
   'Pending': '_sponsor_pending',
 
   'Completed': '_completed',
-  'Disqualified': '_rejected',
+  'Disqualified': '_disqualified',
   'Paused': '_paused',
   'Rejected': '_rejected'
 }

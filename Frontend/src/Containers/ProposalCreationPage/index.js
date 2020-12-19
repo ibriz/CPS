@@ -445,8 +445,8 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
 
                         </Form.Group>
 
-                        <Alert variant={'warning'}>
-                            Warning: You need to transfer 50 ICX to submit a proposal
+                        <Alert variant={'info'}>
+                            Note: You need to transfer 50 ICX to submit a proposal
                         </Alert>
 
 
