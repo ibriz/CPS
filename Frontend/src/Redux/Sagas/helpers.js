@@ -13,7 +13,8 @@ async function request({
     address = null,
     failureMessage = null,
     requireSigning = false,
-    requestSentMessage = "Request Sent"
+    requestSentMessage = null,
+    callBackAfterSigning
 }) {
     const baseURL = ipfs ? IPFS_URL : BASE_URL;
     console.log("request");
@@ -31,6 +32,10 @@ async function request({
 
           if(requestSentMessage) {
               NotificationManager.info(requestSentMessage);
+          }
+
+          if(callBackAfterSigning instanceof Function) {
+            callBackAfterSigning();
           }
 
         headers = {

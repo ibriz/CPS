@@ -150,13 +150,17 @@ const proposalSlice = createSlice({
     initialState,
     reducers: {
         submitProgressReportRequest(state) {
-            state.submittingProgressReport = true
+            // state.submittingProgressReport = true
         },
         submitProgressReportSuccess(state) {
             state.submittingProgressReport = false
         },
         submitProgressReportFailure(state) {
             state.submittingProgressReport = false
+        },
+
+        setSubmittingProgressReport(state) {
+            state.submittingProgressReport = true;
         },
 
         fetchProgressReportListRequest(state) {
@@ -413,5 +417,5 @@ voteProgressReport,
 fetchVoteResultRequest, fetchVoteResultSuccess, fetchVoteResultFailure,
 fetchProgressReportByProposalRequest, fetchProgressReportByProposalSuccess,
 fetchProgressReportByProposalFailure, fetchRemainingVotesPRSuccess,
-fetchVoteResultBudgetChangeRequest, fetchVoteResultBudgetChangeSuccess, fetchVoteResultBudgetChangeFailure} = proposalSlice.actions;
+fetchVoteResultBudgetChangeRequest, fetchVoteResultBudgetChangeSuccess, fetchVoteResultBudgetChangeFailure, setSubmittingProgressReport} = proposalSlice.actions;
 export default proposalSlice.reducer;

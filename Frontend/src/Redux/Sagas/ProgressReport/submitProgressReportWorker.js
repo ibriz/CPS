@@ -2,9 +2,10 @@ import { call, put, select} from 'redux-saga/effects';
 // import {
 //   getCourseInfo,
 // } from '../services/api';
-import {submitProgressReportSuccess, submitProgressReportFailure} from '../../Reducers/progressReportSlice';
+import {submitProgressReportSuccess, submitProgressReportFailure, setSubmittingProgressReport} from '../../Reducers/progressReportSlice';
 import {PROGRESS_REPORT_ADD_URL} from '../../Constants';
 import {request} from '../helpers';
+import store from 'Redux/Store';
 
 export const getAddress = (state) => state.account.address
 
@@ -27,7 +28,10 @@ function* submitProgressReportWorker({payload}) {
           address,
           type: "report"
         },
-        url: PROGRESS_REPORT_ADD_URL
+        url: PROGRESS_REPORT_ADD_URL,
+        requireSigning: true,
+        callBackAfterSigning: () => store.dispatch(setSubmittingProgressReport(true))
+
       });    
       yield put(submitProgressReportSuccess(
       {
