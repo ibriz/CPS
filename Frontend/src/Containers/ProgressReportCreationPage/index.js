@@ -88,6 +88,29 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
     }, [progressReport.additionalBudget])
 
 
+    const onClickSaveDraft = () => {
+        let allGood = true;
+        Object.keys(progressReport).map(key => {
+            if(document.getElementById(key)) {
+                console.log("keyProposal", key, progressReport[key], document.getElementById(key).checkValidity())
+                if((!Array.isArray(progressReport[key]) && progressReport[key]) || (Array.isArray(progressReport[key]) && progressReport[key].length > 0 )) {
+                    if (!document.getElementById(key).checkValidity()) {
+                        document.getElementById(key).reportValidity();
+                        allGood = false;
+                    }
+                }
+            } else {
+                console.log("keyProposalNot",key)
+            }
+
+        })
+        if(!allGood) {
+            return;
+        }
+        setDraftConfirmationShow(true);
+    }
+
+
 
     let [submissionConfirmationShow, setSubmissionConfirmationShow] = React.useState(false);
 
@@ -471,7 +494,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                         <Form.Group as={Row} controlId="formPlaintextPassword">
                             <Col className={styles.draftButton}>
                                 <Popup 
-                                    component = {<Button variant="outline-info" onClick={() => setDraftConfirmationShow(true)}>SAVE AS DRAFT</Button>}
+                                    component = {<Button variant="outline-info" onClick={onClickSaveDraft}>SAVE AS DRAFT</Button>}
                                     popOverText = "Save changes and continue later."
                                     placement = "right"
                                 />
