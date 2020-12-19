@@ -20,7 +20,7 @@ const Home = ({ period, isPrep, isRegistered, address }) => {
             <div style={{ textAlign: 'center', color: '#262626', fontSize: '1.5rem', fontWeight: '595' }}>All Proposals</div>
             <div className={styles.proposalCard}>
                 <ProposalCard
-                    proposalStatesList={['Active', 'Paused', 'Voting', 'Completed', 'Disqualified']}
+                    proposalStatesList={['Active', 'Paused', 'Voting', 'Completed', 'Rejected' , 'Disqualified']}
                     initialState={'Active'}
                     minHeight='150px'
                 />
