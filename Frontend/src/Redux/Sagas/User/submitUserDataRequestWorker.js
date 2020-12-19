@@ -20,7 +20,8 @@ function* submitUserDataRequestWorker({payload}) {
         lastName: payload.userData.lastName,
         address,
       },
-      url: SUBMIT_USER_DATA_URL
+      url: SUBMIT_USER_DATA_URL,
+      requireSigning: true
     });
     NotificationManager.success("User Data Updated Successfully");
     yield put(submitUserDataSuccess(

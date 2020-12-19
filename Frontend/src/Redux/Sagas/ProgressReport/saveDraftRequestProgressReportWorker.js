@@ -25,7 +25,9 @@ function* saveDraftRequestWorker({payload}) {
       body: body,
       // signature: signature,
       url: ADD_PROGRESS_REPORT_DRAFT_URL,
-      method: body.ipfsKey? "PUT": "POST"
+      method: body.ipfsKey? "PUT": "POST",
+      requireSigning: true
+
 
     });
     NotificationManager.success("Draft Succesfully saved")

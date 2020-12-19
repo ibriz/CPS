@@ -28,7 +28,8 @@ function* saveDraftRequestWorker({payload}) {
       body: body,
       // signature: signature,
       url: ADD_PROPOSAL_DRAFT_URL,
-      method: body.proposalKey? "PUT": "POST"
+      method: body.proposalKey? "PUT": "POST",
+      requireSigning: true
     });
     NotificationManager.success("Draft Succesfully saved")
     yield put(saveDraftSuccess(
