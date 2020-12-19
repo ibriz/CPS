@@ -31,7 +31,7 @@ function validateSignature(signature, address, payload) {
 function isSignatureRecent(payload) {
     const timestamp = payload.slice(payload.length - 13);
 
-    return (Date.now() - parseInt('0x' + timestamp)) <  VALID_TIME;
+    return (Date.now() - parseInt('0x' + timestamp)) < VALID_TIME;
 }
 
 function buildAllowAllPolicy(event) {

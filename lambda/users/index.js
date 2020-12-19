@@ -5,17 +5,17 @@ const client = redis.createClient(process.env.REDIS_URL);
 const setAsync = promisify(client.set).bind(client);
 const getAsync = promisify(client.get).bind(client);
 
-async function registerUser(payload){
+async function registerUser(payload) {
     const body = JSON.parse(payload.body);
 
     //Store the data of user in redis with key - users:address:<<address of the user>>
     const redisResponse = await setAsync(`users:address:${body.address}`, payload.body);
     if (!redisResponse) throw new Error("Data couldnot be uploaded in redis");
 
-    return JSON.stringify({redisResponse: redisResponse});
+    return JSON.stringify({ redisResponse: redisResponse });
 }
 
-async function getUser(payload){
+async function getUser(payload) {
     const redisKey = payload.queryStringParameters.address;
 
     if (!redisKey) return new Error('address of the user is required');
@@ -31,9 +31,9 @@ exports.handler = async (event) => {
 
         console.log(event.body);
 
-        if(event.httpMethod === 'POST') {
+        if (event.httpMethod === 'POST') {
             user = await registerUser(event);
-        } else if(event.httpMethod === 'GET') {
+        } else if (event.httpMethod === 'GET') {
             user = await getUser(event);
         } else {
             throw new Error('Method doesnot exist');
