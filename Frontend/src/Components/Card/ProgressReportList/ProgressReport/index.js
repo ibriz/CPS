@@ -9,7 +9,7 @@ import LowerCardInfo from '../../../UI/LowerCardList/LowerCardInfo';
 import Budget from '../../../UI/LowerCardList/Budget';
 import { progressReportStatusMapping } from 'Constants';
 import ProgressBarCombined from 'Components/Card/ProgressBarCombined';
-
+import ClassNames from 'classnames';
 
 const badgeColor = {
     'Approved': 'success',
@@ -20,11 +20,11 @@ const badgeColor = {
 }
 
 
-const ProgressReport = ({ progressReport, selectedTab, showProject = true, onClick }) => {
+const ProgressReport = ({ progressReport, selectedTab, showProject = true, onClick, isModal = false }) => {
     return (
         <>
             <Row className={styles.proposalContainer} onClick={onClick}>
-                <Col sm="9" className={styles.infos}>
+                <Col sm="9" className={ClassNames(styles.infos, {[styles.infosModal]: isModal})}>
                     <Row style={{ alignItems: 'center' }} className={styles.firstRow}>
                         <Badge size="xs" variant={progressReportStatusMapping.find(mapping => mapping.status === progressReport.status).badgeColor} className={styles.badge}>{progressReportStatusMapping.find(mapping => mapping.status === progressReport.status).name}</Badge>{' '}
                         <LowerCardTitle>{progressReport.progressReportTitle}</LowerCardTitle>
@@ -50,7 +50,7 @@ const ProgressReport = ({ progressReport, selectedTab, showProject = true, onCli
 
                 {
                     progressReportStatusMapping.find(mapping => mapping.status === progressReport.status).name !== 'Draft' && 
-                    <Col md="3" xs="12" className={styles.progressBar} >
+                    <Col md="3" xs="12" className={ClassNames(styles.progressBar, {[styles.progressBarModal] : isModal})} >
                         <ProgressText>Stake- {progressReport.approvedPercentage ? progressReport.approvedPercentage.toFixed() : 0}% approved, {progressReport.rejectedPercentage ? progressReport.rejectedPercentage.toFixed() : 0}% rejected</ProgressText>
                         <ProgressBarCombined 
                           approvedPercentage = {progressReport.approvedPercentage}
