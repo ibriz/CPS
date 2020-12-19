@@ -3,24 +3,41 @@ import styles from './Home.module.scss';
 import SlantedHeader from './SlantedHeader';
 import ProposalCard from '../../Components/ProposalCard';
 import Footer from 'Components/Footer';
+import { connect } from 'react-redux';
+import UpperCard from 'Containers/Proposals/UpperCard';
+import { Container } from 'react-bootstrap';
 
-const Home = () => {
+const Home = ({ period, isPrep, isRegistered, address }) => {
     return (
         <div className={styles.home}>
             <SlantedHeader />
-            <div style = {{textAlign: 'center', color: '#262626', fontSize: '1.5rem', fontWeight: '595'}}>All Proposals</div>
+            {
+                (!isPrep || !isRegistered) && address &&
+                <Container style = {{marginBottom: '10px'}} className = {styles.upperCardContainer}>
+                    <UpperCard />
+                </Container>
+            }
+            <div style={{ textAlign: 'center', color: '#262626', fontSize: '1.5rem', fontWeight: '595' }}>All Proposals</div>
             <div className={styles.proposalCard}>
                 <ProposalCard
-                 proposalStatesList = {['Active', 'Paused', 'Voting', 'Completed', 'Disqualified']}
-                 initialState = {'Active'}
-                 minHeight = '150px'
+                    proposalStatesList={['Active', 'Paused', 'Voting', 'Completed', 'Disqualified']}
+                    initialState={'Active'}
+                    minHeight='150px'
                 />
 
             </div>
-            
+
 
         </div>
     )
 }
 
-export default Home;
+const mapStateToProps = state => (
+    {
+        address: state.account.address,
+        isPrep: state.account.isPrep,
+        isRegistered: state.account.isRegistered
+    }
+);
+
+export default connect(mapStateToProps)(Home);
