@@ -347,7 +347,11 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                                         )                                   
                                     } 
                                     setWords = {setDescriptionWords}
-                                    setCharacters = {setDescriptionCharacters}>
+                                    setCharacters = {setDescriptionCharacters}
+                                    onBlur = {() => {
+                                        document.getElementById("description").reportValidity();
+                                    }}
+                                    >
                                     </RichTextEditor>
                                     <input className = {styles.milestoneFakeInput} style = {{left: '15px'}} id = "description" />
 

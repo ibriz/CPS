@@ -27,7 +27,7 @@ export function modelElementToPlainText( element ) {
 	return text;
 }
 
-const RichTextEditor = ({onChange, setWords, setCharacters}) => {
+const RichTextEditor = ({onChange, setWords, setCharacters, onBlur}) => {
 
     const [numberOfWords, setNumberOfWords] = useState(0);
     const [numberOfCharacters, setNumberOfCharacters] = useState(0);
@@ -67,6 +67,10 @@ const RichTextEditor = ({onChange, setWords, setCharacters}) => {
         }}
         onBlur={(event, editor) => {
             console.log('Blur.', editor);
+
+            if(onBlur instanceof Function) {
+                onBlur();
+            }
         }}
         onFocus={(event, editor) => {
             console.log('Focus.', editor);

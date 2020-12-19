@@ -369,6 +369,10 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                                     }
                                     setWords = {setDescriptionWords}
                                     setCharacters = {setDescriptionCharacters}
+
+                                    onBlur = {() => {
+                                        document.getElementById("description").reportValidity();
+                                    }}
                                     
                                     />
                         <input className = {styles.fakeInput} style = {{left: '15px'}} id = "description" />
@@ -468,6 +472,9 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                                             }
                                             setWords = {setRevisionDescriptionWords}
                                             setCharacters = {setRevisionDescriptionCharacters}
+                                            onBlur = {() => {
+                                                document.getElementById("revisionDescription").reportValidity();
+                                            }}
                                         />
                             <input className = {styles.fakeInput} style = {{left: '15px'}} id = "revisionDescription" />
 
