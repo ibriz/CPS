@@ -130,6 +130,15 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
     }
 
     useEffect(() => {
+        document.getElementById("teamEmail").onfocus = () => {
+            document.getElementById("teamEmail").onblur = () => {
+                document.getElementById("teamEmail").reportValidity();
+                document.getElementById("teamEmail").onblur = () => {
+                    
+                }
+            }
+        }
+       
         fetchPrepsRequest();
         fetchCPFScoreAddressRequest();
 
@@ -243,7 +252,9 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                 [name]: value
             })
         );
-
+        if(name === "teamEmail") {
+            return;
+        }
         document.getElementById(name) && document.getElementById(name).reportValidity();
     }
 
@@ -348,7 +359,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                             <Form.Label column sm="12">
                                 Description
                                 <span className={styles.required}></span>
-                                <InfoIcon description="A detailed description for the project" />
+                                <InfoIcon description="A detailed description for the project (minimum 100 words)" />
                             </Form.Label>
                             <Col sm="12" style = {{position: 'relative'}}>
                                 <RichTextEditor
