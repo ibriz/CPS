@@ -352,7 +352,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                         <Form.Group as={Row} controlId="formPlaintextPassword">
                             <AppFormLabel column lg="12">
                                 Description
-                                <InfoIcon description = "A detailed description for the progress report"/>  
+                                <InfoIcon description = "A detailed description for the progress report (minimum 100 words)"/>  
                                 <span className = {styles.required}></span>
 
                             </AppFormLabel>
@@ -456,7 +456,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                                     <AppFormLabel column lg="12">
                                         Revision Description
                                         <span className = {styles.required}></span>
-                                        <InfoIcon description = "Reason for requiring additional time and additional budget"/>  
+                                        <InfoIcon description = "Reason for requiring additional time and additional budget (minimum 100 words)"/>  
 
                             </AppFormLabel>
                                     <Col lg="12">
