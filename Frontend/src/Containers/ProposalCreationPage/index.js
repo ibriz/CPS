@@ -183,7 +183,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
     const onClickSaveDraft = () => {
         let allGood = true;
         Object.keys(proposal).map(key => {
-            if(document.getElementById(key) && key !== 'description') {
+            if(document.getElementById(key) && key !== 'description' && key !== 'milestones') {
                 console.log("keyProposal", key, proposal[key], document.getElementById(key).checkValidity())
                 if((!Array.isArray(proposal[key]) && proposal[key]) || (Array.isArray(proposal[key]) && proposal[key].length > 0 )) {
                     if (!document.getElementById(key).checkValidity()) {
