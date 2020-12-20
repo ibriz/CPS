@@ -42,6 +42,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
 
     const [descriptionWords, setDescriptionWords] = React.useState(0);
     const [descriptionCharacters, setDescriptionCharacters] = React.useState(0);
+    const [totalNumberOfMonthsInMilestone, setTotalNumberOfMonthsInMilestone] = React.useState(0);
 
 
     useEffect(() => {
@@ -63,6 +64,8 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
             teamSize: null,
         }
     );
+
+
 
     useEffect(() => {
         setProposal(proposal => (
@@ -87,12 +90,24 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
     }, [proposal.totalBudget]);
 
     useEffect(() => {
+        const minimumNumberOfWords = 2;
+        // const maximumNumberOfMilestones = 6;
+        const totalMonths = proposal.milestones.reduce((sum ,milestone) => sum + parseInt(milestone.duration), 0);
+        setTotalNumberOfMonthsInMilestone(totalMonths);
+
+        console.log("proposal.projectDuration", proposal.projectDuration)
         if(proposal.milestones.length < 1) {
-            document.getElementById("milestones").setCustomValidity(`You need to have at least one milestone`);
-        } else {
+            document.getElementById("milestones").setCustomValidity(`Please add milestones`);
+        }
+        else if( parseInt(totalMonths) != parseInt(proposal.projectDuration)) {
+            console.log("mielstone", parseInt(totalMonths), parseInt(proposal.projectDuration))
+            document.getElementById("milestones").setCustomValidity(`The total duration in milestones should equal to the project duration (currently ${proposal.projectDuration || 0} months)`);
+        } 
+        else {
             document.getElementById("milestones").setCustomValidity(``);
         }
-    }, [proposal.milestones])
+
+    }, [proposal.milestones, proposal.projectDuration])
 
     useEffect(() => {
         const minimumNumberOfWords = 100
