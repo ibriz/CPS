@@ -224,7 +224,7 @@ class CPF(IconScoreBase):
                 cps_treasury_score = self.create_interface_score(self._cps_treasury_score.get(), CPS_TREASURY_INTERFACE)
                 cps_treasury_score.icx(total_transfer).update_proposal_fund(_ipfs_key, _total_added_budget,
                                                                             _sponsor_reward, _total_installment_count)
-                self.ProposalFundTransferred(_ipfs_key, _added_budget, "Successfully updated fund")
+                self.ProposalFundTransferred(_ipfs_key, _added_budget, "ICX Successfully updated fund")
             except BaseException as e:
                 revert(f"Network problem. Sending proposal funds. {e}")
         else:

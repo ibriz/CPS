@@ -235,7 +235,7 @@ class CPS_TREASURY(IconScoreBase):
             )
 
             self.ProposalFundDeposited(_ipfs_key, _added_budget, f"{_ipfs_key} : Added Budget : "
-                                                                 f"{_added_budget} Successfully")
+                                                                 f"{_added_budget * _MULTIPLIER} ICX Successfully")
         else:
             revert("IPFS key doesn't exist")
 
