@@ -70,3 +70,15 @@ padding-right: 0px;
     padding-left: 2px !important;
 }
 
+.address {
+    font-size: 0.9rem;
+    word-wrap: break-word;
+}
+
+@media screen and (max-width: 575px) {
+
+    .addressContainer {
+        padding-left: 15px !important
+    }
+}
+

@@ -110,7 +110,7 @@ const UserInfoFormModal = ({user, submitUserDataRequest, setModalShow, address, 
               Wallet Address
                             </Form.Label>
             <Col sm="10" className={ClassNames(styles.inputSameLine, styles.addressContainer)}>
-              <span style = {{fontSize: '0.9rem'}}>{address}</span>
+              <span className = {styles.address}>{address}</span>
             </Col>
           </Form.Group>
 
