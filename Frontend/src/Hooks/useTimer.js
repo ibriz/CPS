@@ -82,7 +82,11 @@ const useTimer = () => {
                     second: 0
                 }
             );
-            dispatch(fetchPeriodDetailsRequest());
+            let timestamp = new Date();
+            if (timestamp % 40 == 0) {
+                dispatch(fetchPeriodDetailsRequest());
+
+            }
         }
 
     }
@@ -120,13 +124,14 @@ const useTimer = () => {
 
     useEffect(() => {
         // fetchPeriodDetailsRequest();
-        if (!remainingTimeRedux || !period || !timestampRedux) {
+        if ((remainingTimeRedux === null) || (period === null) || (timestampRedux === null) || (remainingTimeRedux === undefined) || (period === undefined) || (timestampRedux === undefined)) {
             dispatch(fetchPeriodDetailsRequest());
+            calculateRemainingTime(remainingTimeRedux, setRemainingTime);
+
+            calculateRemainingTime(remainingTimeRedux + periodSpan, setRemainingTimeForGrant);
+    
         }
-        calculateRemainingTime(remainingTimeRedux, setRemainingTime);
-
-        calculateRemainingTime(remainingTimeRedux + periodSpan, setRemainingTimeForGrant);
-
+     
         const interval = setInterval(() => {
             calculateRemainingTime(remainingTimeRedux, setRemainingTime);
             calculateRemainingTime(remainingTimeRedux + (period === 'APPLICATION' ? periodSpan : 0), setRemainingTimeForGrant);
