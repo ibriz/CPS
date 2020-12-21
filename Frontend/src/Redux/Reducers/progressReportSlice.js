@@ -360,6 +360,14 @@ const proposalSlice = createSlice({
                         total: progressReport[PARAMS.totalVoters],
                         actual: progressReport[PARAMS.approvedVoters]
                     }),
+                    rejectedPercentage: calculatePercentage({
+                        total: progressReport[PARAMS.totalVotes],
+                        actual: progressReport[PARAMS.rejectedVotes]
+                    }),
+                    rejectedVotesPercentageCount: calculatePercentage({
+                        total: progressReport[PARAMS.totalVoters],
+                        actual: progressReport[PARAMS.rejectedVoters]
+                    }),
 
                     
 
