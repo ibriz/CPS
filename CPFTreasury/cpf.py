@@ -7,12 +7,11 @@ ZERO_WALLET_ADDRESS = Address.from_string('hx00000000000000000000000000000000000
 class CPS_TREASURY_INTERFACE(InterfaceScore):
     @interface
     def deposit_proposal_fund(self, _ipfs_key: str, _total_installment_count: int, _sponsor_address: Address,
-                              _contributor_address: Address, _total_budget: int):
-        pass
+                              _contributor_address: Address, _total_budget: int): pass
 
     @interface
-    def update_proposal_fund(self, _ipfs_key: str, _added_budget: int, _total_installment_count: int):
-        pass
+    def update_proposal_fund(self, _ipfs_key: str, _added_budget: int, _sponsor_reward: int,
+                             _total_installment_count: int): pass
 
 
 class CPF(IconScoreBase):
@@ -208,22 +207,23 @@ class CPF(IconScoreBase):
         if self._proposals_details[_ipfs_key][self._STATUS] != self._ACTIVE:
             revert('The project isn\'t in active state')
 
-        total_transfer = 102 * _added_budget * _MULTIPLIER / 100
-        _added_budget = _added_budget * _MULTIPLIER
+        _total_added_budget = _added_budget * _MULTIPLIER
+        _sponsor_reward = _total_added_budget // 50
+        total_transfer = _total_added_budget + _sponsor_reward
 
         if self.icx.get_balance(self.address) < total_transfer:
             revert('Not enough fund in treasury.')
 
         if _ipfs_key in self._proposals_keys:
             self._proposals_details[_ipfs_key][self._TOTAL_BUDGET] = str(int(self._proposals_details[_ipfs_key][
-                                                                                 self._TOTAL_BUDGET]) + _added_budget)
+                                                                                 self._TOTAL_BUDGET]) + _total_added_budget)
             self._proposals_details[_ipfs_key][self._TOTAL_INSTALLMENT_COUNT] = str(
                 int(self._proposals_details[_ipfs_key][self._TOTAL_INSTALLMENT_COUNT]) + _total_installment_count)
 
             try:
                 cps_treasury_score = self.create_interface_score(self._cps_treasury_score.get(), CPS_TREASURY_INTERFACE)
-                cps_treasury_score.icx(total_transfer).update_proposal_fund(_ipfs_key, _added_budget,
-                                                                            _total_installment_count)
+                cps_treasury_score.icx(total_transfer).update_proposal_fund(_ipfs_key, _total_added_budget,
+                                                                            _sponsor_reward, _total_installment_count)
                 self.ProposalFundTransferred(_ipfs_key, _added_budget, "Successfully updated fund")
             except BaseException as e:
                 revert(f"Network problem. Sending proposal funds. {e}")

@@ -205,9 +205,11 @@ class CPS_TREASURY(IconScoreBase):
 
     @external
     @payable
-    def update_proposal_fund(self, _ipfs_key: str, _added_budget: int = 0, _added_installment_count: int = 0) -> None:
+    def update_proposal_fund(self, _ipfs_key: str, _added_budget: int = 0, _sponsor_reward: int = 0,
+                             _added_installment_count: int = 0) -> None:
         """
         After the budget adjustment is successfully approved. The added budget will be transferred from CPF
+        :param _sponsor_reward: After budget adjustment, 2% of the total fund added for sponsor
         :param _ipfs_key: Proposal IPFS HASH key
         :param _added_budget: added budget
         :type _added_budget: int
@@ -226,7 +228,7 @@ class CPS_TREASURY(IconScoreBase):
                 int(self._proposals_details[_ipfs_key][self._TOTAL_BUDGET]) + _added_budget)
 
             self._proposals_details[_ipfs_key][self._SPONSOR_REWARD] = str(
-                int(self._proposals_details[_ipfs_key][self._SPONSOR_REWARD]) + int(self.msg.value) - _added_budget)
+                int(self._proposals_details[_ipfs_key][self._SPONSOR_REWARD]) + _sponsor_reward)
 
             self._proposals_details[_ipfs_key][self._TOTAL_INSTALLMENT_COUNT] = str(
                 int(self._proposals_details[_ipfs_key][self._TOTAL_INSTALLMENT_COUNT]) + _added_installment_count
