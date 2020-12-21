@@ -49,13 +49,22 @@ async function getResult({ txHash,
             NotificationManager.error(result.failure.message, failureMessage)
         }
         else if (result.status === 1) {
-            NotificationManager.success(successMessage);
             console.log("callback", typeof callBack);
 
             if (typeof callBack === "function") {
                 console.log("callback10");
-                callBack();
+
+                try {
+                    callBack();
+                } catch {
+                    console.log("CallbackError")
+                } finally {
+                    NotificationManager.success(successMessage);
+
+                }
             }
+
+
         }
         // console.log("callBack2", callBack, typeof callBack);
         // console.log("callBack");
@@ -149,7 +158,7 @@ export default (event) => {
                     },  function(){
                         store.dispatch( fetchProposalByAddressRequest(
                             {
-                                walletAddress: store.getstate().getState().account.address,
+                                walletAddress: store.getstate().account.address,
                             }));
                         store.dispatch(  fetchProgressReportListRequest(
                             {
