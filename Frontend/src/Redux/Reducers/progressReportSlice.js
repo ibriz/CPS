@@ -402,7 +402,23 @@ const proposalSlice = createSlice({
                             proposalKey: progressReport[PARAMS.proposalHash],
                             approvedVotes: IconConverter.toBigNumber(progressReport[PARAMS.approvedVotes]),
                             totalVotes: IconConverter.toBigNumber(progressReport[PARAMS.totalVotes]),
-                            approvedPercentage: (!progressReport[PARAMS.totalVotes] || parseInt(progressReport[PARAMS.totalVotes]) === 0) ? 0 : ((progressReport[PARAMS.approvedVotes] / progressReport[PARAMS.totalVotes]) * 100)
+                            // approvedPercentage: (!progressReport[PARAMS.totalVotes] || parseInt(progressReport[PARAMS.totalVotes]) === 0) ? 0 : ((progressReport[PARAMS.approvedVotes] / progressReport[PARAMS.totalVotes]) * 100)
+                            approvedPercentage: calculatePercentage({
+                                total: progressReport[PARAMS.totalVotes],
+                                actual: progressReport[PARAMS.approvedVotes]
+                            }),
+                            approvedVotesPercentageCount: calculatePercentage({
+                                total: progressReport[PARAMS.totalVoters],
+                                actual: progressReport[PARAMS.approvedVoters]
+                            }),
+                            rejectedPercentage: calculatePercentage({
+                                total: progressReport[PARAMS.totalVotes],
+                                actual: progressReport[PARAMS.rejectedVotes]
+                            }),
+                            rejectedVotesPercentageCount: calculatePercentage({
+                                total: progressReport[PARAMS.totalVoters],
+                                actual: progressReport[PARAMS.rejectedVoters]
+                            }),
                         }
                     )
                 ).sort( (a,b) => 
