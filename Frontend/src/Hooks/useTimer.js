@@ -47,7 +47,7 @@ const useTimer = () => {
         return highestSignificantTime;
     }
 
-    function calculateRemainingTime(remainingTime, setRemainingTime) {
+    function calculateRemainingTime(remainingTime, setRemainingTime, shouldDispatch = false) {
 
         let timestamp = Math.floor(Date.now() / 1000);
         var d = remainingTime - (timestamp - timestampRedux);
@@ -83,7 +83,7 @@ const useTimer = () => {
                 }
             );
             let timestamp = new Date();
-            if (timestamp % 40 == 0) {
+            if (timestamp % 40 == 0 && shouldDispatch) {
                 dispatch(fetchPeriodDetailsRequest());
 
             }
@@ -124,21 +124,21 @@ const useTimer = () => {
 
     useEffect(() => {
         // fetchPeriodDetailsRequest();
-        if ((remainingTimeRedux === null) || (period === null) || (timestampRedux === null) || (remainingTimeRedux === undefined) || (period === undefined) || (timestampRedux === undefined)) {
-            dispatch(fetchPeriodDetailsRequest());
-            calculateRemainingTime(remainingTimeRedux, setRemainingTime);
-
-            calculateRemainingTime(remainingTimeRedux + periodSpan, setRemainingTimeForGrant);
-    
-        }
      
         const interval = setInterval(() => {
-            calculateRemainingTime(remainingTimeRedux, setRemainingTime);
+            calculateRemainingTime(remainingTimeRedux, setRemainingTime, true);
             calculateRemainingTime(remainingTimeRedux + (period === 'APPLICATION' ? periodSpan : 0), setRemainingTimeForGrant);
         }, 1000);
     
         return () => clearInterval(interval);
     }, [timestampRedux, remainingTimeRedux])
+
+    useEffect(() => {
+        dispatch(fetchPeriodDetailsRequest());
+        calculateRemainingTime(remainingTimeRedux, setRemainingTime);
+
+        calculateRemainingTime(remainingTimeRedux + periodSpan, setRemainingTimeForGrant);
+    }, [])
 
     return {
         period,
