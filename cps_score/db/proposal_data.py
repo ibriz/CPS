@@ -84,7 +84,6 @@ def getDataFromProposalDB(prefix: bytes, _proposals: 'ProposalDataDB') -> dict:
     sponsor_deposit_amount = _proposals[prefix].sponsor_deposit_amount.get()
     sponsored_timestamp = _proposals[prefix].sponsored_timestamp.get()
     sponsor_deposit_status = _proposals[prefix].sponsor_deposit_status.get()
-    voters_list = len(_proposals[prefix].voters_list)
     approve_voters = len(_proposals[prefix].approve_voters)
     reject_voters = len(_proposals[prefix].reject_voters)
 
@@ -106,7 +105,6 @@ def getDataFromProposalDB(prefix: bytes, _proposals: 'ProposalDataDB') -> dict:
         'total_votes': total_votes,
         'approved_votes': approved_votes,
         'rejected_votes': rejected_votes,
-        'total_voters': voters_list,
         'approve_voters': approve_voters,
         'reject_voters': reject_voters
     }

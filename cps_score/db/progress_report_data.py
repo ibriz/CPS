@@ -79,7 +79,6 @@ def getDataFromProgressReportDB(prefix: bytes, _proposals: 'ProgressReportDataDB
     approved_votes = _proposals[prefix].approved_votes.get()
     rejected_votes = _proposals[prefix].rejected_votes.get()
 
-    total_voters = len(_proposals[prefix].voters_list)
     approve_voters = len(_proposals[prefix].approve_voters)
     reject_voters = len(_proposals[prefix].reject_voters)
 
@@ -104,7 +103,6 @@ def getDataFromProgressReportDB(prefix: bytes, _proposals: 'ProgressReportDataDB
         'approved_votes': approved_votes,
         'rejected_votes': rejected_votes,
 
-        'total_voters': total_voters,
         'approve_voters': approve_voters,
         'reject_voters': reject_voters,
 
