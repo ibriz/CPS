@@ -12,6 +12,7 @@ import { loginPrepRequest } from 'Redux/Reducers/accountSlice';
 import { fetchSponsorRequestsListRequest, fetchProposalListRequest } from 'Redux/Reducers/proposalSlice';
 import { fetchRemainingVotesRequest } from 'Redux/Reducers/proposalSlice';
 import {fetchProgressReportListRequest} from 'Redux/Reducers/progressReportSlice';
+import {fetchPeriodDetailsRequest} from 'Redux/Reducers/periodSlice';
 
 // import { loginSuccess } from 'Redux/Reducers/accountSlice';
 
@@ -296,6 +297,9 @@ export default (event) => {
                         txHash: payload.result,
                         failureMessage: "Period Update Failed",
                         successMessage: "Period Updated Successfully",
+
+                    }, function() {
+                        store.dispatch(fetchPeriodDetailsRequest());
 
                     });
 
