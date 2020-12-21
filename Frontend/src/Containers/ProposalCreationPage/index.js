@@ -364,6 +364,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                             <Col sm="12" style = {{position: 'relative'}}>
                                 <RichTextEditor
                                     required
+                                    initialData = {proposal.description ?? null}
                                     onChange={(data) =>
                                         setProposal(prevState =>
                                             ({

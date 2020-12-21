@@ -27,7 +27,7 @@ export function modelElementToPlainText( element ) {
 	return text;
 }
 
-const RichTextEditor = ({onChange, setWords, setCharacters, onBlur}) => {
+const RichTextEditor = ({onChange, setWords, setCharacters, onBlur, initialData = null}) => {
 
     const [numberOfWords, setNumberOfWords] = useState(0);
     const [numberOfCharacters, setNumberOfCharacters] = useState(0);
@@ -36,6 +36,7 @@ const RichTextEditor = ({onChange, setWords, setCharacters, onBlur}) => {
         <>
         <CKEditor
         id="editor1"
+        data={initialData}
         editor={ClassicEditor}
         onInit={editor => {
             // You can store the "editor" and use when it is needed.
