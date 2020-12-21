@@ -176,10 +176,10 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
 
 
     const saveChanges = () => {
-        if (!progressReport.projectName) {
-            NotificationManager.error("Please choose a project before saving");
-            return;
-        }
+        // if (!progressReport.projectName) {
+        //     NotificationManager.error("Please choose a project before saving");
+        //     return;
+        // }
         if (isDraft) {
             saveDraftRequest({
                 ...progressReport,
@@ -194,7 +194,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                 ...progressReport,
                 address: walletAddress,
                 proposalKey: progressReport.projectName,
-                proposalName: currentUserActiveProposals.find(proposal => proposal.ipfsKey === progressReport.projectName)._proposal_title
+                proposalName: currentUserActiveProposals.find(proposal => proposal.ipfsKey === progressReport.projectName)?._proposal_title
 
             });
         }
@@ -359,6 +359,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                             <Col lg="12">
                                 <RichTextEditor
                                     required
+                                    initialData = {progressReport.description ?? null}
                                     onChange={(data) =>
                                         setProposal(prevState =>
                                             ({
@@ -462,6 +463,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                                     <Col lg="12">
                                         <RichTextEditor
                                             required
+                                            initialData = {progressReport.revisionDescription ?? null}
                                             onChange={(data) =>
                                                 setProposal(prevState =>
                                                     ({
