@@ -9,7 +9,7 @@ import {submitUserDataRequest} from 'Redux/Reducers/userSlice';
 import ConfirmationModal from 'Components/UI/ConfirmationModal';
 
 
-const UserInfoFormModal = ({user, submitUserDataRequest, setModalShow, ...props}) => {
+const UserInfoFormModal = ({user, submitUserDataRequest, setModalShow, address, ...props}) => {
 
   const [userData, setUserData] = useState(
     {
@@ -104,6 +104,16 @@ const UserInfoFormModal = ({user, submitUserDataRequest, setModalShow, ...props}
             </Col>
           </Form.Group>
 
+
+          <Form.Group as={Row} controlId="formPlaintextEmail">
+            <Form.Label column sm="2">
+              Wallet Address
+                            </Form.Label>
+            <Col sm="10" className={ClassNames(styles.inputSameLine, styles.addressContainer)}>
+              <span style = {{fontSize: '0.9rem'}}>{address}</span>
+            </Col>
+          </Form.Group>
+
           <Form.Group as={Row} controlId="formPlaintextEmail">
             
             <Col sm="12">
@@ -147,7 +157,8 @@ const UserInfoFormModal = ({user, submitUserDataRequest, setModalShow, ...props}
 };
 
 const mapStateToProps =  state => ({
-  user: state.user
+  user: state.user,
+  address: state.account.address
 });
 
 const mapDispatchToProps = {
