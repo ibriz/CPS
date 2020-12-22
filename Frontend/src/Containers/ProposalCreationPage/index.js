@@ -122,7 +122,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
     }, [proposal.milestones, proposal.projectDuration])
 
     useEffect(() => {
-        const minimumNumberOfWords = 100
+        const minimumNumberOfWords = 10
         if (!proposal.description) {
             document.getElementById("description").setCustomValidity(`Please write a description of minimum ${minimumNumberOfWords} words.`);
         } else if (descriptionWords < minimumNumberOfWords) {
