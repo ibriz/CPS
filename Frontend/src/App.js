@@ -7,6 +7,7 @@ import { NotificationContainer} from 'react-notifications';
 import {fetchUserDataRequest} from 'Redux/Reducers/userSlice';
 import Footer from 'Components/Footer';
 import { Helmet } from "react-helmet";
+import UnsubscribePage from 'Containers/UnsubscribePage'
 
 function App({ address, fetchUserDataRequest }) {
 
@@ -30,6 +31,13 @@ function App({ address, fetchUserDataRequest }) {
 
           </>}
             </>
+        </Route>
+
+        <Route exact path = {"/unsubscribe"}>
+            <UnsubscribePage />
+            <Helmet>
+                  <title>CPS - Unsubscribe</title>
+            </Helmet>
         </Route>
 
         <Route path={process.env.PUBLIC_URL + "/"}>
