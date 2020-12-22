@@ -4,7 +4,6 @@ const redis = require('redis');
 const client = redis.createClient(process.env.REDIS_URL);
 const { promisify } = require('util');
 const getAsync = promisify(client.get).bind(client);
-const setAsync = promisify(client.set).bind(client);
 const getAllUserAsync = promisify(client.keys).bind(client);
 
 async function populate_users_details(addresses_list) {
@@ -37,26 +36,7 @@ async function get_registered_users_keys() {
     return registered_users;
 }
 
-async function get_snapshot() {
-    const snapshot = await getAsync(`period_snapshot`);
-
-    return JSON.parse(snapshot);
-}
-
-async function set_snapshot(period) {
-    console.log("Updating Period in Redis");
-    const redisResponse = await setAsync(`period_snapshot`, JSON.stringify(period));
-    if (!redisResponse) {
-        console.error("Period couldnot be updated in Redis");
-        throw new Error("Period couldnot be updated in Redis");
-    }
-
-    return period;
-}
-
 module.exports = {
     populate_users_details,
-    get_registered_users_keys,
-    get_snapshot,
-    set_snapshot
+    get_registered_users_keys
 }

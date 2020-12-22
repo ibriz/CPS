@@ -14,23 +14,12 @@ async function execute() {
         let present_period = await score.period_check();
         console.log("Period from Blockchain" + JSON.stringify(present_period));
 
-        let stored_period = await redis.get_snapshot();
-        console.log("Period from Redis" + JSON.stringify(stored_period));
-
-        if (stored_period == null) {
-            stored_period = await redis.set_snapshot(present_period);
-            console.log("First Redis init period" + JSON.stringify(stored_period));
-        }
-
-        if (stored_period.next_block <= present_period.current_block) {
+        if (parseInt(present_period.remaining_time, 'hex') === 0 ) {
             console.log("Period updated");
-            period_triggered = await score.update_period(present_period);
+            await score.update_period(present_period);
+            period_triggered = true;
+            present_period = await score.period_check();
             console.log("Changed period: " + period_triggered);
-
-            if (period_triggered) {
-                present_period = await score.period_check();
-                stored_period = await redis.set_snapshot(present_period);
-            }
         }
 
         const preps = await score.get_preps();
