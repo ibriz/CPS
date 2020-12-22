@@ -95,8 +95,6 @@ async function period_check() {
         console.log('RPC Call for Period');
         const period_status = await iconService.call(icon_call_builder('get_period_status')).execute();
 
-        console.log('============Period============');
-        console.log(period_status);
         return period_status;
     } catch (error) {
         console.error(error);
@@ -131,7 +129,6 @@ async function update_period() {
         console.log('Transaction hash' + txHash);
 
         const result = await getResult(txHash);
-
         console.log('Result of update period' + JSON.stringify(result));
 
         return result;
