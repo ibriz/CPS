@@ -10,7 +10,9 @@ const client = redis.createClient(process.env.REDIS_URL);
 const getAsync = promisify(client.get).bind(client);
 
 // SES initialize
-const SES = new AWS.SES();
+const SES = new AWS.SES({
+    'region': process.env.SES_REGION
+});
 
 const emailFrom = process.env.MAIL_FROM;
 const subject = process.env.SUBJECT;
@@ -24,11 +26,14 @@ async function send_email(emailAddress, body) {
                 ToAddresses: [emailAddress],
             },
             Template: template,
-            TemplateData: JSON.stringify({ ...body, subject }),
+            TemplateData: `{\"proposalName\":\"${body.proposalName}\",
+                        \"contributor_address\":\"${body.address}\",
+                        \"subject\":\"${process.env.SUBJECT}\"}`,
             Source: emailFrom
         };
+        console.log(params);
         const emailResponse = await SES.sendTemplatedEmail(params).promise();
-        console.log('Email Sent Successfully to ' + emailResponse)
+        console.log('Email Sent Successfully to ' + JSON.stringify(emailResponse))
     } catch (error) {
         console.error('Email sending Failed! ' + error);
         throw new Error('Email sending Failed! ' + error);
