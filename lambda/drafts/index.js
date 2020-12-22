@@ -11,7 +11,9 @@ const getAllProposalAsync = promisify(client.keys).bind(client);
 async function uploadDraftToIPFS(payload) {
 
     let body = JSON.parse(payload);
-    if (!body.type) throw new Error('type field missing')
+    if (!body.type) throw new Error('type field missing');
+    if (!body.address) throw new Error('address field missing');
+    if (!body.address) throw new Error('address field missing');
     const ipfsKey = body.type + uuidv4();
     body.ipfsKey = ipfsKey;
 
@@ -26,7 +28,8 @@ async function uploadDraftToIPFS(payload) {
     uploadedProposal.ipfsKey = body.ipfsKey;
     uploadedProposal.address = body.address;
     uploadedProposal.type = body.type;
-    uploadedProposal.proposalName = body.proposalName;
+    if(body.proposalName) uploadedProposal.proposalName = body.proposalName;
+    if(body.progressReportName) uploadedProposal.progressReportName = body.progressReportName;
 
     console.log(uploadedProposal)
 
@@ -52,7 +55,8 @@ async function updateDraftToIPFS(payload) {
     updatedProposal.ipfsKey = body.ipfsKey;
     updatedProposal.address = body.address;
     updatedProposal.type = body.type;
-    updatedProposal.proposalName = body.proposalName;
+    if(body.proposalName) updatedProposal.proposalName = body.proposalName;
+    if(body.progressReportName) updatedProposal.progressReportName = body.progressReportName;
 
     console.log(updatedProposal);
 
@@ -68,9 +72,13 @@ async function addHashToRedis(proposal) {
         ipfsKey: proposal.ipfsKey
     }
 
-    if (proposal.type == 'ProgressReport') {
+    if(proposal.proposalName) redisObject.proposalName = proposal.proposalName;
+
+    if (proposal.type === 'ProgressReport') {
         redisObject.progressReportName = proposal.progressReportName;
     }
+
+    console.log(redisObject);
 
     // storing draft name, hash, url and ipfskey in redis
     const redisResponse = await setAsync(`address:${proposal.address}:type:${proposal.type}:drafts:${proposal.ipfsKey}`,
