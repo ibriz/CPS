@@ -10,7 +10,7 @@ import { signTransaction as signTransactionRequest } from 'Redux/Reducers/accoun
 // var CPSScore = 'cxdf3c1ea6ba87e21957c63b21a54151a38a6ecb80';
 // var CPSScore = 'cx00c1e2d9b009fca69002c53c1ce3ed377708381e';
 // var CPSScore = 'cx6bb0e6683dd326165d42289c12b6bd0eaa596cc9';
-var CPSScore = 'cxa4b044b17158b964ed529a72d024eea80ac46944';
+var CPSScore = 'cxe05883bbd4bba196413def1f827bd90e71ec7ce0';
 
 export const provider = new HttpProvider('https://bicon.net.solidwallet.io/api/v3');
 export const iconService = new IconService(provider);
