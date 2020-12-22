@@ -23,6 +23,17 @@ import InfoIcon from "Components/InfoIcon";
 import Popup from 'Components/Popup';
 import useTimer from 'Hooks/useTimer';
 
+const signingInfoMessage = (
+    <div className="text-information">
+        <div>Note:</div>
+        <div className="intendation">You need to sign the transaction two times-
+            <div className="intendation">i) First time: to verify the user identity while submitting the progress report data to the Backend (IPFS).</div>
+            <div className="intendation">ii) Second time: to verify the user identity while saving the ipfs hash to the blockchain.</div>
+
+        </div>
+    </div>
+)
+
 const ProgressReportCreationPage = ({ submitProgressReport, history, submittingProgressReport, fetchProposalListRequest, updateProposalStatus, currentUserActiveProposals, saveDraftRequest, location, walletAddress, fetchProposalByAddressRequest, fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, cpfScoreAddress, cpfRemainingFunds }) => {
 
 
@@ -488,6 +499,12 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                             </>
                         }
 
+                        <Alert variant={'info'}>
+                            {signingInfoMessage}
+
+
+                        </Alert>
+
                         {
                             isLastReport &&
                             <Alert variant={'info'}>
@@ -561,6 +578,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                 show={submissionConfirmationShow}
                 onHide={() => setSubmissionConfirmationShow(false)}
                 heading={'Progress Report Submission Confirmation'}
+                size="mdxl"
                 onConfirm={() => {
                     submitProgressReport(
                         {
@@ -571,6 +589,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                 {
                     <>
                         <div>Are you sure you want to submit the progress report?</div>
+                        {signingInfoMessage}
                     </>
                 }
 

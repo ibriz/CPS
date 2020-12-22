@@ -1,11 +1,18 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
 
-
+@media screen and (min-width: 650px) {
+  .modal-mdxl {
+    max-width: 630px !important;
+  }
+}
 
 $theme-colors: (
   "info": #1AAABA,
+  "information": #17A2B8,
   "completed": #0F626B
 );
+
+
 
 @import '~bootstrap/scss/bootstrap';
 
@@ -271,4 +278,8 @@ a.sidebarHeader:hover {
 
 .pagination {
   flex-wrap: wrap;
+}
+
+.intendation {
+  padding-left: 15px !important;
 }

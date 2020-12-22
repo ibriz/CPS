@@ -25,6 +25,18 @@ import { requestIPFS } from 'Redux/Sagas/helpers';
 import useTimer from 'Hooks/useTimer';
 import Popup from 'Components/Popup';
 
+const signingInfoMessage = (
+    <div className="text-information">
+        <div>Note:</div>
+        <div className="intendation">1) You need to transfer 50 ICX to submit a proposal.</div>
+        <div className="intendation">2) You need to sign the transaction two times-
+            <div className="intendation">i) First time: to verify the user identity while submitting the proposal data to the Backend (IPFS).</div>
+            <div className="intendation">ii) Second time: to verify the user identity while saving the ipfs hash and to submit 50 ICX fee to the blockchain.</div>
+
+        </div>
+    </div>
+)
+
 const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fetchPrepsRequest, preps, saveDraftRequest, walletAddress, location, fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, cpfScoreAddress, cpfRemainingFunds }) => {
 
     const {
@@ -92,17 +104,17 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
     useEffect(() => {
         const minimumNumberOfWords = 2;
         // const maximumNumberOfMilestones = 6;
-        const totalMonths = proposal.milestones.reduce((sum ,milestone) => sum + parseInt(milestone.duration), 0);
+        const totalMonths = proposal.milestones.reduce((sum, milestone) => sum + parseInt(milestone.duration), 0);
         setTotalNumberOfMonthsInMilestone(totalMonths);
 
         console.log("proposal.projectDuration", proposal.projectDuration)
-        if(proposal.milestones.length < 1) {
+        if (proposal.milestones.length < 1) {
             document.getElementById("milestones").setCustomValidity(`Please add milestones`);
         }
-        else if( parseInt(totalMonths) != parseInt(proposal.projectDuration)) {
+        else if (parseInt(totalMonths) != parseInt(proposal.projectDuration)) {
             console.log("mielstone", parseInt(totalMonths), parseInt(proposal.projectDuration))
             document.getElementById("milestones").setCustomValidity(`The total duration in milestones should equal to the project duration (currently ${proposal.projectDuration || 0} months)`);
-        } 
+        }
         else {
             document.getElementById("milestones").setCustomValidity(``);
         }
@@ -111,7 +123,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
 
     useEffect(() => {
         const minimumNumberOfWords = 100
-        if(!proposal.description) {
+        if (!proposal.description) {
             document.getElementById("description").setCustomValidity(`Please write a description of minimum ${minimumNumberOfWords} words.`);
         } else if (descriptionWords < minimumNumberOfWords) {
             document.getElementById("description").setCustomValidity(`Description should be a minimum of ${minimumNumberOfWords} words`);
@@ -134,11 +146,11 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
             document.getElementById("teamEmail").onblur = () => {
                 document.getElementById("teamEmail").reportValidity();
                 document.getElementById("teamEmail").onblur = () => {
-                    
+
                 }
             }
         }
-       
+
         fetchPrepsRequest();
         fetchCPFScoreAddressRequest();
 
@@ -192,20 +204,20 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
     const onClickSaveDraft = () => {
         let allGood = true;
         Object.keys(proposal).map(key => {
-            if(document.getElementById(key) && key !== 'description' && key !== 'milestones') {
+            if (document.getElementById(key) && key !== 'description' && key !== 'milestones') {
                 console.log("keyProposal", key, proposal[key], document.getElementById(key).checkValidity())
-                if((!Array.isArray(proposal[key]) && proposal[key]) || (Array.isArray(proposal[key]) && proposal[key].length > 0 )) {
+                if ((!Array.isArray(proposal[key]) && proposal[key]) || (Array.isArray(proposal[key]) && proposal[key].length > 0)) {
                     if (!document.getElementById(key).checkValidity()) {
                         document.getElementById(key).reportValidity();
                         allGood = false;
                     }
                 }
             } else {
-                console.log("keyProposalNot",key)
+                console.log("keyProposalNot", key)
             }
 
         })
-        if(!allGood) {
+        if (!allGood) {
             return;
         }
         setDraftConfirmationShow(true);
@@ -252,7 +264,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                 [name]: value
             })
         );
-        if(name === "teamEmail") {
+        if (name === "teamEmail") {
             return;
         }
         document.getElementById(name) && document.getElementById(name).reportValidity();
@@ -361,26 +373,26 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                                 <span className={styles.required}></span>
                                 <InfoIcon description="A detailed description for the project (minimum 100 words)" />
                             </Form.Label>
-                            <Col sm="12" style = {{position: 'relative'}}>
+                            <Col sm="12" style={{ position: 'relative' }}>
                                 <RichTextEditor
                                     required
-                                    initialData = {proposal.description ?? null}
+                                    initialData={proposal.description ?? null}
                                     onChange={(data) =>
                                         setProposal(prevState =>
                                             ({
                                                 ...prevState,
                                                 description: data
                                             })
-                                        )                                   
-                                    } 
-                                    setWords = {setDescriptionWords}
-                                    setCharacters = {setDescriptionCharacters}
-                                    onBlur = {() => {
+                                        )
+                                    }
+                                    setWords={setDescriptionWords}
+                                    setCharacters={setDescriptionCharacters}
+                                    onBlur={() => {
                                         document.getElementById("description").reportValidity();
                                     }}
-                                    >
-                                    </RichTextEditor>
-                                    <input className = {styles.milestoneFakeInput} style = {{left: '15px'}} id = "description" />
+                                >
+                                </RichTextEditor>
+                                <input className={styles.milestoneFakeInput} style={{ left: '15px' }} id="description" />
 
 
 
@@ -394,7 +406,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                                 <InfoIcon description="Milestone for the project" />
                             </Form.Label>
                             <Col sm="12" >
-                                <Button variant="light" onClick={() => setModalShow(true)} style = {{position: 'relative'}}>Add Milestone <input className = {styles.milestoneFakeInput} id = "milestones" /></Button>
+                                <Button variant="light" onClick={() => setModalShow(true)} style={{ position: 'relative' }}>Add Milestone <input className={styles.milestoneFakeInput} id="milestones" /></Button>
                             </Col>
                         </Form.Group>
 
@@ -473,16 +485,17 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                         </Form.Group>
 
                         <Alert variant={'info'}>
-                            Note: You need to transfer 50 ICX to submit a proposal
-                        </Alert>
+                            {signingInfoMessage}
 
+
+                        </Alert>
 
                         <Form.Group as={Row} >
                             <Col className={styles.draftButton}>
-                            <Popup 
-                                    component = {<Button variant="outline-info" onClick={onClickSaveDraft}>SAVE AS DRAFT</Button>}
-                                    popOverText = "Save changes and continue later."
-                                    placement = "right"
+                                <Popup
+                                    component={<Button variant="outline-info" onClick={onClickSaveDraft}>SAVE AS DRAFT</Button>}
+                                    popOverText="Save changes and continue later."
+                                    placement="right"
                                 />
                             </Col>
                             <Col className={styles.saveButton}>
@@ -491,36 +504,36 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                                         <Button variant="info" type="submit">SUBMIT</Button>
 
                                         :
-                                    //     <OverlayTrigger trigger="hover" placement="left"
-                                    //     overlay={
-                                    //         <Popover id="popover-basic" >
-                                    //             <Popover.Content>
-                                    //                 <span style = {{textAlign: 'center'}}>
-                                    //                     You can submit in the next application period.
-                                    //                 </span>
-                                    //             </Popover.Content>
-                                    //         </Popover>
+                                        //     <OverlayTrigger trigger="hover" placement="left"
+                                        //     overlay={
+                                        //         <Popover id="popover-basic" >
+                                        //             <Popover.Content>
+                                        //                 <span style = {{textAlign: 'center'}}>
+                                        //                     You can submit in the next application period.
+                                        //                 </span>
+                                        //             </Popover.Content>
+                                        //         </Popover>
 
 
 
-                                            
-                                    //     }
-                                    // >
-                                    //         <span className="d-inline-block">
 
-                                    //             <Button variant="info" type="submit" disabled style={{ pointerEvents: 'none' }}>SUBMIT</Button>
-                                    //         </span>
+                                        //     }
+                                        // >
+                                        //         <span className="d-inline-block">
 
-                                    //     </OverlayTrigger>
+                                        //             <Button variant="info" type="submit" disabled style={{ pointerEvents: 'none' }}>SUBMIT</Button>
+                                        //         </span>
 
-                                    <Popup 
-                                    component = {<span className="d-inline-block">
+                                        //     </OverlayTrigger>
 
-                                                 <Button variant="info" type="submit" disabled style={{ pointerEvents: 'none' }}>SUBMIT</Button>
-                                             </span>}
-                                    popOverText = "You can submit in the next application period."
-                                    placement = "left"
-                                    />
+                                        <Popup
+                                            component={<span className="d-inline-block">
+
+                                                <Button variant="info" type="submit" disabled style={{ pointerEvents: 'none' }}>SUBMIT</Button>
+                                            </span>}
+                                            popOverText="You can submit in the next application period."
+                                            placement="left"
+                                        />
                                 }
                             </Col>
                         </Form.Group>
@@ -575,6 +588,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                 show={submissionConfirmationShow}
                 onHide={() => setSubmissionConfirmationShow(false)}
                 heading={'Proposal Submission Confirmation'}
+                size="mdxl"
                 onConfirm={() => {
                     submitProposal(
                         {
@@ -585,7 +599,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                 {
                     <>
                         <div>Are you sure you want to submit the proposal?</div>
-                        <div className="text-danger">You need to submit 50 ICX to submit a proposal</div>
+                        {signingInfoMessage}
                     </>
                 }
 
