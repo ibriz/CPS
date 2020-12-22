@@ -31,9 +31,11 @@ function* saveDraftRequestWorker({payload}) {
       callBackAfterSigning: payload.callBackAfterSigning
 
     });
-    NotificationManager.success("Draft Succesfully saved")
     yield put(saveDraftSuccess(
     ));
+
+    NotificationManager.success("Draft Succesfully saved")
+
   } catch (error) {
     NotificationManager.error(error.message, "Draft save failed");
 

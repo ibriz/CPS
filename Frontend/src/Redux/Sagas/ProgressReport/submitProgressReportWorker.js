@@ -6,6 +6,7 @@ import {submitProgressReportSuccess, submitProgressReportFailure, setSubmittingP
 import {PROGRESS_REPORT_ADD_URL} from '../../Constants';
 import {request} from '../helpers';
 import store from 'Redux/Store';
+import {NotificationManager} from 'react-notifications';
 
 export const getAddress = (state) => state.account.address
 
@@ -40,6 +41,7 @@ function* submitProgressReportWorker({payload}) {
       }
     ));
   } catch (error) {
+    NotificationManager.error(error.message, "Submit Progress Report Failed");
     yield put(submitProgressReportFailure());
   }
 }
