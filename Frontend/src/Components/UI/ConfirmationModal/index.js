@@ -5,15 +5,16 @@ import styles from './ConfirmationModal.module.css';
 
 const ConfirmationModal = ({heading = "Confirmation Required"
                             , children = <span>Are you sure?</span>,
-                            onConfirm
-                            , ...props}) => {
+                            onConfirm,
+                            size = "md",
+                             ...props}) => {
 
     return (
       <Modal
         {...props}
         aria-labelledby="contained-modal-title-vcenter"
         centered
-        size = "md"
+        size = {size}
       >
         <Modal.Header bg-primary closeButton>
           <Modal.Title id="contained-modal-title-vcenter" className = {styles.modalTitle}>
