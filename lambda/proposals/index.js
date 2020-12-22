@@ -28,7 +28,8 @@ async function send_email(emailAddress, body) {
             Template: template,
             TemplateData: `{\"proposalName\":\"${body.proposalName}\",
                         \"contributor_address\":\"${body.address}\",
-                        \"subject\":\"${process.env.SUBJECT}\"}`,
+                        \"subject\":\"${process.env.SUBJECT}\",
+                        \"frontend_url":\"${process.env.FRONTEND_URL}\"}`,
             Source: emailFrom
         };
         console.log(params);
@@ -124,7 +125,7 @@ exports.handler = async (event) => {
                     const sponsor = JSON.parse(sponsorData);
                     console.log(sponsor);
 
-                    if (sponsor.enableEmailNotifications) await send_email(sponsor.email, body);
+                    if (body.type === 'Proposal' && sponsor.enableEmailNotifications) await send_email(sponsor.email, body);
                 }
             } else {
                 proposal = await uploadFile(event);
