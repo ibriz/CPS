@@ -228,16 +228,24 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
             saveDraftRequest({
                 ...proposal,
                 address: walletAddress,
-                proposalKey: proposal.ipfsKey
+                proposalKey: proposal.ipfsKey,
+                callBackAfterSigning: () => {
+                    history.push('/proposals');
+
+                }
             });
         }
         else {
             saveDraftRequest({
                 ...proposal,
-                address: walletAddress
+                address: walletAddress,
+                callBackAfterSigning: () => {
+                    history.push('/proposals');
+
+                }
             });
         }
-        history.push('/proposals');
+        // history.push('/proposals');
     }
 
     // useEffect(() => {
