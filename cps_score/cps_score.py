@@ -224,7 +224,7 @@ class CPS_Score(IconScoreBase):
             revert(f"{self.address} : Only Admins can call this method.")
 
     def check_period(self, period_name: str):
-        if self.next_block.get() <= self.block_height:
+        if self.next_block.get() <= self.now():
             self.update_period()
             if self.period_name.get() != period_name:
                 revert(f"{self.address} : Not {period_name}")
@@ -858,7 +858,7 @@ class CPS_Score(IconScoreBase):
 
     @only_owner
     @external
-    def set_initialBlock(self, _block_height: int) -> None:
+    def set_initialBlock(self, _timestamp: int) -> None:
         """
         To set the initial block of application period to start (once only)
         :_block_height : the initial block to be set
@@ -866,9 +866,9 @@ class CPS_Score(IconScoreBase):
         """
 
         self.set_PReps()
-        if _block_height < self.block_height:
-            _block_height = self.block_height
-        self.initial_block.set(_block_height)
+        if _timestamp < self.now():
+            _timestamp = self.now()
+        self.initial_block.set(_timestamp)
 
         self.next_block.set(self.initial_block.get() + BLOCKS_COUNT)
         self.period_name.set(APPLICATION_PERIOD)
@@ -975,14 +975,14 @@ class CPS_Score(IconScoreBase):
         :return: dict of status
         """
 
-        _remaining_blocks = self.next_block.get() - self.block_height
+        _remaining_blocks = self.next_block.get() - self.now()
         if _remaining_blocks < 0:
             _remaining_blocks = 0
-        period_dict = {self._CURRENTBLOCK: self.block_height,
+        period_dict = {self._CURRENTBLOCK: self.now(),
                        self._NEXTBLOCK: self.next_block.get(),
-                       self._REMAINING_TIME: _remaining_blocks * 2,
+                       self._REMAINING_TIME: _remaining_blocks // U_SECONDS,
                        self._PERIOD_NAME: self.period_name.get(),
-                       self._PERIOD_SPAN: BLOCKS_COUNT * 2}
+                       self._PERIOD_SPAN: BLOCKS_COUNT // U_SECONDS}
 
         return period_dict
 
@@ -1465,21 +1465,21 @@ class CPS_Score(IconScoreBase):
         Update Period after ending of the Allocated BlockTime for each period.
         :return:
         """
-        if self.block_height <= self.next_block.get():
-            self.PeriodNotUpdate(f"Period Update Fail. {self.address} : -> Current Block : {self.block_height}, "
+        if self.now() <= self.next_block.get():
+            self.PeriodNotUpdate(f"Period Update Fail. {self.address} : -> Current Timestamp : {self.now()}, "
                                  f"Next Block : {self.next_block.get()}")
 
         else:
             self.set_PReps()
             if self.period_name.get() == APPLICATION_PERIOD:
                 self.period_name.set(VOTING_PERIOD)
-                self.next_block.set(self.block_height + BLOCKS_COUNT)
+                self.next_block.set(self.now() + BLOCKS_COUNT)
                 # self.next_block.set(self.next_block.get() + BLOCKS_COUNT)
                 self._update_application_result()
 
             else:
                 self.period_name.set(APPLICATION_PERIOD)
-                self.next_block.set(self.block_height + BLOCKS_COUNT)
+                self.next_block.set(self.now() + BLOCKS_COUNT)
                 # self.next_block.set(self.next_block.get() + BLOCKS_COUNT)
                 self._update_proposals_result()
                 self._check_progress_report_submission()
