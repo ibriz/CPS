@@ -8,7 +8,7 @@ import { HttpProvider } from 'icon-sdk-js';
 import { setModalShowSponsorRequests, setModalShowVoting, fetchProposalByAddressRequest } from 'Redux/Reducers/proposalSlice';
 import { setModalShowVotingPR } from 'Redux/Reducers/progressReportSlice';
 // import { fetchPeriodDetailsRequest } from 'Redux/Reducers/periodSlice';
-import { loginPrepRequest } from 'Redux/Reducers/accountSlice';
+import { loginPrepRequest, setHasAddress } from 'Redux/Reducers/accountSlice';
 import { fetchSponsorRequestsListRequest, fetchProposalListRequest } from 'Redux/Reducers/proposalSlice';
 import { fetchRemainingVotesRequest } from 'Redux/Reducers/proposalSlice';
 import {fetchProgressReportListRequest} from 'Redux/Reducers/progressReportSlice';
@@ -96,6 +96,11 @@ export default (event) => {
         case 'RESPONSE_ADDRESS':
             console.log("login", payload);
             store.dispatch(login({ address: payload }));
+            break;
+
+        case 'RESPONSE_HAS_ADDRESS':
+            console.log("RESPONSE_HAS_ADDRESS", payload);
+            store.dispatch(setHasAddress({ hasAddress: payload.hasAddress }));
             break;
 
         case 'RESPONSE_SIGNING':
