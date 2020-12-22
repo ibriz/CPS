@@ -15,6 +15,27 @@ async function registerUser(payload) {
     return JSON.stringify({ redisResponse: redisResponse });
 }
 
+async function unsubscribeUser(payload) {
+    const unsubsribeRequest = JSON.parse(payload.body);
+
+    const redisKey = unsubsribeRequest.address;
+
+    if (!redisKey) return new Error('address of the user is required');
+
+    //Retrieve the data from redis using the key - users:address:<<address of the user>>
+    const userFromRedis = await getAsync(`users:address:${redisKey}`);
+
+    const body = JSON.parse(userFromRedis);
+
+    body.enableEmailNotifications = false;
+
+    //Store the data of user in redis with key - users:address:<<address of the user>>
+    const redisResponse = await setAsync(`users:address:${body.address}`, JSON.stringify(body));
+    if (!redisResponse) throw new Error("Email couldnot be unsubscribed");
+
+    return JSON.stringify({ redisResponse: redisResponse });
+}
+
 async function getUser(payload) {
     const redisKey = payload.queryStringParameters.address;
 
@@ -33,6 +54,8 @@ exports.handler = async (event) => {
 
         if (event.httpMethod === 'POST') {
             user = await registerUser(event);
+        } else if (event.httpMethod === 'PUT') {
+            user = await unsubscribeUser(event);
         } else if (event.httpMethod === 'GET') {
             user = await getUser(event);
         } else {
