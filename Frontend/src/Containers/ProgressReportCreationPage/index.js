@@ -197,7 +197,11 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                 address: walletAddress,
                 proposalKey: progressReport.proposalKey,
                 reportKey: progressReport.reportKey,
-                proposalName: currentUserActiveProposals.find(proposal => proposal.ipfsKey === progressReport.projectName)?._proposal_title
+                proposalName: currentUserActiveProposals.find(proposal => proposal.ipfsKey === progressReport.projectName)?._proposal_title,
+                callBackAfterSigning: () => {
+                    history.push('/progress-reports');
+
+                }
             });
         }
         else {
@@ -205,11 +209,14 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                 ...progressReport,
                 address: walletAddress,
                 proposalKey: progressReport.projectName,
-                proposalName: currentUserActiveProposals.find(proposal => proposal.ipfsKey === progressReport.projectName)?._proposal_title
+                proposalName: currentUserActiveProposals.find(proposal => proposal.ipfsKey === progressReport.projectName)?._proposal_title,
+                callBackAfterSigning: () => {
+                    history.push('/progress-reports');
+
+                }
 
             });
         }
-        history.push('/progress-reports');
     }
 
 

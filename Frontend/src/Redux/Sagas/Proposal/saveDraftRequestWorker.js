@@ -29,13 +29,15 @@ function* saveDraftRequestWorker({payload}) {
       url: ADD_PROPOSAL_DRAFT_URL,
       method: body.proposalKey? "PUT": "POST",
       requireSigning: true,
-      requestSentMessage: "Draft Save Request Sent"
+      requestSentMessage: "Draft Save Request Sent",
+      callBackAfterSigning: payload.callBackAfterSigning
     });
     NotificationManager.success("Draft Succesfully saved")
     yield put(saveDraftSuccess(
     ));
   } catch (error) {
-    NotificationManager.error("Draft save failed");
+    console.log("Error123", error.name, error.message)
+    NotificationManager.error(error.message, "Draft save failed");
 
     yield put(saveDraftFailure());
   }
