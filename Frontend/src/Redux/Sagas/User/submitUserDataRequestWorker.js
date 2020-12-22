@@ -23,12 +23,17 @@ function* submitUserDataRequestWorker({payload}) {
       url: SUBMIT_USER_DATA_URL,
       requireSigning: true
     });
-    NotificationManager.success("User Data Updated Successfully");
     yield put(submitUserDataSuccess(
     ));
-    yield put(fetchUserDataRequest());
+    NotificationManager.success("User Data Updated Successfully");
+
+    try {
+      yield put(fetchUserDataRequest());
+    } catch(error) {
+      console.log(error);
+    }
   } catch (error) {
-    NotificationManager.error("User Data Update Failed");
+    NotificationManager.error(error.message, "User Data Update Failed");
     yield put(submitUserDataFailure());
 
   }

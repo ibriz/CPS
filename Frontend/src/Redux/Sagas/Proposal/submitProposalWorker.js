@@ -7,6 +7,7 @@ import {PROPOSAL_ADD_URL} from '../../Constants';
 import {request} from '../helpers';
 import {signTransaction} from 'Redux/ICON/utils';
 import store from 'Redux/Store';
+import {NotificationManager} from 'react-notifications';
 
 export const getAddress = (state) => state.account.address
 
@@ -42,6 +43,8 @@ function* submitProposalWorker({payload}) {
       }
     ));
   } catch (error) {
+    NotificationManager.error(error.message, "Submit Proposal Failed");
+
     yield put(submitProposalFailure());
   }
 }
