@@ -267,7 +267,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
     }
 
     useEffect(() => {
-        const minimumNumberOfWords = 100;
+        const minimumNumberOfWords = 10;
 
         if(!progressReport.description) {
             document.getElementById("description").setCustomValidity(`Please write a description of minimum ${minimumNumberOfWords} words.`);
@@ -281,7 +281,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
     }, [progressReport.description, descriptionWords])
 
     useEffect(() => {
-        const minimumNumberOfWords = 100;
+        const minimumNumberOfWords = 10;
 
         if (progressReport.projectTermRevision) {
             if(!progressReport.revisionDescription) {
