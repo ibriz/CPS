@@ -106,7 +106,7 @@ export function sendTransaction({
 }
 
 
-export function signTransaction() {
+export function signTransaction(walletAddress) {
 
   return new Promise((resolve, reject) => {
 
@@ -119,7 +119,7 @@ export function signTransaction() {
     store.dispatch(signTransactionRequest({ signature: null }));
 
       const payload = getRanHex(51) + new Date().getTime();
-      signTransactionFromICONEX(payload);
+      signTransactionFromICONEX(payload, walletAddress);
 
       const interFunction = () => {
         const signature = store.getState().account.signature;
@@ -144,13 +144,13 @@ function getRanHex(size) {
     )
 }
 
-export function signTransactionFromICONEX(hash) {
+export function signTransactionFromICONEX(hash, walletAddress) {
     
     window.parent.dispatchEvent(new CustomEvent('ICONEX_RELAY_REQUEST', {
         detail: {
             type: 'REQUEST_SIGNING',
             payload: {
-                from: store.getState().account.address,
+                from: walletAddress,
                 // hash: "9babe5d2911e8e42dfad72a589202767f95c6fab49523cdc1621607529890125", //64 characters
                 hash: hash,
             },

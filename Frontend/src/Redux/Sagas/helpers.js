@@ -14,7 +14,8 @@ async function request({
     failureMessage = null,
     requireSigning = false,
     requestSentMessage = null,
-    callBackAfterSigning
+    callBackAfterSigning,
+    walletAddress = store.getState().account.address
 }) {
     const baseURL = ipfs ? IPFS_URL : BASE_URL;
     console.log("request");
@@ -28,7 +29,7 @@ async function request({
         const {
             signature, 
             payload
-          } = await signTransaction();
+          } = await signTransaction(walletAddress);
 
           if(requestSentMessage) {
               NotificationManager.info(requestSentMessage);
