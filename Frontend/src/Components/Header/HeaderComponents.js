@@ -76,7 +76,7 @@ const HeaderComponents = ({ address, logout, title, isPrep, isRegistered, unregi
                     <div>Are you sure you want to {isRegistered ? 'unregister from' : 'register to'} Prep List?</div>
                     {
                         !isRegistered &&
-                        <div style={{ color: 'red' }}>If you miss voting on voting period you should pay penalty to re-register.</div>
+                        <div style={{ color: 'red' }}>Please note that if you miss a vote you will be required to pay a penalty before re-registering.</div>
 
                     }
                 </>
