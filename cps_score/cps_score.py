@@ -3,6 +3,7 @@ from .db.progress_report_data import *
 from .db.proposal_data import *
 from .utils.consts import *
 from .utils.interfaces import *
+from .utils.utils import *
 from iconservice import *
 
 
@@ -148,6 +149,10 @@ class CPS_Score(IconScoreBase):
     def PeriodNotUpdate(self, notes: str):
         pass
 
+    @eventlog(indexed=1)
+    def NotPeriod(self, notes: str):
+        pass
+
     def __init__(self, db: IconScoreDatabase) -> None:
         super().__init__(db)
 
@@ -227,7 +232,7 @@ class CPS_Score(IconScoreBase):
         if self.next_block.get() <= self.now():
             self.update_period()
             if self.period_name.get() != period_name:
-                revert(f"{self.address} : Not {period_name}")
+                self.NotPeriod(f"{self.address} : This method can be only called on {period_name}")
 
     def set_id(self, _val: str):
         self.id.set(_val)
@@ -331,10 +336,7 @@ class CPS_Score(IconScoreBase):
         Set the list of P-Reps' address for the period
         :return:
         """
-
-        for prep in range(0, len(self.main_preps)):
-            self.main_preps.pop()
-
+        ArrayDBUtils.array_db_clear(self.main_preps)
         _prep_list = self._get_preps_address()
 
         for prep in _prep_list:
@@ -861,16 +863,18 @@ class CPS_Score(IconScoreBase):
     def set_initialBlock(self, _timestamp: int) -> None:
         """
         To set the initial block of application period to start (once only)
-        :_block_height : the initial block to be set
-        :return:
+        :param _timestamp : initial UTC Day for the CPS to be set
+
+        :return: X
         """
 
         self.set_PReps()
         if _timestamp < self.now():
             _timestamp = self.now()
-        self.initial_block.set(_timestamp)
 
-        self.next_block.set(self.initial_block.get() + BLOCKS_COUNT)
+        current_day_number = _timestamp // U_SECONDS_DAY
+        self.initial_block.set(current_day_number)
+        self.next_block.set(current_day_number + DAY_COUNT)
         self.period_name.set(APPLICATION_PERIOD)
 
     @external(readonly=True)
@@ -975,14 +979,14 @@ class CPS_Score(IconScoreBase):
         :return: dict of status
         """
 
-        _remaining_blocks = self.next_block.get() - self.now()
-        if _remaining_blocks < 0:
-            _remaining_blocks = 0
-        period_dict = {self._CURRENTBLOCK: self.now(),
+        _current_day = self.now() // U_SECONDS_DAY
+        _remaining_time = (_current_day + 1) * U_SECONDS_DAY - self.now()
+
+        period_dict = {self._CURRENTBLOCK: _current_day,
                        self._NEXTBLOCK: self.next_block.get(),
-                       self._REMAINING_TIME: _remaining_blocks // U_SECONDS,
+                       self._REMAINING_TIME: _remaining_time // U_SECONDS,
                        self._PERIOD_NAME: self.period_name.get(),
-                       self._PERIOD_SPAN: BLOCKS_COUNT // U_SECONDS}
+                       self._PERIOD_SPAN: DAY_COUNT * U_SECONDS_DAY // U_SECONDS}
 
         return period_dict
 
@@ -1465,22 +1469,21 @@ class CPS_Score(IconScoreBase):
         Update Period after ending of the Allocated BlockTime for each period.
         :return:
         """
-        if self.now() <= self.next_block.get():
-            self.PeriodNotUpdate(f"Period Update Fail. {self.address} : -> Current Timestamp : {self.now()}, "
-                                 f"Next Block : {self.next_block.get()}")
+        _current_day = self.now() // U_SECONDS_DAY
+        if _current_day <= self.next_block.get():
+            self.PeriodNotUpdate(f"Period Update Fail. {self.address} : -> Current Day : {_current_day}, "
+                                 f"Next Changing  : {self.next_block.get()}")
 
         else:
             self.set_PReps()
             if self.period_name.get() == APPLICATION_PERIOD:
                 self.period_name.set(VOTING_PERIOD)
-                self.next_block.set(self.now() + BLOCKS_COUNT)
-                # self.next_block.set(self.next_block.get() + BLOCKS_COUNT)
+                self.next_block.set(_current_day + DAY_COUNT)
                 self._update_application_result()
 
             else:
                 self.period_name.set(APPLICATION_PERIOD)
-                self.next_block.set(self.now() + BLOCKS_COUNT)
-                # self.next_block.set(self.next_block.get() + BLOCKS_COUNT)
+                self.next_block.set(_current_day + DAY_COUNT)
                 self._update_proposals_result()
                 self._check_progress_report_submission()
                 self._update_progress_report_result()
@@ -1532,7 +1535,9 @@ class CPS_Score(IconScoreBase):
             _total_voters = len(self.main_preps)
 
             _voters_list = self._get_voters_list(_pending_proposals[proposal])
-            _not_voters = list(set(self.main_preps) - set(_voters_list))
+            _main_preps_list = ArrayDBUtils.arraydb_to_list(self.main_preps)
+            _not_voters = [addr for addr in _main_preps_list + _voters_list if
+                           addr not in _main_preps_list or addr not in _voters_list]
 
             for prep in _not_voters:
                 if prep not in self.inactive_preps:
@@ -1595,7 +1600,9 @@ class CPS_Score(IconScoreBase):
             _total_voters = len(self.main_preps)
 
             _voters_list = self._get_voters_list(_reports)
-            _not_voters = list(set(self.main_preps) - set(_voters_list))
+            _main_preps_list = ArrayDBUtils.arraydb_to_list(self.main_preps)
+            _not_voters = [addr for addr in _main_preps_list + _voters_list if
+                           addr not in _main_preps_list or addr not in _voters_list]
 
             for prep in _not_voters:
                 if prep not in self.inactive_preps:
@@ -1753,5 +1760,5 @@ class CPS_Score(IconScoreBase):
 
             self.PRepPenalty(_prep, "P-Rep added to Denylist.")
 
-        for prep in range(0, len(self.inactive_preps)):
-            self.inactive_preps.pop()
+        # Clear all data from the ArrayDB
+        ArrayDBUtils.array_db_clear(self.inactive_preps)
