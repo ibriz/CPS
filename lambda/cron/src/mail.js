@@ -35,17 +35,17 @@ async function send_email(receiver_type, emailToAddresses, subject) {
     }
 }
 
-async function send_bulk_email(template, userDetails, subject, default_params = {}) {
+async function send_bulk_email(template, userDetails, subject, default_params) {
     console.log(userDetails);
     if (userDetails.length > 0) {
         let params = {
             Source: emailFrom,
             Template: template,
             Destinations: [],
-            DefaultTemplateData: JSON.stringify({
-                Subject: subject,
-                default_params
-            })
+            DefaultTemplateData: `{
+                \"Subject\": \"${subject}\",
+                \"default_params\":\"${default_params}\"
+            }`
         }
 
         for (const user of userDetails) {
@@ -53,7 +53,7 @@ async function send_bulk_email(template, userDetails, subject, default_params = 
                 Destination: {
                     ToAddresses: [user.email]
                 },
-                ReplacementTemplateData: user
+                ReplacementTemplateData: user.replacementTemplateData
             })
         }
 
