@@ -54,7 +54,7 @@ const socialLinks = [
 const links = [
     {
         title: "Getting Started",
-        link: "https://google.com"
+        link: "https://medium.com/@ibriz.ai/1efe714c9182"
     },
 
     {
