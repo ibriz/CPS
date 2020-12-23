@@ -15,7 +15,9 @@ async function request({
     requireSigning = false,
     requestSentMessage = null,
     callBackAfterSigning,
-    walletAddress = store.getState().account.address
+    walletAddress = store.getState().account.address, 
+    successCallback,
+    failureCallback
 }) {
     const baseURL = ipfs ? IPFS_URL : BASE_URL;
     console.log("request");
@@ -43,7 +45,7 @@ async function request({
             ...headers,
             signature: signature,
             payload: payload,
-            address: store.getState().account.address
+            address: walletAddress
 
         }
     }
@@ -62,7 +64,18 @@ async function request({
     const responseJSON = await response.json();
 
     if (response.status <200 || response.status>400) {
-        throw new Error(responseJSON.message);
+        if (failureCallback instanceof Function) {
+            failureCallback(responseJSON.message)
+        } else {
+            throw new Error(responseJSON.message);
+
+        }
+
+        return;
+    }
+
+    if (successCallback instanceof Function) {
+        successCallback();
     }
     return responseJSON;
 };
