@@ -49,7 +49,7 @@ const UnsubscribePage = ({hasAddress}) => {
         if (hasAddress.hasAddress) {
             setUnsubscribeConfirmationShow(true);
         } else {
-            NotificationManager.error(`The address ${walletAddress} not found in the ICONEX`)
+            NotificationManager.error(`The address ${`${walletAddress.slice(0, 8)}...${walletAddress.slice(walletAddress.length - 4)}`} not found in the ICONEX`)
         }
 
     }
