@@ -186,7 +186,11 @@ async function progress_report_reminder_before_one_day(user_details_list) {
             console.log(new_user_active_proposals);
 
             for (const new_proposal of new_user_active_proposals) {
-                user_detail.project_title = new_proposal.project_title;
+                user_detail.replacementTemplateData = `{
+                    \"firstName\": \"${user_detail.firstName}\",
+                    \"project_title\": \"${new_proposal.project_title}\",
+                    \"address\": \"${user_detail.address}\"
+                }`
                 address_notification_list.push(user_detail);
             }
         }
@@ -211,7 +215,11 @@ async function progress_report_reminder_before_one_week(user_details_list) {
             console.log(new_user_active_proposals);
 
             for (const new_proposal of new_user_active_proposals) {
-                user_detail.project_title = new_proposal.project_title;
+                user_detail.replacementTemplateData = `{
+                    \"firstName\": \"${user_detail.firstName}\",
+                    \"project_title\": \"${new_proposal.project_title}\",
+                    \"address\": \"${user_detail.address}\"
+                }`
                 address_notification_list.push(user_detail);
             }
         }
@@ -238,6 +246,10 @@ async function voting_reminder_before_one_day(user_details_list, type) {
             console.log(new_user_active_proposals);
 
             if (new_user_active_proposals.length != 0 && address_notification_list.indexOf(user_detail) === -1) {
+                user_detail.replacementTemplateData = `{
+                    \"firstName\": \"${user_detail.firstName}\",
+                    \"address\": \"${user_detail.address}\"
+                }`
                 address_notification_list.push(user_detail);
             }
         }
@@ -264,6 +276,10 @@ async function voting_reminder_before_one_week(user_details_list, type) {
             console.log(new_user_active_proposals);
 
             if (new_user_active_proposals.length != 0 && address_notification_list.indexOf(user_detail) === -1) {
+                user_detail.replacementTemplateData = `{
+                    \"firstName\": \"${user_detail.firstName}\",
+                    \"address\": \"${user_detail.address}\"
+                }`
                 address_notification_list.push(user_detail);
             }
         }
@@ -289,8 +305,11 @@ async function sponsorship_accepted_notification(user_details_list) {
             console.log(new_user_active_proposals);
 
             for (const new_proposal of new_user_active_proposals) {
-                user_detail.project_title = new_proposal.project_title;
-                user_detail.contributor_address = new_proposal.contributor_address;
+                user_detail.replacementTemplateData = `{
+                    \"firstName\": \"${user_detail.firstName}\",
+                    \"project_title\": \"${new_proposal.project_title}\",
+                    \"contributor_address\": \"${new_proposal.contributor_address}\"
+                }`
                 address_notification_list.push(user_detail);
             }
         }
@@ -316,9 +335,13 @@ async function proposal_accepted_notification(user_details_list) {
             console.log(new_user_active_proposals);
 
             for (const new_proposal of new_user_active_proposals) {
-                user_detail.project_title = new_proposal.project_title;
-                user_detail.total_budget = new_proposal.total_budget;
-                user_detail.project_duration = new_proposal.project_duration;
+                user_detail.replacementTemplateData = `{
+                    \"firstName\": \"${user_detail.firstName}\",
+                    \"project_title\": \"${new_proposal.project_title}\",
+                    \"total_budget\": \"${new_proposal.total_budget}\",
+                    \"project_duration\": \"${new_proposal.project_duration}\",
+                    \"address\": \"${user_detail.address}\",
+                }`
                 address_notification_list.push(user_detail);
             }
         }
@@ -342,8 +365,12 @@ async function budget_approved_notification(user_details_list) {
             const user_reports = proposals.filter(e => e.contributor_address === user_detail.address);
 
             for (const user_report of user_reports) {
-                user_detail.progress_report_title = user_report.progress_report_title;
-                user_detail.additional_budget = user_report.additional_budget;
+                user_detail.replacementTemplateData = `{
+                    \"firstName\": \"${user_detail.firstName}\",
+                    \"progress_report_title\": \"${user_report.progress_report_title}\",
+                    \"additional_budget\": \"${user_report.additional_budget}\",
+                    \"address\": \"${user_detail.address}\",
+                }`
                 address_notification_list.push(user_detail);
             }
         }
@@ -367,8 +394,12 @@ async function budget_rejected_notification(user_details_list) {
             const user_reports = proposals.filter(e => e.contributor_address === user_detail.address);
 
             for (const user_report of user_reports) {
-                user_detail.progress_report_title = user_report.progress_report_title;
-                user_detail.additional_budget = user_report.additional_budget;
+                user_detail.replacementTemplateData = `{
+                    \"firstName\": \"${user_detail.firstName}\",
+                    \"progress_report_title\": \"${user_report.progress_report_title}\",
+                    \"additional_budget\": \"${user_report.additional_budget}\",
+                    \"address\": \"${user_detail.address}\",
+                }`
                 address_notification_list.push(user_detail);
             }
         }

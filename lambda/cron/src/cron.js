@@ -14,7 +14,7 @@ async function execute() {
         let present_period = await score.period_check();
         console.log("Period from Blockchain" + JSON.stringify(present_period));
 
-        if (parseInt(present_period.remaining_time, 'hex') === 0 ) {
+        if (parseInt(present_period.remaining_time, 'hex') === 0) {
             console.log("Period updated");
             await score.update_period(present_period);
             period_triggered = true;
@@ -40,7 +40,12 @@ async function execute() {
             const period_changed = async (preps_list) => {
                 console.log("preps_list" + preps_list)
                 console.log("Sending emails to " + preps_list.length + " preps");
-                await mail.send_bulk_email('period-change', preps_list, 'Start of new period | ICON CPS', { period: present_period._period_name });
+                await mail.send_bulk_email('period-change',
+                                            preps_list,
+                                            'Start of new period | ICON CPS',
+                                            { 
+                                                period: present_period._period_name 
+                                            });
             }
 
             actions.push(period_changed);
@@ -55,7 +60,10 @@ async function execute() {
                 const progress_report_reminder_before_one_day_async = score.progress_report_reminder_before_one_day(user_details_list).then(async (contributor_notification_list) => {
                     console.log("contributor_notification_list" + contributor_notification_list)
                     console.log("Sending emails to " + contributor_notification_list.length + " contributors");
-                    await mail.send_bulk_email('contributor-reminder', contributor_notification_list, 'One day remaining for progress report | ICON CPS', { time: '24 hours', type: 'Progress Report' });
+                    await mail.send_bulk_email('contributor-reminder',
+                                                contributor_notification_list,
+                                                'One day remaining for progress report | ICON CPS',
+                                                `{ \"time\": \"24 hours\", \"type\": \"Progress Report\" }`);
                 })
 
                 actions.push(progress_report_reminder_before_one_day_async);
@@ -63,7 +71,10 @@ async function execute() {
                 const progress_report_reminder_before_one_week = score.progress_report_reminder_before_one_week(user_details_list).then(async (contributor_notification_list) => {
                     console.log("contributor_notification_list" + contributor_notification_list)
                     console.log("Sending emails to " + contributor_notification_list.length + " contributors");
-                    await mail.send_bulk_email('contributor-reminder', contributor_notification_list, 'One week remaining for progress report | ICON CPS', { time: 'one week', type: 'Progress Report' });
+                    await mail.send_bulk_email('contributor-reminder',
+                                                contributor_notification_list,
+                                                'One week remaining for progress report | ICON CPS',
+                                                `{ \"time\": \"one week\", \"type\": \"Progress Report\" }`);
                 })
 
                 actions.push(progress_report_reminder_before_one_week);
@@ -74,7 +85,9 @@ async function execute() {
             const sponsorship_accepted_notification_async = score.sponsorship_accepted_notification(user_details_list).then(async (contributor_notification_list) => {
                 console.log("contributor_notification_list" + contributor_notification_list)
                 console.log("Sending emails to " + contributor_notification_list.length + " contributors");
-                await mail.send_bulk_email('sponsorship-accepted', contributor_notification_list, 'Sponsorship Request Accepted | ICON CPS');
+                await mail.send_bulk_email('sponsorship-accepted',
+                                            contributor_notification_list,
+                                            'Sponsorship Request Accepted | ICON CPS');
             })
 
             actions.push(sponsorship_accepted_notification_async);
@@ -83,19 +96,28 @@ async function execute() {
                 const proposal_accepted_notification_async = score.proposal_accepted_notification(user_details_list).then(async (contributor_notification_list) => {
                     console.log("contributor_notification_list" + contributor_notification_list)
                     console.log("Sending emails to " + contributor_notification_list.length + " contributors");
-                    await mail.send_bulk_email('proposal-accepted', contributor_notification_list, 'One week remaining for voting | ICON CPS', { type: 'Proposal' });
+                    await mail.send_bulk_email('proposal-accepted',
+                                                contributor_notification_list,
+                                                'One week remaining for voting | ICON CPS',
+                                                `{ \"type\": \"Proposal\" }`);
                 })
 
                 const budget_approved_notification_async = score.budget_approved_notification(user_details_list).then(async (contributor_notification_list) => {
                     console.log("contributor_notification_list" + contributor_notification_list)
                     console.log("Sending emails to" + contributor_notification_list + "contributors");
-                    await mail.send_bulk_email('budget-change', contributor_notification_list, 'Budget Approval | ICON CPS', { status: 'approved' });
+                    await mail.send_bulk_email('budget-change',
+                                                contributor_notification_list,
+                                                'Budget Approval | ICON CPS',
+                                                `{ \"status\": \"approved\" }`);
                 })
 
                 const budget_rejected_notification_async = score.budget_rejected_notification(user_details_list).then(async (contributor_notification_list) => {
                     console.log("contributor_notification_list" + contributor_notification_list)
                     console.log("Sending emails to" + contributor_notification_list + "contributors");
-                    await mail.send_bulk_email('budget-change', contributor_notification_list, 'Budget Rejected | ICON CPS', { status: 'rejected' });
+                    await mail.send_bulk_email('budget-change',
+                                                contributor_notification_list,
+                                                'Budget Rejected | ICON CPS',
+                                                `{ \"status\": \"rejected\" }`);
                 })
 
                 actions.push(proposal_accepted_notification_async, budget_approved_notification_async, budget_rejected_notification_async);
@@ -106,13 +128,19 @@ async function execute() {
                 const voting_reminder_before_one_day_proposal_async = score.voting_reminder_before_one_day(preps_list, 'Proposal').then(async (preps_notification_list) => {
                     console.log("preps_notification_list" + preps_notification_list)
                     console.log("Sending emails to " + preps_notification_list.length + " preps");
-                    await mail.send_bulk_email('prep-day-reminder', preps_notification_list, 'One day remaining for voting | ICON CPS', { icx: process.env.ICX_PENALTY });
+                    await mail.send_bulk_email('prep-day-reminder',
+                                                preps_notification_list,
+                                                'One day remaining for voting | ICON CPS',
+                                                `{ \"icx\": \"${process.env.ICX_PENALTY}\" }`);
                 })
 
                 const voting_reminder_before_one_day_progress_report_async = score.voting_reminder_before_one_day(preps_list, 'Progress Report').then(async (preps_notification_list) => {
                     console.log("preps_notification_list" + preps_notification_list)
                     console.log("Sending emails to " + preps_notification_list.length + " preps");
-                    await mail.send_bulk_email('prep-day-reminder', preps_notification_list, 'One day remaining for voting | ICON CPS', { icx: process.env.ICX_PENALTY });
+                    await mail.send_bulk_email('prep-day-reminder',
+                                                preps_notification_list,
+                                                'One day remaining for voting | ICON CPS',
+                                                `{ \"icx\": \"${process.env.ICX_PENALTY}\" }`);
                 })
 
                 actions.push(voting_reminder_before_one_day_proposal_async, voting_reminder_before_one_day_progress_report_async);
@@ -120,13 +148,17 @@ async function execute() {
                 const progress_report_reminder_before_one_week_proposal_async = score.voting_reminder_before_one_week(preps_list, 'Proposal').then(async (preps_notification_list) => {
                     console.log("preps_notification_list" + preps_notification_list)
                     console.log("Sending emails to " + preps_notification_list.length + " preps");
-                    await mail.send_bulk_email('prep-week-reminder', preps_notification_list, 'One week remaining for voting | ICON CPS');
+                    await mail.send_bulk_email('prep-week-reminder', 
+                                                preps_notification_list,
+                                                'One week remaining for voting | ICON CPS');
                 })
 
                 const progress_report_reminder_before_one_week_progress_report_async = score.voting_reminder_before_one_week(preps_list, 'Progress Report').then(async (preps_notification_list) => {
                     console.log("preps_notification_list" + preps_notification_list)
                     console.log("Sending emails to " + preps_notification_list.length + " preps");
-                    await mail.send_bulk_email('prep-week-reminder', preps_notification_list, 'One week remaining for voting | ICON CPS');
+                    await mail.send_bulk_email('prep-week-reminder',
+                                                preps_notification_list,
+                                                'One week remaining for voting | ICON CPS');
                 })
 
                 actions.push(progress_report_reminder_before_one_week_proposal_async, progress_report_reminder_before_one_week_progress_report_async);
