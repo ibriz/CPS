@@ -19,6 +19,7 @@ function Layout({ setLocale }) {
       <Sidebar
         collapsed={collapsed}
         toggled={toggled}
+        setToggled = {setToggled}
         handleToggleSidebar={handleToggleSidebar}
         handleCollapsedChange={handleCollapsedChange}
       />
