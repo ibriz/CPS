@@ -1,2 +1,4 @@
 cps_score/.idea/
 .idea/
+*.pkl
+CPS Deployment Guide.ipynb
