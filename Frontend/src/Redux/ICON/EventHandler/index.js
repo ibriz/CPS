@@ -25,7 +25,8 @@ const { submit_proposal,
     update_period,
     unregister_prep,
     register_prep,
-    pay_prep_penalty } = constants;
+    pay_prep_penalty,
+    approve_sponsor } = constants;
 
 function setTimeoutPromise() {
     return new Promise(function (resolve, reject) {
@@ -222,38 +223,86 @@ export default (event) => {
 
                     // setTimeout(() => window.location.reload(), 800); 
                     break;
-                case reject_sponsor:
-                    history.push('/');
-                    NotificationManager.info("Proposal Rejection Request Sent");
 
-                    getResult({
-                        txHash: payload.result,
-                        failureMessage: "Proposal Rejection Failed",
-                        successMessage: "Proposal Rejected Successfully"
-                    }, function(){
+                    case approve_sponsor:
+                        console.log('history');
+                        history.push('/');
+                        NotificationManager.info("Sponsor request approval request sent");
+    
+                        getResult({
+                            txHash: payload.result,
+                            failureMessage: "Error accepting Sponsor Request",
+                            successMessage: "Sponsor request accepted successfully"
+                        }, function(){
+    
+                            store.dispatch(fetchSponsorRequestsListRequest(
+                                {
+                                    status: "Pending",
+                                    walletAddress: store.getState().account.address,
+                                    pageNumber: 1
+                                }
+                            ));
+                            store.dispatch(fetchSponsorRequestsListRequest(
+                                {
+                                    status: "Approved",
+                                    walletAddress: store.getState().account.address,
+                                    pageNumber: 1
+                                }
+                            ));
+                            store.dispatch(fetchSponsorRequestsListRequest(
+                                {
+                                    status: "Rejected",
+                                    walletAddress: store.getState().account.address,
+                                    pageNumber: 1
+                                }
+                            ));
+                            return true;
+    
+                        });
+                        store.dispatch(setModalShowSponsorRequests(false));
+    
+                        // setTimeout(() => window.location.reload(), 800); 
+                        break;
 
-                        store.dispatch(fetchSponsorRequestsListRequest(
-                            {
-                                status: "Pending",
-                                walletAddress: store.getState().account.address,
-                                pageNumber: 1
-                            }
-                        ));
-                        store.dispatch(fetchSponsorRequestsListRequest(
-                            {
-                                status: "Approved",
-                                walletAddress: store.getState().account.address,
-                                pageNumber: 1
-                            }
-                        ));
-                        return true;
-
-                    });
-                    store.dispatch(setModalShowSponsorRequests(false));
-
-
-                    // setTimeout(() => window.location.reload(), 800);                 
-                    break;
+                        case reject_sponsor:
+                            console.log('history');
+                            history.push('/');
+                            NotificationManager.info("Sponsor request rejection request sent");
+        
+                            getResult({
+                                txHash: payload.result,
+                                failureMessage: "Error denying Sponsor Request",
+                                successMessage: "Sponsor request denied successfully"
+                            }, function(){
+        
+                                store.dispatch(fetchSponsorRequestsListRequest(
+                                    {
+                                        status: "Pending",
+                                        walletAddress: store.getState().account.address,
+                                        pageNumber: 1
+                                    }
+                                ));
+                                store.dispatch(fetchSponsorRequestsListRequest(
+                                    {
+                                        status: "Approved",
+                                        walletAddress: store.getState().account.address,
+                                        pageNumber: 1
+                                    }
+                                ));
+                                store.dispatch(fetchSponsorRequestsListRequest(
+                                    {
+                                        status: "Rejected",
+                                        walletAddress: store.getState().account.address,
+                                        pageNumber: 1
+                                    }
+                                ));
+                                return true;
+        
+                            });
+                            store.dispatch(setModalShowSponsorRequests(false));
+        
+                            // setTimeout(() => window.location.reload(), 800); 
+                            break;
 
                 case vote_proposal:
                     console.group("vote_proposal");

@@ -313,12 +313,12 @@ function DetailsModal(props) {
               onClick={() => {
                 setSponsorConfirmationShow(true);
                 setSponsorVote('approve')
-              }}>Approve</Button>
+              }}>Accept</Button>
             <Button variant="danger" className={styles.rejectButton} onClick={onClickRejectSponsorRequest}
               onClick={() => {
                 setSponsorConfirmationShow(true);
                 setSponsorVote('reject')
-              }}>Reject</Button>
+              }}>Deny</Button>
 
           </Row>
         }
@@ -408,10 +408,10 @@ function DetailsModal(props) {
           {
             (sponsorVote === 'approve') ?
               <>
-                <div>Are you sure you want to approve the sponsor request?</div>
+                <div>Are you sure you want to accept the sponsor request?</div>
                 <div style={{ color: 'red' }}>You will need to transfer {icxFormat((proposalDetail?.totalBudget?? 0) * 0.1, true)} ICX for sponsor bond.</div>
               </> :
-              <span>Are you sure you want to reject the sponsor request?</span>
+              <span>Are you sure you want to deny the sponsor request?</span>
           }
 
         </ConfirmationModal>
