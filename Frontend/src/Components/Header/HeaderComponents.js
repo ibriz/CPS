@@ -9,8 +9,9 @@ import ConfirmationModal from 'Components/UI/ConfirmationModal';
 import UserInfoFormModal from './UserInfoFormModal';
 import useTimer from 'Hooks/useTimer';
 import {Link} from 'react-router-dom';
+import {setLoginButtonClicked} from 'Redux/Reducers/accountSlice';
 
-const HeaderComponents = ({ address, logout, title, isPrep, isRegistered, unregisterPrep, registerPrep,period, payPenalty, firstName, lastName, walletBalance, landingPage }) => {
+const HeaderComponents = ({ address, logout, title, isPrep, isRegistered, unregisterPrep, registerPrep,period, payPenalty, firstName, lastName, walletBalance, landingPage, loginButtonClicked, setLoginButtonClicked }) => {
 
 
     const [modalShow, setModalShow] = React.useState(false);
@@ -20,6 +21,16 @@ const HeaderComponents = ({ address, logout, title, isPrep, isRegistered, unregi
     const onLogout = () => {
         logout();
     }
+
+    useState(() => {
+        if(address && loginButtonClicked) {
+            setLoginButtonClicked({
+                click: false
+            });
+            setModalShow(true);
+
+        }
+    }, [address])
 
     const [showUnregisterConfirmationModal, setShowUnregisterConfirmationModal] = useState(false);
 
@@ -101,6 +112,7 @@ const mapStateToProps = state => ({
     isRegistered: state.account.isRegistered,
     payPenalty: state.account.payPenalty,
     walletBalance: state.account.walletBalance,
+    loginButtonClicked: state.account.loginButtonClicked,
 
 
     period: state.period.period,
@@ -114,6 +126,7 @@ const mapDispatchToProps = dispatch => (
         logout: () => dispatch(logout()),
         unregisterPrep: () => dispatch(unregisterPrep()),
         registerPrep: () => dispatch(registerPrep()),
+        setLoginButtonClicked: (payload) => dispatch(setLoginButtonClicked(payload))
 
     }
 )

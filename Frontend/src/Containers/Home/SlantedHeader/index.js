@@ -20,8 +20,9 @@ import { Link } from 'react-router-dom';
 import { NotificationManager } from 'react-notifications';
 import Header from 'Components/Header';
 import HeaderComponents from 'Components/Header/HeaderComponents';
+import {setLoginButtonClicked} from 'Redux/Reducers/accountSlice';
 
-const SlantedHeader = ({ loginRequest, loginPrepRequest, walletAddress }) => {
+const SlantedHeader = ({ loginRequest, loginPrepRequest, walletAddress, setLoginButtonClicked }) => {
 
     const onClickLogin = () => {
 
@@ -44,6 +45,9 @@ const SlantedHeader = ({ loginRequest, loginPrepRequest, walletAddress }) => {
             // is Google Chrome
             window.dispatchEvent(customRequestHasAccount);
             window.dispatchEvent(customRequestAddress);
+            setLoginButtonClicked({
+                click: true
+            });
             loginRequest();
         } else {
             NotificationManager.warning("Please Use Google Chrome or any other Chromium Browser");
@@ -183,6 +187,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     loginRequest: payload => dispatch(loginRequest(payload)),
     loginPrepRequest: payload => dispatch(loginPrepRequest(payload)),
+    setLoginButtonClicked: payload => dispatch(setLoginButtonClicked(payload)),
 
 });
 export default connect(mapStateToProps, mapDispatchToProps)(SlantedHeader);

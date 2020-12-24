@@ -16,6 +16,7 @@ import ProposalPendingPRCard from 'Components/ProposalPendingPRCard';
 import SponsorRequestsCard from 'Components/SponsorRequestsCard';
 import VotingCard from 'Components/VotingCard';
 import { fetchExpectedGrantRequest, fetchCPSTreasuryScoreAddressRequest } from 'Redux/Reducers/fundSlice';
+import {setLoginButtonClicked} from 'Redux/Reducers/accountSlice';
 
 const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfRemainingFunds, cpfScoreAddress, fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, fetchProjectAmountsRequest, isPrep, isRegistered, myProposalList, fetchExpectedGrantRequest, expectedGrant, sponsorBond, totalCountSponsorRequests, remainingVotesProposal, remainingVotesPR, fetchCPSTreasuryScoreAddressRequest, cpsTreasuryScoreAddress, payPenaltyAmount, sponsorReward }) => {
     const [showPayPenaltyConfirmationModal, setShowPayPenaltyConfirmationModal] = useState(false);
@@ -276,7 +277,7 @@ const mapDispatchToProps = {
     fetchCPFRemainingFundRequest,
     fetchProjectAmountsRequest,
     fetchExpectedGrantRequest,
-    fetchCPSTreasuryScoreAddressRequest
+    fetchCPSTreasuryScoreAddressRequest,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
