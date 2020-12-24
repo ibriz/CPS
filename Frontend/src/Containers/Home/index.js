@@ -12,7 +12,7 @@ const Home = ({ period, isPrep, isRegistered, address }) => {
         <div className={styles.home}>
             <SlantedHeader />
             {
-                (!isPrep || !isRegistered) && address &&
+                address &&
                 <Container style = {{marginBottom: '10px'}} className = {styles.upperCardContainer}>
                     <UpperCard />
                 </Container>

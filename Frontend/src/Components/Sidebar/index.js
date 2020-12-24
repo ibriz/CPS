@@ -118,12 +118,12 @@ const Aside = ({ collapsed, rtl, toggled, handleToggleSidebar, handleCollapsedCh
                 <Link to="/dashboard" />
 
               </MenuItem>
-              <MenuItem icon={<FaGem />} style = {getHighlightedStyle(['/proposals'])}
+              <MenuItem icon={<FaGem />} style = {getHighlightedStyle(['/proposals', '/newProposal'])}
                 > {<span>Proposals</span>}
                 <Link to={process.env.PUBLIC_URL + "/proposals"} />
 
               </MenuItem>
-              <MenuItem icon={<FaList />} style = {getHighlightedStyle(['/progress-reports'])}
+              <MenuItem icon={<FaList />} style = {getHighlightedStyle(['/progress-reports', '/newProgressReport'])}
               > {<span>Progress Reports</span>}
                 <Link to="/progress-reports" />
 

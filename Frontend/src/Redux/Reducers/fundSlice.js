@@ -8,6 +8,7 @@ const initialState = {
     cpsTreasuryScoreAddress: null,
 
     expectedGrant: 0,
+    sponsorReward: 0,
     sponsorBond: 0
 
 };
@@ -62,8 +63,13 @@ const fundSlice = createSlice({
             return;
         },
         fetchExpectedGrantSuccess(state, action) {
-            state.expectedGrant = action.payload.response.total_amount ? IconConverter.toBigNumber(action.payload.response.total_amount).dividedBy(10**18) : 0;
-            state.sponsorBond = action.payload.response.total_sponsor_bond ? IconConverter.toBigNumber(action.payload.response.total_sponsor_bond).dividedBy(10**18) : 0;
+            if(action.payload.type === 'proposalGrant') {
+                state.expectedGrant = action.payload.response.total_amount ? IconConverter.toBigNumber(action.payload.response.total_amount).dividedBy(10**18) : 0;
+            } else {
+                state.sponsorReward = action.payload.response.total_amount ? IconConverter.toBigNumber(action.payload.response.total_amount).dividedBy(10**18) : 0;
+                state.sponsorBond = action.payload.response.total_sponsor_bond ? IconConverter.toBigNumber(action.payload.response.total_sponsor_bond).dividedBy(10**18) : 0;
+            }
+        
 
             // state.cpfScoreAddress = action.payload.response;
 

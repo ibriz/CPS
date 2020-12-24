@@ -74,7 +74,7 @@ const Main = ({
               </Route>
               <Route path="/newProposal">
                   <>
-                    {userRoute(<ProposalCreationPage />)}
+                    {<ProposalCreationPage />}
                     <Helmet>
                       <title>CPS - Create New Proposal</title>
                     </Helmet>
@@ -85,7 +85,7 @@ const Main = ({
               <Route path="/newProgressReport">
                 {
                     <>
-                      {userRoute(<ProgressReportCreationPage />)}
+                      {<ProgressReportCreationPage />}
                       <Helmet>
                         <title>CPS - Create New Progress Report</title>
                       </Helmet>
