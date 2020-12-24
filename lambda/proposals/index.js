@@ -15,7 +15,6 @@ const SES = new AWS.SES({
 });
 
 const emailFrom = process.env.MAIL_FROM;
-const subject = process.env.SUBJECT;
 const template = process.env.SPONSORSHIP_REQUEST_TEMPLATE;
 
 async function send_email(emailAddress, body) {
