@@ -44,7 +44,8 @@ async function send_bulk_email(template, userDetails, subject, default_params) {
             Destinations: [],
             DefaultTemplateData: `{
                 \"Subject\": \"${subject}\",
-                \"default_params\":\"${default_params}\"
+                \"default_params\":\"${default_params}\",
+                \"frontend_url\":\"${process.env.FRONTEND_URL}\"
             }`
         }
 
