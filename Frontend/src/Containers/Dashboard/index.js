@@ -100,7 +100,7 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
                 color: '#1AAABA',
                 title: `Total Disbursement Due in ${highestSignificantTimeForGrant.value} ${highestSignificantTimeForGrant.text}`,
                 // value={`${icxFormat(cpfRemainingFunds, true)} ICX`} 
-                value: `${icxFormat(expectedGrant + sponsorReward, true)} ICX`
+                value: `${icxFormat(parseFloat(expectedGrant) + parseFloat(sponsorReward), true)} ICX`
             },
         ];
     }
