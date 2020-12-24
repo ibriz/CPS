@@ -17,7 +17,7 @@ import SponsorRequestsCard from 'Components/SponsorRequestsCard';
 import VotingCard from 'Components/VotingCard';
 import { fetchExpectedGrantRequest, fetchCPSTreasuryScoreAddressRequest } from 'Redux/Reducers/fundSlice';
 
-const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfRemainingFunds, cpfScoreAddress, fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, fetchProjectAmountsRequest, isPrep, isRegistered, myProposalList, fetchExpectedGrantRequest, expectedGrant, sponsorBond, totalCountSponsorRequests, remainingVotesProposal, remainingVotesPR, fetchCPSTreasuryScoreAddressRequest, cpsTreasuryScoreAddress, payPenaltyAmount }) => {
+const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfRemainingFunds, cpfScoreAddress, fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, fetchProjectAmountsRequest, isPrep, isRegistered, myProposalList, fetchExpectedGrantRequest, expectedGrant, sponsorBond, totalCountSponsorRequests, remainingVotesProposal, remainingVotesPR, fetchCPSTreasuryScoreAddressRequest, cpsTreasuryScoreAddress, payPenaltyAmount, sponsorReward }) => {
     const [showPayPenaltyConfirmationModal, setShowPayPenaltyConfirmationModal] = useState(false);
     const { isRemainingTimeZero, highestSignificantTime, highestSignificantTimeForGrant } = useTimer();
 
@@ -52,11 +52,30 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
         ];
     } else {
         cardInfo = [
+
+            {
+                color: '#1AAABA',
+                title: "My Voting Proposals",
+                // value={`${projectAmounts.Voting.count} (${icxFormat(projectAmounts.Voting.amount)} ICX)`} 
+                value: myProposalList.filter(proposal => proposal._status === '_pending').length
+            },
+            {
+                color: '#1AAABA',
+                title: "My Approved Proposals",
+                // value={`${projectAmounts.Active.count + projectAmounts.Paused.count} (${icxFormat(projectAmounts.Active.amount + projectAmounts.Paused.amount)} ICX)`} />
+                value: myProposalList.filter(proposal => ['_active', '_paused'].includes(proposal._status)).length
+            },
             {
                 color: '#1AAABA',
                 title: period === "APPLICATION" ? "Remaining Sponsor Requests" : "Outstanding Votes",
                 // value={`${projectAmounts.Voting.count} (${icxFormat(projectAmounts.Voting.amount)} ICX)`} 
                 value: period === "APPLICATION" ? totalCountSponsorRequests.Pending : (remainingVotesProposal.length + remainingVotesPR.length)
+            },
+            {
+                title: `Remaining of ${period === "APPLICATION" ? 'Application Period' : 'Voting Period'}`,
+                color: '#1AAABA',
+                // value={period === "APPLICATION" ? 'Application Period' : 'Voting Period'} />
+                value: ` ${highestSignificantTime.value} ${highestSignificantTime.text}`
             },
             {
                 color: '#1AAABA',
@@ -68,14 +87,21 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
                 color: '#1AAABA',
                 title: `Sponsor Reward in  ${highestSignificantTimeForGrant.value} ${highestSignificantTimeForGrant.text}`,
                 // value={`${icxFormat(cpfRemainingFunds, true)} ICX`} 
-                value: `${icxFormat(expectedGrant, true)} ICX`
+                value: `${icxFormat(sponsorReward, true)} ICX`
             },
             {
-                title: `Remaining of ${period === "APPLICATION" ? 'Application Period' : 'Voting Period'}`,
                 color: '#1AAABA',
-                // value={period === "APPLICATION" ? 'Application Period' : 'Voting Period'} />
-                value: ` ${highestSignificantTime.value} ${highestSignificantTime.text}`
-            }
+                title: `Proposal Grants Due in ${highestSignificantTimeForGrant.value} ${highestSignificantTimeForGrant.text}`,
+                // value={`${icxFormat(cpfRemainingFunds, true)} ICX`} 
+                value: `${icxFormat(expectedGrant, true)} ICX`
+            },
+
+            {
+                color: '#1AAABA',
+                title: `Total Disbursement Due in ${highestSignificantTimeForGrant.value} ${highestSignificantTimeForGrant.text}`,
+                // value={`${icxFormat(cpfRemainingFunds, true)} ICX`} 
+                value: `${icxFormat(expectedGrant + sponsorReward, true)} ICX`
+            },
         ];
     }
 
@@ -88,7 +114,15 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
 
     useEffect(() => {
         if (cpsTreasuryScoreAddress) {
-            fetchExpectedGrantRequest();
+            fetchExpectedGrantRequest({
+                type: 'proposalGrant'
+            });
+
+            if(isPrep && isRegistered) {
+                fetchExpectedGrantRequest({
+                    type: 'sponsorReward'
+                });
+            }
         }
     }, [cpsTreasuryScoreAddress, fetchExpectedGrantRequest, isPrep, isRegistered])
 
@@ -167,7 +201,6 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
 
 
             {
-                (!isPrep || !isRegistered) &&
                 <>
                     <div className={styles.myProposalHeading}>My Proposals</div>
 
@@ -221,6 +254,7 @@ const mapStateToProps = state => (
         myProposalList: state.proposals.myProposalList,
         expectedGrant: state.fund.expectedGrant,
         sponsorBond: state.fund.sponsorBond,
+        sponsorReward: state.fund.sponsorReward,
         totalCountSponsorRequests: state.proposals.totalCountSponsorRequests,
 
         remainingVotesProposal: state.proposals.remainingVotes,

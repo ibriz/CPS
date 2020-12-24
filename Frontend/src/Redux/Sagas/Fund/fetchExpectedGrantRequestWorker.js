@@ -21,7 +21,7 @@ function* fetchCPFScoreAddressWorker({ payload }) {
     console.log("cpsTreasuryScoreAddress",cpsTreasuryScoreAddress);
     if (cpsTreasuryScoreAddress) {
       const response = yield call(callKeyStoreWallet, {
-        method: (isPrep && isRegistered) ? 'get_sponsor_projected_fund' : 'get_contributor_projected_fund',
+        method: (payload.type === 'sponsorReward') ? 'get_sponsor_projected_fund' : 'get_contributor_projected_fund',
         params: {
           _wallet_address: walletAddress,
 
@@ -34,6 +34,7 @@ function* fetchCPFScoreAddressWorker({ payload }) {
       yield put(fetchExpectedGrantSuccess({
         response: {
           ...response,
+          type: payload.type
         }
       }));
     }

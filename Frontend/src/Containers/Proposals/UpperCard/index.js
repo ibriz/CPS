@@ -23,7 +23,7 @@ const UpperCard = ({ numberOfSubmittedProposals, updatePeriod, sponsorRequest, v
         button = <Button variant="primary" className={styles.createProposalButton} onClick={onClickUpdatePeriod}>UPDATE PERIOD </Button>
         text = <span className={styles.proposalNumber}>Click button to trigger {period === 'APPLICATION' ? 'Voting' : 'Application'} Period</span>
 
-    } else if (sponsorRequest || voting || (isPrep && isRegistered)) {
+    } else if (sponsorRequest || voting) {
         text = null;
         button = null;
 
