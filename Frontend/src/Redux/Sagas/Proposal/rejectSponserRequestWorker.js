@@ -10,6 +10,7 @@ function* rejectSponserRequestWorker({ payload }) {
     sendTransaction({
         method: 'sponsor_vote',
         params,
+        id: 'reject_sponsor'
     }
     )
 

@@ -11,6 +11,7 @@ function* approveSponserRequestWorker({ payload }) {
         method: 'sponsor_vote',
         params,
         icxAmount: payload.sponsorBond,
+        id: 'approve_sponsor'
     }
     )
 
