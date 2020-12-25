@@ -698,7 +698,7 @@ class CPS_Score(IconScoreBase):
             if _status == self._SPONSOR_PENDING:
                 _budget = int(_proposal_details[self._TOTAL_BUDGET])
 
-                if self.msg.value != (_budget * MULTIPLIER) / 10:
+                if self.msg.value != (_budget * MULTIPLIER) // 10:
                     revert(f"{self.address} : -> Deposit 10% of the total budget of the project.")
 
                 self._update_proposal_status(_ipfs_key, self._PENDING)
