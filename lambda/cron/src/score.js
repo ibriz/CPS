@@ -80,9 +80,9 @@ async function recursive_score_call(func, params = {}, data = []) {
 
     if (Array.isArray(results)) return results;
 
-    data.push(results.data);
+    data = data.concat(results.data);
 
-    if (results.count > results.data.length) {
+    if (parseInt(results.count, 'hex') > results.data.length) {
         params._start_index = params._end_index + 20;
         return await recursive_score_call(func, params, data)
     } else {
