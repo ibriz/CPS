@@ -125,10 +125,7 @@ async function update_period() {
         const txHash = await iconService.sendTransaction(signedTransaction).execute();
         console.log('Transaction hash' + txHash);
 
-        const result = await getResult(txHash);
-        console.log('Result of update period' + JSON.stringify(result));
-
-        return result;
+        await getResult(txHash);
     } catch (error) {
         console.error(error);
         throw new Error(error);
