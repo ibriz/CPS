@@ -24,6 +24,7 @@ async function populate_users_details(addresses_list) {
         console.error(e);
         console.error("Error getting addresses from Redis!");
     } finally {
+        console.log('populate_users_details'+JSON.stringify(user_details_list));
         return user_details_list;
     }
 }

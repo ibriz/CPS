@@ -8,7 +8,7 @@ exports.handler = async (_event) => {
         console.log(cron_actions);
 
         return Promise.all(cron_actions).then(() => {
-            console.log('===========================Completed=============================');
+            console.log('==============Invoke Successful==========');
             Promise.resolve({
                 statusCode: 200,
                 headers: {
