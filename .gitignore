@@ -3,3 +3,4 @@ cps_score/.idea/
 *.pkl
 *.ipynb
 .ipynb_checkpoints/
+*.pyc
