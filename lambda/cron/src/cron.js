@@ -4,6 +4,27 @@ const score = require('./score');
 
 const DAY = 24 * 60 * 60;
 
+async function period_changed(preps_list) {
+    if (preps_list !== undefined && preps_list.length > 0) {
+        console.log('preps_list' + preps_list)
+        console.log('Sending emails to ' + preps_list.length + ' preps');
+
+        const period_changed_preps_list = preps_list.map(e => {
+            return {
+                email: e.email,
+                replacementTemplateData: `{\"address\":\"${e.address}\",
+                                        \"firstName\":\"${e.firsName}\"}`
+            }
+        })
+        await mail.send_bulk_email('period-change',
+            period_changed_preps_list,
+            'Start of new period | ICON CPS',
+            `{ \"period\": \"${present_period._period_name}\" }`);
+    } else {
+        console.log('No user to send notification: period_changed')
+    }
+}
+
 async function execute() {
     let actions = [];
     try {
@@ -32,27 +53,13 @@ async function execute() {
 
         const preps_list = await redis.populate_users_details(preps_key);
         console.log('Notification enabled user details ' + JSON.stringify(user_details_list));
+        console.log('Notification enabled preps details ' + JSON.stringify(preps_list));
 
-        if (period_triggered) {
-            const period_changed = async (preps_list) => {
-                if (preps_list !== undefined && preps_list.length > 0) {
-                    console.log('preps_list' + preps_list)
-                    console.log('Sending emails to ' + preps_list.length + ' preps');
-                    await mail.send_bulk_email('period-change',
-                        preps_list,
-                        'Start of new period | ICON CPS',
-                        { period: present_period._period_name });
-                } else {
-                    console.log('No user to send notification: period_changed')
-                }
-            }
-
-            actions.push(period_changed);
-        }
+        if (period_triggered) await period_changed(preps_list);
 
         console.log(present_period);
 
-        if (present_period.period_name === 'Application Period') {
+        if (present_period.period_name === 'Application Period' && user_details_list.length > 0) {
             console.log('=====================Notifications for Application Period=======================');
 
             if (parseInt(present_period.remaining_time) <= DAY) {
@@ -145,7 +152,7 @@ async function execute() {
 
                 actions.push(proposal_accepted_notification_async, budget_approved_notification_async, budget_rejected_notification_async);
             }
-        } else if (present_period.period_name === 'Voting Period') {
+        } else if (present_period.period_name === 'Voting Period' && preps_list.length > 0) {
             console.log('=====================Notifications for Voting Period=======================');
             if (parseInt(present_period.remaining_time) <= DAY) {
                 const voting_reminder_before_one_day_proposal_async = score.voting_reminder_before_one_day(preps_list, 'Proposal').then(async (preps_notification_list) => {
@@ -203,6 +210,8 @@ async function execute() {
                 actions.push(progress_report_reminder_before_one_week_proposal_async, progress_report_reminder_before_one_week_progress_report_async);
             } else {
                 console.log('No reminders sent to users');
+                console.log('No of notification enabled preps: ' + preps_list.length);
+                console.log('No of notification enabled contributors' + user_details_list.length);
             }
         }
     } catch (error) {
