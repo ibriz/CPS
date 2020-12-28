@@ -4,7 +4,7 @@ const score = require('./score');
 
 const DAY = 24 * 60 * 60;
 
-async function period_changed(preps_list) {
+async function period_changed(preps_list, period) {
 	if (preps_list !== undefined && preps_list.length > 0) {
 		console.log('preps_list' + preps_list)
 		console.log('Sending emails to ' + preps_list.length + ' preps');
@@ -13,13 +13,13 @@ async function period_changed(preps_list) {
 			return {
 				email: e.email,
 				replacementTemplateData: `{\"address\":\"${e.address}\",
-                                        \"firstName\":\"${e.firsName}\"}`
+                                        \"firstName\":\"${e.firstName}\"}`
 			}
 		})
 		await mail.send_bulk_email('period-change',
 			period_changed_preps_list,
 			'Start of new period | ICON CPS',
-			`{ \"period\": \"${present_period._period_name}\" }`);
+			`,\"period\": \"${period}\"`);
 	} else {
 		console.log('No user to send notification: period_changed')
 	}
@@ -55,7 +55,7 @@ async function execute() {
 		console.log('Notification enabled user details ' + JSON.stringify(user_details_list));
 		console.log('Notification enabled preps details ' + JSON.stringify(preps_list));
 
-		if (period_triggered) await period_changed(preps_list);
+		if (period_triggered) await period_changed(preps_list, present_period.period_name);
 
 		console.log(present_period);
 
@@ -70,7 +70,7 @@ async function execute() {
 						await mail.send_bulk_email('contributor-reminder',
 							contributor_notification_list,
 							'One day remaining for progress report | ICON CPS',
-							`{ \"time\": \"24 hours\", \"type\": \"Progress Report\" }`);
+							`,\"time\": \"24 hours\", \"type\": \"Progress Report\"`);
 					} else {
 						console.log('No user to send notification: progress_report_reminder_before_one_day_async')
 					}
@@ -85,7 +85,7 @@ async function execute() {
 						await mail.send_bulk_email('contributor-reminder',
 							contributor_notification_list,
 							'One week remaining for progress report | ICON CPS',
-							`{ \"time\": \"one week\", \"type\": \"Progress Report\" }`);
+							`,\"time\": \"one week\", \"type\": \"Progress Report\"`);
 					} else {
 						console.log('No user to send notification: progress_report_reminder_before_one_week')
 					}
@@ -118,7 +118,7 @@ async function execute() {
 						await mail.send_bulk_email('proposal-accepted',
 							contributor_notification_list,
 							'One week remaining for voting | ICON CPS',
-							`{ \"type\": \"Proposal\" }`);
+							`,\"type\": \"Proposal\"`);
 					} else {
 						console.log('No user to send notification: proposal_accepted_notification_async')
 					}
@@ -131,7 +131,7 @@ async function execute() {
 						await mail.send_bulk_email('budget-change',
 							contributor_notification_list,
 							'Budget Approval | ICON CPS',
-							`{ \"status\": \"approved\" }`);
+							`,\"status\": \"approved\"`);
 					} else {
 						console.log('No user to send notification: budget_approved_notification_async')
 					}
@@ -144,7 +144,7 @@ async function execute() {
 						await mail.send_bulk_email('budget-change',
 							contributor_notification_list,
 							'Budget Rejected | ICON CPS',
-							`{ \"status\": \"rejected\" }`);
+							`,\"status\": \"rejected\"`);
 					} else {
 						console.log('No user to send notification: budget_rejected_notification_async')
 					}
@@ -162,7 +162,7 @@ async function execute() {
 						await mail.send_bulk_email('prep-day-reminder',
 							preps_notification_list,
 							'One day remaining for voting | ICON CPS',
-							`{ \"icx\": \"${process.env.ICX_PENALTY}\" }`);
+							`,\"icx\": \"${process.env.ICX_PENALTY}\"`);
 					} else {
 						console.log('No user to send notification: voting_reminder_before_one_day_proposal_async')
 					}
@@ -175,7 +175,7 @@ async function execute() {
 						await mail.send_bulk_email('prep-day-reminder',
 							preps_notification_list,
 							'One day remaining for voting | ICON CPS',
-							`{ \"icx\": \"${process.env.ICX_PENALTY}\" }`);
+							`,\"icx\": \"${process.env.ICX_PENALTY}\"`);
 					} else {
 						console.log('No user to send notification: voting_reminder_before_one_day_progress_report_async')
 					}
