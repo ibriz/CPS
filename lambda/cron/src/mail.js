@@ -1,21 +1,21 @@
 const AWS = require('aws-sdk');
 // SES initialize
-const SES = new AWS.SES();
+const SES = new AWS.SES({
+	'region': process.env.SES_REGION
+});
 
 const emailFrom = process.env.EMAIL_FROM;
 
-async function send_bulk_email(template, userDetails, subject, default_params) {
+async function send_bulk_email(template, userDetails, subject, default_params = '') {
 	console.log(userDetails);
 	if (userDetails.length > 0) {
 		let params = {
 			Source: emailFrom,
 			Template: template,
 			Destinations: [],
-			DefaultTemplateData: `{
-                \"Subject\": \"${subject}\",
-                \"default_params\":\"${default_params}\",
-                \"frontend_url\":\"${process.env.FRONTEND_URL}\"
-            }`
+			DefaultTemplateData: `{\"subject\": \"${subject}\",
+								\"frontend_url\":\"${process.env.FRONTEND_URL}\"` + 
+								default_params + `}`
 		}
 
 		for (const user of userDetails) {
@@ -27,7 +27,7 @@ async function send_bulk_email(template, userDetails, subject, default_params) {
 			})
 		}
 
-		console.log('Params for sending email' + JSON.stringify(params));
+		console.log('Params for sending email' + params);
 
 		try {
 			await SES.sendBulkTemplatedEmail(params).promise();
