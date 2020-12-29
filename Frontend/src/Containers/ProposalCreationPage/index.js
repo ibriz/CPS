@@ -428,6 +428,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <>
                                     {
                                         proposal.milestones.map((milestone, index) =>
                                             <tr>
@@ -456,7 +457,13 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                                                         } />
                                                 </td>
                                             </tr>)
+
                                     }
+                                                                                <tr>
+                                                <td><b>TOTAL</b></td>
+                                                <td><b>{totalNumberOfMonthsInMilestone} months</b></td>
+                                            </tr>
+                                            </>
                                 </tbody>
                             </Table>
                         }
