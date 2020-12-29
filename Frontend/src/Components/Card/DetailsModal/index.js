@@ -12,14 +12,30 @@ import { proposalStatusMapping } from '../../../Constants';
 import VoteList from './VoteList';
 import RichTextEditor from 'Components/RichTextEditor';
 import ConfirmationModal from 'Components/UI/ConfirmationModal';
-import { getProposalApprovedPercentage, getProposalApprovedVotersPercentage,
-  getProposalRejectedPercentage, getProposalRejectedVotersPercentage } from 'Selectors';
+import {
+  getProposalApprovedPercentage, getProposalApprovedVotersPercentage,
+  getProposalRejectedPercentage, getProposalRejectedVotersPercentage
+} from 'Selectors';
 import { icxFormat } from 'helpers';
 import DetailsModalPR from 'Components/Card/DetailsModalProgressReport';
 import IconService from 'icon-sdk-js';
 import ProgressBarCombined from 'Components/Card/ProgressBarCombined';
 import { fetchPrepsRequest } from 'Redux/Reducers/prepsSlice';
 import useTimer from 'Hooks/useTimer';
+import MilestonesTimeline from 'Components/Card/DetailsModal/MilestonesTimeline';
+import styled from 'styled-components';
+import InfoIcon from 'Components/InfoIcon';
+import VoteProgressBar from 'Components/VoteProgressBar';
+
+const DescriptionTitle = styled.div`
+font-style: normal;
+font-weight: 600;
+font-size: 14px;
+line-height: 17px;   
+color: #262626;
+margin-bottom: 5px;
+
+`
 
 function DetailsModal(props) {
 
@@ -30,7 +46,7 @@ function DetailsModal(props) {
   const [sponsorVote, setSponsorVote] = useState('');
   const [modalShow, setModalShow] = React.useState(false);
   const [selectedProgressReport, setSelectedProgressReport] = React.useState();
-  const {remainingTime: remainingTimer} = useTimer();
+  const { remainingTime: remainingTimer } = useTimer();
 
   const [voteConfirmationShow, setVoteConfirmationShow] = React.useState(false);
 
@@ -38,13 +54,13 @@ function DetailsModal(props) {
   const { proposalDetail, proposal, sponsorRequest = false, approveSponserRequest, rejectSponsorRequest, voting = false, voteProposal, progressReportByProposal, votesByProposal, fetchVoteResultRequest, approvedPercentage,
     fetchProgressReportByProposalRequest, period, remainingTime, approvedVoterPercentage, fetchProposalDetail, walletAddress, rejectedPercentage, rejectedVoterPercentage, fetchPrepsRequest, preps, ...remainingProps } = props;
 
-    const status = proposalStatusMapping.find(mapping => mapping.status === proposal?._status)?.name
+  const status = proposalStatusMapping.find(mapping => mapping.status === proposal?._status)?.name
 
-    const prepName = proposalDetail?.sponserPrepName ? proposalDetail?.sponserPrepName : preps.find(prep => prep.address == proposalDetail?.sponserPrep)?.name;
-    
-    const onClickProgressReport = (porgressReport) => {
-      setModalShow(true);
-      setSelectedProgressReport(porgressReport);
+  const prepName = proposalDetail?.sponserPrepName ? proposalDetail?.sponserPrepName : preps.find(prep => prep.address == proposalDetail?.sponserPrep)?.name;
+
+  const onClickProgressReport = (porgressReport) => {
+    setModalShow(true);
+    setSelectedProgressReport(porgressReport);
   }
 
   useEffect(() => {
@@ -89,7 +105,7 @@ function DetailsModal(props) {
   }
 
   const onClickApproveSponsorRequest = () => {
-    const {IconConverter} = IconService
+    const { IconConverter } = IconService
     approveSponserRequest(
       {
         ipfsKey: proposal.ipfsKey,
@@ -115,9 +131,9 @@ function DetailsModal(props) {
       size="lg"
       aria-labelledby="contained-modal-title-vcenter"
       centered
-      
+
     >
-      <Modal.Header closeButton className={styles.modalHeader} style = {modalShow ? {backgroundColor: '#DDDDDD'} : {}}>
+      <Modal.Header closeButton className={styles.modalHeader} style={modalShow ? { backgroundColor: '#DDDDDD' } : {}}>
         <Container fluid className={styles.container}>
           <Row>
             <Col sm="12">
@@ -175,18 +191,27 @@ function DetailsModal(props) {
                           percentage={approvedPercentage} /> */}
 
 
-                    <ProgressBarCombined 
-                          approvedPercentage = {approvedPercentage}
-                          rejectedPercentage = {rejectedPercentage}
-                          />
+                        <ProgressBarCombined
+                          approvedPercentage={approvedPercentage}
+                          rejectedPercentage={rejectedPercentage}
+                        />
                       </Col>
 
                       <Col lg="8" xs="12" className={styles.progressTextContainer}>
                         {
 
-                          <ProgressText>
-                            Stake- {approvedPercentage ? `${approvedPercentage.toFixed()}` : 0}% approved, {rejectedPercentage ? `${rejectedPercentage.toFixed()}` : 0}% rejected
-                            </ProgressText>
+                          // <ProgressText>
+                          //   Stake- {approvedPercentage ? `${approvedPercentage.toFixed()}` : 0}% approved, {rejectedPercentage ? `${rejectedPercentage.toFixed()}` : 0}% rejected
+                          //   <InfoIcon description="The category the project falls into" />
+
+                          //   </ProgressText>
+
+                          <VoteProgressBar 
+                            approvedPercentage = {approvedPercentage}
+                            rejectedPercentage = {rejectedPercentage}
+                            noProgressBar
+                            proposal
+                          />
                         }
 
                       </Col>
@@ -197,18 +222,26 @@ function DetailsModal(props) {
                         {/* <ProgressBar
                           percentage={approvedVoterPercentage} /> */}
 
-                      <ProgressBarCombined 
-                          approvedPercentage = {approvedVoterPercentage}
-                          rejectedPercentage = {rejectedVoterPercentage}
-                          />
+                        <ProgressBarCombined
+                          approvedPercentage={approvedVoterPercentage}
+                          rejectedPercentage={rejectedVoterPercentage}
+                        />
                       </Col>
 
                       <Col lg="8" xs="12" className={styles.progressTextContainer}>
                         {
 
-                          <ProgressText>
-                            Voter count- {approvedVoterPercentage ? `${approvedVoterPercentage.toFixed()}` : 0}% approved, {rejectedVoterPercentage ? `${rejectedVoterPercentage.toFixed()}` : 0}% rejected
-                          </ProgressText>
+                          // <ProgressText>
+                          //   Voter count- {approvedVoterPercentage ? `${approvedVoterPercentage.toFixed()}` : 0}% approved, {rejectedVoterPercentage ? `${rejectedVoterPercentage.toFixed()}` : 0}% rejected
+                          // </ProgressText>
+
+                          <VoteProgressBar 
+                          approvedPercentage = {approvedVoterPercentage}
+                          rejectedPercentage = {rejectedVoterPercentage}
+                          noProgressBar
+                          proposal
+                          voterCount
+                          />
                         }
 
                       </Col>
@@ -225,19 +258,23 @@ function DetailsModal(props) {
         </Container>
 
       </Modal.Header>
-      <Modal.Body className={styles.modalBody} style = {modalShow ? {backgroundColor: '#DDDDDD'} : {}}>
+      <Modal.Body className={styles.modalBody} style={modalShow ? { backgroundColor: '#DDDDDD' } : {}}>
         <Row>
           <Col lg="8" xs="12">
             {/* <div dangerouslySetInnerHTML={{ __html: description }} /> */}
             <Description description={(proposalDetail && proposalDetail.description) || '<span>No Description</span>'} />
+                {/* <DescriptionTitle>MILESTONES</DescriptionTitle>
+
+                <MilestonesTimeline milestones={proposalDetail?.milestones} /> */}
+
           </Col>
 
           {/* <Col lg="4" className = "d-none d-lg-block"> */}
           <Col lg="4" xs="12">
-            <Col xs="12" style = {{
-                  paddingLeft: '0px',
-                  paddingRight: '0px'
-                }}>
+            <Col xs="12" style={{
+              paddingLeft: '0px',
+              paddingRight: '0px'
+            }}>
               <DetailsTable
                 title={"Project Details"}
                 data={
@@ -278,32 +315,43 @@ function DetailsModal(props) {
             </Col>
             {
               (proposalDetail?.milestones?.length > 0) &&
-              <Col xs="12" style = {{
+              <Col xs="12" style={{
                 paddingLeft: '0px',
                 paddingRight: '0px'
               }}>
-                <MilestoneTable
+                {/* <MilestoneTable
                   milestones={proposalDetail?.milestones}
-                  style = {{
+                  style={{
                     paddingLeft: '0px',
                     paddingRight: '0px'
-                  }} />
+                  }} /> */}
               </Col>
             }
           </Col>
         </Row>
-        {
-          (status === 'Voting') &&
+
         <Row>
-            <Col xs="12">
-                <div style = {{textAlign: 'center', color: '#262626', marginBottom: '5px', fontSize: '1rem'}}>
-                  <>
-                  {period === 'APPLICATION' ? 'Voting starts in ' : 'Voting ends in '}
-                  </>
-                  <b>{remainingTimer.day}</b> days <b>{remainingTimer.hour}</b> hours <b>{remainingTimer.minute}</b> minutes <b>{remainingTimer.second}</b> seconds
-                  </div>
+            <Col>
+                <ListTitle>MILESTONES</ListTitle>
+                <MilestonesTimeline milestones={proposalDetail?.milestones} />
+       
+
             </Col>
         </Row>
+
+
+        {
+          (status === 'Voting') &&
+          <Row>
+            <Col xs="12">
+              <div style={{ textAlign: 'center', color: '#262626', marginBottom: '5px', fontSize: '1rem' }}>
+                <>
+                  {period === 'APPLICATION' ? 'Voting starts in ' : 'Voting ends in '}
+                </>
+                <b>{remainingTimer.day}</b> days <b>{remainingTimer.hour}</b> hours <b>{remainingTimer.minute}</b> minutes <b>{remainingTimer.second}</b> seconds
+                  </div>
+            </Col>
+          </Row>
         }
 
         {
@@ -326,47 +374,47 @@ function DetailsModal(props) {
         {
           voting && (period === 'VOTING') && (remainingTime > 0) &&
           <>
-          {
-            !votesByProposal.some(vote => vote.sponsorAddress === walletAddress) ?
-            <>
-            <Row style={{ justifyContent: 'center' }}>
-              <ButtonGroup aria-label="Basic example">
+            {
+              !votesByProposal.some(vote => vote.sponsorAddress === walletAddress) ?
+                <>
+                  <Row style={{ justifyContent: 'center' }}>
+                    <ButtonGroup aria-label="Basic example">
 
-                {
-                  voteOptions.map(voteOption =>
-                    <Button variant={vote === voteOption ? 'success' : 'light'} onClick={() => setVote(voteOption)}>{voteOption}</Button>
-                  )
+                      {
+                        voteOptions.map(voteOption =>
+                          <Button variant={vote === voteOption ? 'success' : 'light'} onClick={() => setVote(voteOption)}>{voteOption}</Button>
+                        )
 
-                }
-              </ButtonGroup>
+                      }
+                    </ButtonGroup>
 
 
-            </Row>
-            <Row>
-              <Col xs="12">
-                <span>Explain in brief the reason behind your decision</span>
-              </Col>
+                  </Row>
+                  <Row>
+                    <Col xs="12">
+                      <span>Explain in brief the reason behind your decision</span>
+                    </Col>
 
-              <Col xs="12">
-                <RichTextEditor
-                  required
-                  onChange={(data) =>
-                    setVoteReason(
-                      data
-                    )} />
-              </Col>
+                    <Col xs="12">
+                      <RichTextEditor
+                        required
+                        onChange={(data) =>
+                          setVoteReason(
+                            data
+                          )} />
+                    </Col>
 
-            </Row>
+                  </Row>
 
-            <Row style={{ justifyContent: 'center' }}>
-              <Button variant="primary" onClick={() => setVoteConfirmationShow(true)} style={{ marginTop: '10px', width: '150px' }}>Submit Vote</Button>
+                  <Row style={{ justifyContent: 'center' }}>
+                    <Button variant="primary" onClick={() => setVoteConfirmationShow(true)} style={{ marginTop: '10px', width: '150px' }}>Submit Vote</Button>
 
-            </Row>
-            </> :
-            <>
-            <p style = {{color: '#262626', textAlign: 'center'}}>You have already voted for this proposal</p>
-            </>
-          }
+                  </Row>
+                </> :
+                <>
+                  <p style={{ color: '#262626', textAlign: 'center' }}>You have already voted for this proposal</p>
+                </>
+            }
           </>
         }
 
@@ -383,7 +431,7 @@ function DetailsModal(props) {
                         projectReports={progressReportByProposal}
                         onClickProgressReport={onClickProgressReport}
                         isModal
-                        />
+                      />
                     </>
                   ) :
                   (status === 'Voting') ?
@@ -409,7 +457,7 @@ function DetailsModal(props) {
             (sponsorVote === 'approve') ?
               <>
                 <div>Are you sure you want to accept the sponsor request?</div>
-                <div style={{ color: 'red' }}>You will need to transfer {icxFormat((proposalDetail?.totalBudget?? 0) * 0.1, true)} ICX for sponsor bond.</div>
+                <div style={{ color: 'red' }}>You will need to transfer {icxFormat((proposalDetail?.totalBudget ?? 0) * 0.1, true)} ICX for sponsor bond.</div>
               </> :
               <span>Are you sure you want to deny the sponsor request?</span>
           }
@@ -425,11 +473,11 @@ function DetailsModal(props) {
         </ConfirmationModal>
 
         <DetailsModalPR
-                                show={modalShow}
-                                onHide={() => setModalShow(false)}
-                                progressReport={selectedProgressReport}
-                                // status={selectedTab}
-                            />  
+          show={modalShow}
+          onHide={() => setModalShow(false)}
+          progressReport={selectedProgressReport}
+        // status={selectedTab}
+        />
 
       </Modal.Body>
     </Modal>

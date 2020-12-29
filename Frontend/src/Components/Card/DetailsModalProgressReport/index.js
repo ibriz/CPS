@@ -25,6 +25,7 @@ import {
 import { icxFormat } from 'helpers';
 import ProgressBarCombined from 'Components/Card/ProgressBarCombined';
 import useTimer from 'Hooks/useTimer';
+import VoteProgressBar from 'Components/VoteProgressBar';
 
 function DetailsModal(props) {
 
@@ -173,9 +174,15 @@ function DetailsModal(props) {
                       <Col lg="8" xs="12" className={styles.progressTextContainer}>
                         {
 
-                          <ProgressText>
-                             Stake- {approvedPercentage ? `${approvedPercentage.toFixed()}` : 0}% approved, {rejectedPercentage ? `${rejectedPercentage.toFixed()}` : 0}% rejected 
-                            </ProgressText>
+                          // <ProgressText>
+                          //    Stake- {approvedPercentage ? `${approvedPercentage.toFixed()}` : 0}% approved, {rejectedPercentage ? `${rejectedPercentage.toFixed()}` : 0}% rejected 
+                          //   </ProgressText>
+
+                            <VoteProgressBar
+                            approvedPercentage = {approvedPercentage}
+                            rejectedPercentage = {rejectedPercentage}
+                            noProgressBar
+                            />
                         }
 
                       </Col>
@@ -192,9 +199,16 @@ function DetailsModal(props) {
                       <Col lg="8" xs="12" className={styles.progressTextContainer}>
                         {
 
-                          <ProgressText>
-                            Voter Count- {approvedVoterPercentage ? `${approvedVoterPercentage.toFixed()}` : 0}% approved, {rejectedVotersPercentage ? `${rejectedVotersPercentage.toFixed()}` : 0}% rejected
-                          </ProgressText>
+                          // <ProgressText>
+                          //   Voter Count- {approvedVoterPercentage ? `${approvedVoterPercentage.toFixed()}` : 0}% approved, {rejectedVotersPercentage ? `${rejectedVotersPercentage.toFixed()}` : 0}% rejected
+                          // </ProgressText>
+
+                          <VoteProgressBar
+                          approvedPercentage = {approvedVoterPercentage}
+                          rejectedPercentage = {rejectedVotersPercentage}
+                          noProgressBar
+                          voterCount
+                          />
                         }
 
                       </Col>
@@ -216,9 +230,18 @@ function DetailsModal(props) {
                       <Col lg="8" xs="12" className={styles.progressTextContainer}>
                         {
 
-                          <ProgressText>
-                            Stake- {approvedPercentageBudgetChange ? `${approvedPercentageBudgetChange.toFixed()}` : 0}% approved, {rejectedPercentageBudgetChange ? `${rejectedPercentageBudgetChange.toFixed()}` : 0}% rejected (Budget Change Request)
-                          </ProgressText>
+                          // <ProgressText>
+                          //   Stake- {approvedPercentageBudgetChange ? `${approvedPercentageBudgetChange.toFixed()}` : 0}% approved, {rejectedPercentageBudgetChange ? `${rejectedPercentageBudgetChange.toFixed()}` : 0}% rejected (Budget Change Request)
+                          // </ProgressText>
+
+                          <VoteProgressBar
+                          approvedPercentage = {approvedPercentageBudgetChange}
+                          rejectedPercentage = {rejectedPercentageBudgetChange}
+                          noProgressBar
+                          budgetAdjustment
+                          />
+
+                          
                         }
 
                       </Col>
@@ -235,9 +258,17 @@ function DetailsModal(props) {
                       <Col lg="8" xs="12" className={styles.progressTextContainer}>
                         {
 
-                          <ProgressText>
-                              Voter count- {approvedVoterPercentageBudgetChange ? `${approvedVoterPercentageBudgetChange.toFixed()}` : 0}% approved, {rejectedVoterPercentageBudgetChange ? `${rejectedVoterPercentageBudgetChange.toFixed()}` : 0}% rejected (Budget Change Request)
-                          </ProgressText>
+                          // <ProgressText>
+                          //     Voter count- {approvedVoterPercentageBudgetChange ? `${approvedVoterPercentageBudgetChange.toFixed()}` : 0}% approved, {rejectedVoterPercentageBudgetChange ? `${rejectedVoterPercentageBudgetChange.toFixed()}` : 0}% rejected (Budget Change Request)
+                          // </ProgressText>
+
+                          <VoteProgressBar
+                          approvedPercentage = {approvedVoterPercentageBudgetChange}
+                          rejectedPercentage = {rejectedVoterPercentageBudgetChange}
+                          noProgressBar
+                          budgetAdjustment
+                          voterCount
+                          />
                         }
 
                       </Col>

@@ -3,9 +3,9 @@ import { AiFillDelete, AiFillQuestionCircle } from 'react-icons/ai';
 import { OverlayTrigger, Tooltip, Popover } from 'react-bootstrap'
 
 
-const InfoIcon = ({ description }) => {
+const InfoIcon = ({ description, placement = "right" }) => {
     return (
-        <OverlayTrigger trigger="hover" placement="right"
+        <OverlayTrigger trigger="hover" placement= {placement}
             overlay={
                 <Popover id="popover-basic" >
                     <Popover.Content>

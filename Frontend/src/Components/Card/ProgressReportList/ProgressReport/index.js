@@ -10,6 +10,7 @@ import Budget from '../../../UI/LowerCardList/Budget';
 import { progressReportStatusMapping } from 'Constants';
 import ProgressBarCombined from 'Components/Card/ProgressBarCombined';
 import ClassNames from 'classnames';
+import VoteProgressBar from 'Components/VoteProgressBar';
 
 const badgeColor = {
     'Approved': 'success',
@@ -51,17 +52,26 @@ const ProgressReport = ({ progressReport, selectedTab, showProject = true, onCli
                 {
                     progressReportStatusMapping.find(mapping => mapping.status === progressReport.status).name !== 'Draft' && 
                     <Col md="3" xs="12" className={ClassNames(styles.progressBar, {[styles.progressBarModal] : isModal})} >
-                        <ProgressText>Stake- {progressReport.approvedPercentage ? progressReport.approvedPercentage.toFixed() : 0}% approved, {progressReport.rejectedPercentage ? progressReport.rejectedPercentage.toFixed() : 0}% rejected</ProgressText>
+                        {/* <ProgressText>Stake- {progressReport.approvedPercentage ? progressReport.approvedPercentage.toFixed() : 0}% approved, {progressReport.rejectedPercentage ? progressReport.rejectedPercentage.toFixed() : 0}% rejected</ProgressText>
                         <ProgressBarCombined 
                           approvedPercentage = {progressReport.approvedPercentage}
                           rejectedPercentage = {progressReport.rejectedPercentage}
-                          />
+                          /> */}
 
-                        <ProgressText>Voter count- {progressReport.approvedVotesPercentageCount ? progressReport.approvedVotesPercentageCount.toFixed() : 0}% approved, {progressReport.rejectedVotesPercentageCount ? progressReport.rejectedVotesPercentageCount.toFixed() : 0}% rejected</ProgressText>
+                          <VoteProgressBar 
+                          approvedPercentage = {progressReport.approvedPercentage}
+                          rejectedPercentage = {progressReport.rejectedPercentage} />
+
+                        {/* <ProgressText>Voter count- {progressReport.approvedVotesPercentageCount ? progressReport.approvedVotesPercentageCount.toFixed() : 0}% approved, {progressReport.rejectedVotesPercentageCount ? progressReport.rejectedVotesPercentageCount.toFixed() : 0}% rejected</ProgressText>
                         <ProgressBarCombined 
                           approvedPercentage = {progressReport.approvedVotesPercentageCount}
                           rejectedPercentage = {progressReport.rejectedVotesPercentageCount}
-                          />
+                          /> */}
+
+                        <VoteProgressBar 
+                          approvedPercentage = {progressReport.approvedVotesPercentageCount}
+                          rejectedPercentage = {progressReport.rejectedVotesPercentageCount}
+                          voterCount />
                     </Col>
                 }
 
