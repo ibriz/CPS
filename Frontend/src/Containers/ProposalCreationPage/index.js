@@ -358,7 +358,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                             <Form.Label column sm="2" className={styles.labelSameLine}>
                                 Sponsor PRep
                                 <span className={styles.required}></span>
-                                <InfoIcon description="The Prep Sponsor for the project." />
+                                <InfoIcon description={<span>The Prep Sponsor for the project. You can choose a sponsor by first posting about your proposal in the ICON Forum where P-Reps can show interest in sponsoring your proposal.</span>} />
                             </Form.Label>
                             <Col sm="4" className={styles.inputSameLine}>
                                 <Form.Control size="md" as="select" value={proposal.sponserPrep} name="sponserPrep" id="sponserPrep" onChange={handleChange} required>
