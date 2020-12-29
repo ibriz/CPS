@@ -6,7 +6,7 @@ import {
   SidebarHeader,
   SidebarContent,
 } from 'react-pro-sidebar';
-import { FaTachometerAlt, FaGem, FaList } from 'react-icons/fa';
+import { FaTachometerAlt, FaGem, FaList, FaBookOpen } from 'react-icons/fa';
 import {MdDashboard, MdForum} from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import { Badge } from 'react-bootstrap';
@@ -151,6 +151,12 @@ const Aside = ({ collapsed, rtl, toggled, handleToggleSidebar, handleCollapsedCh
              <MenuItem icon={<MdForum />}
               > {<span>ICON Forum</span>}
                 <a href="https://forum.icon.community/c/contribution-proposals/45" target = "_blank" />
+
+              </MenuItem> 
+
+              <MenuItem icon={<FaBookOpen />}
+              > {<span>User Guide</span>}
+                <a href="https://medium.com/ibriz-iconosphere/how-to-use-the-contribution-proposal-system-1efe714c9182" target = "_blank" />
 
               </MenuItem> 
 
