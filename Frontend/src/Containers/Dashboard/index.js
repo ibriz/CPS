@@ -141,8 +141,8 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
                         <Alert variant="danger">
                             {
                                 period === 'APPLICATION' && !isRemainingTimeZero ?
-                                    `You have been denyListed. You need to pay the penalty amount of ${payPenaltyAmount} ICX to re-register.` :
-                                    `You have been denyListed. You can pay the penalty amount of ${payPenaltyAmount} ICX in the next Application period to re-register.`
+                                    `You missed voting on some of the proposals or progress reports in the voting period. Please pay the penalty amount of ${payPenaltyAmount} ICX to re-register.` :
+                                    `You missed voting on some of the proposals or progress reports in the voting period. Please pay the penalty amount of ${payPenaltyAmount} ICX in the next Application period to re-register.`
                             }
 
                             {
