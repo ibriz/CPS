@@ -9,8 +9,9 @@ import { connect } from 'react-redux';
 import store from 'Redux/Store';
 import { NotificationManager } from 'react-notifications';
 import { request } from 'Redux/Sagas/helpers';
+import {withRouter} from 'react-router-dom';
 
-const UnsubscribePage = ({ hasAddress }) => {
+const UnsubscribePage = ({ hasAddress, history }) => {
     let query = useQuery();
     let walletAddress = query.get("address");
 
@@ -82,7 +83,11 @@ const UnsubscribePage = ({ hasAddress }) => {
                             requireSigning: true,
                             walletAddress,
                             method: 'PUT',
-                            callBackAfterSigning: () => NotificationManager.info("Unsubscription Request Sent"),
+                            callBackAfterSigning: () => {
+                                NotificationManager.info("Unsubscription Request Sent");
+                                history.push('/');
+
+                            },
                             successCallback: () => {
                                 NotificationManager.success("Unsubscription Success")
                             },
@@ -112,4 +117,4 @@ const mapStateToProps = state => (
     }
 )
 
-export default connect(mapStateToProps)(UnsubscribePage);
+export default withRouter(connect(mapStateToProps)(UnsubscribePage));

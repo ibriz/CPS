@@ -14,6 +14,8 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import useTimer from 'Hooks/useTimer';
 import ProgressBarCombined from 'Components/Card/ProgressBarCombined';
+import InfoIcon from 'Components/InfoIcon';
+import VoteProgressBar from 'Components/VoteProgressBar';
 
 const badgeColor = {
     'Voting': 'warning',
@@ -86,17 +88,35 @@ const Proposal = ({ proposal, selectedTab, onClick, proposalPendingPR = false, p
                                 {/* <ProgressText>{proposal.approvedPercentage ? `${proposal.approvedPercentage.toFixed()}` : 0}% Stake Approved</ProgressText>
                                 <ProgressBar percentage={proposal.approvedPercentage} /> */}
 
-                                    <ProgressText>Stake- {proposal.approvedPercentage ? proposal.approvedPercentage.toFixed() : 0}% approved, {proposal.rejectedPercentage ? proposal.rejectedPercentage.toFixed() : 0}% rejected</ProgressText>
+                                    {/* <ProgressText>Stake- {proposal.approvedPercentage ? proposal.approvedPercentage.toFixed() : 0}% approved, {proposal.rejectedPercentage ? proposal.rejectedPercentage.toFixed() : 0}% rejected</ProgressText>
+                                    <InfoIcon description="The category the project falls into" 
+                                        placement = "top"/>
+
                                     <ProgressBarCombined
                                         approvedPercentage={proposal.approvedPercentage}
                                         rejectedPercentage={proposal.rejectedPercentage}
+                                    /> */}
+
+                                    <VoteProgressBar
+                                        approvedPercentage = {proposal.approvedPercentage}
+                                        rejectedPercentage = {proposal.rejectedPercentage}
+                                        proposal
                                     />
 
-                                    <ProgressText>Voter count- {proposal.approvedVotesPercentageCount ? proposal.approvedVotesPercentageCount.toFixed() : 0}% approved, {proposal.rejectedVotesPercentageCount ? proposal.rejectedVotesPercentageCount.toFixed() : 0}% rejected</ProgressText>
+                                    {/* <ProgressText>Voter count- {proposal.approvedVotesPercentageCount ? proposal.approvedVotesPercentageCount.toFixed() : 0}% approved, {proposal.rejectedVotesPercentageCount ? proposal.rejectedVotesPercentageCount.toFixed() : 0}% rejected</ProgressText>
+                                    <InfoIcon description="The category the project falls into" 
+                                        placement = "top"/>
                                     <ProgressBarCombined
                                         approvedPercentage={proposal.approvedVotesPercentageCount}
                                         rejectedPercentage={proposal.rejectedVotesPercentageCount}
-                                    />
+                                    /> */}
+
+                                    <VoteProgressBar
+                                        approvedPercentage = {proposal.approvedVotesPercentageCount}
+                                        rejectedPercentage = {proposal.rejectedVotesPercentageCount}
+                                        proposal
+                                        voterCount
+                                    />      
                             </>
                         }
 
