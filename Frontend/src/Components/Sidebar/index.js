@@ -101,6 +101,12 @@ const Aside = ({ collapsed, rtl, toggled, handleToggleSidebar, handleCollapsedCh
                 <a href="https://forum.icon.community/c/contribution-proposals/45" target = "_blank" />
 
               </MenuItem> 
+
+              <MenuItem icon={<FaBookOpen />}
+              > {<span>User Guide</span>}
+                <a href="https://medium.com/ibriz-iconosphere/how-to-use-the-contribution-proposal-system-1efe714c9182" target = "_blank" />
+
+              </MenuItem> 
           </Menu>
 
         }
