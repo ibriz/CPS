@@ -6,6 +6,9 @@ const DAY = 24 * 60 * 60;
 
 async function period_changed(preps_list, period) {
 	if (preps_list !== undefined && preps_list.length > 0) {
+
+		const count = await score.get_proposal_and_progress_report_count();
+
 		console.log('preps_list' + preps_list)
 		console.log('Sending emails to ' + preps_list.length + ' preps');
 
@@ -19,7 +22,9 @@ async function period_changed(preps_list, period) {
 		await mail.send_bulk_email('period-change',
 			period_changed_preps_list,
 			'Start of new period | ICON CPS',
-			`,\"period\": \"${period}\"`);
+			`,\"period\": \"${period}\",
+			\"proposal_no\":\"${count.proposals_count}\",
+			\"progress_report_no\":\"${count.progress_report_count}\"`);
 	} else {
 		console.log('No user to send notification: period_changed')
 	}

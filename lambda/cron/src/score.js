@@ -150,6 +150,18 @@ async function get_progress_reports_by_status(status = '_approved') {
 	return accepted_active_proposals;
 }
 
+async function get_proposal_and_progress_report_count() {
+	console.log('RPC Call for Proposal and Progress Report Count');
+	const accepted_active_proposals = await iconService.call(icon_call_builder('get_proposal_status', { status: '_pending' }));
+
+	const accepted_active_progress_report = await iconService.call(icon_call_builder('get_progress_reports', { status: '_waiting' }));
+
+	return {
+		proposals_count: accepted_active_proposals.count,
+		progress_report_count: accepted_active_progress_report.count
+	};
+}
+
 async function get_remaining_projects(address) {
 	console.log('RPC Call for Remaining Project');
 	const project_list = await recursive_score_call('get_remaining_project', { _project_type: 'proposal', _wallet_address: address });
@@ -429,6 +441,7 @@ module.exports = {
 	progress_report_reminder_before_one_day,
 	progress_report_reminder_before_one_week,
 	get_progress_reports_by_status,
+	get_proposal_and_progress_report_count,
 	get_active_proposals,
 	get_proposals_details,
 	get_remaining_projects,
