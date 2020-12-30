@@ -9,7 +9,10 @@ const initialState = {
 
     expectedGrant: 0,
     sponsorReward: 0,
-    sponsorBond: 0
+    sponsorBond: 0,
+
+    withDrawAmountSponsorReward: 0,
+    withDrawAmountProposalGrant: 0
 
 };
 
@@ -65,9 +68,12 @@ const fundSlice = createSlice({
         fetchExpectedGrantSuccess(state, action) {
             if(action.payload.type === 'proposalGrant') {
                 state.expectedGrant = action.payload.response.total_amount ? IconConverter.toBigNumber(action.payload.response.total_amount).dividedBy(10**18) : 0;
+                state.withDrawAmountProposalGrant = action.payload.response.withdraw_amount ? IconConverter.toBigNumber(action.payload.response.withdraw_amount).dividedBy(10**18) : 0;
             } else {
                 state.sponsorReward = action.payload.response.total_amount ? IconConverter.toBigNumber(action.payload.response.total_amount).dividedBy(10**18) : 0;
                 state.sponsorBond = action.payload.response.total_sponsor_bond ? IconConverter.toBigNumber(action.payload.response.total_sponsor_bond).dividedBy(10**18) : 0;
+                state.withDrawAmountSponsorReward = action.payload.response.withdraw_amount ? IconConverter.toBigNumber(action.payload.response.withdraw_amount).dividedBy(10**18) : 0;
+
             }
         
 
@@ -76,6 +82,9 @@ const fundSlice = createSlice({
             return;
         },
         fetchExpectedGrantFailure() {
+            return;
+        },
+        claimReward() {
             return;
         },
     },
@@ -91,6 +100,6 @@ const fundSlice = createSlice({
 export const { fetchCPFScoreAddressRequest, fetchCPFScoreAddressSuccess, fetchCPFScoreAddressFailure,
     fetchCPFRemainingFundRequest, fetchCPFRemainingFundSuccess, fetchCPFRemainingFundFailure,
     fetchExpectedGrantRequest, fetchExpectedGrantSuccess, fetchExpectedGrantFailure,
-    fetchCPSTreasuryScoreAddressRequest, fetchCPSTreasuryScoreAddressSuccess, fetchCPSTreasuryScoreAddressFailure
+    fetchCPSTreasuryScoreAddressRequest, fetchCPSTreasuryScoreAddressSuccess, fetchCPSTreasuryScoreAddressFailure, claimReward
 } = fundSlice.actions;
 export default fundSlice.reducer;

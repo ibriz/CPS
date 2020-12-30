@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import useTimer from 'Hooks/useTimer';
 import InfoCard from './InfoCard';
 import { icxFormat } from 'helpers';
-import { fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest } from 'Redux/Reducers/fundSlice';
+import { fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, claimReward } from 'Redux/Reducers/fundSlice';
 import { fetchProjectAmountsRequest } from 'Redux/Reducers/proposalSlice';
 import styles from './Dashboard.module.scss';
 import MyProposalCard from 'Components/MyProposalCard';
@@ -18,8 +18,10 @@ import VotingCard from 'Components/VotingCard';
 import { fetchExpectedGrantRequest, fetchCPSTreasuryScoreAddressRequest } from 'Redux/Reducers/fundSlice';
 import {setLoginButtonClicked} from 'Redux/Reducers/accountSlice';
 
-const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfRemainingFunds, cpfScoreAddress, fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, fetchProjectAmountsRequest, isPrep, isRegistered, myProposalList, fetchExpectedGrantRequest, expectedGrant, sponsorBond, totalCountSponsorRequests, remainingVotesProposal, remainingVotesPR, fetchCPSTreasuryScoreAddressRequest, cpsTreasuryScoreAddress, payPenaltyAmount, sponsorReward }) => {
+const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfRemainingFunds, cpfScoreAddress, fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, fetchProjectAmountsRequest, isPrep, isRegistered, myProposalList, fetchExpectedGrantRequest, expectedGrant, sponsorBond, totalCountSponsorRequests, remainingVotesProposal, remainingVotesPR, fetchCPSTreasuryScoreAddressRequest, cpsTreasuryScoreAddress, payPenaltyAmount, sponsorReward, withDrawAmountSponsorReward, withDrawAmountProposalGrant, claimReward }) => {
     const [showPayPenaltyConfirmationModal, setShowPayPenaltyConfirmationModal] = useState(false);
+    const [showClaimRewardConfirmationModal, setShowClaimRewardConfirmationModal] = useState(false);
+
     const { isRemainingTimeZero, highestSignificantTime, highestSignificantTimeForGrant } = useTimer();
 
     let cardInfo;
@@ -133,7 +135,51 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
 
     return (
         <Container>
+
             <Header title="Dashboard" />
+
+            <Row style={{ marginTop: '30px' }}>
+                <Col xs="12">
+                    <div className = {styles.period}>Period: {period === "APPLICATION" ? 'Application Period' : 'Voting Period'}</div>
+                </Col>
+            </Row>
+
+            {
+                (parseFloat(withDrawAmountSponsorReward) > 0 || parseFloat(withDrawAmountProposalGrant) > 0) &&
+                <Row style={{ marginTop: '15px' }}>
+                    <Col xs="12">
+                        <Alert variant="success">
+                            {
+                                isPrep ?
+                                    `Congratulations! You can claim a total of ${icxFormat(parseFloat(withDrawAmountSponsorReward) + parseFloat(withDrawAmountProposalGrant), true)} ICX (proposal grant - ${icxFormat(parseFloat(withDrawAmountProposalGrant), true)} ICX and sponsor reward - ${icxFormat(parseFloat(withDrawAmountSponsorReward), true)} ICX)` :
+                                    `Congratulations! You can claim proposal grant of ${icxFormat(parseFloat(withDrawAmountProposalGrant), true)} ICX`
+                            }
+
+                            {
+                                <>
+                                    <br />
+                                    <Button variant="info" onClick={setShowClaimRewardConfirmationModal}>
+                                        Claim Reward
+                                    </Button>
+                                </>
+                            }
+
+
+                            <ConfirmationModal
+                                show={showClaimRewardConfirmationModal}
+                                onHide={() => setShowClaimRewardConfirmationModal(false)}
+                                heading={'Reward Claim Confirmation'}
+                                onConfirm={claimReward}
+                            >
+                                <div>Are you sure you want to claim the reward?</div>
+                            </ConfirmationModal>
+
+                        </Alert>
+                    </Col>
+                </Row>
+
+            }
+
             {
                 payPenalty &&
                 <Row style={{ marginTop: '15px' }}>
@@ -171,10 +217,8 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
                 </Row>
 
             }
-            <Row style={{ marginTop: '30px' }}>
-                <Col xs="12">
-                    <div className = {styles.period}>Period: {period === "APPLICATION" ? 'Application Period' : 'Voting Period'}</div>
-                </Col>
+            <Row >
+
 
                 {
                     cardInfo.map(info =>
@@ -263,7 +307,10 @@ const mapStateToProps = state => (
 
         cpsTreasuryScoreAddress: state.fund.cpsTreasuryScoreAddress,
 
-        payPenaltyAmount: state.account.penaltyAmount
+        payPenaltyAmount: state.account.penaltyAmount,
+
+        withDrawAmountSponsorReward: state.fund.withDrawAmountSponsorReward,
+        withDrawAmountProposalGrant: state.fund.withDrawAmountProposalGrant,
 
 
 
@@ -278,6 +325,7 @@ const mapDispatchToProps = {
     fetchProjectAmountsRequest,
     fetchExpectedGrantRequest,
     fetchCPSTreasuryScoreAddressRequest,
+    claimReward
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
