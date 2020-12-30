@@ -13,6 +13,7 @@ import { fetchSponsorRequestsListRequest, fetchProposalListRequest } from 'Redux
 import { fetchRemainingVotesRequest } from 'Redux/Reducers/proposalSlice';
 import {fetchProgressReportListRequest} from 'Redux/Reducers/progressReportSlice';
 import {fetchPeriodDetailsRequest} from 'Redux/Reducers/periodSlice';
+import { fetchExpectedGrantRequest, fetchCPSTreasuryScoreAddressRequest } from 'Redux/Reducers/fundSlice';
 
 // import { loginSuccess } from 'Redux/Reducers/accountSlice';
 
@@ -26,7 +27,8 @@ const { submit_proposal,
     unregister_prep,
     register_prep,
     pay_prep_penalty,
-    approve_sponsor } = constants;
+    approve_sponsor,
+    claim_reward } = constants;
 
 function setTimeoutPromise() {
     return new Promise(function (resolve, reject) {
@@ -413,6 +415,31 @@ export default (event) => {
                         // window.location.reload();
                         NotificationManager.info("Prep Penalty Sent");
                         break;
+
+                        case claim_reward:
+                            getResult({
+                                txHash: payload.result,
+                                failureMessage: "Reward Claim Failed",
+                                successMessage: "Reward Claimed Successfully",
+            
+                            }, function(){
+            
+                                store.dispatch(fetchCPSTreasuryScoreAddressRequest());
+                                store.dispatch(fetchExpectedGrantRequest({
+                                    type: 'proposalGrant'
+                                }));
+                    
+                                if(store.getState().account.isPrep && store.getState().account.isRegistered) {
+                                    store.dispatch(fetchExpectedGrantRequest({
+                                        type: 'sponsorReward'
+                                    }));
+                                }
+                                return true;
+                            });
+            
+                            // window.location.reload();
+                            NotificationManager.info("Reward Claim Request Sent");
+                            break;
                 default:
                     break;
             }

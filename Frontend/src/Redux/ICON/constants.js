@@ -9,5 +9,6 @@ export default {
     unregister_prep: 32007,
     register_prep: 32008,
     pay_prep_penalty: 32009,
-    approve_sponsor: 32010
+    approve_sponsor: 32010,
+    claim_reward: 32011,
 }
