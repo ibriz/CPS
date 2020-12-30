@@ -138,6 +138,10 @@ class CPS_Score(IconScoreBase):
         pass
 
     @eventlog(indexed=2)
+    def RegisterPRep(self, _sender_address: Address, _notes: str):
+        pass
+
+    @eventlog(indexed=2)
     def SponsorBondReturned(self, _sender_address: Address, _notes: str):
         pass
 
@@ -401,6 +405,7 @@ class CPS_Score(IconScoreBase):
 
         if self.period_name.get() == APPLICATION_PERIOD:
             self.main_preps.put(_address)
+            self.RegisterPRep(self.msg.sender,'P-Rep Registered.')
 
     def _remove_sponsor(self, _address: Address) -> None:
         """
@@ -609,11 +614,8 @@ class CPS_Score(IconScoreBase):
         proposal_key[self._PERCENTAGE_COMPLETED] = 0
 
         self._add_proposals(proposal_key)
-
         self._sponsor_pending.put(proposal_key[self._IPFS_HASH])
-
         self.contributors.put(self.msg.sender)
-
         self.ProposalSubmitted(self.msg.sender, "Successfully submitted a Proposal.")
         try:
             self.icx.transfer(ZERO_WALLET_ADDRESS, self.msg.value)
