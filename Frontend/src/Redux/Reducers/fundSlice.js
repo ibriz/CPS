@@ -66,7 +66,7 @@ const fundSlice = createSlice({
             return;
         },
         fetchExpectedGrantSuccess(state, action) {
-            if(action.payload.type === 'proposalGrant') {
+            if(action.payload.response.type === 'proposalGrant') {
                 state.expectedGrant = action.payload.response.total_amount ? IconConverter.toBigNumber(action.payload.response.total_amount).dividedBy(10**18) : 0;
                 state.withDrawAmountProposalGrant = action.payload.response.withdraw_amount ? IconConverter.toBigNumber(action.payload.response.withdraw_amount).dividedBy(10**18) : 0;
             } else {
