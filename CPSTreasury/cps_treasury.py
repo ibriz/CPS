@@ -1,6 +1,20 @@
+from .proposal_data import *
 from iconservice import *
 
-_MULTIPLIER = 10 ** 18
+PROPOSAL_DB_PREFIX = b'proposal'
+
+
+def icx(value: int) -> int:
+    return value * 10 ** 18
+
+
+class ProposalAttributes(TypedDict):
+    ipfs_hash: str
+    project_duration: int
+    total_budget: int
+    sponsor_reward: int
+    contributor_address: Address
+    sponsor_address: Address
 
 
 class CPF_TREASURY_INTERFACE(InterfaceScore):
@@ -10,49 +24,54 @@ class CPF_TREASURY_INTERFACE(InterfaceScore):
 
 
 class CPS_TREASURY(IconScoreBase):
+    ID = 'id'
     _PROPOSALS_KEYS = "_proposals_keys"
-    _PROPOSALS_DETAILS = "_proposals_details"
+    _FUND_RECORD = "fund_record"
 
     _TOTAL_INSTALLMENT_COUNT = "_total_installment_count"
-
     _TOTAL_TIMES_INSTALLMENT_PAID = "_total_times_installment_paid"
     _TOTAL_TIMES_REWARD_PAID = "_total_times_reward_paid"
+    _TOTAL_INSTALLMENT_PAID = "_total_installment_paid"
+    _TOTAL_REWARD_PAID = "_total_reward_paid"
+    _INSTALLMENT_AMOUNT = "installment_amount"
 
     _CPS_SCORE = "_cps_score"
     _CPF_TREASURY_SCORE = "_cpf_treasury_score"
 
-    _TOTAL_BUDGET = "_total_budget"
-    _TOTAL_INSTALLMENT_PAID = "_total_installment_paid"
-    _TOTAL_REWARD_PAID = "_total_reward_paid"
-    _SPONSOR_ADDRESS = '_sponsor_address'
-    _CONTRIBUTOR_ADDRESS = "_contributor_address"
-    _STATUS = "_status"
-    _IPFS_KEY = "_ipfs_key"
-    _SPONSOR_REWARD = "_sponsor_reward"
-    _INSTALLMENT_AMOUNT = "installment_amount"
-    _PROPOSALS_AMOUNTS = "proposal_amounts"
+    _SPONSOR_ADDRESS = 'sponsor_address'
+    _CONTRIBUTOR_ADDRESS = "contributor_address"
+    _STATUS = "status"
+    _IPFS_HASH = "ipfs_hash"
+    _SPONSOR_REWARD = "sponsor_reward"
+    _TOTAL_BUDGET = "total_budget"
 
     _ACTIVE = "active"
-    _PAUSED = "paused"
     _DISQUALIFIED = "disqualified"
     _COMPLETED = "completed"
 
-    @eventlog(indexed=3)
+    @eventlog(indexed=1)
     def ProposalFundDeposited(self, _ipfs_key: str, _total_budget: int, note: str):
         pass
 
-    @eventlog(indexed=3)
+    @eventlog(indexed=1)
     def ProposalFundSent(self, _receiver_address: Address, _fund: int, note: str):
         pass
 
-    @eventlog(indexed=2)
+    @eventlog(indexed=1)
+    def ProposalFundWithdrawn(self, _receiver_address: Address, _fund: int, note: str):
+        pass
+
+    @eventlog(indexed=1)
     def ProposalDisqualified(self, _ipfs_key: str, note: str):
         pass
 
     def __init__(self, db: IconScoreDatabase) -> None:
         super().__init__(db)
+
+        self.id = VarDB(self.ID, db, str)
+        self.proposals = ProposalDataDB(db)
         self._proposals_keys = ArrayDB(self._PROPOSALS_KEYS, db, value_type=str)
-        self._proposals_details = DictDB(self._PROPOSALS_DETAILS, db, value_type=str, depth=2)
+        self._fund_record = DictDB(self._FUND_RECORD, db, value_type=int)
 
         self._cpf_treasury_score = VarDB(self._CPF_TREASURY_SCORE, db, value_type=Address)
         self._cps_score = VarDB(self._CPS_SCORE, db, value_type=Address)
@@ -70,6 +89,42 @@ class CPS_TREASURY(IconScoreBase):
         :rtype: str
         """
         return "CPS_TREASURY_SCORE"
+
+    def set_id(self, _val: str):
+        self.id.set(_val)
+
+    def get_id(self) -> str:
+        return self.id.get()
+
+    def proposal_prefix(self, _proposal_key: str) -> bytes:
+        return b'|'.join([PROPOSAL_DB_PREFIX, self.id.get().encode(), _proposal_key.encode()])
+
+    def _add_new_proposal(self, _key: str) -> None:
+        self._proposals_keys.put(_key)
+
+    def _check_proposal(self, _proposal_key: str) -> bool:
+        """
+        Check if the _proposal_key is already set or not
+        :param _proposal_key: Proposal IPFS Hash
+        :type _proposal_key: str
+        :return: bool
+        """
+        if _proposal_key not in self._proposals_keys:
+            return False
+        else:
+            return True
+
+    def _add_record(self, _proposal: ProposalAttributes) -> None:
+        proposal_data_obj = createProposalDataObject(_proposal)
+        if not self._check_proposal(proposal_data_obj.ipfs_hash):
+            self._add_new_proposal(proposal_data_obj.ipfs_hash)
+        prefix = self.proposal_prefix(proposal_data_obj.ipfs_hash)
+        addDataToProposalDB(prefix, self.proposals, proposal_data_obj)
+
+    def _get_projects(self, _proposal_key: str) -> dict:
+        prefix = self.proposal_prefix(_proposal_key)
+        _proposal_details = getDataFromProposalDB(prefix, self.proposals)
+        return _proposal_details
 
     @external
     def set_cps_score(self, _score: Address) -> None:
@@ -121,15 +176,16 @@ class CPS_TREASURY(IconScoreBase):
         _total_amount_to_be_paid = 0
         _installment_amount = []
         for _ipfs_key in self._proposals_keys:
-            if self._proposals_details[_ipfs_key][self._STATUS] != self._DISQUALIFIED:
-                if self._proposals_details[_ipfs_key][self._CONTRIBUTOR_ADDRESS] == str(_wallet_address):
-                    _total_installment = int(self._proposals_details[_ipfs_key][self._TOTAL_INSTALLMENT_COUNT])
-                    _total_paid_count = int(self._proposals_details[_ipfs_key][self._TOTAL_TIMES_INSTALLMENT_PAID])
+            prefix = self.proposal_prefix(_ipfs_key)
+            if self.proposals[prefix].status.get() != self._DISQUALIFIED:
+                if self.proposals[prefix].contributor_address.get() == _wallet_address:
+                    _total_installment = self.proposals[prefix].project_duration.get()
+                    _total_paid_count = self.proposals[prefix].installment_count.get()
                     if _total_paid_count < _total_installment:
-                        _total_budget = int(self._proposals_details[_ipfs_key][self._TOTAL_BUDGET])
-                        _total_paid_amount = int(self._proposals_details[_ipfs_key][self._TOTAL_INSTALLMENT_PAID])
+                        _total_budget = self.proposals[prefix].total_budget.get()
+                        _total_paid_amount = self.proposals[prefix].withdraw_amount.get()
 
-                        _installment_amount.append({self._IPFS_KEY: _ipfs_key,
+                        _installment_amount.append({self._IPFS_HASH: _ipfs_key,
                                                     self._TOTAL_BUDGET: _total_budget,
                                                     self._TOTAL_INSTALLMENT_PAID: _total_paid_amount,
                                                     self._TOTAL_INSTALLMENT_COUNT: _total_installment,
@@ -139,7 +195,8 @@ class CPS_TREASURY(IconScoreBase):
 
         return {"data": _installment_amount,
                 "project_count": len(_installment_amount),
-                "total_amount": _total_amount_to_be_paid}
+                "total_amount": _total_amount_to_be_paid,
+                "withdraw_amount": self._fund_record[_wallet_address]}
 
     @external(readonly=True)
     def get_sponsor_projected_fund(self, _wallet_address: Address) -> dict:
@@ -152,71 +209,62 @@ class CPS_TREASURY(IconScoreBase):
         _total_sponsor_bond = 0
         _installment_amount = []
         for _ipfs_key in self._proposals_keys:
-            if self._proposals_details[_ipfs_key][self._STATUS] != self._DISQUALIFIED:
-                if self._proposals_details[_ipfs_key][self._SPONSOR_ADDRESS] == str(_wallet_address):
-                    _total_installment = int(self._proposals_details[_ipfs_key][self._TOTAL_INSTALLMENT_COUNT])
-                    _total_paid_count = int(self._proposals_details[_ipfs_key][self._TOTAL_TIMES_REWARD_PAID])
+            prefix = self.proposal_prefix(_ipfs_key)
+            if self.proposals[prefix].status.get() != self._DISQUALIFIED:
+                if self.proposals[prefix].sponsor_address.get() == _wallet_address:
+                    _total_installment = self.proposals[prefix].project_duration.get()
+                    _total_paid_count = self.proposals[prefix].sponsor_reward_count.get()
                     if _total_paid_count < _total_installment:
-                        _total_reward = int(self._proposals_details[_ipfs_key][self._SPONSOR_REWARD])
-                        _total_paid_amount = int(self._proposals_details[_ipfs_key][self._TOTAL_REWARD_PAID])
-                        _deposited_sponsor_bond = int(self._proposals_details[_ipfs_key][self._TOTAL_BUDGET]) // 10
+                        _total_budget = self.proposals[prefix].sponsor_reward.get()
+                        _total_paid_amount = self.proposals[prefix].sponsor_withdraw_amount.get()
+                        _deposited_sponsor_bond = _total_budget // 10
 
-                        _installment_amount.append({self._IPFS_KEY: _ipfs_key,
-                                                    self._SPONSOR_REWARD: _total_reward,
-                                                    self._TOTAL_REWARD_PAID: _total_paid_amount,
+                        _installment_amount.append({self._IPFS_HASH: _ipfs_key,
+                                                    self._TOTAL_BUDGET: _total_budget,
+                                                    self._TOTAL_INSTALLMENT_PAID: _total_paid_amount,
                                                     self._TOTAL_INSTALLMENT_COUNT: _total_installment,
-                                                    self._TOTAL_TIMES_REWARD_PAID: _total_paid_count,
-                                                    self._INSTALLMENT_AMOUNT: _total_reward // _total_installment})
-                        _total_amount_to_be_paid += _total_reward // _total_installment
+                                                    self._TOTAL_TIMES_INSTALLMENT_PAID: _total_paid_count,
+                                                    self._INSTALLMENT_AMOUNT: _total_budget // _total_installment})
+                        _total_amount_to_be_paid += _total_budget // _total_installment
                         _total_sponsor_bond += _deposited_sponsor_bond
 
         return {"data": _installment_amount,
                 "project_count": len(_installment_amount),
                 "total_amount": _total_amount_to_be_paid,
+                "withdraw_amount": self._fund_record[_wallet_address],
                 "total_sponsor_bond": _total_sponsor_bond}
 
     @external
     @payable
-    def deposit_proposal_fund(self, _ipfs_key: str, _total_installment_count: int, _sponsor_address: Address,
-                              _contributor_address: Address, _total_budget: int) -> None:
+    def deposit_proposal_fund(self, _proposals: ProposalAttributes) -> None:
         """
         Treasury Score sending the amount to the CPS Treasury Score
-        :param _ipfs_key: Proposal IPFS HASH key
-        :param _total_installment_count: Total Duration month count
-        :param _sponsor_address: Sponsor P-Rep Address
-        :param _contributor_address: Contributor Address
-        :param _total_budget: Total Budget for the project
-        :type _total_budget: ICX Loop
-        :return:
+        :ipfs_hash: Proposal IPFS HASH key
+        :project_duration: Total Duration month count
+        :sponsor_address: Sponsor P-Rep Address
+        :contributor_address: Contributor Address
+        :total_budget: Total Budget for the project (ICX LOOP)
+        :sponsor_reward: Reward for the Sponsor ICX Loop
         """
+        proposal_key = _proposals.copy()
+
         if self.msg.sender != self._cpf_treasury_score.get():
             revert(f"{self.address} : Can't be called by other account. Only CPF "
                    f"Treasury Score can send amount to this method. ")
 
-        if _ipfs_key not in self._proposals_keys:
-            self._proposals_keys.put(_ipfs_key)
-            self._proposals_details[_ipfs_key][self._TOTAL_INSTALLMENT_COUNT] = str(_total_installment_count)
-            self._proposals_details[_ipfs_key][self._TOTAL_BUDGET] = str(_total_budget)
-            self._proposals_details[_ipfs_key][self._SPONSOR_REWARD] = str(self.msg.value - _total_budget)
-            self._proposals_details[_ipfs_key][self._TOTAL_INSTALLMENT_PAID] = str(0)
-            self._proposals_details[_ipfs_key][self._TOTAL_TIMES_INSTALLMENT_PAID] = str(0)
-            self._proposals_details[_ipfs_key][self._TOTAL_TIMES_REWARD_PAID] = str(0)
-            self._proposals_details[_ipfs_key][self._TOTAL_REWARD_PAID] = str(0)
-            self._proposals_details[_ipfs_key][self._SPONSOR_ADDRESS] = str(_sponsor_address)
-            self._proposals_details[_ipfs_key][self._CONTRIBUTOR_ADDRESS] = str(_contributor_address)
-            self._proposals_details[_ipfs_key][self._STATUS] = self._ACTIVE
+        proposal_key[self._STATUS] = self._ACTIVE
 
-            self.ProposalFundDeposited(_ipfs_key, _total_budget, f"Received {self.msg.value} ICX fund from CPF.")
-        else:
-            revert(f"{self.address} : IPFS key already Exists")
+        self._add_record(proposal_key)
+        self.ProposalFundDeposited(proposal_key[self._IPFS_HASH], proposal_key[self._TOTAL_BUDGET],
+                                   f"Received {self.msg.value} ICX fund from CPF.")
 
     @external
     @payable
-    def update_proposal_fund(self, _ipfs_key: str, _added_budget: int = 0, _sponsor_reward: int = 0,
+    def update_proposal_fund(self, _ipfs_key: str, _added_budget: int = 0, _added_sponsor_reward: int = 0,
                              _added_installment_count: int = 0) -> None:
         """
         After the budget adjustment is successfully approved. The added budget will be transferred from CPF
-        :param _sponsor_reward: After budget adjustment, 2% of the total fund added for sponsor
+        :param _added_sponsor_reward: After budget adjustment, 2% of the total fund added for sponsor
         :param _ipfs_key: Proposal IPFS HASH key
         :param _added_budget: added budget
         :type _added_budget: int
@@ -227,22 +275,19 @@ class CPS_TREASURY(IconScoreBase):
         if self.msg.sender != self._cpf_treasury_score.get():
             revert(f"{self.address} : Can't be called by other account. Only CPF "
                    f"Treasury Score can send amount to this method. ")
-        if _ipfs_key in self._proposals_keys:
-            if self._proposals_details[_ipfs_key][self._STATUS] == self._DISQUALIFIED:
-                revert(f'{self.address} The project has been disqualified.')
 
-            self._proposals_details[_ipfs_key][self._TOTAL_BUDGET] = str(
-                int(self._proposals_details[_ipfs_key][self._TOTAL_BUDGET]) + _added_budget)
+        prefix = self.proposal_prefix(_ipfs_key)
+        _total_budget = self.proposals[prefix].total_budget.get()
+        _sponsor_reward = self.proposals[prefix].sponsor_reward.get()
+        _total_duration = self.proposals[prefix].project_duration.get()
 
-            self._proposals_details[_ipfs_key][self._SPONSOR_REWARD] = str(
-                int(self._proposals_details[_ipfs_key][self._SPONSOR_REWARD]) + _sponsor_reward)
-
-            self._proposals_details[_ipfs_key][self._TOTAL_INSTALLMENT_COUNT] = str(
-                int(self._proposals_details[_ipfs_key][self._TOTAL_INSTALLMENT_COUNT]) + _added_installment_count
-            )
+        if self._check_proposal(_ipfs_key):
+            self.proposals[prefix].total_budget.set(_total_budget + _added_budget)
+            self.proposals[prefix].sponsor_reward.set(_sponsor_reward + _added_sponsor_reward)
+            self.proposals[prefix].project_duration.set(_total_duration + _added_installment_count)
 
             self.ProposalFundDeposited(_ipfs_key, _added_budget, f"{_ipfs_key} : Added Budget : "
-                                                                 f"{_added_budget * _MULTIPLIER} ICX Successfully")
+                                                                 f"{icx(_added_budget)} ICX Successfully")
         else:
             revert(f"{self.address}: IPFS key doesn't exist")
 
@@ -254,24 +299,29 @@ class CPS_TREASURY(IconScoreBase):
         :param _ipfs_key: Proposal IPFS HASH key
         :return:
         """
-        if _ipfs_key in self._proposals_keys:
-            contributor_address = self._proposals_details[_ipfs_key][self._CONTRIBUTOR_ADDRESS]
-            _total_budget = int(self._proposals_details[_ipfs_key][self._TOTAL_BUDGET])
-            _total_installment_paid = int(self._proposals_details[_ipfs_key][self._TOTAL_INSTALLMENT_PAID])
-            _total_installment_count = int(self._proposals_details[_ipfs_key][self._TOTAL_INSTALLMENT_COUNT])
-            _total_paid_count = int(self._proposals_details[_ipfs_key][self._TOTAL_TIMES_INSTALLMENT_PAID])
-            if _total_installment_count - _total_installment_paid == 1:
-                self._proposals_details[_ipfs_key][self._STATUS] = self._COMPLETED
+        if self.msg.sender != self._cps_score.get():
+            revert(f"{self.address} : Can't be called by other account. Only CPS "
+                   f" Score can call this method. ")
+
+        prefix = self.proposal_prefix(_ipfs_key)
+
+        if self._check_proposal(_ipfs_key):
+            _total_budget = self.proposals[prefix].total_budget.get()
+            _total_duration = self.proposals[prefix].project_duration.get()
+            _installment_count = self.proposals[prefix].installment_count.get()
+            contributor_address = self.proposals[prefix].contributor_address.get()
+
+            if _total_duration - _installment_count == 1:
+                self.proposals[prefix].status.set(self._COMPLETED)
 
             try:
-                amount = (_total_budget - _total_installment_paid) // (_total_installment_count - _total_paid_count)
+                _installment_amount = _total_budget // _total_duration
 
-                self._proposals_details[_ipfs_key][self._TOTAL_INSTALLMENT_PAID] = str(_total_installment_paid + amount)
-                self._proposals_details[_ipfs_key][self._TOTAL_TIMES_INSTALLMENT_PAID] = str(_total_paid_count + 1)
-                self.icx.transfer(Address.from_string(contributor_address), amount)
+                self.proposals[prefix].installment_count.set(_installment_count + 1)
+                self._fund_record[contributor_address] += _installment_amount
 
-                self.ProposalFundSent(Address.from_string(contributor_address), amount,
-                                      f"Installment No. {_total_paid_count + 1} transferred to contributor")
+                self.ProposalFundSent(contributor_address, _installment_amount,
+                                      f"Installment No. {_installment_count + 1} added to contributors address.")
             except BaseException as e:
                 revert(f'{self.address}: Network problem. Sending project funds. {e}')
 
@@ -283,26 +333,31 @@ class CPS_TREASURY(IconScoreBase):
         :param _ipfs_key: Proposal IPFS HASH key
         :return:
         """
-        if _ipfs_key in self._proposals_keys:
+        if self.msg.sender != self._cps_score.get():
+            revert(f"{self.address} : Can't be called by other account. Only CPS "
+                   f" Score can call this method. ")
+
+        prefix = self.proposal_prefix(_ipfs_key)
+
+        if self._check_proposal(_ipfs_key):
+            _sponsor_reward = self.proposals[prefix].sponsor_reward.get()
+            _total_duration = self.proposals[prefix].project_duration.get()
+            _sponsor_reward_count = self.proposals[prefix].sponsor_reward_count.get()
+            _sponsor_address = self.proposals[prefix].sponsor_address.get()
+
+            if _total_duration - _sponsor_reward_count == 1:
+                self.proposals[prefix].status.set(self._COMPLETED)
+
             try:
-                sponsor_address = self._proposals_details[_ipfs_key][self._SPONSOR_ADDRESS]
-                sponsor_reward = int(self._proposals_details[_ipfs_key][self._SPONSOR_REWARD])
-                total_reward_paid = int(self._proposals_details[_ipfs_key][self._TOTAL_REWARD_PAID])
-                _total_count = int(self._proposals_details[_ipfs_key][self._TOTAL_INSTALLMENT_COUNT])
-                _total_paid_count = int(self._proposals_details[_ipfs_key][self._TOTAL_TIMES_REWARD_PAID])
-                amount = (sponsor_reward - total_reward_paid) // (_total_count - _total_paid_count)
+                _installment_amount = _sponsor_reward // _total_duration
 
-                if _total_count - _total_paid_count == 1:
-                    self._proposals_details[_ipfs_key][self._STATUS] = self._COMPLETED
+                self.proposals[prefix].installment_count.set(_sponsor_reward_count + 1)
+                self._fund_record[_sponsor_address] += _installment_amount
 
-                self._proposals_details[_ipfs_key][self._TOTAL_REWARD_PAID] = str(total_reward_paid + amount)
-                self._proposals_details[_ipfs_key][self._TOTAL_TIMES_REWARD_PAID] = str(_total_paid_count + 1)
-                self.icx.transfer(Address.from_string(sponsor_address), amount)
-
-                self.ProposalFundSent(Address.from_string(sponsor_address), amount,
-                                      f"Sponsor Reward No. {_total_paid_count + 1} transferred to Sponsor.")
+                self.ProposalFundSent(_sponsor_address, _installment_amount,
+                                      f"Installment No. {_sponsor_reward_count + 1} added to sponsor address.")
             except BaseException as e:
-                revert(f'{self.address} : Network problem. Sending project funds. {e}')
+                revert(f'{self.address}: Network problem. Sending project funds. {e}')
 
     @external
     def disqualify_project(self, _ipfs_key: str) -> None:
@@ -312,62 +367,42 @@ class CPS_TREASURY(IconScoreBase):
         :param _ipfs_key: Proposal IPFS HASH key
         """
 
-        if _ipfs_key in self._proposals_keys:
-            self._proposals_details[_ipfs_key][self._STATUS] = self._DISQUALIFIED
-            self._proposals_details[_ipfs_key][self._TOTAL_BUDGET] = self._proposals_details[_ipfs_key][
-                self._TOTAL_INSTALLMENT_PAID]
+        if self.msg.sender != self._cps_score.get():
+            revert(f"{self.address} : Can't be called by other account. Only CPS "
+                   f" Score can call this method. ")
 
-            total_disqualified_budget = int(self._proposals_details[_ipfs_key][self._TOTAL_BUDGET]) - int(
-                self._proposals_details[_ipfs_key][self._TOTAL_INSTALLMENT_PAID])
-            total_disqualified_reward = int(self._proposals_details[_ipfs_key][self._SPONSOR_REWARD]) - int(
-                self._proposals_details[_ipfs_key][self._TOTAL_REWARD_PAID])
+        if self._check_proposal(_ipfs_key):
+            prefix = self.proposal_prefix(_ipfs_key)
+            self.proposals[prefix].status.set(self._COMPLETED)
+
+            _total_budget = self.proposals[prefix].total_budget.get()
+            _withdraw_amount = self.proposals[prefix].withdraw_amount.get()
+            _sponsor_reward = self.proposals[prefix].sponsor_reward.get()
+            _sponsor_withdraw_amount = self.proposals[prefix].sponsor_withdraw_amount.get()
+
+            _remaining_budget = _total_budget - _withdraw_amount
+            _remaining_reward = _sponsor_reward - _sponsor_withdraw_amount
+
             # return remaining fund amount to the CPF
             try:
                 cpf_treasury_score = self.create_interface_score(self._cpf_treasury_score.get(), CPF_TREASURY_INTERFACE)
-                cpf_treasury_score.icx(total_disqualified_budget + total_disqualified_reward).disqualify_proposal_fund(
+                cpf_treasury_score.icx(_remaining_budget + _remaining_reward).disqualify_proposal_fund(
                     _ipfs_key)
 
-                self.ProposalDisqualified(_ipfs_key, "Proposal disqualified")
+                self.ProposalDisqualified(_ipfs_key, f"{_ipfs_key}Proposal disqualified")
             except BaseException as e:
                 revert(f"{self.address} : Network problem. Sending proposal funds. {e}")
         else:
             revert(f"{self.address} : Provided IPFS key not found.")
 
-    @external(readonly=True)
-    def get_proposals_details_list(self, _start_index: int = 0, _end_index: int = 20) -> dict:
+    @external
+    def claim_reward(self, _wallet_address: Address) -> None:
         """
-            Returns all proposal fund records
-            :return: List of all project_funds_list
+        Claim he reward or the installment amount
+        :param _wallet_address: wallet address of the user who claim the reward
         """
-
-        _proposals_details_list = []
-        _proposals_keys = self._proposals_keys
-
-        if _end_index - _start_index > 50:
-            return {-1: "Page length must not be greater than 50."}
-        if _start_index < 0:
-            _start_index = 0
-        count = len(_proposals_keys)
-
-        _range = range(_start_index, count if _end_index > count else _end_index)
-
-        for _keys in _range:
-            _proposal_detail = {self._STATUS: self._proposals_details[_proposals_keys[_keys]][self._STATUS],
-                                self._CONTRIBUTOR_ADDRESS: self._proposals_details[_keys][
-                                    self._CONTRIBUTOR_ADDRESS],
-                                self._TOTAL_BUDGET: self._proposals_details[_proposals_keys[_keys]][self._TOTAL_BUDGET],
-                                self._SPONSOR_ADDRESS: self._proposals_details[_proposals_keys[_keys]][
-                                    self._CONTRIBUTOR_ADDRESS],
-                                self._TOTAL_INSTALLMENT_COUNT: self._proposals_details[_proposals_keys[_keys]][
-                                    self._TOTAL_INSTALLMENT_COUNT],
-                                self._TOTAL_TIMES_INSTALLMENT_PAID: self._proposals_details[_proposals_keys[_keys]][
-                                    self._TOTAL_TIMES_INSTALLMENT_PAID],
-                                self._SPONSOR_REWARD: self._proposals_details[_proposals_keys[_keys]][
-                                    self._SPONSOR_REWARD],
-                                self._TOTAL_INSTALLMENT_PAID: self._proposals_details[_proposals_keys[_keys]][
-                                    self._TOTAL_INSTALLMENT_PAID],
-                                self._IPFS_KEY: _proposals_keys[_keys]}
-            _proposals_details_list.append(_proposal_detail)
-
-        _proposals_dict_list = {"data": _proposals_details_list, "count": len(_proposals_details_list)}
-        return _proposals_dict_list
+        _available_amount = self._fund_record[_wallet_address]
+        if _available_amount > 0:
+            self.icx.transfer(_wallet_address, _available_amount)
+            self.ProposalFundWithdrawn(_wallet_address, _available_amount, f"{_available_amount} withdrawn to "
+                                                                           f"{_wallet_address}")
