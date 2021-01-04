@@ -14,8 +14,8 @@ const VoteProgressBar = ({voterCount, approvedPercentage = 0, rejectedPercentage
         type = 'progress report';
     }
 
-    const progressText = `${voterCount ? 'Voter count ' : 'Stake'}- ${approvedPercentage ? approvedPercentage.toFixed() : 0}% approved, ${rejectedPercentage ? rejectedPercentage.toFixed() : 0}% rejected${budgetAdjustment ? ' (Budget Change Request)': ''}`;
-    const description = !voterCount ? `Percentage of total stakes of the voters that have approved / rejected the ${type}` : `Percetage of the total voters that have approved / rejected the ${proposal ? 'proposal' : 'progress report'}`;
+    const progressText = `${voterCount ? 'Voter count ' : 'Stake '}- ${approvedPercentage ? approvedPercentage.toFixed() : 0}% approved, ${rejectedPercentage ? rejectedPercentage.toFixed() : 0}% rejected${budgetAdjustment ? ' (Budget Change Request)': ''}`;
+    const description = !voterCount ? `Percentage of total stakes of the voters that have approved / rejected the ${type} (calculated based on the total P-Reps that have already participated in the voting for this ${type}).` : `Percentage of the total voters that have approved / rejected the ${type} (calculated based on the total possible P-Reps regardless of whether they have already participated in the voting or not for this ${type}).`;
 
     return (
         <>
