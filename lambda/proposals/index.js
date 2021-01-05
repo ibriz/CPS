@@ -124,7 +124,7 @@ exports.handler = async (event) => {
 					const sponsor = JSON.parse(sponsorData);
 					console.log(sponsor);
 
-					if (body.type === 'Proposal' && sponsor.enableEmailNotifications) await send_email(sponsor.email, body);
+					if (body.type === 'Proposal' && sponsor.verified && sponsor.enableEmailNotifications) await send_email(sponsor.email, body);
 				}
 			} else {
 				proposal = await uploadFile(event);

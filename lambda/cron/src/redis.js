@@ -15,7 +15,7 @@ async function populate_users_details(addresses_list) {
 			if (address_details != null) {
 				const json_address_details = JSON.parse(address_details);
 
-				if (json_address_details.enableEmailNotifications == true && user_details_list.indexOf(json_address_details) === -1) {
+				if (json_address_details.enableEmailNotifications && json_address_details.verified  && user_details_list.indexOf(json_address_details) === -1) {
 					user_details_list.push(json_address_details);
 				}
 			}
