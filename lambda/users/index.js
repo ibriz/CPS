@@ -59,18 +59,25 @@ async function generateEmailVerificationToken(address, email) {
 
 async function registerUser(payload) {
 	try {
-		const body = JSON.parse(payload.body);
+		let body = JSON.parse(payload.body);
 
 		if (!body.address) return new Error('address of the user is required');
 		if (!body.email) return new Error('email of the user is required');
 
-		payload.body.verified = false;
+		//Retrieve the data from redis using the key - users:address:<<address of the user>>
+		const userFromRedis = await getAsync(`users:address:${body.address}`);
+
+		const userStoredData = JSON.parse(userFromRedis);
+
+		console.log(userFromRedis, userStoredData);
+
+		if(!userFromRedis ||  userStoredData.email !== body.email) body.verified = false;
 
 		//Store the data of user in redis with key - users:address:<<address of the user>>
-		const redisResponse = await setAsync(`users:address:${body.address}`, payload.body);
+		const redisResponse = await setAsync(`users:address:${body.address}`,  JSON.stringify(body));
 		if (!redisResponse) throw new Error("Data couldnot be uploaded in redis");
 
-		await generateEmailVerificationToken(body.address, body.email);
+		if(!userFromRedis || userStoredData.email !== body.email) await generateEmailVerificationToken(body.address, body.email);
 
 		return JSON.stringify({ redisResponse: redisResponse });
 	} catch (error) {
