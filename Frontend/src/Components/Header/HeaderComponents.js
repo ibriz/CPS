@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { Row } from 'react-bootstrap';
 import styles from './Header.module.css'
 import { Button } from 'react-bootstrap';
@@ -10,19 +10,35 @@ import UserInfoFormModal from './UserInfoFormModal';
 import useTimer from 'Hooks/useTimer';
 import {Link} from 'react-router-dom';
 import {setLoginButtonClicked} from 'Redux/Reducers/accountSlice';
+import EmailConfirmationModal from './EmailConfirmationModal';
+import useVerification from 'Hooks/useVerification';
+import {setUserDataSubmitSuccess} from 'Redux/Reducers/userSlice';
 
-const HeaderComponents = ({ address, logout, title, isPrep, isRegistered, unregisterPrep, registerPrep,period, payPenalty, firstName, lastName, walletBalance, landingPage, loginButtonClicked, setLoginButtonClicked }) => {
+const HeaderComponents = ({ address, logout, title, isPrep, isRegistered, unregisterPrep, registerPrep,period, payPenalty, firstName, lastName, walletBalance, landingPage, loginButtonClicked, setLoginButtonClicked, userDataSubmitSuccess, verified, setUserDataSubmitSuccess, previousEmail, email }) => {
 
-
+    const [emailConfirmationModalShow, setEmailConfirmationModal] = React.useState(false);
     const [modalShow, setModalShow] = React.useState(false);
 
     const {isRemainingTimeZero} = useTimer();
+    useVerification();
 
     const onLogout = () => {
         logout();
     }
 
-    useState(() => {
+    useEffect(() => {
+        console.log("userDataSubmitSuccess", userDataSubmitSuccess);
+        if(userDataSubmitSuccess && !verified && (previousEmail !== email)) {
+            setUserDataSubmitSuccess(
+                {
+                    status: false
+                }
+            );
+            setEmailConfirmationModal(true);
+        }
+    }, [userDataSubmitSuccess, previousEmail, email]);
+
+    useEffect(() => {
         if(address && loginButtonClicked) {
             setLoginButtonClicked({
                 click: false
@@ -101,6 +117,12 @@ const HeaderComponents = ({ address, logout, title, isPrep, isRegistered, unregi
             onHide={() => setModalShow(false)}
         />
 
+        <EmailConfirmationModal
+            show={emailConfirmationModalShow}
+            setModalShow={setEmailConfirmationModal}
+            onHide={() => setEmailConfirmationModal(false)}
+        />
+
     </>
     );
 }
@@ -114,10 +136,13 @@ const mapStateToProps = state => ({
     walletBalance: state.account.walletBalance,
     loginButtonClicked: state.account.loginButtonClicked,
 
-
+    userDataSubmitSuccess: state.user.userDataSubmitSuccess,
     period: state.period.period,
     firstName: state.user.firstName,
-    lastName: state.user.lastName
+    lastName: state.user.lastName,
+    previousEmail: state.user.previousEmail,
+    email:state.user.email,
+    verified: state.user.verified
 
 })
 
@@ -126,7 +151,8 @@ const mapDispatchToProps = dispatch => (
         logout: () => dispatch(logout()),
         unregisterPrep: () => dispatch(unregisterPrep()),
         registerPrep: () => dispatch(registerPrep()),
-        setLoginButtonClicked: (payload) => dispatch(setLoginButtonClicked(payload))
+        setLoginButtonClicked: (payload) => dispatch(setLoginButtonClicked(payload)),
+        setUserDataSubmitSuccess: (payload) => dispatch(setUserDataSubmitSuccess(payload))
 
     }
 )

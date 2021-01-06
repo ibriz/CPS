@@ -21,12 +21,16 @@ const Header = ({ address, logout, title, isPrep, isRegistered, unregisterPrep, 
             // style = {(isPrep && !payPenalty && period === 'APPLICATION') ? {marginTop: '35px'} : {}}
             >{title}</span>
             <div className = {styles.headerComp1}>
-                <HeaderComponents />
+                {
+                    (window.innerWidth < 768) && <HeaderComponents />
+                }
+                
 
             </div>
         <div className={styles.account}>
-
-            <HeaderComponents />
+        {
+            (window.innerWidth >= 768) && <HeaderComponents />
+        }
         </div>
         
         </Row>

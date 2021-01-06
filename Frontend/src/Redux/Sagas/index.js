@@ -51,7 +51,7 @@ import {
 import { fetchPrepWorker, unregisterPrepWorker, registerPrepWorker, payPenaltyWorker } from './PRep';
 import {fetchPeriodDetailsRequestWorker, updatePeriodWorker} from './Period';
 
-import {fetchUserDataRequestWorker, submitUserDataRequestWorker} from './User';
+import {fetchUserDataRequestWorker, submitUserDataRequestWorker, resendVerificationEmailRequestWorker} from './User';
 
 
 
@@ -74,7 +74,7 @@ import { submitProgressReportRequest, submitProgressReportSuccess, fetchProgress
 import {fetchPeriodDetailsRequest, updatePeriod} from '../Reducers/periodSlice';
 import { fetchPrepsRequest, unregisterPrep, registerPrep, payPenalty } from '../Reducers/prepsSlice';
 import {fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, fetchExpectedGrantRequest, fetchCPSTreasuryScoreAddressRequest, claimReward} from '../Reducers/fundSlice';
-import {fetchUserDataRequest, submitUserDataRequest} from '../Reducers/userSlice';
+import {fetchUserDataRequest, submitUserDataRequest, resendVerificationEmailRequest} from '../Reducers/userSlice';
 import { FiPrinter } from 'react-icons/fi';
 
 function* rootSaga() {
@@ -155,6 +155,8 @@ yield takeEvery(fetchRemainingVotesRequest.type, fetchRemainingVotesRequestWorke
 yield takeEvery(fetchVoteResultBudgetChangeRequest.type, fetchVoteResultBudgetChangeRequestWorker);
 
 yield takeEvery(claimReward.type, claimRewardWorker);
+
+yield takeEvery(resendVerificationEmailRequest.type, resendVerificationEmailRequestWorker);
 
 
 
