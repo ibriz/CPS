@@ -93,7 +93,11 @@ const SlantedHeader = ({ loginRequest, loginPrepRequest, walletAddress, setLogin
                             {
                                 walletAddress ?
                                 <>
-                                    <HeaderComponents landingPage />
+                                    {
+                                        (window.innerWidth < 768) && <HeaderComponents landingPage />
+
+                                    }
+                                    
 
                                 </>
                                     :
@@ -166,8 +170,10 @@ const SlantedHeader = ({ loginRequest, loginPrepRequest, walletAddress, setLogin
             {
                 walletAddress ?
                 <>
-                    <HeaderComponents landingPage />
+                                    {
+                                        (window.innerWidth >= 768) && <HeaderComponents landingPage />
 
+                                    }
                 </>
                     :
                     <Button variant="outline-light" className={styles.button} onClick={onClickLogin}>LOGIN</Button>

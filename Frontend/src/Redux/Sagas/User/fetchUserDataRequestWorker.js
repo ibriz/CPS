@@ -12,6 +12,8 @@ function* fetchUserDataRequestWorker({payload}) {
       method: 'GET'
     });
 
+    // response.verified = false;
+
     // const response = {
     //         "email":"tejpant@gmail.com",
     //         "address":"hx6c8f76faff8d64e43115eb7cbd8aac3a510c1c5d",
