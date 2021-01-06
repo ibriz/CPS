@@ -9,8 +9,7 @@ def icx(value: int) -> int:
 
 class CPS_TREASURY_INTERFACE(InterfaceScore):
     @interface
-    def deposit_proposal_fund(self, _ipfs_key: str, _total_installment_count: int, _sponsor_address: Address,
-                              _contributor_address: Address, _total_budget: int, sponsor_reward: int): pass
+    def deposit_proposal_fund(self, _proposals: TypedDict): pass
 
     @interface
     def update_proposal_fund(self, _ipfs_key: str, _added_budget: int, _added_sponsor_reward: int,
@@ -183,11 +182,12 @@ class CPF(IconScoreBase):
             self._proposals_keys.put(_ipfs_key)
             self._proposals_details[_ipfs_key][self._TOTAL_BUDGET] = total_transfer
 
+            params = {_ipfs_key, _total_installment_count, _sponsor_address, _contributor_address, _total_budget,
+                      _sponsor_reward}
+
             try:
                 cps_treasury_score = self.create_interface_score(self._cps_treasury_score.get(), CPS_TREASURY_INTERFACE)
-                cps_treasury_score.icx(total_transfer).deposit_proposal_fund(_ipfs_key, _total_installment_count,
-                                                                             _sponsor_address, _contributor_address,
-                                                                             _total_budget, _sponsor_reward)
+                cps_treasury_score.icx(total_transfer).deposit_proposal_fund(params)
 
                 self.ProposalFundTransferred(_ipfs_key, _total_budget, f"Successfully transferred {total_transfer} ICX "
                                                                        f"to CPF Treasury.")
