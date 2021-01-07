@@ -133,7 +133,8 @@ const initialState = {
         }
     },
 
-    remainingVotes: []
+    remainingVotes: [],
+    sponsorMessage: [],
 };
 
 const proposalSlice = createSlice({
@@ -559,6 +560,16 @@ const proposalSlice = createSlice({
         fetchRemainingVotesFailure(state) {
             return;
         },
+        fetchSponsorMessageRequest() {
+            return;
+        },
+        fetchSponsorMessageSuccess(state, action) {
+            state.sponsorMessage[action.payload.response.ipfsKey] = action.payload.response.message;
+            return;
+        },  
+        fetchSponsorMessageFailure() {
+            return;
+        },
     },
 
     extraReducers: {
@@ -582,5 +593,6 @@ export const { submitProposalRequest, submitProposalSuccess, submitProposalFailu
     fetchProjectAmountsRequest, fetchProjectAmountsSuccess, fetchProjectAmountsFailure,
     fetchMyProposalListRequest, fetchMyProposalListSuccess, fetchMyProposalListFailure,
     fetchRemainingVotesRequest, fetchRemainingVotesProposalSuccess, fetchRemainingVotesFailure,
-    setSubmittingProposal } = proposalSlice.actions;
+    setSubmittingProposal,
+    fetchSponsorMessageRequest, fetchSponsorMessageSuccess, fetchSponsorMessageFailure } = proposalSlice.actions;
 export default proposalSlice.reducer;
