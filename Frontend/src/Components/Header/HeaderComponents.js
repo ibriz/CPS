@@ -18,6 +18,7 @@ const HeaderComponents = ({ address, logout, title, isPrep, isRegistered, unregi
 
     const [emailConfirmationModalShow, setEmailConfirmationModal] = React.useState(false);
     const [modalShow, setModalShow] = React.useState(false);
+    const [initialPrompt, setInitialPrompt] = React.useState(false);
 
     const {isRemainingTimeZero} = useTimer();
     useVerification();
@@ -43,7 +44,7 @@ const HeaderComponents = ({ address, logout, title, isPrep, isRegistered, unregi
             setLoginButtonClicked({
                 click: false
             });
-            setModalShow(true);
+            setInitialPrompt(true);
 
         }
     }, [address])
@@ -115,6 +116,13 @@ const HeaderComponents = ({ address, logout, title, isPrep, isRegistered, unregi
             show={modalShow}
             setModalShow={setModalShow}
             onHide={() => setModalShow(false)}
+        />
+
+        <UserInfoFormModal
+            show={initialPrompt}
+            setModalShow={setInitialPrompt}
+            onHide={() => setInitialPrompt(false)}
+            initialPrompt
         />
 
         <EmailConfirmationModal
