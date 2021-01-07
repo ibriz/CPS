@@ -6,13 +6,15 @@ import wallet from 'Redux/ICON/FrontEndWallet';
 import {fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest} from 'Redux/Reducers/fundSlice';
 import {icxFormat} from 'helpers';
 import useTimer from 'Hooks/useTimer';
+import { fetchPrepsRequest } from 'Redux/Reducers/prepsSlice';
 
-const TabularData = ({ numberOfPendingProposals, numberOfSubmittedProposals, totalPendingProposalBudge, totalSubmittedProposalBudget, cpfRemainingFunds, numberOfApprovedProposals, totalApprovedProposalBudget, fetchProposalListRequest, walletAddress,totalCount, fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, cpfScoreAddress, fetchProjectAmountsRequest, projectAmounts }) => {
+const TabularData = ({ numberOfPendingProposals, numberOfSubmittedProposals, totalPendingProposalBudge, totalSubmittedProposalBudget, cpfRemainingFunds, numberOfApprovedProposals, totalApprovedProposalBudget, fetchProposalListRequest, walletAddress,totalCount, fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, cpfScoreAddress, fetchProjectAmountsRequest, projectAmounts, fetchPrepsRequest, preps }) => {
     const {period} = useTimer();
     useEffect(() => {
         fetchCPFScoreAddressRequest();
         fetchProjectAmountsRequest();
-    }, [fetchCPFScoreAddressRequest, fetchProjectAmountsRequest]);
+        fetchPrepsRequest();
+    }, [fetchCPFScoreAddressRequest, fetchProjectAmountsRequest, fetchPrepsRequest]);
 
     useEffect(() => {
         fetchCPFRemainingFundRequest();
@@ -22,6 +24,10 @@ const TabularData = ({ numberOfPendingProposals, numberOfSubmittedProposals, tot
         {
             key: 'Period',
             value: period === 'APPLICATION' ? 'Application Period' : 'Voting Period'
+        },
+        {
+            key: 'No. of Registered P-Reps',
+            value: preps.length
         },
         {
             key: 'Voting Proposals',
@@ -79,7 +85,9 @@ const mapStateToProps = () => state => {
         walletAddress: state.account.address,
         totalCount: state.proposals.totalCount,
 
-        projectAmounts: state.proposals.projectAmounts
+        projectAmounts: state.proposals.projectAmounts,
+        preps: state.preps.preps,
+
 
 
 
@@ -92,6 +100,8 @@ const mapDispatchToProps = dispatch => (
         fetchCPFScoreAddressRequest: payload => dispatch(fetchCPFScoreAddressRequest(payload)),
         fetchCPFRemainingFundRequest: payload => dispatch(fetchCPFRemainingFundRequest(payload)),
         fetchProjectAmountsRequest: payload => dispatch(fetchProjectAmountsRequest(payload)),
+        fetchPrepsRequest: payload => dispatch(fetchPrepsRequest(payload)),
+
     }
 )
 

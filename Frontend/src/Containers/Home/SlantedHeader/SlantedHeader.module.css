@@ -112,13 +112,13 @@ align-items: center;
     }
 
     .slanted {
-        height: 430px;
+        height: 463px;
     }
 }
 
 @media screen and (min-width: 1200px) {
     .slanted {
-        height: 430px;
+        height: 463px;
     }
 }
 
@@ -199,7 +199,7 @@ align-items: center;
 
 .slantedBackground {
     position: absolute;
-    top: 70px;
+    top: 97px;
     right: 0;
     width: 500px;
 
@@ -212,7 +212,7 @@ align-items: center;
 
     .slanted {
         height: auto !important;
-        padding-bottom: 60px;
+        padding-bottom: 80px;
     }
 }
 
