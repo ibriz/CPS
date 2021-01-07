@@ -11,7 +11,7 @@ import {submitUserDataRequest} from 'Redux/Reducers/userSlice';
 import ConfirmationModal from 'Components/UI/ConfirmationModal';
 
 
-const UserInfoFormModal = ({user, submitUserDataRequest, setModalShow, address, verified, firstName, resendVerificationEmailRequest, ...props}) => {
+const UserInfoFormModal = ({user, submitUserDataRequest, setModalShow, address, verified, firstName, resendVerificationEmailRequest, initialPrompt, ...props}) => {
 
   const [userData, setUserData] = useState(
     {
@@ -22,6 +22,7 @@ const UserInfoFormModal = ({user, submitUserDataRequest, setModalShow, address, 
     }
   );
   let [confirmationShow, setConfirmationShow] = React.useState(false);
+  let [dontShowAgain, setDontShowAgain] = React.useState(false);
 
   useEffect(() => 
     user && setUserData({
@@ -139,8 +140,27 @@ const UserInfoFormModal = ({user, submitUserDataRequest, setModalShow, address, 
           }
 
 
-          <Form.Group as={Row} controlId="formPlaintextPassword">
+          {
+            initialPrompt &&
+            <Row>
 
+            <Col sm = "12"><Form.Check type="checkbox" label="Don't show again." checked={dontShowAgain} onChange={event => setDontShowAgain(event.target.checked)} name="enableEmailNotifications"
+
+            /></Col>
+                        </Row>
+
+          }
+
+
+          <Form.Group as={Row} controlId="formPlaintextPassword">
+          <Col>
+              <Button variant="outline-info" onClick = {() => {
+                if (initialPrompt) {
+                  
+                }
+                setModalShow(false);
+              }}>CLOSE</Button>
+            </Col>
             <Col className={styles.saveButton}>
               <Button variant="info" type="submit">SUBMIT</Button>
             </Col>
