@@ -24,7 +24,8 @@ import {
   fetchProposalByAddressWorker,
   fetchProposalVoteResultRequestWorker,
   fetchProjectAmountsWorker,
-  fetchRemainingVotesRequestWorker
+  fetchRemainingVotesRequestWorker,
+  fetchSponsorMessageRequestWorker
 } from './Proposal';
 
 import {
@@ -62,7 +63,8 @@ import { submitProposalRequest, submitProposalSuccess, fetchProposalListRequest,
   voteProposal, fetchProposalByAddressRequest,
   fetchVoteResultRequest as fetchProposalVoteResultRequest,
   fetchProjectAmountsRequest,
-  fetchRemainingVotesRequest} from '../Reducers/proposalSlice';
+  fetchRemainingVotesRequest,
+  fetchSponsorMessageRequest} from '../Reducers/proposalSlice';
 import { submitProgressReportRequest, submitProgressReportSuccess, fetchProgressReportListRequest, fetchProgressReportDetailRequest,
   fetchDraftsRequest as fetchDraftsRequestProgressReport,
   saveDraftRequest as saveDraftRequestProgressReport,
@@ -157,6 +159,8 @@ yield takeEvery(fetchVoteResultBudgetChangeRequest.type, fetchVoteResultBudgetCh
 yield takeEvery(claimReward.type, claimRewardWorker);
 
 yield takeEvery(resendVerificationEmailRequest.type, resendVerificationEmailRequestWorker);
+
+yield takeEvery(fetchSponsorMessageRequest.type, fetchSponsorMessageRequestWorker);
 
 
 

@@ -4,7 +4,7 @@ import { Header, Address, DetailsTable, Description, MilestoneTable, ListTitle }
 import styles from './DetailsModal.module.css';
 import ProgressBar from '../../UI/ProgressBar';
 import ProgressText from '../../UI/ProgressText';
-import { FetchProposalDetailRequest, fetchProposalDetailRequest, approveSponserRequest, rejectSponsorRequest, voteProposal, fetchVoteResultRequest } from 'Redux/Reducers/proposalSlice';
+import { FetchProposalDetailRequest, fetchProposalDetailRequest, approveSponserRequest, rejectSponsorRequest, voteProposal, fetchVoteResultRequest, fetchSponsorMessageRequest } from 'Redux/Reducers/proposalSlice';
 import { fetchProgressReportByProposalRequest } from 'Redux/Reducers/progressReportSlice';
 import { connect } from 'react-redux';
 import ProgressReportList from 'Components/Card/ProgressReportList';
@@ -57,7 +57,7 @@ function DetailsModal(props) {
 
 
   const { proposalDetail, proposal, sponsorRequest = false, approveSponserRequest, rejectSponsorRequest, voting = false, voteProposal, progressReportByProposal, votesByProposal, fetchVoteResultRequest, approvedPercentage,
-    fetchProgressReportByProposalRequest, period, remainingTime, approvedVoterPercentage, fetchProposalDetail, walletAddress, rejectedPercentage, rejectedVoterPercentage, fetchPrepsRequest, preps, ...remainingProps } = props;
+    fetchProgressReportByProposalRequest, period, remainingTime, approvedVoterPercentage, fetchProposalDetail, walletAddress, rejectedPercentage, rejectedVoterPercentage, fetchPrepsRequest, preps, sponsorMessage, ...remainingProps } = props;
 
   const status = proposalStatusMapping.find(mapping => mapping.status === proposal?._status)?.name
 
@@ -70,7 +70,18 @@ function DetailsModal(props) {
 
   useEffect(() => {
     fetchPrepsRequest();
-  }, [])
+  }, []);
+
+  // useEffect(() => {
+  //   if (status !== 'Pending') {
+  //     console.log("STATUSPENDING");
+  //     props.proposal && fetchSponsorMessageRequest({
+  //       ipfsKey: props.proposal.ipfsKey
+  
+  //     })
+  //   }
+
+  // }, [props.proposal]);
 
   useEffect(() => {
     props.proposal && props.fetchProposalDetail(
@@ -545,6 +556,7 @@ const mapStateToProps = state => (
     walletAddress: state.account.address,
 
     preps: state.preps.preps,
+    sponsorMessage: state.proposals.sponsorMessage
 
   }
 )
@@ -558,6 +570,7 @@ const mapDispatchToProps = (dispatch) => (
     fetchVoteResultRequest: payload => dispatch(fetchVoteResultRequest(payload)),
     fetchProgressReportByProposalRequest: payload => dispatch(fetchProgressReportByProposalRequest(payload)),
     fetchPrepsRequest: payload => dispatch(fetchPrepsRequest(payload)),
+    fetchSponsorMessageRequest: payload => dispatch(fetchSponsorMessageRequest(payload)),
 
   }
 )
