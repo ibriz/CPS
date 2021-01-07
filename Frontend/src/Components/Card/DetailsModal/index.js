@@ -478,8 +478,18 @@ function DetailsModal(props) {
           // !sponsorRequest &&
           <Row>
             <Col xs="12">
+
               {
-                (status === 'Active' || status === 'Completed' || status === 'Paused') ?
+                  (status === 'Voting' || status === 'Active' || status === 'Completed' || status === 'Paused' || status === 'Disqualified') ?
+                    <>
+                      <ListTitle>VOTES</ListTitle>
+                      <VoteList
+                        votes={votesByProposal} />
+                    </> :
+                    null
+              }
+              {
+                (status === 'Active' || status === 'Completed' || status === 'Paused') &&
                   (
                     <>
                       <ListTitle>Progress Reports</ListTitle>
@@ -489,15 +499,10 @@ function DetailsModal(props) {
                         isModal
                       />
                     </>
-                  ) :
-                  (status === 'Voting') ?
-                    <>
-                      <ListTitle>VOTES</ListTitle>
-                      <VoteList
-                        votes={votesByProposal} />
-                    </> :
-                    null
+                  ) 
+                  
               }
+
 
             </Col>
           </Row>
