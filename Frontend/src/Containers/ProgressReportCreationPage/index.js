@@ -306,7 +306,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                             <AppFormLabel column lg="3">
                                 Project Name
                                 <span className = {styles.required}></span>
-                                <InfoIcon description = "The project for which the progress report is being submitted"/>   
+                                {/* <InfoIcon description = "The project for which the progress report is being submitted"/>    */}
                             </AppFormLabel>
                             <Col lg="9" className={styles.inputSameLine}>
                                 <Form.Control size="md" as="select" value={progressReport.projectName} name="projectName" id="projectName" onChange={handleChange} required>
@@ -328,7 +328,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                                 
                                 Progress Report Name
                                 <span className = {styles.required}></span>
-                                <InfoIcon description = "A suitable name for the progress report"/>  
+                                {/* <InfoIcon description = "A suitable name for the progress report"/>   */}
                             </AppFormLabel>
                             <Col lg="9" className={styles.inputSameLine}>
                                 <Form.Control placeholder="Progress Report Name" size="md" value={progressReport.progressReportTitle} name="progressReportTitle" id="progressReportTitle" onChange={handleChange} required />
@@ -339,7 +339,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                             <AppFormLabel column lg="3">
                                 Percentage Completed
                                 <span className = {styles.required}></span>
-                                <InfoIcon description = "The completed percentage of the project"/>  
+                                {/* <InfoIcon description = "The completed percentage of the project"/>   */}
                             </AppFormLabel>
                             <Col lg="" className="col-lg-2" className={styles.inputSameLine}>
                                 <InputGroup size="md">
@@ -353,7 +353,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                             <AppFormLabel column lg="3" className={styles.labelSameLine}>
                                 Time Remaining to Completion
                                 <span className = {styles.required}></span>
-                                <InfoIcon description = "The estimated remaining time for the project"/>  
+                                {/* <InfoIcon description = "The estimated remaining time for the project"/>   */}
                             </AppFormLabel>
                             <Col lg="3" className={styles.inputSameLine}>
                                 <InputGroup size="md">
@@ -414,7 +414,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                         <Form.Group as={Row} controlId="formPlaintextPassword" className = {styles.maxWidthLabelPTR}>
 
                             <AppFormLabel column lg="3" >
-                                Project Term Revision
+                                Project Terms Revision
                                 <span className = {styles.required}></span>
                                 <InfoIcon description = "Whether the project requires additional budget or additional time for completion"/>  
                             </AppFormLabel>
@@ -440,7 +440,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                                     <AppFormLabel column lg="2" >
                                         Additional Budget
                                         <span className = {styles.required}></span>
-                                        <InfoIcon description = "Additional budget required (in ICX) for completion"/>  
+                                        {/* <InfoIcon description = "Additional budget required (in ICX) for completion"/>   */}
                             </AppFormLabel>
                                     <Col lg="4" className={styles.inputSameLine}>
                                         <InputGroup size="md">
@@ -457,7 +457,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                                     <AppFormLabel column lg="2" className={styles.labelSameLine}>
                                         Additional Time
                                         <span className = {styles.required}></span>
-                                        <InfoIcon description = "Additional time required (in months) for completion"/>  
+                                        {/* <InfoIcon description = "Additional time required (in months) for completion"/>   */}
                                     </AppFormLabel>
                                     <Col lg="4" className={styles.inputSameLine}>
                                         <InputGroup size="md">
