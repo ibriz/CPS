@@ -41,9 +41,14 @@ function DetailsModal(props) {
 
   const voteOptions = ['Approve', 'Reject', 'Abstain'];
   const [vote, setVote] = useState(voteOptions[0]);
+
+  const sponsorVoteOptions = ['Accept', 'Deny'];
+  const [sponsorVote, setSponsorVote] = useState(sponsorVoteOptions[0]);
+
   const [voteReason, setVoteReason] = useState('');
+  const [sponsorVoteReason, setSponsorVoteReason] = useState('');
   const [sponsorConfirmationShow, setSponsorConfirmationShow] = React.useState(false);
-  const [sponsorVote, setSponsorVote] = useState('');
+  // const [sponsorVote, setSponsorVote] = useState('');
   const [modalShow, setModalShow] = React.useState(false);
   const [selectedProgressReport, setSelectedProgressReport] = React.useState();
   const { remainingTime: remainingTimer } = useTimer();
@@ -109,7 +114,8 @@ function DetailsModal(props) {
     approveSponserRequest(
       {
         ipfsKey: proposal.ipfsKey,
-        sponsorBond: IconConverter.toBigNumber(proposalDetail?.totalBudget).dividedBy(10)
+        sponsorBond: IconConverter.toBigNumber(proposalDetail?.totalBudget).dividedBy(10),
+        reason: sponsorVoteReason
       }
     );
     // props.onHide();
@@ -119,6 +125,8 @@ function DetailsModal(props) {
     rejectSponsorRequest(
       {
         ipfsKey: proposal.ipfsKey,
+        reason: sponsorVoteReason
+
       }
     );
     // props.onHide();
@@ -356,7 +364,42 @@ function DetailsModal(props) {
 
         {
           sponsorRequest && (status === 'Pending') && (period === 'APPLICATION') && (remainingTime > 0) &&
+          <>
           <Row style={{ justifyContent: 'center' }}>
+            <ButtonGroup aria-label="Basic example">
+
+              {
+                sponsorVoteOptions.map(sponsorVoteOptions =>
+                  <Button variant={sponsorVote === sponsorVoteOptions ? 'success' : 'light'} onClick={() => setSponsorVote(sponsorVoteOptions)}>{sponsorVoteOptions}</Button>
+                )
+
+              }
+            </ButtonGroup>
+
+
+          </Row>
+          <Row>
+            <Col xs="12">
+              <span>Explain in brief the reason behind your decision</span>
+            </Col>
+
+            <Col xs="12">
+              <RichTextEditor
+                required
+                onChange={(data) =>
+                  setSponsorVoteReason(
+                    data
+                  )} />
+            </Col>
+
+          </Row>
+
+          <Row style={{ justifyContent: 'center' }}>
+            <Button variant="primary" onClick={() => setSponsorConfirmationShow(true)} style={{ marginTop: '10px', width: '199px' }}>Submit Sponsor Vote</Button>
+
+          </Row>
+
+          {/* <Row style={{ justifyContent: 'center' }}>
             <Button variant="success" onClick={onClickApproveSponsorRequest}
               onClick={() => {
                 setSponsorConfirmationShow(true);
@@ -368,7 +411,9 @@ function DetailsModal(props) {
                 setSponsorVote('reject')
               }}>Deny</Button>
 
-          </Row>
+          </Row> */}
+        </>
+
         }
 
         {
@@ -450,11 +495,11 @@ function DetailsModal(props) {
         <ConfirmationModal
           show={sponsorConfirmationShow}
           onHide={() => setSponsorConfirmationShow(false)}
-          heading={sponsorVote === 'approve' ? 'Sponsor Request Approval Confirmation' : 'Sponsor Request Rejection Confirmation'}
-          onConfirm={sponsorVote === 'approve' ?
+          heading={sponsorVote === 'Accept' ? 'Sponsor Request Approval Confirmation' : 'Sponsor Request Rejection Confirmation'}
+          onConfirm={sponsorVote === 'Accept' ?
             onClickApproveSponsorRequest : onClickRejectSponsorRequest} >
           {
-            (sponsorVote === 'approve') ?
+            (sponsorVote === 'Accept') ?
               <>
                 <div>Are you sure you want to accept the sponsor request?</div>
                 <div style={{ color: 'red' }}>You will need to transfer {icxFormat((proposalDetail?.totalBudget ?? 0) * 0.1, true)} ICX for sponsor bond.</div>

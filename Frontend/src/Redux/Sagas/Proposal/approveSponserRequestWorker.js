@@ -4,7 +4,8 @@ function* approveSponserRequestWorker({ payload }) {
 
     const params = {
         _ipfs_key: payload.ipfsKey,
-        _vote: '_accept'
+        _vote: '_accept',
+        _reason: payload.reason,
     }
 
     sendTransaction({
