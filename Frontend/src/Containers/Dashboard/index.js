@@ -42,12 +42,12 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
             },
             {
                 color: '#1AAABA',
-                title: `Disbursement Due in ${highestSignificantTimeForGrant.value} ${highestSignificantTimeForGrant.text}`,
+                title: `Next Disbursement in ${highestSignificantTimeForGrant.value} ${highestSignificantTimeForGrant.text}`,
                 // value={`${icxFormat(cpfRemainingFunds, true)} ICX`} 
                 value: `${icxFormat(expectedGrant, true)} ICX`
             },
             {
-                title: `Remaining of ${period === "APPLICATION" ? 'Application Period' : 'Voting Period'}`,
+                title: `Remaining Time in ${period === "APPLICATION" ? 'Application Period' : 'Voting Period'}`,
                 color: '#1AAABA',
                 // value={period === "APPLICATION" ? 'Application Period' : 'Voting Period'} />
                 value: `${highestSignificantTime.value} ${highestSignificantTime.text}`
@@ -75,7 +75,7 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
                 value: period === "APPLICATION" ? totalCountSponsorRequests.Pending : (remainingVotesProposal.length + remainingVotesPR.length)
             },
             {
-                title: `Remaining of ${period === "APPLICATION" ? 'Application Period' : 'Voting Period'}`,
+                title: `Remaining Time in ${period === "APPLICATION" ? 'Application Period' : 'Voting Period'}`,
                 color: '#1AAABA',
                 // value={period === "APPLICATION" ? 'Application Period' : 'Voting Period'} />
                 value: ` ${highestSignificantTime.value} ${highestSignificantTime.text}`
@@ -88,23 +88,23 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
             },
             {
                 color: '#1AAABA',
-                title: `Sponsor Reward in  ${highestSignificantTimeForGrant.value} ${highestSignificantTimeForGrant.text}`,
+                title: `Next Sponsor Reward in  ${highestSignificantTimeForGrant.value} ${highestSignificantTimeForGrant.text}`,
                 // value={`${icxFormat(cpfRemainingFunds, true)} ICX`} 
                 value: `${icxFormat(sponsorReward, true)} ICX`
             },
             {
                 color: '#1AAABA',
-                title: `Proposal Grants Due in ${highestSignificantTimeForGrant.value} ${highestSignificantTimeForGrant.text}`,
+                title: `Next Disbursement in ${highestSignificantTimeForGrant.value} ${highestSignificantTimeForGrant.text}`,
                 // value={`${icxFormat(cpfRemainingFunds, true)} ICX`} 
                 value: `${icxFormat(expectedGrant, true)} ICX`
             },
 
-            {
-                color: '#1AAABA',
-                title: `Total Disbursement Due in ${highestSignificantTimeForGrant.value} ${highestSignificantTimeForGrant.text}`,
-                // value={`${icxFormat(cpfRemainingFunds, true)} ICX`} 
-                value: `${icxFormat(parseFloat(expectedGrant) + parseFloat(sponsorReward), true)} ICX`
-            },
+            // {
+            //     color: '#1AAABA',
+            //     title: `Total Disbursement Due in ${highestSignificantTimeForGrant.value} ${highestSignificantTimeForGrant.text}`,
+            //     // value={`${icxFormat(cpfRemainingFunds, true)} ICX`} 
+            //     value: `${icxFormat(parseFloat(expectedGrant) + parseFloat(sponsorReward), true)} ICX`
+            // },
         ];
     }
 
@@ -217,7 +217,7 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
                 </Row>
 
             }
-            <Row >
+            <Row style = {{justifyContent: 'center'}}>
 
 
                 {
