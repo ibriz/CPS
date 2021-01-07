@@ -12,6 +12,7 @@ import { Link } from 'react-router-dom';
 import { Badge } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import {withRouter} from 'react-router-dom';
+import {CgFileDocument} from 'react-icons/cg';
 
 const Aside = ({ collapsed, rtl, toggled, handleToggleSidebar, handleCollapsedChange, isPrep, isRegistered, history, setToggled }) => {
   const highlightedStyle = {background: 'rgba(38, 38, 38, 0.1)'};
@@ -107,6 +108,12 @@ const Aside = ({ collapsed, rtl, toggled, handleToggleSidebar, handleCollapsedCh
                 <a href="https://medium.com/ibriz-iconosphere/how-to-use-the-contribution-proposal-system-1efe714c9182" target = "_blank" />
 
               </MenuItem> 
+
+              <MenuItem icon={<CgFileDocument/>}
+              > {<span>CPS Whitepaper</span>}
+                <a href="https://docs.google.com/document/d/1g1idSDN7D64gHaBjOyhNw2dAD2YqEQcon_kB1WLJhas/edit?usp=sharing" target = "_blank" />
+
+              </MenuItem> 
           </Menu>
 
         }
@@ -163,6 +170,12 @@ const Aside = ({ collapsed, rtl, toggled, handleToggleSidebar, handleCollapsedCh
               <MenuItem icon={<FaBookOpen />}
               > {<span>User Guide</span>}
                 <a href="https://medium.com/ibriz-iconosphere/how-to-use-the-contribution-proposal-system-1efe714c9182" target = "_blank" />
+
+              </MenuItem> 
+
+              <MenuItem icon={<CgFileDocument/>}
+              > {<span>CPS Whitepaper</span>}
+                <a href="https://docs.google.com/document/d/1g1idSDN7D64gHaBjOyhNw2dAD2YqEQcon_kB1WLJhas/edit?usp=sharing" target = "_blank" />
 
               </MenuItem> 
 
