@@ -19,7 +19,7 @@ MAJORITY = 0.666
 DAY_COUNT = 1
 
 # Total Blocks in 1 day
-# BLOCKS_DAY_COUNT = 43200
+# BLOCKS_DAY_COUNT = 43120
 BLOCKS_DAY_COUNT = 300
 
 # BURN COIN ADDRESS
@@ -47,6 +47,7 @@ CPF_SCORE = "_cpf_score"
 INITIAL_BLOCK = "initial_block"
 PERIOD_DETAILS = "_period_details"
 PERIOD_NAME = "period_name"
+PREVIOUS_PERIOD_NAME = "previous_period_name"
 PERIOD_SPAN = "period_span"
 LASTBLOCK = "last_block"
 CURRENTBLOCK = "current_block"

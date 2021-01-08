@@ -23,6 +23,7 @@ class ProposalData(object):
         self.sponsor_deposit_amount = VarDB("sponsor_deposit", db, int)
         self.sponsored_timestamp = VarDB("sponsored_timestamp", db, int)
         self.sponsor_deposit_status = VarDB("sponsor_deposit_status", db, str)
+        self.sponsor_vote_reason = VarDB("sponsor_vote_reason", db, bytes)
 
         self.voters_list = ArrayDB("voters_list", db, Address)
         self.approve_voters = ArrayDB("approve_voters", db, Address)
@@ -84,6 +85,8 @@ def getDataFromProposalDB(prefix: bytes, _proposals: 'ProposalDataDB') -> dict:
     sponsor_deposit_amount = _proposals[prefix].sponsor_deposit_amount.get()
     sponsored_timestamp = _proposals[prefix].sponsored_timestamp.get()
     sponsor_deposit_status = _proposals[prefix].sponsor_deposit_status.get()
+    sponsor_vote_reason = _proposals[prefix].sponsor_vote_reason.get()
+
     approve_voters = len(_proposals[prefix].approve_voters)
     reject_voters = len(_proposals[prefix].reject_voters)
 
@@ -102,6 +105,7 @@ def getDataFromProposalDB(prefix: bytes, _proposals: 'ProposalDataDB') -> dict:
         'sponsor_deposit_amount': sponsor_deposit_amount,
         'sponsored_timestamp': sponsored_timestamp,
         'sponsor_deposit_status': sponsor_deposit_status,
+        'sponsor_vote_reason': sponsor_vote_reason,
         'total_votes': total_votes,
         'approved_votes': approved_votes,
         'rejected_votes': rejected_votes,
