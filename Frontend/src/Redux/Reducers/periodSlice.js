@@ -27,6 +27,7 @@ const periodSlice = createSlice({
             state.nextBlock = parseInt(action.payload.response.next_block);
             state.remainingTime = parseInt(action.payload.response.remaining_time);
             state.period = periodMapping[action.payload.response.period_name];
+            state.previousPeriod = periodMapping[action.payload.response.previous_period_name];
             state.periodSpan = parseInt(action.payload.response.period_span);
             state.timestamp = Math.floor(Date.now() / 1000);
 

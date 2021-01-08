@@ -18,7 +18,7 @@ import VotingCard from 'Components/VotingCard';
 import { fetchExpectedGrantRequest, fetchCPSTreasuryScoreAddressRequest } from 'Redux/Reducers/fundSlice';
 import {setLoginButtonClicked} from 'Redux/Reducers/accountSlice';
 
-const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfRemainingFunds, cpfScoreAddress, fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, fetchProjectAmountsRequest, isPrep, isRegistered, myProposalList, fetchExpectedGrantRequest, expectedGrant, sponsorBond, totalCountSponsorRequests, remainingVotesProposal, remainingVotesPR, fetchCPSTreasuryScoreAddressRequest, cpsTreasuryScoreAddress, payPenaltyAmount, sponsorReward, withDrawAmountSponsorReward, withDrawAmountProposalGrant, claimReward }) => {
+const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfRemainingFunds, cpfScoreAddress, fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, fetchProjectAmountsRequest, isPrep, isRegistered, myProposalList, fetchExpectedGrantRequest, expectedGrant, sponsorBond, totalCountSponsorRequests, remainingVotesProposal, remainingVotesPR, fetchCPSTreasuryScoreAddressRequest, cpsTreasuryScoreAddress, payPenaltyAmount, sponsorReward, withDrawAmountSponsorReward, withDrawAmountProposalGrant, claimReward, previousPeriod }) => {
     const [showPayPenaltyConfirmationModal, setShowPayPenaltyConfirmationModal] = useState(false);
     const [showClaimRewardConfirmationModal, setShowClaimRewardConfirmationModal] = useState(false);
 
@@ -143,6 +143,18 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
                     <div className = {styles.period}>Period: {period === "APPLICATION" ? 'Application Period' : 'Voting Period'}</div>
                 </Col>
             </Row>
+
+            {
+                period === 'APPLICATION' && previousPeriod === 'APPLICATION' &&
+                <Row style={{ marginTop: '15px' }}>
+                <Col xs="12">
+                    <Alert variant="info">
+                        <span>Note: The period switched back to application period because there were less than 7 P-Reps</span>
+
+                    </Alert>
+                </Col>
+            </Row>
+            }
 
             {
                 (parseFloat(withDrawAmountSponsorReward) > 0 || parseFloat(withDrawAmountProposalGrant) > 0) &&
@@ -291,6 +303,7 @@ const mapStateToProps = state => (
     {
         payPenalty: state.account.payPenalty,
         period: state.period.period,
+        previousPeriod: state.period.previousPeriod,
         projectAmounts: state.proposals.projectAmounts,
         cpfRemainingFunds: state.fund.cpfRemainingFunds,
         cpfScoreAddress: state.fund.cpfScoreAddress,
