@@ -282,9 +282,13 @@ function DetailsModal(props) {
           <Col lg="8" xs="12">
             {/* <div dangerouslySetInnerHTML={{ __html: description }} /> */}
             <Description description={(proposalDetail && proposalDetail.description) || '<span>No Description</span>'} />
-                {/* <DescriptionTitle>MILESTONES</DescriptionTitle>
+            {
+            proposal?.sponsorVoteReason &&
+              <Description description={proposal.sponsorVoteReason || '<span>No Message</span>'} title = "Message from Sponsor" />
 
-                <MilestonesTimeline milestones={proposalDetail?.milestones} /> */}
+            }
+               
+                
 
           </Col>
 
