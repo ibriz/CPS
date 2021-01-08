@@ -64,20 +64,23 @@ async function registerUser(payload) {
 		if (!body.address) return new Error('address of the user is required');
 		if (!body.email) return new Error('email of the user is required');
 
+		body.verified = false;
+
 		//Retrieve the data from redis using the key - users:address:<<address of the user>>
 		const userFromRedis = await getAsync(`users:address:${body.address}`);
 
 		const userStoredData = JSON.parse(userFromRedis);
 
-		console.log(userFromRedis, userStoredData);
-
-		if(!userFromRedis ||  userStoredData.email !== body.email) body.verified = false;
+		if(userStoredData && userStoredData.hasOwnProperty('verified') && userStoredData.email === body.email)
+			body.verified = userStoredData.verified;
 
 		//Store the data of user in redis with key - users:address:<<address of the user>>
-		const redisResponse = await setAsync(`users:address:${body.address}`,  JSON.stringify(body));
+		const redisResponse = await setAsync(`users:address:${body.address}`, JSON.stringify(body));
 		if (!redisResponse) throw new Error("Data couldnot be uploaded in redis");
 
-		if(!userFromRedis || userStoredData.email !== body.email) await generateEmailVerificationToken(body.address, body.email);
+		await setAsync(`initialprompt:address:${body.address}`, JSON.stringify({ intialprompt: true }));
+
+		if (body.verified === false) await generateEmailVerificationToken(body.address, body.email);
 
 		return JSON.stringify({ redisResponse: redisResponse });
 	} catch (error) {
@@ -173,6 +176,37 @@ async function getUser(payload) {
 	}
 }
 
+async function setUserIntialPrompt(payload) {
+	try {
+		let body = JSON.parse(payload.body);
+
+		if (!body.address) return new Error('address of the user is required');
+
+		//Store the data of user in redis with key - users:address:<<address of the user>>
+		const redisResponse = await setAsync(`initialprompt:address:${body.address}`, JSON.stringify({intialprompt: false}));
+		if (!redisResponse) throw new Error("Data couldnot be uploaded in redis");
+
+		return JSON.stringify({ redisResponse: redisResponse });
+	} catch (error) {
+		console.error('User Registration Failed! ' + error);
+		throw new Error('User Registration Failed! ' + error);
+	}
+}
+
+async function getUserIntialPrompt(payload) {
+	try {
+		const redisKey = payload.queryStringParameters.address;
+
+		if (!redisKey) return new Error('address of the user is required');
+
+		//Retrieve the data from redis using the key - users:address:<<address of the user>>
+		return await getAsync(`initialprompt:address:${redisKey}`);
+	} catch (error) {
+		console.error('Error while fetching initialprompt from redis ' + error);
+		throw new Error('User not found! ' + error);
+	}
+}
+
 exports.handler = async (event) => {
 	try {
 		const statusCode = 200;
@@ -183,6 +217,8 @@ exports.handler = async (event) => {
 		if (event.httpMethod === 'POST') {
 			if (event.path === process.env.EMAIL_VERIFY_PATH)
 				user = await getEmailVerificationLink(event);
+			else if (event.path === process.env.INTIAL_PROMPT_PATH)
+				user = await setUserIntialPrompt(event);
 			else
 				user = await registerUser(event);
 		} else if (event.httpMethod === 'PUT') {
@@ -190,6 +226,8 @@ exports.handler = async (event) => {
 		} else if (event.httpMethod === 'GET') {
 			if (event.path === process.env.EMAIL_VERIFY_PATH)
 				user = await verifyUserEmail(event);
+			else if (event.path === process.env.INTIAL_PROMPT_PATH)
+				user = await getUserIntialPrompt(event);
 			else
 				user = await getUser(event);
 		} else {
