@@ -220,7 +220,7 @@ class CPS_TREASURY(IconScoreBase):
                         _deposited_sponsor_bond = _total_budget // 10
 
                         _installment_amount.append({self._IPFS_HASH: _ipfs_key,
-                                                    self._TOTAL_BUDGET: _total_budget,
+                                                    self._SPONSOR_REWARD: _total_budget,
                                                     self._TOTAL_INSTALLMENT_PAID: _total_paid_amount,
                                                     self._TOTAL_INSTALLMENT_COUNT: _total_installment,
                                                     self._TOTAL_TIMES_INSTALLMENT_PAID: _total_paid_count,
@@ -403,6 +403,10 @@ class CPS_TREASURY(IconScoreBase):
         """
         _available_amount = self._fund_record[_wallet_address]
         if _available_amount > 0:
-            self.icx.transfer(_wallet_address, _available_amount)
-            self.ProposalFundWithdrawn(_wallet_address, _available_amount, f"{_available_amount} withdrawn to "
+            try:
+                self.icx.transfer(_wallet_address, _available_amount)
+                self._fund_record[_wallet_address] = 0
+                self.ProposalFundWithdrawn(_wallet_address, _available_amount, f"{_available_amount} withdrawn to "
                                                                            f"{_wallet_address}")
+            except BaseException as e:
+                revert(f"{self.address} : Network problem. Claiming Reward{e}")
