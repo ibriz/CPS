@@ -14,7 +14,7 @@ import EmailConfirmationModal from './EmailConfirmationModal';
 import useVerification from 'Hooks/useVerification';
 import {setUserDataSubmitSuccess} from 'Redux/Reducers/userSlice';
 
-const HeaderComponents = ({ address, logout, title, isPrep, isRegistered, unregisterPrep, registerPrep,period, payPenalty, firstName, lastName, walletBalance, landingPage, loginButtonClicked, setLoginButtonClicked, userDataSubmitSuccess, verified, setUserDataSubmitSuccess, previousEmail, email }) => {
+const HeaderComponents = ({ address, logout, title, isPrep, isRegistered, unregisterPrep, registerPrep,period, payPenalty, firstName, lastName, walletBalance, landingPage, loginButtonClicked, setLoginButtonClicked, userDataSubmitSuccess, verified, setUserDataSubmitSuccess, previousEmail, email, initialPromptRedux }) => {
 
     const [emailConfirmationModalShow, setEmailConfirmationModal] = React.useState(false);
     const [modalShow, setModalShow] = React.useState(false);
@@ -40,14 +40,14 @@ const HeaderComponents = ({ address, logout, title, isPrep, isRegistered, unregi
     }, [userDataSubmitSuccess, previousEmail, email]);
 
     useEffect(() => {
-        if(address && loginButtonClicked) {
+        if(address && loginButtonClicked && initialPromptRedux) {
             setLoginButtonClicked({
                 click: false
             });
             setInitialPrompt(true);
 
         }
-    }, [address])
+    }, [address, initialPromptRedux])
 
     const [showUnregisterConfirmationModal, setShowUnregisterConfirmationModal] = useState(false);
 
@@ -150,7 +150,9 @@ const mapStateToProps = state => ({
     lastName: state.user.lastName,
     previousEmail: state.user.previousEmail,
     email:state.user.email,
-    verified: state.user.verified
+    verified: state.user.verified,
+
+    initialPromptRedux: state.user.initialPrompt
 
 })
 
