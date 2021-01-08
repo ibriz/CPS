@@ -6,6 +6,7 @@ export const PROPOSAL_ADD_URL = 'proposals';
 export const SUBMIT_USER_DATA_URL = 'user';
 export const PROGRESS_REPORT_ADD_URL = 'proposals';
 export const RESEND_EMAIL_VERIFICATION = 'user/verify';
+export const USER_PROMPT = 'user/prompt';
 
 export const IMAGE_UPLOAD_URL = '/proposals/image';
 

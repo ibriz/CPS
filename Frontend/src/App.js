@@ -4,15 +4,16 @@ import Home from './Containers/Home';
 import { Switch, Route, Redirect} from 'react-router-dom';
 import { connect } from 'react-redux'
 import { NotificationContainer} from 'react-notifications';
-import {fetchUserDataRequest} from 'Redux/Reducers/userSlice';
+import {fetchUserDataRequest, fetchUserPromptRequest} from 'Redux/Reducers/userSlice';
 import Footer from 'Components/Footer';
 import { Helmet } from "react-helmet";
 import UnsubscribePage from 'Containers/UnsubscribePage'
 
-function App({ address, fetchUserDataRequest }) {
+function App({ address, fetchUserDataRequest, fetchUserPromptRequest }) {
 
   useEffect(() => {
     address && fetchUserDataRequest();
+    address && fetchUserPromptRequest();
   }, [address])
 
   return (
@@ -62,7 +63,8 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = {
-  fetchUserDataRequest
+  fetchUserDataRequest,
+  fetchUserPromptRequest
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

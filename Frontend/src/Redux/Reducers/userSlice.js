@@ -8,6 +8,7 @@ const initialState = {
     enableEmailNotification: false,
     verified: false,
     userDataSubmitSuccess: false,
+    initialPrompt: false
 };
 
 const userSlice = createSlice({
@@ -53,7 +54,31 @@ const userSlice = createSlice({
 
         setUserDataSubmitSuccess(state,action) {
             state.userDataSubmitSuccess = action.payload.status;
-        }
+        },
+
+
+        fetchUserPromptRequest(state,action) {
+
+        },
+        fetchUserPromptSuccess(state,action) {
+            console.log("fetchUserPromptSuccess", action.payload.response.intialprompt)
+            state.initialPrompt = action.payload.response.intialprompt ?? true;
+
+        },
+        fetchUserPromptFailure(state,action) {
+            state.initialPrompt = true;
+
+        },
+
+        disableUserPromptRequest(state,action) {
+
+        },
+        disableUserPromptSuccess(state,action) {
+
+        },
+        disableUserPromptFailure(state,action) {
+        },
+
     },
     extraReducers: {
         "account/logout": (state, action) => {
@@ -69,6 +94,8 @@ const userSlice = createSlice({
 
 export const { fetchUserDataRequest, fetchUserDataSuccess, fetchUserDataFailure, 
     submitUserDataRequest, submitUserDataSuccess, submitUserDataFailure,
-    resendVerificationEmailRequest, resendVerificationEmailSuccess, resendVerificationEmailFailure, setUserDataSubmitSuccess
+    resendVerificationEmailRequest, resendVerificationEmailSuccess, resendVerificationEmailFailure, setUserDataSubmitSuccess,
+    fetchUserPromptRequest, fetchUserPromptSuccess, fetchUserPromptFailure,
+    disableUserPromptRequest, disableUserPromptSuccess, disableUserPromptFailure,
 } = userSlice.actions;
 export default userSlice.reducer;

@@ -52,7 +52,8 @@ import {
 import { fetchPrepWorker, unregisterPrepWorker, registerPrepWorker, payPenaltyWorker } from './PRep';
 import {fetchPeriodDetailsRequestWorker, updatePeriodWorker} from './Period';
 
-import {fetchUserDataRequestWorker, submitUserDataRequestWorker, resendVerificationEmailRequestWorker} from './User';
+import {fetchUserDataRequestWorker, submitUserDataRequestWorker, resendVerificationEmailRequestWorker,
+  fetchUserPromptRequestWorker, disableUserPromptRequestWorker} from './User';
 
 
 
@@ -76,7 +77,8 @@ import { submitProgressReportRequest, submitProgressReportSuccess, fetchProgress
 import {fetchPeriodDetailsRequest, updatePeriod} from '../Reducers/periodSlice';
 import { fetchPrepsRequest, unregisterPrep, registerPrep, payPenalty } from '../Reducers/prepsSlice';
 import {fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, fetchExpectedGrantRequest, fetchCPSTreasuryScoreAddressRequest, claimReward} from '../Reducers/fundSlice';
-import {fetchUserDataRequest, submitUserDataRequest, resendVerificationEmailRequest} from '../Reducers/userSlice';
+import {fetchUserDataRequest, submitUserDataRequest, resendVerificationEmailRequest,
+  fetchUserPromptRequest, disableUserPromptRequest} from '../Reducers/userSlice';
 import { FiPrinter } from 'react-icons/fi';
 
 function* rootSaga() {
@@ -162,6 +164,8 @@ yield takeEvery(resendVerificationEmailRequest.type, resendVerificationEmailRequ
 
 yield takeEvery(fetchSponsorMessageRequest.type, fetchSponsorMessageRequestWorker);
 
+yield takeEvery(fetchUserPromptRequest.type, fetchUserPromptRequestWorker);
+yield takeEvery(disableUserPromptRequest.type, disableUserPromptRequestWorker);
 
 
 }

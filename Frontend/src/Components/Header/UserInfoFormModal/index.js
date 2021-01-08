@@ -5,13 +5,13 @@ import { FiEdit2 } from 'react-icons/fi';
 import styles from './UserInfoFormModal.module.scss';
 import {connect} from 'react-redux';
 import { AiFillCheckCircle } from 'react-icons/ai';
-import { resendVerificationEmailRequest } from 'Redux/Reducers/userSlice';
+import { resendVerificationEmailRequest, disableUserPromptRequest } from 'Redux/Reducers/userSlice';
 
 import {submitUserDataRequest} from 'Redux/Reducers/userSlice';
 import ConfirmationModal from 'Components/UI/ConfirmationModal';
 
 
-const UserInfoFormModal = ({user, submitUserDataRequest, setModalShow, address, verified, firstName, resendVerificationEmailRequest, initialPrompt, ...props}) => {
+const UserInfoFormModal = ({user, submitUserDataRequest, setModalShow, address, verified, firstName, resendVerificationEmailRequest, initialPrompt, disableUserPromptRequest, ...props}) => {
 
   const [userData, setUserData] = useState(
     {
@@ -155,9 +155,9 @@ const UserInfoFormModal = ({user, submitUserDataRequest, setModalShow, address, 
           <Form.Group as={Row} controlId="formPlaintextPassword">
           <Col>
               <Button variant="outline-info" onClick = {() => {
-                if (initialPrompt) {
-                  
-                }
+                  if(initialPrompt) {
+                    disableUserPromptRequest()
+                  }
                 setModalShow(false);
               }}>CLOSE</Button>
             </Col>
@@ -196,6 +196,10 @@ const UserInfoFormModal = ({user, submitUserDataRequest, setModalShow, address, 
                         }
                     );
                   setModalShow(false);
+
+                  if(initialPrompt) {
+                    disableUserPromptRequest()
+                  }
                 }} >
                 {                 
                         <>
@@ -217,7 +221,8 @@ const mapStateToProps =  state => ({
 
 const mapDispatchToProps = {
   submitUserDataRequest,
-  resendVerificationEmailRequest
+  resendVerificationEmailRequest,
+  disableUserPromptRequest
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserInfoFormModal);
