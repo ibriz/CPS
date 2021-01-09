@@ -316,7 +316,7 @@ function DetailsModal(props) {
                     },
                     {
                       key: 'Sponsor Prep',
-                      value: prepName ? prepName : <a>`${proposalDetail?.sponserPrep?.slice(0, 6)}...`</a> || 'N/A'
+                    value: prepName ? <a href = {`https://bicon.tracker.solidwallet.io/address/${proposalDetail?.sponserPrep}`} target = "_blank" style = {{color: '#262626', textDecoration: 'underline'}}>{prepName}</a> : <a href = {`https://bicon.tracker.solidwallet.io/address/${proposalDetail?.sponserPrep}`} target = "_blank" style = {{color: '#262626', textDecoration: 'underline'}}>{`${proposalDetail?.sponserPrep?.slice(0, 6)}...`}</a> || 'N/A'
                     },
                     {
                       key: 'Team Name',
