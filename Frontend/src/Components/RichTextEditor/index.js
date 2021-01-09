@@ -2,6 +2,8 @@ import React, {useState} from 'react';
 import CKEditor from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import ImageUploadAdapter from '../../helpers/ImageUploadAdapter';
+import {TiTick} from 'react-icons/ti';
+import {ImCross} from 'react-icons/im'
 
 export function modelElementToPlainText( element ) {
 	if ( element.is( 'text' ) || element.is( 'textProxy' ) ) {
@@ -27,7 +29,7 @@ export function modelElementToPlainText( element ) {
 	return text;
 }
 
-const RichTextEditor = ({onChange, setWords, setCharacters, onBlur, initialData = null}) => {
+const RichTextEditor = ({onChange, setWords, setCharacters, onBlur, initialData = null, minimumNumberOfWords}) => {
 
     const [numberOfWords, setNumberOfWords] = useState(0);
     const [numberOfCharacters, setNumberOfCharacters] = useState(0);
@@ -85,7 +87,11 @@ const RichTextEditor = ({onChange, setWords, setCharacters, onBlur, initialData 
         }
         }
     />
-    <div style = {{height: 'auto', border: '1px solid', borderTop: 'none', borderRadius: '2px', borderTopLeftRadius: 0, borderTopRightRadius: 0, borderColor: '#c4c4c4', paddingLeft: '5px' }}>{numberOfWords} words, {numberOfCharacters} characters</div>
+    {
+        minimumNumberOfWords &&
+    <div style = {{height: 'auto', border: '1px solid', borderTop: 'none', borderRadius: '2px', borderTopLeftRadius: 0, borderTopRightRadius: 0, borderColor: '#c4c4c4', paddingLeft: '5px' }}>{numberOfWords} words / {minimumNumberOfWords} words {numberOfWords >= minimumNumberOfWords ? <TiTick className = "text-success" style = {{fontSize: '1.1rem'}}/> : <ImCross className = "text-danger" style = {{fontSize: '0.75rem'}}/>}</div>
+
+    }
     </>
     )
 

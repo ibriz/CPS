@@ -359,7 +359,7 @@ function DetailsModal(props) {
                   <>
                   {period === 'APPLICATION' ? 'Voting starts in ' : 'Voting ends in '}
                   </>
-                  <b>{remainingTimer.day}</b> days <b>{remainingTimer.hour}</b> hours <b>{remainingTimer.minute}</b> minutes <b>{remainingTime.second}</b> seconds
+                  <b>{remainingTimer.day}</b> days <b>{remainingTimer.hour}</b> hours <b>{remainingTimer.minute}</b> minutes <b>{remainingTimer.second}</b> seconds
                   </div>
             </Col>
         </Row>

@@ -83,7 +83,7 @@ const EmailConfirmationModal = ({ user, resendVerificationEmailRequest, setModal
           verified ?
             <span style={{ display: 'flex', alignItems: 'center' }}><AiFillCheckCircle className="text-success" style={{ fontSize: '18px', marginRight: '2px' }} /> <span>Your email has been verified</span></span> :
             <>
-              <span style={{ display: 'flex', alignItems: 'center' }}><AiFillCheckCircle className="text-success" style={{ fontSize: '18px', marginRight: '2px' }} /> <span>A verficiation link has been sent to your email address.</span></span>
+              <span style={{ display: 'flex', alignItems: 'center' }}><AiFillCheckCircle className="text-success" style={{ fontSize: '18px', marginRight: '2px' }} /> <span>A verification link has been sent to your email address.</span></span>
         Please click on the link that has been just sent to your email address in order to receive email notifications.
         <br /> Didn't receive email or the email link expired? <span style={{ textDecoration: 'underline', cursor: 'pointer' }} onClick={() => setConfirmationShow(true)}>Resend email confirmation</span>
             </>
