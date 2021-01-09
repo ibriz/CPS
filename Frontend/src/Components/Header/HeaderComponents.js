@@ -13,8 +13,9 @@ import {setLoginButtonClicked} from 'Redux/Reducers/accountSlice';
 import EmailConfirmationModal from './EmailConfirmationModal';
 import useVerification from 'Hooks/useVerification';
 import {setUserDataSubmitSuccess} from 'Redux/Reducers/userSlice';
+import {withRouter} from 'react-router-dom';
 
-const HeaderComponents = ({ address, logout, title, isPrep, isRegistered, unregisterPrep, registerPrep,period, payPenalty, firstName, lastName, walletBalance, landingPage, loginButtonClicked, setLoginButtonClicked, userDataSubmitSuccess, verified, setUserDataSubmitSuccess, previousEmail, email, initialPromptRedux }) => {
+const HeaderComponents = ({ address, logout, title, isPrep, isRegistered, unregisterPrep, registerPrep,period, payPenalty, firstName, lastName, walletBalance, landingPage, loginButtonClicked, setLoginButtonClicked, userDataSubmitSuccess, verified, setUserDataSubmitSuccess, previousEmail, email, initialPromptRedux, history }) => {
 
     const [emailConfirmationModalShow, setEmailConfirmationModal] = React.useState(false);
     const [modalShow, setModalShow] = React.useState(false);
@@ -25,6 +26,7 @@ const HeaderComponents = ({ address, logout, title, isPrep, isRegistered, unregi
 
     const onLogout = () => {
         logout();
+        history.push('/');
     }
 
     useEffect(() => {
@@ -40,6 +42,9 @@ const HeaderComponents = ({ address, logout, title, isPrep, isRegistered, unregi
     }, [userDataSubmitSuccess, previousEmail, email]);
 
     useEffect(() => {
+        if(address && loginButtonClicked) {
+            history.push('/dashboard');
+        }
         if(address && loginButtonClicked && initialPromptRedux) {
             setLoginButtonClicked({
                 click: false
@@ -61,7 +66,7 @@ const HeaderComponents = ({ address, logout, title, isPrep, isRegistered, unregi
 
     return (
     <>
-            <span onClick={() => setModalShow(true)} className={styles.address} style = {landingPage ? {color: 'white'} : {}}>{(firstName || lastName) ? `${firstName || ''} ${lastName || ''}` : `${address.slice(0, 4)}...${address.slice(address.length - 2)}`} ({walletBalance.toFixed(2)} ICX)</span>
+            <span onClick={() => setModalShow(true)} className={styles.address} style = {landingPage ? {color: 'white'} : {}}>{(firstName || lastName) ? `${firstName || ''} ${lastName || ''}` : `${address?.slice(0, 4)}...${address?.slice(address.length - 2)}`} ({walletBalance?.toFixed(2)} ICX)</span>
             {
                 isPrep && isRegistered && !payPenalty && period === 'APPLICATION' && !isRemainingTimeZero &&
                 <Button variant="danger" onClick={() => setShowUnregisterConfirmationModal(true)} style={{ marginRight: '5px', marginLeft: '5px' }}>Unregister Prep</Button>
@@ -168,4 +173,4 @@ const mapDispatchToProps = dispatch => (
 )
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(HeaderComponents);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(HeaderComponents));

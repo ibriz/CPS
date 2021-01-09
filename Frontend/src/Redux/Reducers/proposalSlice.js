@@ -25,7 +25,8 @@ const PARAMS = {
     newProgressReport: 'new_progress_report',
     lastProgressReport: 'last_progress_report',
 
-    sponsorVoteReason: 'sponsor_vote_reason'
+    sponsorVoteReason: 'sponsor_vote_reason',
+    projectDuration: 'project_duration'
 }
 
 const initialState = {
@@ -176,6 +177,8 @@ const proposalSlice = createSlice({
                         ipfsKey: proposal[PARAMS.proposalHash],
                         approvedVotes: IconConverter.toBigNumber(proposal[PARAMS.approvedVotes]),
                         totalVotes: IconConverter.toBigNumber(proposal[PARAMS.totalVotes]),
+                        projectDuration: IconConverter.toBigNumber(proposal[PARAMS.projectDuration]),
+
                         sponsorVoteReason: proposal[PARAMS.sponsorVoteReason],
                         // approvedPercentage: (!proposal[PARAMS.totalVotes] || parseInt(proposal[PARAMS.totalVotes]) === 0) ? 0 : ((proposal[PARAMS.approvedVotes] / proposal[PARAMS.totalVotes]) * 100),
 
@@ -272,6 +275,8 @@ const proposalSlice = createSlice({
                         _timestamp: proposal[PARAMS.timestamp],
                         ipfsHash: proposal[PARAMS.proposalHash],
                         ipfsKey: proposal[PARAMS.proposalHash],
+                        projectDuration: IconConverter.toBigNumber(proposal[PARAMS.projectDuration]),
+
                         approvedVotes: IconConverter.toBigNumber(proposal[PARAMS.approvedVotes]),
                         totalVotes: IconConverter.toBigNumber(proposal[PARAMS.totalVotes]),
                         sponsorVoteReason: proposal[PARAMS.sponsorVoteReason],
@@ -463,6 +468,8 @@ const proposalSlice = createSlice({
                         ipfsKey: proposal[PARAMS.proposalHash],
                         approvedVotes: IconConverter.toBigNumber(proposal[PARAMS.approvedVotes]),
                         totalVotes: IconConverter.toBigNumber(proposal[PARAMS.totalVotes]),
+                        projectDuration: IconConverter.toBigNumber(proposal[PARAMS.projectDuration]),
+
                         sponsorVoteReason: proposal[PARAMS.sponsorVoteReason],
 
                         // approvedPercentage: (!proposal[PARAMS.totalVotes] || parseInt(proposal[PARAMS.totalVotes]) === 0) ? 0 : ((proposal[PARAMS.approvedVotes] / proposal[PARAMS.totalVotes]) * 100),
@@ -531,6 +538,8 @@ const proposalSlice = createSlice({
                         approvedVotes: IconConverter.toBigNumber(proposal[PARAMS.approvedVotes]),
                         totalVotes: IconConverter.toBigNumber(proposal[PARAMS.totalVotes]),
                         sponsorVoteReason: proposal[PARAMS.sponsorVoteReason],
+                        projectDuration: IconConverter.toBigNumber(proposal[PARAMS.projectDuration]),
+
                         // approvedPercentage: (!proposal[PARAMS.totalVotes] || parseInt(proposal[PARAMS.totalVotes]) === 0) ? 0 : ((proposal[PARAMS.approvedVotes] / proposal[PARAMS.totalVotes]) * 100),
 
                         approvedPercentage: calculatePercentage({

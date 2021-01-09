@@ -308,15 +308,15 @@ function DetailsModal(props) {
                     },
                     {
                       key: 'Project Duration',
-                      value: `${proposalDetail?.projectDuration} months` || 'N/A'
+                      value: `${proposal?.projectDuration} months` || 'N/A'
                     },
                     {
                       key: 'Total Budget',
-                      value: `${icxFormat(proposalDetail?.totalBudget)} ICX` || 'N/A'
+                      value: `${icxFormat(proposal?.budget)} ICX` || 'N/A'
                     },
                     {
                       key: 'Sponsor Prep',
-                      value: prepName ? prepName : `${proposalDetail?.sponserPrep?.slice(0, 6)}...` || 'N/A'
+                      value: prepName ? prepName : <a>`${proposalDetail?.sponserPrep?.slice(0, 6)}...`</a> || 'N/A'
                     },
                     {
                       key: 'Team Name',

@@ -365,7 +365,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                                     <option disabled selected value="">Select PREP</option>
                                     {
                                         preps.map(prep =>
-                                            <option value={prep.address}>{prep.name}</option>
+                                            <option value={prep.address}>{`${prep.name} (${prep.address.slice(0, 4)}...${prep.address.slice(prep.address.length - 2)})`}</option>
 
                                         )
                                     }
@@ -398,6 +398,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                                     onBlur={() => {
                                         document.getElementById("description").reportValidity();
                                     }}
+                                    minimumNumberOfWords = {10}
                                 >
                                 </RichTextEditor>
                                 <input className={styles.milestoneFakeInput} style={{ left: '15px' }} id="description" />

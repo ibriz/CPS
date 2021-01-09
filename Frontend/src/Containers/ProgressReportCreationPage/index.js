@@ -392,7 +392,8 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                                     onBlur = {() => {
                                         document.getElementById("description").reportValidity();
                                     }}
-                                    
+                                    minimumNumberOfWords = {10}
+
                                     />
                         <input className = {styles.fakeInput} style = {{left: '15px'}} id = "description" />
 
@@ -495,6 +496,8 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                                             onBlur = {() => {
                                                 document.getElementById("revisionDescription").reportValidity();
                                             }}
+                                            minimumNumberOfWords = {10}
+
                                         />
                             <input className = {styles.fakeInput} style = {{left: '15px'}} id = "revisionDescription" />
 
