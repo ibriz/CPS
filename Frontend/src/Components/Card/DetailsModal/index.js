@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Button, Col, Row, Container, Badge, ButtonGroup } from 'react-bootstrap';
+import { Modal, Button, Col, Row, Container, Badge, ButtonGroup, Alert } from 'react-bootstrap';
 import { Header, Address, DetailsTable, Description, MilestoneTable, ListTitle } from '../../UI/DetailsModal';
 import styles from './DetailsModal.module.css';
 import ProgressBar from '../../UI/ProgressBar';
@@ -37,6 +37,17 @@ margin-bottom: 5px;
 
 `
 
+const sponsorNote = (
+  <div className="text-information" style = {{fontSize: '0.9rem'}}>
+      <div>Note:</div>
+      <div className="intendation">1) If you accept the sponsor request you will need to submit 10% of the total budget as sponsor bond. </div>
+      <div className="intendation">2) If the proposal gets rejected in the voting period you will get your sponsor bond back</div>
+      <div className="intendation">3) If the proposal gets accepted in the voting period, you will get sponsor reward every month for the project duration. </div>
+      <div className="intendation">4) If the proposal gets paused (if the progress report for the proposal gets rejected), you will stop receiving the sponsor reward.</div>
+      <div className="intendation">5) If the proposal gets disqualified (if the progress report for the proposal gets rejected 2 times in a row), you will stop receiving the sponsor reward and will lose the sponsor bond you initially submitted. </div>
+  </div>
+)
+
 function DetailsModal(props) {
 
   const voteOptions = ['Approve', 'Reject', 'Abstain'];
@@ -63,6 +74,10 @@ function DetailsModal(props) {
 
   const prepName = proposalDetail?.sponserPrepName ? proposalDetail?.sponserPrepName : preps.find(prep => prep.address == proposalDetail?.sponserPrep)?.name;
 
+  useEffect(() => {
+    console.log("sponsorConfirmationShow", sponsorConfirmationShow, modalShow, modalShow || sponsorConfirmationShow);
+
+  }, [sponsorConfirmationShow, modalShow])
   const onClickProgressReport = (porgressReport) => {
     setModalShow(true);
     setSelectedProgressReport(porgressReport);
@@ -152,7 +167,7 @@ function DetailsModal(props) {
       centered
 
     >
-      <Modal.Header closeButton className={styles.modalHeader} style={modalShow ? { backgroundColor: '#DDDDDD' } : {}}>
+      <Modal.Header closeButton className={styles.modalHeader} style={(modalShow || sponsorConfirmationShow) ? { backgroundColor: '#DDDDDD' } : {}}>
         <Container fluid className={styles.container}>
           <Row>
             <Col sm="12">
@@ -409,6 +424,11 @@ function DetailsModal(props) {
 
           </Row>
 
+
+          <Alert variant={'info'} style = {{marginTop: '15px'}}>
+              {sponsorNote}
+           </Alert>
+
           <Row style={{ justifyContent: 'center' }}>
             <Button variant="primary" onClick={() => setSponsorConfirmationShow(true)} style={{ marginTop: '10px', width: '199px' }}>Submit Sponsor Vote</Button>
 
@@ -514,6 +534,7 @@ function DetailsModal(props) {
 
         <ConfirmationModal
           show={sponsorConfirmationShow}
+          size="lg"
           onHide={() => setSponsorConfirmationShow(false)}
           heading={sponsorVote === 'Accept' ? 'Sponsor Request Approval Confirmation' : 'Sponsor Request Rejection Confirmation'}
           onConfirm={sponsorVote === 'Accept' ?
@@ -522,7 +543,7 @@ function DetailsModal(props) {
             (sponsorVote === 'Accept') ?
               <>
                 <div>Are you sure you want to accept the sponsor request?</div>
-                <div style={{ color: 'red' }}>You will need to transfer {icxFormat((proposalDetail?.totalBudget ?? 0) * 0.1, true)} ICX for sponsor bond.</div>
+                {sponsorNote}
               </> :
               <span>Are you sure you want to deny the sponsor request?</span>
           }
