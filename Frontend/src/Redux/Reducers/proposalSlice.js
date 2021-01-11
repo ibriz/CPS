@@ -409,7 +409,7 @@ const proposalSlice = createSlice({
                         mapping.status === vote.vote)?.name,
                     timestamp: vote._timestamp,
                     prepName: vote.prep_name,
-                    reason: vote._reason
+                    reason: vote.vote_reason
                 }
             ));
             state.votesByProposal = state.votesByProposal.filter(vote => 
