@@ -17,7 +17,7 @@ function* resendVerificationEmailRequestWorker({payload}) {
         address,
       },
       url: RESEND_EMAIL_VERIFICATION,
-    //   requireSigning: true
+      requireSigning: true
     });
     yield put(resendVerificationEmailSuccess(
     ));
