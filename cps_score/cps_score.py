@@ -191,6 +191,10 @@ class CPS_Score(IconScoreBase):
     def progress_report_prefix(self, _progress_key: str) -> bytes:
         return b'|'.join([PROGRESS_REPORT_DB_PREFIX, self.id.get().encode(), _progress_key.encode()])
 
+    @payable
+    def fallback(self):
+        revert(f'{self.address} :ICX can only be sent while submitting a proposal or paying the penalty.')
+
     def _burn(self, amount: int) -> None:
         """
         Burn ICX method

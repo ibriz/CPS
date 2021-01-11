@@ -91,6 +91,10 @@ class CPS_TREASURY(IconScoreBase):
         """
         return "CPS_TREASURY_SCORE"
 
+    @payable
+    def fallback(self):
+        revert(f'{self.address} :ICX can only be sent by CPF Treasury Score.')
+
     def set_id(self, _val: str):
         self.id.set(_val)
 

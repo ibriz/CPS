@@ -68,6 +68,10 @@ class CPF(IconScoreBase):
     def name(self) -> str:
         return "CPF_TREASURY_SCORE"
 
+    @payable
+    def fallback(self):
+        revert(f'{self.address} :ICX can only be sent using add_fund() method.')
+
     @external
     def set_maximum_treasury_fund(self, _value: int) -> None:
         """
