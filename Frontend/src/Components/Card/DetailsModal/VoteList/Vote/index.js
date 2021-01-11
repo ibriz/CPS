@@ -6,11 +6,12 @@ import LowerCardTitle from 'Components/UI/LowerCardList/LowerCardTitle';
 import {proposalStatusMapping} from 'Constants'
 
 const Vote = ({vote}) => {
+
+    const [showSponsorMessage, setShowSponsorMessage] = React.useState(false);
     return (
         <>
             <Row className={styles.proposalContainer} 
-                    // onClick = {onClick}
-                    >
+ onClick = {() => setShowSponsorMessage(prevState => !prevState)}                    >
                 <Col sm="12" className = {styles.infos}>
                     <Row style={{ alignItems: 'center' }} className={styles.firstRow}>
                         {/* <Badge size="xs" variant={badgeColor[selectedTab]} className={styles.badge}>{selectedTab}</Badge>{' '} */}
@@ -24,6 +25,23 @@ const Vote = ({vote}) => {
                         </Col>
 
                     </Row>
+                    {
+                        showSponsorMessage && 
+                        <Row className={styles.firstRow} style = {{paddingLeft: '15px'}}>
+                            <span style = {{fontWeight: 600, fontSize: '0.85rem'}}>Message From P-Rep:</span>
+                            {
+                                vote.reason ?
+                                <div style = {{fontSize: '0.85rem'}}                                 
+                                    dangerouslySetInnerHTML={{ __html: vote.reason }}
+                                /> :
+                                <div style = {{fontSize: '0.85rem'}}                                 
+                                
+                            >No Message</div>
+
+                            }
+                        </Row>
+                    }
+
                     {/* <Row className={styles.secondRow}>
                         <LowerCardInfo>{`${proposal._contributor_address.slice(0, 4)}...${proposal._contributor_address.slice(proposal._contributor_address.length - 3)}`}</LowerCardInfo>
                         <LowerCardInfo className={"proposalInfo2"}>Started from: {new Date(proposal._timestamp / 1000).toLocaleDateString()}</LowerCardInfo>
@@ -42,6 +60,7 @@ const Vote = ({vote}) => {
 
             </Row>
 
+        
             <hr className = {styles.horizontalRule}/>
         </>
     )
