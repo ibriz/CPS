@@ -61,6 +61,7 @@ ADMINS = "admins"
 UNREGISTERED_PREPS = "unregistered_preps"
 REGISTERED_PREPS = "registered_preps"
 INACTIVE_PREPS = "inactive_preps"
+PREP_NAME = "prep_name"
 
 # VarDB/ArrayDB Params
 PROPOSALS_KEY_LIST = 'proposals_key_list'
@@ -102,6 +103,7 @@ STATUS = "status"
 
 # VOTE KEYS
 VOTE = "vote"
+VOTE_REASON = "vote_reason"
 APPROVE = "_approve"
 REJECT = "_reject"
 ABSTAIN = "_abstain"
