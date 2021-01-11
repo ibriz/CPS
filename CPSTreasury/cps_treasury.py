@@ -34,6 +34,7 @@ class CPS_TREASURY(IconScoreBase):
     _TOTAL_INSTALLMENT_PAID = "_total_installment_paid"
     _TOTAL_REWARD_PAID = "_total_reward_paid"
     _INSTALLMENT_AMOUNT = "installment_amount"
+    _SPONSOR_BOND_AMOUNT = "sponsor_bond_amount"
 
     _CPS_SCORE = "_cps_score"
     _CPF_TREASURY_SCORE = "_cpf_treasury_score"
@@ -224,7 +225,8 @@ class CPS_TREASURY(IconScoreBase):
                                                     self._TOTAL_INSTALLMENT_PAID: _total_paid_amount,
                                                     self._TOTAL_INSTALLMENT_COUNT: _total_installment,
                                                     self._TOTAL_TIMES_INSTALLMENT_PAID: _total_paid_count,
-                                                    self._INSTALLMENT_AMOUNT: _total_budget // _total_installment})
+                                                    self._INSTALLMENT_AMOUNT: _total_budget // _total_installment,
+                                                    self._SPONSOR_BOND_AMOUNT: _deposited_sponsor_bond})
                         _total_amount_to_be_paid += _total_budget // _total_installment
                         _total_sponsor_bond += _deposited_sponsor_bond
 
@@ -307,10 +309,11 @@ class CPS_TREASURY(IconScoreBase):
             prefix = self.proposal_prefix(_ipfs_key)
             proposal = self.proposals[prefix]
 
-            _total_budget = proposal.total_budget.get()
-            _total_duration = proposal.project_duration.get()
-            _installment_count = proposal.installment_count.get()
-            contributor_address = proposal.contributor_address.get()
+            _total_budget: int = proposal.total_budget.get()
+            _total_duration: int = proposal.project_duration.get()
+            _installment_count: int = proposal.installment_count.get()
+            withdraw_amount: int = proposal.withdraw_amount.get()
+            contributor_address: Address = proposal.contributor_address.get()
 
             if _total_duration - _installment_count == 1:
                 proposal.status.set(self._COMPLETED)
@@ -319,6 +322,7 @@ class CPS_TREASURY(IconScoreBase):
             try:
                 _installment_amount = _total_budget // _total_duration
                 proposal.installment_count.set(_installment_count + 1)
+                proposal.withdraw_amount.set(withdraw_amount + _installment_amount)
                 self._fund_record[str(contributor_address)] += _installment_amount
 
                 self.ProposalFundSent(contributor_address, _installment_amount,
@@ -342,10 +346,11 @@ class CPS_TREASURY(IconScoreBase):
             prefix = self.proposal_prefix(_ipfs_key)
             proposals = self.proposals[prefix]
 
-            _sponsor_reward = proposals.sponsor_reward.get()
-            _total_duration = proposals.project_duration.get()
-            _sponsor_reward_count = proposals.sponsor_reward_count.get()
-            _sponsor_address = proposals.sponsor_address.get()
+            _sponsor_reward: int = proposals.sponsor_reward.get()
+            _total_duration: int = proposals.project_duration.get()
+            _sponsor_reward_count: int = proposals.sponsor_reward_count.get()
+            _sponsor_withdraw_amount: int = proposals.sponsor_withdraw_amount.get()
+            _sponsor_address: Address = proposals.sponsor_address.get()
 
             if _total_duration - _sponsor_reward_count == 1:
                 proposals.status.set(self._COMPLETED)
@@ -353,7 +358,9 @@ class CPS_TREASURY(IconScoreBase):
             # Calculating Installment Amount and adding to Wallet Address
             try:
                 _installment_amount = _sponsor_reward // _total_duration
-                proposals.installment_count.set(_sponsor_reward_count + 1)
+                proposals.sponsor_reward_count.set(_sponsor_reward_count + 1)
+                proposals.sponsor_withdraw_amount.set(_sponsor_withdraw_amount + _installment_amount)
+
                 self._fund_record[str(_sponsor_address)] += _installment_amount
 
                 self.ProposalFundSent(_sponsor_address, _installment_amount,
@@ -394,9 +401,10 @@ class CPS_TREASURY(IconScoreBase):
                 cpf_treasury_score.icx(_remaining_budget + _remaining_reward).disqualify_proposal_fund(
                     _ipfs_key)
 
-                self.ProposalDisqualified(_ipfs_key, f"{_ipfs_key}Proposal disqualified")
+                self.ProposalDisqualified(_ipfs_key, f"{_ipfs_key}, Proposal disqualified")
             except BaseException as e:
-                revert(f"{self.address} : Network problem. Sending proposal funds. {e}")
+                revert(
+                    f"{self.address} : Network problem. Sending proposal funds. {e}")
         else:
             revert(f"{self.address} : Provided IPFS key not found.")
 
