@@ -28,8 +28,9 @@ import Popup from 'Components/Popup';
 const signingInfoMessage = (
     <div className="text-information">
         <div>Note:</div>
-        <div className="intendation">1) You need to transfer 50 ICX to submit a proposal.</div>
-        <div className="intendation">2) You need to sign the transaction two times-
+        <div className="intendation">1) Make sure you communicate with the Sponsor P-Rep in advance to ensure that they will accept your sponsorship request. You can communicate with P-Reps by posting about your proposal on <a style = {{color: "inherit", textDecoration: 'underline'}} href = "https://forum.icon.community/c/contribution-proposals/45" target = "_blank">ICON Forum</a> before creating a proposal on the CPS platform.</div>
+        <div className="intendation">2) You need to transfer 50 ICX to submit a proposal.</div>
+        <div className="intendation">3) You need to sign the transaction two times-
             <div className="intendation">i) First time: to verify the user identity while submitting the proposal data to the Backend (IPFS).</div>
             <div className="intendation">ii) Second time: to verify the user identity while saving the ipfs hash and to submit 50 ICX fee to the blockchain.</div>
 
@@ -358,7 +359,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                             <Form.Label column sm="2" className={styles.labelSameLine}>
                                 Sponsor PRep
                                 <span className={styles.required}></span>
-                                <InfoIcon description={<span>The Prep Sponsor for the project. Sponsor P-Rep will stake collateral for your proposal. You should communicate with the Sponsor P-Rep in advance to ensure they will accept sponsorship. You can choose a sponsor by first posting about your proposal in the ICON Forum where P-Reps can show interest in sponsoring your proposal.</span>} />
+                                <InfoIcon description={<span>The Prep Sponsor for the project. Sponsor P-Rep will stake collateral for your proposal. <b>You should communicate with the Sponsor P-Rep in advance to ensure they will accept sponsorship.</b> You can choose a sponsor by first posting about your proposal in the ICON Forum where P-Reps can show interest in sponsoring your proposal.</span>} />
                             </Form.Label>
                             <Col sm="4" className={styles.inputSameLine}>
                                 <Form.Control size="md" as="select" value={proposal.sponserPrep} name="sponserPrep" id="sponserPrep" onChange={handleChange} required>
