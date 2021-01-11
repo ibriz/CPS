@@ -25,7 +25,7 @@ async function send_email(emailAddress, body) {
 				ToAddresses: [emailAddress],
 			},
 			Template: template,
-			TemplateData: `{\"proposalName\":\"${body.proposalName}\",
+			TemplateData: `{\"proposalName\":\"${body.projectName}\",
                         \"contributor_address\":\"${body.address}\",
                         \"subject\":\"${process.env.SUBJECT}\",
                         \"frontend_url":\"${process.env.FRONTEND_URL}\"}`,
@@ -118,13 +118,13 @@ exports.handler = async (event) => {
 			if (event.path === process.env.PROPOSAL_PATH) {
 				proposal = await uploadProposal(body);
 
-				const sponsorData = await getAsync(`users:address:${body.sponsor_address}`);
+				const sponsorData = await getAsync(`users:address:${body.sponserPrep}`);
 
 				if (sponsorData != null) {
 					const sponsor = JSON.parse(sponsorData);
 					console.log(sponsor);
 
-					if (body.type === 'Proposal' && sponsor.verified && sponsor.enableEmailNotifications) await send_email(sponsor.email, body);
+					if (body.type === 'proposal' && sponsor.verified && sponsor.enableEmailNotifications) await send_email(sponsor.email, body);
 				}
 			} else {
 				proposal = await uploadFile(event);
