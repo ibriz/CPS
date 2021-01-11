@@ -14,6 +14,7 @@ class ProgressReportData(object):
         self.budget_adjustment = VarDB("budget_adjustment", db, bool)
         self.additional_budget = VarDB('additional_budget', db, int)
         self.additional_month = VarDB('additional_month', db, int)
+        self.voters_reasons = ArrayDB("voters_reasons", db, bytes)
 
         self.total_votes = VarDB("total_votes", db, int)
         self.approved_votes = VarDB("approved_votes", db, int)

@@ -16,6 +16,7 @@ class ProposalData(object):
         self.tx_hash = VarDB('tx_hash', db, str)
         self.percentage_completed = VarDB('percentage_completed', db, int)
 
+        self.voters_reasons = ArrayDB("voters_reasons", db, bytes)
         self.total_votes = VarDB("total_votes", db, int)
         self.approved_votes = VarDB("approved_votes", db, int)
         self.rejected_votes = VarDB("rejected_votes", db, int)
@@ -30,6 +31,7 @@ class ProposalData(object):
         self.reject_voters = ArrayDB("reject_voters", db, Address)
 
         self.progress_reports = ArrayDB('progress_reports', db, str)
+        self.budget_adjustment = VarDB("budget_adjustment", db, bool)
 
 
 class ProposalDataDB:
@@ -64,6 +66,7 @@ def addDataToProposalDB(prefix: bytes, _proposals: 'ProposalDataDB', proposal_da
     _proposals[prefix].approved_votes.set(0)
     _proposals[prefix].rejected_votes.set(0)
     _proposals[prefix].approved_reports.set(0)
+    _proposals[prefix].budget_adjustment.set(False)
 
 
 def getDataFromProposalDB(prefix: bytes, _proposals: 'ProposalDataDB') -> dict:
@@ -86,9 +89,12 @@ def getDataFromProposalDB(prefix: bytes, _proposals: 'ProposalDataDB') -> dict:
     sponsored_timestamp = _proposals[prefix].sponsored_timestamp.get()
     sponsor_deposit_status = _proposals[prefix].sponsor_deposit_status.get()
     sponsor_vote_reason = _proposals[prefix].sponsor_vote_reason.get()
+    if sponsor_vote_reason is not None:
+        sponsor_vote_reason = sponsor_vote_reason.decode('utf-8')
 
     approve_voters = len(_proposals[prefix].approve_voters)
     reject_voters = len(_proposals[prefix].reject_voters)
+    budget_adjustment = _proposals[prefix].budget_adjustment.get()
 
     return {
         'ipfs_hash': ipfs_hash,
@@ -102,6 +108,7 @@ def getDataFromProposalDB(prefix: bytes, _proposals: 'ProposalDataDB') -> dict:
         'status': status,
         'tx_hash': tx_hash,
         'percentage_completed': percentage_completed,
+        'budget_adjustment': budget_adjustment,
         'sponsor_deposit_amount': sponsor_deposit_amount,
         'sponsored_timestamp': sponsored_timestamp,
         'sponsor_deposit_status': sponsor_deposit_status,
