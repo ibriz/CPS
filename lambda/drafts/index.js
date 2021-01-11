@@ -13,7 +13,6 @@ async function uploadDraftToIPFS(payload) {
 	let body = JSON.parse(payload);
 	if (!body.type) throw new Error('type field missing');
 	if (!body.address) throw new Error('address field missing');
-	if (!body.address) throw new Error('address field missing');
 	const ipfsKey = body.type + uuidv4();
 	body.ipfsKey = ipfsKey;
 
