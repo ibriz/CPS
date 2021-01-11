@@ -152,12 +152,12 @@ async function get_progress_reports_by_status(status = '_approved') {
 
 async function get_proposal_and_progress_report_count() {
 	console.log('RPC Call for Proposal and Progress Report Count');
-	const accepted_active_proposals = await iconService.call(icon_call_builder('get_proposal_status', { status: '_pending' }));
+	const accepted_active_proposals = await iconService.call(icon_call_builder('get_proposals_keys_by_status', { status: '_pending' })).execute();
 
-	const accepted_active_progress_report = await iconService.call(icon_call_builder('get_progress_reports', { status: '_waiting' }));
+	const accepted_active_progress_report = await iconService.call(icon_call_builder('get_progress_reports', { status: '_waiting' })).execute();
 
 	return {
-		proposals_count: accepted_active_proposals.count,
+		proposals_count: accepted_active_proposals.length,
 		progress_report_count: accepted_active_progress_report.count
 	};
 }
