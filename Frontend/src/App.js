@@ -7,7 +7,8 @@ import { NotificationContainer} from 'react-notifications';
 import {fetchUserDataRequest, fetchUserPromptRequest} from 'Redux/Reducers/userSlice';
 import Footer from 'Components/Footer';
 import { Helmet } from "react-helmet";
-import UnsubscribePage from 'Containers/UnsubscribePage'
+import UnsubscribePage from 'Containers/UnsubscribePage';
+import VerifiedPage from 'Containers/VerifiedPage'
 
 function App({ address, fetchUserDataRequest, fetchUserPromptRequest }) {
 
@@ -38,6 +39,13 @@ function App({ address, fetchUserDataRequest, fetchUserPromptRequest }) {
             <UnsubscribePage />
             <Helmet>
                   <title>CPS - Unsubscribe</title>
+            </Helmet>
+        </Route>
+
+        <Route exact path = {"/email-verified"}>
+            <VerifiedPage />
+            <Helmet>
+                  <title>CPS - Email Verified</title>
             </Helmet>
         </Route>
 
