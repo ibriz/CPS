@@ -17,7 +17,7 @@ class CPS_TREASURY_INTERFACE(InterfaceScore):
 
 
 class CPF(IconScoreBase):
-    _PROPOSALS_DETAILS = '_proposals_details'
+    _PROPOSAL_BUDGETS = '_proposals_budgets'
     _PROPOSALS_KEYS = '_proposals_keys'
 
     _CPS_TREASURY_SCORE = "_cps_treasury_score"
@@ -50,7 +50,7 @@ class CPF(IconScoreBase):
     def __init__(self, db: IconScoreDatabase) -> None:
         super().__init__(db)
         self._proposals_keys = ArrayDB(self._PROPOSALS_KEYS, db, value_type=str)
-        self._proposals_details = DictDB(self._PROPOSALS_DETAILS, db, value_type=int, depth=2)
+        self._proposal_budgets = DictDB(self._PROPOSAL_BUDGETS, db, value_type=int, depth=1)
 
         self.treasury_fund = VarDB(self.TREASURY_FUND, db, value_type=int)
 
@@ -148,9 +148,7 @@ class CPF(IconScoreBase):
         if self.msg.sender != self._cps_score.get():
             revert(f"{self.address} : Only CPS Score can send fund using this method.")
 
-        _extra_amount = self.icx.get_balance(self.address) - self.treasury_fund.get()
-        if _extra_amount > 0:
-            self._burn(_extra_amount)
+        self._burn_extra_fund()
         self.FundReturned(_address, "Sponsor Bond Returned to Treasury.")
 
     @external
@@ -171,6 +169,7 @@ class CPF(IconScoreBase):
         if self.msg.sender != self._cps_score.get():
             revert(f"{self.address} : Can't be called by other account. Only CPS Score can call this method.")
 
+        # Calculating sponsor reward for sponsor and total budget for contributor
         _total_budget = icx(_total_budget)
         _sponsor_reward = _total_budget // 50
         total_transfer = _total_budget + _sponsor_reward
@@ -180,10 +179,15 @@ class CPF(IconScoreBase):
 
         if _ipfs_key not in self._proposals_keys:
             self._proposals_keys.put(_ipfs_key)
-            self._proposals_details[_ipfs_key][self._TOTAL_BUDGET] = total_transfer
+            self._proposal_budgets[_ipfs_key] = total_transfer
 
-            params = {_ipfs_key, _total_installment_count, _sponsor_address, _contributor_address, _total_budget,
-                      _sponsor_reward}
+            # Required Params for the deposit_proposal_fund method for CPS_Treasury Score
+            params = {"ipfs_hash": _ipfs_key,
+                      "project_duration": _total_installment_count,
+                      "sponsor_address": _sponsor_address,
+                      "contributor_address": _contributor_address,
+                      "total_budget": _total_budget,
+                      "sponsor_reward": _sponsor_reward}
 
             try:
                 cps_treasury_score = self.create_interface_score(self._cps_treasury_score.get(), CPS_TREASURY_INTERFACE)
@@ -217,7 +221,7 @@ class CPF(IconScoreBase):
             revert(f'{self.address} : Not enough fund in treasury.')
 
         if _ipfs_key in self._proposals_keys:
-            self._proposals_details[_ipfs_key][self._TOTAL_BUDGET] += total_transfer
+            self._proposal_budgets[_ipfs_key] += total_transfer
             try:
                 cps_treasury_score = self.create_interface_score(self._cps_treasury_score.get(), CPS_TREASURY_INTERFACE)
                 cps_treasury_score.icx(total_transfer).update_proposal_fund(_ipfs_key, _total_added_budget,
@@ -241,8 +245,9 @@ class CPF(IconScoreBase):
             revert(f"{self.address} : Can't be called by other account. Only CPS Treasury can send the fund. ")
 
         if _ipfs_key in self._proposals_keys:
-            _budget = self._proposals_details[_ipfs_key][self._TOTAL_BUDGET]
-            self._proposals_details[_ipfs_key][self._TOTAL_BUDGET] = _budget - self.msg.value
+            _budget = self._proposal_budgets[_ipfs_key]
+            self._proposal_budgets[_ipfs_key] = _budget - self.msg.value
+            self._burn_extra_fund()
 
             self.ProposalDisqualified(_ipfs_key, f"Proposal disqualified. "
                                                  f"{self.msg.value} returned back to Treasury")
@@ -256,11 +261,17 @@ class CPF(IconScoreBase):
         Add fund to the treasury Account
         :return:
         """
+        self._burn_extra_fund()
+        self.FundReceived(self.msg.sender, f"Treasury Fund {self.msg.value} Received.")
+
+    def _burn_extra_fund(self):
+        """
+        Burning the extra amount above the maximum threshold of CPF
+        :return:
+        """
         _extra_amount = self.icx.get_balance(self.address) - self.treasury_fund.get()
         if _extra_amount > 0:
             self._burn(_extra_amount)
-
-        self.FundReceived(self.msg.sender, f"Treasury Fund {self.msg.value} Received.")
 
     @external(readonly=True)
     def get_proposals_details(self, _start_index: int = 0, _end_index: int = 20) -> dict:
@@ -277,11 +288,10 @@ class CPF(IconScoreBase):
         if _start_index < 0:
             _start_index = 0
         count = len(_proposals_keys)
-
         _range = range(_start_index, count if _end_index > count else _end_index)
 
         for _keys in _range:
-            _proposal_detail = {self._TOTAL_BUDGET: self._proposals_details[_proposals_keys[_keys]][self._TOTAL_BUDGET],
+            _proposal_detail = {self._TOTAL_BUDGET: self._proposal_budgets[_proposals_keys[_keys]],
                                 self._IPFS_HASH: _proposals_keys[_keys]}
             _proposals_details_list.append(_proposal_detail)
 
