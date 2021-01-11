@@ -488,16 +488,12 @@ function DetailsModal(props) {
           <Row>
             <Col xs="12">
               {
-                (status === 'Voting') ?
                   <>
                     <ListTitle>VOTES</ListTitle>
                     <VoteList
                       votes={votesByProposal}
                       progressReport />
-                  </> :
-                  (
-                    null
-                  )
+                  </> 
               }
 
             </Col>
