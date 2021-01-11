@@ -6,7 +6,7 @@ class ProposalData(object):
     def __init__(self, db: IconScoreDatabase) -> None:
         self.ipfs_hash = VarDB('ipfs_hash', db, str)
         self.total_budget = VarDB('total_budget', db, int)
-        self.sponsor_reward = VarDB('sponsor_reward', db, Address)
+        self.sponsor_reward = VarDB('sponsor_reward', db, int)
         self.project_duration = VarDB('project_duration', db, int)
         self.sponsor_address = VarDB('sponsor_address', db, Address)
         self.contributor_address = VarDB('contributor_address', db, Address)

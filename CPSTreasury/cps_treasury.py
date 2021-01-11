@@ -196,7 +196,7 @@ class CPS_TREASURY(IconScoreBase):
         return {"data": _installment_amount,
                 "project_count": len(_installment_amount),
                 "total_amount": _total_amount_to_be_paid,
-                "withdraw_amount": self._fund_record[_wallet_address]}
+                "withdraw_amount": self._fund_record[str(_wallet_address)]}
 
     @external(readonly=True)
     def get_sponsor_projected_fund(self, _wallet_address: Address) -> dict:
@@ -231,7 +231,7 @@ class CPS_TREASURY(IconScoreBase):
         return {"data": _installment_amount,
                 "project_count": len(_installment_amount),
                 "total_amount": _total_amount_to_be_paid,
-                "withdraw_amount": self._fund_record[_wallet_address],
+                "withdraw_amount": self._fund_record[str(_wallet_address)],
                 "total_sponsor_bond": _total_sponsor_bond}
 
     @external
@@ -277,9 +277,9 @@ class CPS_TREASURY(IconScoreBase):
                    f"Treasury Score can send amount to this method. ")
 
         prefix = self.proposal_prefix(_ipfs_key)
-        _total_budget = self.proposals[prefix].total_budget.get()
-        _sponsor_reward = self.proposals[prefix].sponsor_reward.get()
-        _total_duration = self.proposals[prefix].project_duration.get()
+        _total_budget: int = self.proposals[prefix].total_budget.get()
+        _sponsor_reward: int = self.proposals[prefix].sponsor_reward.get()
+        _total_duration: int = self.proposals[prefix].project_duration.get()
 
         if self._check_proposal(_ipfs_key):
             self.proposals[prefix].total_budget.set(_total_budget + _added_budget)
@@ -303,22 +303,23 @@ class CPS_TREASURY(IconScoreBase):
             revert(f"{self.address} : Can't be called by other account. Only CPS "
                    f" Score can call this method. ")
 
-        prefix = self.proposal_prefix(_ipfs_key)
-
         if self._check_proposal(_ipfs_key):
-            _total_budget = self.proposals[prefix].total_budget.get()
-            _total_duration = self.proposals[prefix].project_duration.get()
-            _installment_count = self.proposals[prefix].installment_count.get()
-            contributor_address = self.proposals[prefix].contributor_address.get()
+            prefix = self.proposal_prefix(_ipfs_key)
+            proposal = self.proposals[prefix]
+
+            _total_budget = proposal.total_budget.get()
+            _total_duration = proposal.project_duration.get()
+            _installment_count = proposal.installment_count.get()
+            contributor_address = proposal.contributor_address.get()
 
             if _total_duration - _installment_count == 1:
-                self.proposals[prefix].status.set(self._COMPLETED)
+                proposal.status.set(self._COMPLETED)
 
+            # Calculating Installment Amount and adding to Wallet Address
             try:
                 _installment_amount = _total_budget // _total_duration
-
-                self.proposals[prefix].installment_count.set(_installment_count + 1)
-                self._fund_record[contributor_address] += _installment_amount
+                proposal.installment_count.set(_installment_count + 1)
+                self._fund_record[str(contributor_address)] += _installment_amount
 
                 self.ProposalFundSent(contributor_address, _installment_amount,
                                       f"Installment No. {_installment_count + 1} added to contributors address.")
@@ -337,22 +338,23 @@ class CPS_TREASURY(IconScoreBase):
             revert(f"{self.address} : Can't be called by other account. Only CPS "
                    f" Score can call this method. ")
 
-        prefix = self.proposal_prefix(_ipfs_key)
-
         if self._check_proposal(_ipfs_key):
-            _sponsor_reward = self.proposals[prefix].sponsor_reward.get()
-            _total_duration = self.proposals[prefix].project_duration.get()
-            _sponsor_reward_count = self.proposals[prefix].sponsor_reward_count.get()
-            _sponsor_address = self.proposals[prefix].sponsor_address.get()
+            prefix = self.proposal_prefix(_ipfs_key)
+            proposals = self.proposals[prefix]
+
+            _sponsor_reward = proposals.sponsor_reward.get()
+            _total_duration = proposals.project_duration.get()
+            _sponsor_reward_count = proposals.sponsor_reward_count.get()
+            _sponsor_address = proposals.sponsor_address.get()
 
             if _total_duration - _sponsor_reward_count == 1:
-                self.proposals[prefix].status.set(self._COMPLETED)
+                proposals.status.set(self._COMPLETED)
 
+            # Calculating Installment Amount and adding to Wallet Address
             try:
                 _installment_amount = _sponsor_reward // _total_duration
-
-                self.proposals[prefix].installment_count.set(_sponsor_reward_count + 1)
-                self._fund_record[_sponsor_address] += _installment_amount
+                proposals.installment_count.set(_sponsor_reward_count + 1)
+                self._fund_record[str(_sponsor_address)] += _installment_amount
 
                 self.ProposalFundSent(_sponsor_address, _installment_amount,
                                       f"Installment No. {_sponsor_reward_count + 1} added to sponsor address.")
@@ -373,12 +375,15 @@ class CPS_TREASURY(IconScoreBase):
 
         if self._check_proposal(_ipfs_key):
             prefix = self.proposal_prefix(_ipfs_key)
-            self.proposals[prefix].status.set(self._COMPLETED)
+            proposals = self.proposals[prefix]
 
-            _total_budget = self.proposals[prefix].total_budget.get()
-            _withdraw_amount = self.proposals[prefix].withdraw_amount.get()
-            _sponsor_reward = self.proposals[prefix].sponsor_reward.get()
-            _sponsor_withdraw_amount = self.proposals[prefix].sponsor_withdraw_amount.get()
+            # Set Proposal status to disqualified
+            proposals.status.set(self._DISQUALIFIED)
+
+            _total_budget = proposals.total_budget.get()
+            _withdraw_amount = proposals.withdraw_amount.get()
+            _sponsor_reward = proposals.sponsor_reward.get()
+            _sponsor_withdraw_amount = proposals.sponsor_withdraw_amount.get()
 
             _remaining_budget = _total_budget - _withdraw_amount
             _remaining_reward = _sponsor_reward - _sponsor_withdraw_amount
@@ -396,17 +401,21 @@ class CPS_TREASURY(IconScoreBase):
             revert(f"{self.address} : Provided IPFS key not found.")
 
     @external
-    def claim_reward(self, _wallet_address: Address) -> None:
+    def claim_reward(self) -> None:
         """
         Claim he reward or the installment amount
-        :param _wallet_address: wallet address of the user who claim the reward
         """
-        _available_amount = self._fund_record[_wallet_address]
+        _available_amount = self._fund_record[str(self.msg.sender)]
         if _available_amount > 0:
             try:
-                self.icx.transfer(_wallet_address, _available_amount)
-                self._fund_record[_wallet_address] = 0
-                self.ProposalFundWithdrawn(_wallet_address, _available_amount, f"{_available_amount} withdrawn to "
-                                                                           f"{_wallet_address}")
+                # set the remaining fund 0
+                self._fund_record[str(self.msg.sender)] = 0
+
+                self.icx.transfer(self.msg.sender, _available_amount)
+                self.ProposalFundWithdrawn(self.msg.sender, _available_amount, f"{_available_amount} withdrawn to "
+                                                                               f"{self.msg.sender}")
             except BaseException as e:
                 revert(f"{self.address} : Network problem. Claiming Reward{e}")
+
+        else:
+            revert(f'{self.address} : Claim Reward Fails. Available Amount = {_available_amount}.')
