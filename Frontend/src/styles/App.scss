@@ -13,6 +13,13 @@ $theme-colors: (
 );
 
 
+.input-group-text {
+  border: 0px solid #ced4da !important;
+  padding-bottom: 0rem !important;
+  padding-top: 0rem!important;
+}
+
+
 
 @import '~bootstrap/scss/bootstrap';
 
