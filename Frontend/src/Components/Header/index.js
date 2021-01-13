@@ -15,11 +15,14 @@ const Header = ({ address, logout, title, isPrep, isRegistered, unregisterPrep, 
 
     return (
         <>
-        <Row className = {styles.headerContainer} >
-            <span className={styles.heading} 
-            style = {{marginTop: '0px'}}
-            // style = {(isPrep && !payPenalty && period === 'APPLICATION') ? {marginTop: '35px'} : {}}
-            >{title}</span>
+        <Row className = {styles.headerContainer} style = {{marginTop: '15px'}} >
+            {   
+                window.innerWidth <= 1200 && 
+                <span className={styles.heading} 
+                style = {{marginTop: '0px'}}
+                >{title}</span>            
+            }
+
             <div className = {styles.headerComp1}>
                 {
                     (window.innerWidth < 768) && <HeaderComponents />
@@ -34,6 +37,15 @@ const Header = ({ address, logout, title, isPrep, isRegistered, unregisterPrep, 
         </div>
         
         </Row>
+
+            {   
+                window.innerWidth > 1200 && 
+                <Row style = {{justifyContent: 'center', marginTop: '2px'}}>
+                <span className={styles.heading} 
+                style = {{marginTop: '0px', textAlign: 'center'}}
+                >{title}</span>  
+                </Row>          
+            }
 {/* 
         <Row>
         <span>Wallet Balance - {walletBalance.toFixed(2)} ICX</span>
