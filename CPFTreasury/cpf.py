@@ -130,7 +130,10 @@ class CPF(IconScoreBase):
         :param amount: integer amount to burn
         :return: none
         """
-        self.icx.transfer(ZERO_WALLET_ADDRESS, amount)
+        try:
+            self.icx.transfer(ZERO_WALLET_ADDRESS, amount)
+        except BaseException as e:
+            revert(f"{self.address} : Network problem. Burning amount. {e}")
 
     @external(readonly=True)
     def get_total_fund(self) -> int:
