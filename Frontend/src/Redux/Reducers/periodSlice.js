@@ -40,10 +40,13 @@ const periodSlice = createSlice({
         updatePeriod() {
             return;
         },
+        updatePeriodFrontendWallet() {
+            return;
+        },
     },
 })
 
 export const { fetchPeriodDetailsRequest, fetchPeriodDetailsSuccess, fetchPeriodDetailsFailure,
-    updatePeriod
+    updatePeriod, updatePeriodFrontendWallet
 } = periodSlice.actions;
 export default periodSlice.reducer;
