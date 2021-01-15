@@ -37,6 +37,9 @@ function* saveDraftRequestWorker({payload}) {
     NotificationManager.success("Draft Succesfully saved")
 
   } catch (error) {
+    if(error.message === "-1") {
+      return;
+    }
     NotificationManager.error(error.message, "Draft save failed");
 
     yield put(saveDraftFailure());

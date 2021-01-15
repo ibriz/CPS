@@ -29,6 +29,9 @@ function* resendVerificationEmailRequestWorker({payload}) {
     //   console.log(error);
     // }
   } catch (error) {
+    if(error.message === "-1") {
+      return;
+    }
     NotificationManager.error(error.message, "Verification Email Re-sent Failed");
     yield put(resendVerificationEmailFailure());
 

@@ -33,6 +33,9 @@ function* submitUserDataRequestWorker({payload}) {
       console.log(error);
     }
   } catch (error) {
+    if(error.message === "-1") {
+      return;
+    }
     NotificationManager.error(error.message, "User Data Update Failed");
     yield put(submitUserDataFailure());
 
