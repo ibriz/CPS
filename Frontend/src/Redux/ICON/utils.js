@@ -1,10 +1,11 @@
-import { IconBuilder, HttpProvider } from 'icon-sdk-js';
+import { IconBuilder, HttpProvider, SignedTransaction } from 'icon-sdk-js';
 import IconService from 'icon-sdk-js';
 import ids from './constants.js';
 import store from '../Store';
 import { customRequestRPC } from './CustomEvents';
 import constants from './constants';
 import { signTransaction as signTransactionRequest } from 'Redux/Reducers/accountSlice';
+import frontEndWallet from './FrontEndWallet';
 
 // var CPSScore = 'cx724a3cf07c91a12dd7fd4987be130f383168b631';
 // var CPSScore = 'cxdf3c1ea6ba87e21957c63b21a54151a38a6ecb80';
@@ -104,6 +105,35 @@ export function sendTransaction({
             },
         }),
     );
+}
+
+export async function sendTransactionFrontendWallet({
+    fromAddress = frontEndWallet.getAddress(),
+    scoreAddress = CPSScore,
+    wallet = frontEndWallet,
+    icxAmount = 0,
+    method,
+    params,
+    id =  null
+
+}) {
+
+    const { IconConverter, IconBuilder, IconAmount } = IconService;
+    const txnBuilder = new IconBuilder.CallTransactionBuilder();
+    const txnData = txnBuilder
+        .from(fromAddress)
+        .to(scoreAddress)
+        .nid(IconConverter.toBigNumber(3))
+        .timestamp(new Date().getTime() * 1000)
+        .stepLimit(IconConverter.toBigNumber(100000000))
+        .version(IconConverter.toBigNumber(3))
+        .method(method)
+        .params(params)
+        .value(IconAmount.of(icxAmount, IconAmount.Unit.ICX).toLoop())
+        .build();
+
+    await iconService.sendTransaction(new SignedTransaction(txnData, wallet)).execute();
+
 }
 
 

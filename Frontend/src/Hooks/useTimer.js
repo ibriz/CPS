@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { fetchPeriodDetailsRequest } from 'Redux/Reducers/periodSlice';
 import { useDispatch, useSelector } from "react-redux";
-import { updatePeriod } from 'Redux/Reducers/periodSlice';
+import { updatePeriodFrontendWallet } from 'Redux/Reducers/periodSlice';
 
 const useTimer = () => {
     const remainingTimeRedux = useSelector(state => state.period.remainingTime);
@@ -85,7 +85,7 @@ const useTimer = () => {
             let timestamp = new Date();
 
             if(!updatePeriodTriggered) {
-                // dispatch(updatePeriod);
+                dispatch(updatePeriodFrontendWallet());
                 setUpdatePeriodTriggered(true);
             }
 

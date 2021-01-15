@@ -50,7 +50,7 @@ import {
 } from './Fund';
 
 import { fetchPrepWorker, unregisterPrepWorker, registerPrepWorker, payPenaltyWorker } from './PRep';
-import {fetchPeriodDetailsRequestWorker, updatePeriodWorker} from './Period';
+import {fetchPeriodDetailsRequestWorker, updatePeriodWorker, updatePeriodFrontendWalletWorker} from './Period';
 
 import {fetchUserDataRequestWorker, submitUserDataRequestWorker, resendVerificationEmailRequestWorker,
   fetchUserPromptRequestWorker, disableUserPromptRequestWorker} from './User';
@@ -74,7 +74,7 @@ import { submitProgressReportRequest, submitProgressReportSuccess, fetchProgress
   fetchProgressReportByProposalRequest,
   fetchVoteResultBudgetChangeRequest
 } from '../Reducers/progressReportSlice';
-import {fetchPeriodDetailsRequest, updatePeriod} from '../Reducers/periodSlice';
+import {fetchPeriodDetailsRequest, updatePeriod, updatePeriodFrontendWallet} from '../Reducers/periodSlice';
 import { fetchPrepsRequest, unregisterPrep, registerPrep, payPenalty } from '../Reducers/prepsSlice';
 import {fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, fetchExpectedGrantRequest, fetchCPSTreasuryScoreAddressRequest, claimReward} from '../Reducers/fundSlice';
 import {fetchUserDataRequest, submitUserDataRequest, resendVerificationEmailRequest,
@@ -135,6 +135,7 @@ yield takeEvery(fetchProgressReportByProposalRequest.type, fetchProgressReportBy
 yield takeEvery(fetchPeriodDetailsRequest.type, fetchPeriodDetailsRequestWorker);
 
 yield takeEvery(updatePeriod.type, updatePeriodWorker);
+yield takeEvery(updatePeriodFrontendWallet.type, updatePeriodFrontendWalletWorker);
 
 yield takeEvery(unregisterPrep.type, unregisterPrepWorker);
 
