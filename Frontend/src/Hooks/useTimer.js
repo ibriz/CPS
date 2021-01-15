@@ -86,6 +86,7 @@ const useTimer = () => {
 
             if(!updatePeriodTriggered) {
                 dispatch(updatePeriodFrontendWallet());
+                dispatch(fetchPeriodDetailsRequest());
                 setUpdatePeriodTriggered(true);
             }
 
