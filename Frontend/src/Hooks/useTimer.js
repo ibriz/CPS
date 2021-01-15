@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { fetchPeriodDetailsRequest } from 'Redux/Reducers/periodSlice';
 import { useDispatch, useSelector } from "react-redux";
-
+import { updatePeriod } from 'Redux/Reducers/periodSlice';
 
 const useTimer = () => {
     const remainingTimeRedux = useSelector(state => state.period.remainingTime);
@@ -21,7 +21,7 @@ const useTimer = () => {
         second: 0
     })
     const dispatch = useDispatch();
-
+    const [updatePeriodTriggered, setUpdatePeriodTriggered] = useState(false);
 
     const getHighestSignificantTime = (remainingTime) => {
 
@@ -83,6 +83,12 @@ const useTimer = () => {
                 }
             );
             let timestamp = new Date();
+
+            if(!updatePeriodTriggered) {
+                // dispatch(updatePeriod);
+                setUpdatePeriodTriggered(true);
+            }
+
             if (timestamp % 40 == 0 && shouldDispatch) {
                 dispatch(fetchPeriodDetailsRequest());
 
