@@ -89,7 +89,9 @@ const RichTextEditor = ({onChange, setWords, setCharacters, onBlur, initialData 
     />
     {
         minimumNumberOfWords &&
-    <div style = {{height: 'auto', border: '1px solid', borderTop: 'none', borderRadius: '2px', borderTopLeftRadius: 0, borderTopRightRadius: 0, borderColor: '#c4c4c4', paddingLeft: '5px' }}>{numberOfWords} words / {minimumNumberOfWords} words {numberOfWords >= minimumNumberOfWords ? <TiTick className = "text-success" style = {{fontSize: '1.1rem'}}/> : <ImCross className = "text-danger" style = {{fontSize: '0.75rem'}}/>}</div>
+    <div style = {{height: 'auto', border: '1px solid', borderTop: 'none', borderRadius: '2px', borderTopLeftRadius: 0, borderTopRightRadius: 0, borderColor: '#c4c4c4', paddingLeft: '5px', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', paddingRight: '5px' }}>
+        {numberOfWords}/{minimumNumberOfWords} words {numberOfWords >= minimumNumberOfWords ? <TiTick className = "text-success" style = {{fontSize: '1.1rem', marginLeft: '2px'}}/> : <ImCross className = "text-danger" style = {{fontSize: '0.75rem', marginLeft: '2px'}}/>}
+    </div>
 
     }
     </>

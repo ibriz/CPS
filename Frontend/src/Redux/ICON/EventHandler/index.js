@@ -114,6 +114,13 @@ export default (event) => {
 
             break;
 
+
+        case 'CANCEL_SIGNING':
+            console.log("CANCEL_SIGNING", JSON.stringify(payload));
+            store.dispatch(signTransaction({ signature: "-1" }));
+
+            break;
+
         case 'RESPONSE_JSON-RPC':
             console.log(payload);
 

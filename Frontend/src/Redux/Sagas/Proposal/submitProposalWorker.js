@@ -43,6 +43,9 @@ function* submitProposalWorker({payload}) {
       }
     ));
   } catch (error) {
+    if(error.message === "-1") {
+      return;
+    }
     NotificationManager.error(error.message, "Submit Proposal Failed");
 
     yield put(submitProposalFailure());

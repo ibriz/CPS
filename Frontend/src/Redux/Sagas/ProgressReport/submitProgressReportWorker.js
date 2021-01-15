@@ -41,6 +41,9 @@ function* submitProgressReportWorker({payload}) {
       }
     ));
   } catch (error) {
+    if(error.message === "-1") {
+      return;
+    }
     NotificationManager.error(error.message, "Submit Progress Report Failed");
     yield put(submitProgressReportFailure());
   }

@@ -33,6 +33,10 @@ async function request({
             payload
           } = await signTransaction(walletAddress);
 
+          if(signature === -1) {
+            throw new Error(-1);
+          }
+
           if(requestSentMessage) {
               NotificationManager.info(requestSentMessage);
           }

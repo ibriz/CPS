@@ -92,6 +92,9 @@ const UnsubscribePage = ({ hasAddress, history }) => {
                                 NotificationManager.success("Unsubscription Success")
                             },
                             failureCallback: (error) => {
+                                if(error === "-1") {
+                                    return;
+                                  }
                                 NotificationManager.error(error, "Unsubscription failed");
 
                             }

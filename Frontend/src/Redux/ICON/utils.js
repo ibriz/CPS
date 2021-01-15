@@ -126,6 +126,12 @@ export function signTransaction(walletAddress) {
         const signature = store.getState().account.signature;
         if (signature) {
           clearInterval(interFunction);
+          if(signature === '-1') {
+            resolve({
+                signature: -1,
+                payload: -1
+            });
+          }
           resolve({
               signature, 
               payload
