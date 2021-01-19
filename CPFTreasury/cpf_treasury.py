@@ -16,7 +16,7 @@ class CPS_TREASURY_INTERFACE(InterfaceScore):
                              _total_installment_count: int): pass
 
 
-class CPF(IconScoreBase):
+class CPF_TREASURY(IconScoreBase):
     _PROPOSAL_BUDGETS = '_proposals_budgets'
     _PROPOSALS_KEYS = '_proposals_keys'
 
