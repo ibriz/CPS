@@ -57,9 +57,9 @@ class CPF(IconScoreBase):
         self._cps_treasury_score = VarDB(self._CPS_TREASURY_SCORE, db, value_type=Address)
         self._cps_score = VarDB(self._CPS_SCORE, db, value_type=Address)
 
-    def on_install(self) -> None:
-        self.treasury_fund.set(icx(1000000))
+    def on_install(self, amount: int = 1_000_000) -> None:
         super().on_install()
+        self.treasury_fund.set(icx(amount))
 
     def on_update(self) -> None:
         super().on_update()
