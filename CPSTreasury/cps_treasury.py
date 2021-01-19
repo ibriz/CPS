@@ -69,8 +69,9 @@ class CPS_TREASURY(IconScoreBase):
     def __init__(self, db: IconScoreDatabase) -> None:
         super().__init__(db)
 
-        self.id = VarDB(self.ID, db, str)
+        self.id = VarDB(self.ID, db, value_type=str)
         self.proposals = ProposalDataDB(db)
+
         self._proposals_keys = ArrayDB(self._PROPOSALS_KEYS, db, value_type=str)
         self._fund_record = DictDB(self._FUND_RECORD, db, value_type=int)
 
@@ -93,7 +94,7 @@ class CPS_TREASURY(IconScoreBase):
 
     @payable
     def fallback(self):
-        revert(f'{self.address} :ICX can only be sent by CPF Treasury Score.')
+        revert(f'ICX can only be sent by CPF Treasury Score.')
 
     def set_id(self, _val: str):
         self.id.set(_val)
@@ -139,8 +140,8 @@ class CPS_TREASURY(IconScoreBase):
         :type _score: :class:`iconservice.base.address.Address`
         :return:
         """
-        if self.msg.sender == self.owner and _score.is_contract:
-            self._cps_score.set(_score)
+        self._validate_owner_score(_score)
+        self._cps_score.set(_score)
 
     @external(readonly=True)
     def get_cps_score(self) -> Address:
@@ -159,8 +160,8 @@ class CPS_TREASURY(IconScoreBase):
         :type _score: :class:`iconservice.base.address.Address`
         :return:
         """
-        if self.msg.sender == self.owner and _score.is_contract:
-            self._cpf_treasury_score.set(_score)
+        self._validate_owner_score(_score)
+        self._cpf_treasury_score.set(_score)
 
     @external(readonly=True)
     def get_cpf_treasury_score(self) -> Address:
@@ -252,12 +253,10 @@ class CPS_TREASURY(IconScoreBase):
         :total_budget: Total Budget for the project (ICX LOOP)
         :sponsor_reward: Reward for the Sponsor ICX Loop
         """
+
+        self._validate_cpf_treasury_score()
+
         proposal_key = _proposals.copy()
-
-        if self.msg.sender != self._cpf_treasury_score.get():
-            revert(f"{self.address} : Can't be called by other account. Only CPF "
-                   f"Treasury Score can send amount to this method. ")
-
         proposal_key[self._STATUS] = self._ACTIVE
 
         self._add_record(proposal_key)
@@ -278,9 +277,7 @@ class CPS_TREASURY(IconScoreBase):
         :type _added_installment_count: int
         :return:
         """
-        if self.msg.sender != self._cpf_treasury_score.get():
-            revert(f"{self.address} : Can't be called by other account. Only CPF "
-                   f"Treasury Score can send amount to this method. ")
+        self._validate_cpf_treasury_score()
 
         prefix = self.proposal_prefix(_ipfs_key)
         _total_budget: int = self.proposals[prefix].total_budget.get()
@@ -295,7 +292,7 @@ class CPS_TREASURY(IconScoreBase):
             self.ProposalFundDeposited(_ipfs_key, _added_budget, f"{_ipfs_key} : Added Budget : "
                                                                  f"{icx(_added_budget)} ICX Successfully")
         else:
-            revert(f"{self.address}: IPFS key doesn't exist")
+            revert(f"IPFS key doesn't exist")
 
     @external
     def send_installment_to_contributor(self, _ipfs_key: str) -> None:
@@ -305,9 +302,7 @@ class CPS_TREASURY(IconScoreBase):
         :param _ipfs_key: Proposal IPFS HASH key
         :return:
         """
-        if self.msg.sender != self._cps_score.get():
-            revert(f"{self.address} : Can't be called by other account. Only CPS "
-                   f" Score can call this method. ")
+        self._validate_cps_score()
 
         if self._check_proposal(_ipfs_key):
             prefix = self.proposal_prefix(_ipfs_key)
@@ -342,9 +337,7 @@ class CPS_TREASURY(IconScoreBase):
         :param _ipfs_key: Proposal IPFS HASH key
         :return:
         """
-        if self.msg.sender != self._cps_score.get():
-            revert(f"{self.address} : Can't be called by other account. Only CPS "
-                   f" Score can call this method. ")
+        self._validate_cps_score()
 
         if self._check_proposal(_ipfs_key):
             prefix = self.proposal_prefix(_ipfs_key)
@@ -380,9 +373,7 @@ class CPS_TREASURY(IconScoreBase):
         :param _ipfs_key: Proposal IPFS HASH key
         """
 
-        if self.msg.sender != self._cps_score.get():
-            revert(f"{self.address} : Can't be called by other account. Only CPS "
-                   f" Score can call this method. ")
+        self._validate_cps_score()
 
         if self._check_proposal(_ipfs_key):
             prefix = self.proposal_prefix(_ipfs_key)
@@ -431,3 +422,20 @@ class CPS_TREASURY(IconScoreBase):
 
         else:
             revert(f'{self.address} : Claim Reward Fails. Available Amount = {_available_amount}.')
+
+    def _validate_owner(self):
+        if self.msg.sender != self.owner:
+            revert(f"Only owner can call this method.")
+
+    def _validate_owner_score(self, _score: Address):
+        self._validate_owner()
+        if not _score.is_contract:
+            revert(f"Target({_score}) is not SCORE.")
+
+    def _validate_cps_score(self):
+        if self.msg.sender != self._cps_score.get():
+            revert(f"Only CPS({self._cps_score.get()}) SCORE can send fund using this method.")
+
+    def _validate_cpf_treasury_score(self):
+        if self.msg.sender != self._cpf_treasury_score.get():
+            revert(f"Only CPF Treasury({self._cpf_treasury_score.get()}) SCORE can send fund using this method.")
