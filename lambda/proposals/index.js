@@ -56,7 +56,7 @@ async function uploadProposal(body) {
 			key: body.ipfsKey,
 			data: JSON.stringify(body),
 		});
-		uploadedProposal.ipfsKey = ipfsKey;
+		uploadedProposal.ipfsKey = body.ipfsKey;
 
 		return uploadedProposal;
 	} catch (error) {
