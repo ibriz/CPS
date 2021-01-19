@@ -70,7 +70,7 @@ class CPF(IconScoreBase):
 
     @payable
     def fallback(self):
-        revert(f'{self.address} :ICX can only be sent using add_fund() method.')
+        revert(f"ICX can only be sent using add_fund() method.")
 
     @external
     def set_maximum_treasury_fund(self, _value: int) -> None:
@@ -80,8 +80,7 @@ class CPF(IconScoreBase):
         :type _value : int
         :return:
         """
-        if self.msg.sender != self.owner:
-            revert(f"{self.address} : Only owner can call this method.")
+        self._validate_owner()
         self.treasury_fund.set(icx(_value))
 
     @external
@@ -92,8 +91,8 @@ class CPF(IconScoreBase):
         :type _score: :class:`iconservice.base.address.Address`
         :return:
         """
-        if self.msg.sender == self.owner and _score.is_contract:
-            self._cps_score.set(_score)
+        self._validate_owner_score(_score)
+        self._cps_score.set(_score)
 
     @external(readonly=True)
     def get_cps_score(self) -> Address:
@@ -112,8 +111,8 @@ class CPF(IconScoreBase):
         :type _score: :class:`iconservice.base.address.Address`
         :return:
         """
-        if self.msg.sender == self.owner and _score.is_contract:
-            self._cps_treasury_score.set(_score)
+        self._validate_owner_score(_score)
+        self._cps_treasury_score.set(_score)
 
     @external(readonly=True)
     def get_cps_treasury_score(self) -> Address:
@@ -133,7 +132,7 @@ class CPF(IconScoreBase):
         try:
             self.icx.transfer(ZERO_WALLET_ADDRESS, amount)
         except BaseException as e:
-            revert(f"{self.address} : Network problem. Burning amount. {e}")
+            revert(f"Network problem. Burning amount. {e}")
 
     @external(readonly=True)
     def get_total_fund(self) -> int:
@@ -152,9 +151,7 @@ class CPF(IconScoreBase):
         :return: None
         """
 
-        if self.msg.sender != self._cps_score.get():
-            revert(f"{self.address} : Only CPS Score can send fund using this method.")
-
+        self._validate_cps_score()
         self._burn_extra_fund()
         self.FundReturned(_address, "Sponsor Bond Returned to Treasury.")
 
@@ -173,8 +170,7 @@ class CPF(IconScoreBase):
         :return:
         """
 
-        if self.msg.sender != self._cps_score.get():
-            revert(f"{self.address} : Can't be called by other account. Only CPS Score can call this method.")
+        self._validate_cps_score()
 
         # Calculating sponsor reward for sponsor and total budget for contributor
         _total_budget = icx(_total_budget)
@@ -182,7 +178,7 @@ class CPF(IconScoreBase):
         total_transfer = _total_budget + _sponsor_reward
 
         if self.icx.get_balance(self.address) < total_transfer:
-            revert(f'{self.address} : Not enough fund in treasury.')
+            revert(f"Not enough fund in treasury.")
 
         if _ipfs_key not in self._proposals_keys:
             self._proposals_keys.put(_ipfs_key)
@@ -203,9 +199,9 @@ class CPF(IconScoreBase):
                 self.ProposalFundTransferred(_ipfs_key, _total_budget, f"Successfully transferred {total_transfer} ICX "
                                                                        f"to CPF Treasury.")
             except BaseException as e:
-                revert(f"{self.address}: Network problem. Sending proposal funds. {e}")
+                revert(f"Network problem. Sending proposal funds. {e}")
         else:
-            revert(f"{self.address} : IPFS key already Exists")
+            revert(f"IPFS key already Exists")
 
     @external
     def update_proposal_fund(self, _ipfs_key: str, _added_budget: int = 0, _total_installment_count: int = 0) -> None:
@@ -217,15 +213,14 @@ class CPF(IconScoreBase):
         :return:
         """
 
-        if self.msg.sender != self._cps_score.get():
-            revert(f"{self.address} : Can't be called by other account. Only CPS Score can call this method. ")
+        self._validate_cps_score()
 
         _total_added_budget = icx(_added_budget)
         _sponsor_reward = _total_added_budget // 50
         total_transfer = _total_added_budget + _sponsor_reward
 
         if self.icx.get_balance(self.address) < total_transfer:
-            revert(f'{self.address} : Not enough fund in treasury.')
+            revert(f"Not enough fund in treasury.")
 
         if _ipfs_key in self._proposals_keys:
             self._proposal_budgets[_ipfs_key] += total_transfer
@@ -235,9 +230,9 @@ class CPF(IconScoreBase):
                                                                             _sponsor_reward, _total_installment_count)
                 self.ProposalFundTransferred(_ipfs_key, _added_budget, "ICX Successfully updated fund")
             except BaseException as e:
-                revert(f"{self.address} : Network problem. Sending proposal funds. {e}")
+                revert(f"Network problem. Sending proposal funds. {e}")
         else:
-            revert(f"{self.address} : IPFS key doesn't exist")
+            revert(f"IPFS key doesn't exist")
 
     @external
     @payable
@@ -248,8 +243,7 @@ class CPF(IconScoreBase):
         :param _ipfs_key: Proposal IPFS Hash
         :return:
         """
-        if self.msg.sender != self._cps_treasury_score.get():
-            revert(f"{self.address} : Can't be called by other account. Only CPS Treasury can send the fund. ")
+        self._validate_cps_treasury_score()
 
         if _ipfs_key in self._proposals_keys:
             _budget = self._proposal_budgets[_ipfs_key]
@@ -259,7 +253,7 @@ class CPF(IconScoreBase):
             self.ProposalDisqualified(_ipfs_key, f"Proposal disqualified. "
                                                  f"{self.msg.value} returned back to Treasury")
         else:
-            revert(f"{self.address} : IPFS key doesn't exist")
+            revert(f"IPFS key doesn't exist")
 
     @external
     @payable
@@ -304,3 +298,20 @@ class CPF(IconScoreBase):
 
         _proposals_dict_list = {"data": _proposals_details_list, "count": count}
         return _proposals_dict_list
+
+    def _validate_owner(self):
+        if self.msg.sender != self.owner:
+            revert(f"Only owner can call this method.")
+
+    def _validate_owner_score(self, _score: Address):
+        self._validate_owner()
+        if not _score.is_contract:
+            revert(f"Target({_score}) is not SCORE.")
+
+    def _validate_cps_score(self):
+        if self.msg.sender != self._cps_score.get():
+            revert(f"Only CPS({self._cps_score.get()}) SCORE can send fund using this method.")
+
+    def _validate_cps_treasury_score(self):
+        if self.msg.sender != self._cps_treasury_score.get():
+            revert(f"Only CPS Treasury({self._cps_treasury_score.get()}) SCORE can send fund using this method.")
