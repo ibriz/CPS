@@ -8,6 +8,7 @@ var { v4: uuidv4 } = require('uuid');
 // Redis initialize
 const client = redis.createClient(process.env.REDIS_URL);
 const getAsync = promisify(client.get).bind(client);
+const delAsync = promisify(client.del).bind(client);
 
 // SES initialize
 const SES = new AWS.SES({
@@ -42,13 +43,17 @@ async function send_email(emailAddress, body) {
 
 async function uploadProposal(body) {
 	try {
-		const ipfsKey = body.type + uuidv4();
-		body.ipfsKey = ipfsKey;
+		if(!body.ipfsKey)	{
+			const ipfsKey = body.type + uuidv4();
+			body.ipfsKey = ipfsKey;
+		} else {
+			await delAsync(`address:${body.address}:type:${body.type}:drafts:${body.ipfsKey}`);
+		}
 
 		var uploadedProposal = await fleekStorage.upload({
 			apiKey: process.env.API_KEY,
 			apiSecret: process.env.API_SECRET,
-			key: ipfsKey,
+			key: body.ipfsKey,
 			data: JSON.stringify(body),
 		});
 		uploadedProposal.ipfsKey = ipfsKey;
