@@ -208,9 +208,13 @@ async function getUserIntialPrompt(payload) {
 }
 
 exports.handler = async (event) => {
+	let responseHeader = {
+		'Access-Control-Allow-Origin': '*',
+		'Access-Control-Allow-Headers': '*'
+	};
 	try {
-		const statusCode = 200;
-		var user;
+		let statusCode = 200;
+		let user;
 
 		console.log(event);
 
@@ -224,9 +228,11 @@ exports.handler = async (event) => {
 		} else if (event.httpMethod === 'PUT') {
 			user = await unsubscribeUser(event);
 		} else if (event.httpMethod === 'GET') {
-			if (event.path === process.env.EMAIL_VERIFY_PATH)
+			if (event.path === process.env.EMAIL_VERIFY_PATH){
 				user = await verifyUserEmail(event);
-			else if (event.path === process.env.INTIAL_PROMPT_PATH)
+				statusCode = 301;
+				responseHeader.Location = process.env.FRONTEND_URL + '/email-verified';
+			} else if (event.path === process.env.INTIAL_PROMPT_PATH)
 				user = await getUserIntialPrompt(event);
 			else
 				user = await getUser(event);
@@ -236,10 +242,7 @@ exports.handler = async (event) => {
 
 		const response = {
 			statusCode: statusCode,
-			headers: {
-				'Access-Control-Allow-Origin': '*',
-				'Access-Control-Allow-Headers': '*'
-			},
+			headers: responseHeader,
 			body: user
 		};
 		console.log(response);
@@ -249,10 +252,7 @@ exports.handler = async (event) => {
 
 		return {
 			statusCode: err.statusCode ? err.statusCode : 500,
-			headers: {
-				'Access-Control-Allow-Origin': '*',
-				'Access-Control-Allow-Headers': '*'
-			},
+			headers: responseHeader,
 			body: JSON.stringify({
 				error: err.name ? err.name : 'Exception',
 				message: err.message ? err.message : 'Unknown error',
