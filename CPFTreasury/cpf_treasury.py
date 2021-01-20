@@ -1,7 +1,5 @@
 from iconservice import *
 
-ZERO_WALLET_ADDRESS = Address.from_string('hx0000000000000000000000000000000000000000')
-
 
 def icx(value: int) -> int:
     return value * 10 ** 18
@@ -130,7 +128,8 @@ class CPF_TREASURY(IconScoreBase):
         :return: none
         """
         try:
-            self.icx.transfer(ZERO_WALLET_ADDRESS, amount)
+            sys_interface = self.create_interface_score(SYSTEM_SCORE_ADDRESS, InterfaceSystemScore)
+            sys_interface.icx(amount).burn()
         except BaseException as e:
             revert(f"Network problem. Burning amount. {e}")
 

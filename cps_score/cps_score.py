@@ -53,10 +53,6 @@ class CPS_Score(IconScoreBase):
         pass
 
     @eventlog(indexed=1)
-    def TokenBurn(self, _sender_address: Address, note: str):
-        pass
-
-    @eventlog(indexed=1)
     def ProgressReportSubmitted(self, _sender_address: Address, _project_title: str):
         pass
 
@@ -198,8 +194,8 @@ class CPS_Score(IconScoreBase):
         :return: none
         """
         try:
-            self.icx.transfer(ZERO_WALLET_ADDRESS, amount)
-            self.TokenBurn(self.msg.sender, f"{self.msg.value} ICX transferred to burn wallet address.")
+            sys_interface = self.create_interface_score(SYSTEM_SCORE_ADDRESS, InterfaceSystemScore)
+            sys_interface.icx(amount).burn()
         except BaseException as e:
             revert(f"{self.address} : Network problem. Sending proposal funds. {e}")
 
@@ -1045,7 +1041,7 @@ class CPS_Score(IconScoreBase):
         return sponsors_dict
 
     @external(readonly=True)
-    def get_proposal_details(self, _status: str, _wallet_address: Address = ZERO_WALLET_ADDRESS, _start_index: int = 0,
+    def get_proposal_details(self, _status: str, _wallet_address: Address = None, _start_index: int = 0,
                              _end_index: int = 20) -> dict:
         if _status not in self.STATUS_TYPE:
             return {-1: "Not a valid status."}
