@@ -349,10 +349,10 @@ class CPS_Score(IconScoreBase):
                         self.unregistered_preps[prep] = _data_out
 
         self.registered_preps.put(_address)
+        self.RegisterPRep(self.msg.sender, 'P-Rep Registered.')
 
         if self.period_name.get() == APPLICATION_PERIOD:
             self.valid_preps.put(_address)
-            self.RegisterPRep(self.msg.sender, 'P-Rep Registered.')
 
     def _remove_sponsor(self, _address: Address) -> None:
         """
