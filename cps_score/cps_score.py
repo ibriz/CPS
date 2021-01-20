@@ -175,10 +175,6 @@ class CPS_Score(IconScoreBase):
         """
         return "CPS_SCORE"
 
-    def only_admin(self):
-        if self.msg.sender not in self.admins:
-            revert(f"{self.address} : Only Admins can call this method.")
-
     def set_id(self, _val: str):
         self.id.set(_val)
 
@@ -242,9 +238,8 @@ class CPS_Score(IconScoreBase):
         :type _score: :class:`iconservice.base.address.Address`
         :return:
         """
-        self.only_admin()
-        if _score.is_contract:
-            self.cps_treasury_score.set(_score)
+        self._validate_admin_score(_score)
+        self.cps_treasury_score.set(_score)
 
     @external
     def set_cpf_treasury_score(self, _score: Address) -> None:
@@ -254,9 +249,8 @@ class CPS_Score(IconScoreBase):
         :type _score: :class:`iconservice.base.address.Address`
         :return:
         """
-        self.only_admin()
-        if _score.is_contract:
-            self.cpf_score.set(_score)
+        self._validate_admin_score(_score)
+        self.cpf_score.set(_score)
 
     def _get_preps_address(self) -> list:
         """
@@ -802,7 +796,7 @@ class CPS_Score(IconScoreBase):
 
         :return:
         """
-        self.only_admin()
+        self._validate_admins()
 
         if len(_penalty) != 3:
             revert(f"{self.address} : Exactly 3 Penalty amount Required.")
@@ -1773,3 +1767,12 @@ class CPS_Score(IconScoreBase):
 
         # Clear all data from the ArrayDB
         ArrayDBUtils.array_db_clear(self.inactive_preps)
+
+    def _validate_admins(self):
+        if self.msg.sender not in self.admins:
+            revert(f"Only Admins can call this method.")
+
+    def _validate_admin_score(self, _score: Address):
+        self._validate_admins()
+        if not _score.is_contract:
+            revert(f"Target({_score}) is not SCORE.")
