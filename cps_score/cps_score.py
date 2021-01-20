@@ -835,20 +835,16 @@ class CPS_Score(IconScoreBase):
 
     @only_owner
     @external
-    def set_initialBlock(self, _block_height: int) -> None:
+    def set_initialBlock(self) -> None:
         """
         To set the initial block of application period to start (once only)
-        :param _block_height : initial block height to start the Application Period
-
         :return: X
         """
 
         self.set_PReps()
-        if _block_height < self.block_height:
-            _block_height = self.block_height
 
-        self.initial_block.set(_block_height)
-        self.next_block.set(_block_height + BLOCKS_DAY_COUNT * DAY_COUNT)
+        self.initial_block.set(self.block_height)
+        self.next_block.set(self.block_height + BLOCKS_DAY_COUNT * DAY_COUNT)
         self.period_name.set(APPLICATION_PERIOD)
         self.previous_period_name.set("None")
 
