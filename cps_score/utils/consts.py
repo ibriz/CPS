@@ -13,7 +13,7 @@ MINIMUM_PREPS = 7
 MAX_PROJECT_PERIOD = 6
 
 # 2/3 Vote
-MAJORITY = 0.666
+MAJORITY = 0.67
 
 # Period Interval Time
 DAY_COUNT = 1
