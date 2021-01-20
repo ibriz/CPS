@@ -220,11 +220,7 @@ class CPS_Score(IconScoreBase):
         :return:
         """
         if _address != self.owner:
-            prep = self.admins.pop()
-            if prep != _address:
-                for x in range(0, len(self.admins)):
-                    if self.admins[x] == _address:
-                        self.admins[x] = prep
+            self._remove_array_item(self.admins, _address)
 
     @external
     def set_cps_treasury_score(self, _score: Address) -> None:
@@ -307,17 +303,8 @@ class CPS_Score(IconScoreBase):
         if self.msg.sender not in self.valid_preps and self.msg.sender not in self.registered_preps:
             revert(f"{self.address} : P-Rep is not registered yet.")
 
-        _data_out = self.valid_preps.pop()
-        if _data_out != self.msg.sender:
-            for prep in range(0, len(self.valid_preps)):
-                if self.valid_preps[prep] == self.msg.sender:
-                    self.valid_preps[prep] = _data_out
-
-        registered_out = self.registered_preps.pop()
-        if registered_out != self.msg.sender:
-            for prep in range(0, len(self.registered_preps)):
-                if self.registered_preps[prep] == self.msg.sender:
-                    self.registered_preps[prep] = registered_out
+        self._remove_array_item(self.valid_preps, self.msg.sender)
+        self._remove_array_item(self.registered_preps, self.msg.sender)
 
         self.unregistered_preps.put(self.msg.sender)
         self.UnRegisterPRep(self.msg.sender, f'{self.msg.sender} has ben unregistered successfully.')
@@ -342,11 +329,7 @@ class CPS_Score(IconScoreBase):
             revert(f"{self.address} : You are in denylist. To register, You've to pay Penalty.")
 
         if _address in self.unregistered_preps:
-            _data_out = self.unregistered_preps.pop()
-            if _data_out != _address:
-                for prep in range(0, len(self.unregistered_preps)):
-                    if self.unregistered_preps[prep] == _address:
-                        self.unregistered_preps[prep] = _data_out
+            self._remove_array_item(self.unregistered_preps, _address)
 
         self.registered_preps.put(_address)
         self.RegisterPRep(self.msg.sender, 'P-Rep Registered.')
@@ -362,11 +345,7 @@ class CPS_Score(IconScoreBase):
         :return:
         """
         if _address in self.sponsors:
-            sponsor_address = self.sponsors.pop()
-            if sponsor_address != _address:
-                for index in range(0, len(self.sponsors)):
-                    if self.sponsors[index] == _address:
-                        self.sponsors[index] = sponsor_address
+            self._remove_array_item(self.sponsors, _address)
 
     def _remove_contributor(self, _address: Address) -> None:
         """
@@ -376,11 +355,7 @@ class CPS_Score(IconScoreBase):
         :return:
         """
         if _address in self.contributors:
-            contributor_address = self.contributors.pop()
-            if contributor_address != _address:
-                for index in range(0, len(self.contributors)):
-                    if self.contributors[index] == _address:
-                        self.contributors[index] = contributor_address
+            self._remove_array_item(self.contributors, _address)
 
     def _check_proposal(self, _proposal_key: str) -> bool:
         """
@@ -451,12 +426,7 @@ class CPS_Score(IconScoreBase):
         self.proposals[prefix].timestamp.set(self.now())
         self.proposals[prefix].status.set(_status)
 
-        _data_out = self.proposals_status[_current_status].pop()
-        if _data_out != _proposal_key:
-            for p in range(0, len(self.proposals_status[_current_status])):
-                if self.proposals_status[_current_status][p] == _proposal_key:
-                    self.proposals_status[_current_status][p] = _data_out
-
+        self._remove_array_item(self.proposals_status[_current_status], _proposal_key)
         self.proposals_status[_status].put(_proposal_key)
 
     def _update_percentage_completed(self, _key: str, _percent_completed: int) -> None:
@@ -492,11 +462,7 @@ class CPS_Score(IconScoreBase):
         self.progress_reports[prefix].timestamp.set(self.now())
         self.progress_reports[prefix].status.set(_status)
 
-        _data_out = self.progress_report_status[_current_status].pop()
-        if _data_out != progress_report_key:
-            for p in range(0, len(self.progress_report_status[_current_status])):
-                if self.progress_report_status[_current_status][p] == progress_report_key:
-                    self.progress_report_status[_current_status][p] = _data_out
+        self._remove_array_item(self.progress_report_status[_current_status], progress_report_key)
 
         self.progress_report_status[_status].put(progress_report_key)
 
@@ -818,11 +784,7 @@ class CPS_Score(IconScoreBase):
         if self.msg.value != to_loop(_penalty_amount):
             revert(f"{self.address} :  Please pay Penalty amount of {_penalty_amount} ICX to register as a P-Rep.")
 
-        _prep = self.denylist.pop()
-        if _prep != self.msg.sender:
-            for prep in range(0, len(self.denylist)):
-                if self.denylist[prep] == self.msg.sender:
-                    self.denylist[prep] = _prep
+        self._remove_array_item(self.denylist, self.msg.sender)
 
         self.valid_preps.put(self.msg.sender)
         self._burn(self.msg.value)
@@ -1741,11 +1703,7 @@ class CPS_Score(IconScoreBase):
         """
 
         for _prep in self.inactive_preps:
-            _data_out = self.registered_preps.pop()
-            if _data_out != _prep:
-                for prep in range(0, len(self.registered_preps)):
-                    if self.registered_preps[prep] == _prep:
-                        self.registered_preps[prep] = _data_out
+            self._remove_array_item(self.registered_preps, _prep)
 
             self.denylist.put(_prep)
             if self.preps_denylist[str(_prep)] == "":
@@ -1768,3 +1726,10 @@ class CPS_Score(IconScoreBase):
         self._validate_admins()
         if not _score.is_contract:
             revert(f"Target({_score}) is not SCORE.")
+
+    def _remove_array_item(self, array_db, target):
+        _out: 'Address' = array_db.pop()
+        if _out != target:
+            for index in range(0, len(array_db)):
+                if array_db[index] == target:
+                    array_db[index] = _out
