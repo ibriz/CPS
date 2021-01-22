@@ -90,7 +90,7 @@ class CPS_TREASURY(IconScoreBase):
 
     @payable
     def fallback(self):
-        revert(f'ICX can only be sent by CPF Treasury Score.')
+        revert(f"{self.address} : ICX can only be sent by CPF Treasury Score.")
 
     def set_id(self, _val: str):
         self.id.set(_val)
@@ -288,7 +288,7 @@ class CPS_TREASURY(IconScoreBase):
             self.ProposalFundDeposited(_ipfs_key, _added_budget,
                                        f"{_ipfs_key} : Added Budget : {_added_budget} Successfully")
         else:
-            revert(f"IPFS key doesn't exist")
+            revert(f"{self.address} : IPFS key doesn't exist")
 
     @external
     def send_installment_to_contributor(self, _ipfs_key: str) -> None:
@@ -323,7 +323,7 @@ class CPS_TREASURY(IconScoreBase):
                 self.ProposalFundSent(contributor_address, _installment_amount,
                                       f"Installment No. {_installment_count + 1} added to contributors address.")
             except BaseException as e:
-                revert(f'{self.address}: Network problem. Sending project funds. {e}')
+                revert(f"{self.address} : Network problem. Sending project funds. {e}")
 
     @external
     def send_reward_to_sponsor(self, _ipfs_key: str) -> None:
@@ -359,7 +359,7 @@ class CPS_TREASURY(IconScoreBase):
                 self.ProposalFundSent(_sponsor_address, _installment_amount,
                                       f"Installment No. {_sponsor_reward_count + 1} added to sponsor address.")
             except BaseException as e:
-                revert(f'{self.address}: Network problem. Sending project funds. {e}')
+                revert(f"{self.address} : Network problem. Sending project funds. {e}")
 
     @external
     def disqualify_project(self, _ipfs_key: str) -> None:
@@ -394,8 +394,7 @@ class CPS_TREASURY(IconScoreBase):
 
                 self.ProposalDisqualified(_ipfs_key, f"{_ipfs_key}, Proposal disqualified")
             except BaseException as e:
-                revert(
-                    f"{self.address} : Network problem. Sending proposal funds. {e}")
+                revert(f"{self.address} : Network problem. Sending proposal funds. {e}")
         else:
             revert(f"{self.address} : Provided IPFS key not found.")
 
@@ -417,21 +416,21 @@ class CPS_TREASURY(IconScoreBase):
                 revert(f"{self.address} : Network problem. Claiming Reward{e}")
 
         else:
-            revert(f'{self.address} : Claim Reward Fails. Available Amount = {_available_amount}.')
+            revert(f"{self.address} :Claim Reward Fails. Available Amount = {_available_amount}.")
 
     def _validate_owner(self):
         if self.msg.sender != self.owner:
-            revert(f"Only owner can call this method.")
+            revert(f"{self.address} :Only owner can call this method.")
 
     def _validate_owner_score(self, _score: Address):
         self._validate_owner()
         if not _score.is_contract:
-            revert(f"Target({_score}) is not SCORE.")
+            revert(f"{self.address} :Target({_score}) is not SCORE.")
 
     def _validate_cps_score(self):
         if self.msg.sender != self._cps_score.get():
-            revert(f"Only CPS({self._cps_score.get()}) SCORE can send fund using this method.")
+            revert(f"{self.address} :Only CPS({self._cps_score.get()}) SCORE can send fund using this method.")
 
     def _validate_cpf_treasury_score(self):
         if self.msg.sender != self._cpf_treasury_score.get():
-            revert(f"Only CPF Treasury({self._cpf_treasury_score.get()}) SCORE can send fund using this method.")
+            revert(f"{self.address} :Only CPF Treasury({self._cpf_treasury_score.get()}) SCORE can send fund using this method.")

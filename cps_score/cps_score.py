@@ -1716,12 +1716,12 @@ class CPS_Score(IconScoreBase):
 
     def _validate_admins(self):
         if self.msg.sender not in self.admins:
-            revert(f"Only Admins can call this method.")
+            revert(f"{self.address} : Only Admins can call this method.")
 
     def _validate_admin_score(self, _score: Address):
         self._validate_admins()
         if not _score.is_contract:
-            revert(f"Target({_score}) is not SCORE.")
+            revert(f"{self.address} : Target({_score}) is not SCORE.")
 
     def _remove_array_item(self, array_db, target):
         _out: 'Address' = array_db.pop()
