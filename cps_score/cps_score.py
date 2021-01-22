@@ -485,9 +485,6 @@ class CPS_Score(IconScoreBase):
         """
         self.update_period()
 
-        if self.period_name.get() != APPLICATION_PERIOD:
-            revert(f"{self.address} : Proposals can only be submitted on Application Period")
-
         proposal_key = _proposals.copy()
 
         # TODO
@@ -530,8 +527,6 @@ class CPS_Score(IconScoreBase):
         :return:
         """
         self.update_period()
-        if self.period_name.get() != APPLICATION_PERIOD:
-            revert(f"{self.address} : Progress Reports can only be submitted on Application Period")
 
         _contributor_address = self.msg.sender
         _progress = _progress_report.copy()
@@ -596,8 +591,6 @@ class CPS_Score(IconScoreBase):
         :type _ipfs_key : str
         """
         self.update_period()
-        if self.period_name.get() != APPLICATION_PERIOD:
-            revert(f"{self.address} : Sponsorship Voting can only be done on Application Period")
 
         _proposal_details = self._get_proposal_details(_ipfs_key)
         _status = _proposal_details[STATUS]
@@ -645,8 +638,6 @@ class CPS_Score(IconScoreBase):
         :type _vote_reason : str
         """
         self.update_period()
-        if self.period_name.get() != VOTING_PERIOD:
-            revert(f"{self.address} : Voting can only be done on Voting Period")
 
         if self.msg.sender not in self.valid_preps:
             revert(f"{self.address} : Voting can only be done by registered P-Reps")
@@ -701,8 +692,6 @@ class CPS_Score(IconScoreBase):
         """
 
         self.update_period()
-        if self.period_name.get() != VOTING_PERIOD:
-            revert(f"{self.address} : Voting can only be done on Voting Period")
 
         if self.msg.sender not in self.valid_preps:
             revert(f"{self.address} : Voting can only be done only by Top 100 P-Reps")
@@ -761,6 +750,7 @@ class CPS_Score(IconScoreBase):
         for amount in _penalty:
             self.penalty_amount.put(amount)
 
+    @application_period
     @payable
     @external
     def pay_prep_penalty(self):
@@ -769,8 +759,6 @@ class CPS_Score(IconScoreBase):
         :return:
         """
         self.update_period()
-        if self.period_name.get() != APPLICATION_PERIOD:
-            revert(f"{self.address} : Paying Penalty can only be done on Application Period")
 
         if self.msg.sender not in self.denylist:
             revert(f"{self.address} : {self.msg.sender} not in denylist.")
@@ -1075,9 +1063,6 @@ class CPS_Score(IconScoreBase):
 
         :return: List of all proposals_details
         """
-
-        if _wallet_address == "":
-            return {"Message": "Enter wallet address."}
 
         _proposals_list = []
         _proposals_keys = self.proposals_key_list
