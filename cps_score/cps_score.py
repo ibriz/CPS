@@ -519,7 +519,6 @@ class CPS_Score(IconScoreBase):
 
     @application_period
     @external
-    @payable
     def submit_progress_report(self, _progress_report: ProgressReportAttributes) -> None:
         """
         Submits a progress report, with ipfs_hash and report hash
