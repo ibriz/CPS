@@ -1,11 +1,7 @@
-from .proposal_data import *
 from iconservice import *
+from .proposal_data import *
 
 PROPOSAL_DB_PREFIX = b'proposal'
-
-
-def icx(value: int) -> int:
-    return value * 10 ** 18
 
 
 class ProposalAttributes(TypedDict):
@@ -250,8 +246,8 @@ class CPS_TREASURY(IconScoreBase):
         :project_duration: Total Duration month count
         :sponsor_address: Sponsor P-Rep Address
         :contributor_address: Contributor Address
-        :total_budget: Total Budget for the project (ICX LOOP)
-        :sponsor_reward: Reward for the Sponsor ICX Loop
+        :total_budget: Total Budget for the project (LOOP)
+        :sponsor_reward: Reward for the Sponsor (Loop)
         """
 
         self._validate_cpf_treasury_score()
@@ -261,7 +257,7 @@ class CPS_TREASURY(IconScoreBase):
 
         self._add_record(proposal_key)
         self.ProposalFundDeposited(proposal_key[self._IPFS_HASH], proposal_key[self._TOTAL_BUDGET],
-                                   f"Received {self.msg.value} ICX fund from CPF.")
+                                   f"Received {self.msg.value} fund from CPF.")
 
     @external
     @payable
@@ -289,8 +285,8 @@ class CPS_TREASURY(IconScoreBase):
             self.proposals[prefix].sponsor_reward.set(_sponsor_reward + _added_sponsor_reward)
             self.proposals[prefix].project_duration.set(_total_duration + _added_installment_count)
 
-            self.ProposalFundDeposited(_ipfs_key, _added_budget, f"{_ipfs_key} : Added Budget : "
-                                                                 f"{icx(_added_budget)} ICX Successfully")
+            self.ProposalFundDeposited(_ipfs_key, _added_budget,
+                                       f"{_ipfs_key} : Added Budget : {_added_budget} Successfully")
         else:
             revert(f"IPFS key doesn't exist")
 

@@ -107,3 +107,6 @@ ABSTAIN = "_abstain"
 ACCEPT = "_accept"
 YES = "yes"
 NO = "no"
+
+# Sponsor Fee
+SPONSOR_FEE = 50

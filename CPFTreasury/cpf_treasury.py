@@ -1,8 +1,7 @@
 from iconservice import *
 
-
-def icx(value: int) -> int:
-    return value * 10 ** 18
+# ICX Multiplier
+MULTIPLIER = 10 ** 18
 
 
 class CPS_TREASURY_INTERFACE(InterfaceScore):
@@ -55,9 +54,9 @@ class CPF_TREASURY(IconScoreBase):
         self._cps_treasury_score = VarDB(self._CPS_TREASURY_SCORE, db, value_type=Address)
         self._cps_score = VarDB(self._CPS_SCORE, db, value_type=Address)
 
-    def on_install(self, amount: int = 1_000_000) -> None:
+    def on_install(self, amount: int = 1_000_000 * MULTIPLIER) -> None:
         super().on_install()
-        self.treasury_fund.set(icx(amount))
+        self.treasury_fund.set(amount)
 
     def on_update(self) -> None:
         super().on_update()
@@ -74,12 +73,12 @@ class CPF_TREASURY(IconScoreBase):
     def set_maximum_treasury_fund(self, _value: int) -> None:
         """
         Set the maximum Treasury fund. Default 1M ICX
-        :param _value: Value in ICX
+        :param _value: Value in Loop
         :type _value : int
         :return:
         """
         self._validate_owner()
-        self.treasury_fund.set(icx(_value))
+        self.treasury_fund.set(_value)
 
     @external
     def set_cps_score(self, _score: Address) -> None:
@@ -172,7 +171,7 @@ class CPF_TREASURY(IconScoreBase):
         self._validate_cps_score()
 
         # Calculating sponsor reward for sponsor and total budget for contributor
-        _total_budget = icx(_total_budget)
+        # TODO what is 50?
         _sponsor_reward = _total_budget // 50
         total_transfer = _total_budget + _sponsor_reward
 
@@ -195,8 +194,8 @@ class CPF_TREASURY(IconScoreBase):
                 cps_treasury_score = self.create_interface_score(self._cps_treasury_score.get(), CPS_TREASURY_INTERFACE)
                 cps_treasury_score.icx(total_transfer).deposit_proposal_fund(params)
 
-                self.ProposalFundTransferred(_ipfs_key, _total_budget, f"Successfully transferred {total_transfer} ICX "
-                                                                       f"to CPF Treasury.")
+                self.ProposalFundTransferred(_ipfs_key, _total_budget, f"Successfully transferred "
+                                                                       f"{total_transfer} to CPF Treasury.")
             except BaseException as e:
                 revert(f"Network problem. Sending proposal funds. {e}")
         else:
@@ -214,7 +213,8 @@ class CPF_TREASURY(IconScoreBase):
 
         self._validate_cps_score()
 
-        _total_added_budget = icx(_added_budget)
+        _total_added_budget = _added_budget
+        # TODO what is 50?
         _sponsor_reward = _total_added_budget // 50
         total_transfer = _total_added_budget + _sponsor_reward
 
@@ -227,7 +227,7 @@ class CPF_TREASURY(IconScoreBase):
                 cps_treasury_score = self.create_interface_score(self._cps_treasury_score.get(), CPS_TREASURY_INTERFACE)
                 cps_treasury_score.icx(total_transfer).update_proposal_fund(_ipfs_key, _total_added_budget,
                                                                             _sponsor_reward, _total_installment_count)
-                self.ProposalFundTransferred(_ipfs_key, _added_budget, "ICX Successfully updated fund")
+                self.ProposalFundTransferred(_ipfs_key, _added_budget, "Successfully updated fund")
             except BaseException as e:
                 revert(f"Network problem. Sending proposal funds. {e}")
         else:

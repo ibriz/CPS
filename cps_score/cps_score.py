@@ -7,10 +7,6 @@ from .utils.utils import *
 from iconservice import *
 
 
-def to_loop(value: int) -> int:
-    return value * 10 ** 18
-
-
 class ProposalAttributes(TypedDict):
     ipfs_hash: str
     project_title: str
@@ -501,15 +497,15 @@ class CPS_Score(IconScoreBase):
         if proposal_key[PROJECT_DURATION] > MAX_PROJECT_PERIOD:
             revert(f'{self.address} : Maximum Project Duration exceeds 6 months.')
 
-        if to_loop(proposal_key[TOTAL_BUDGET]) > self.get_remaining_fund():
+        if proposal_key[TOTAL_BUDGET] > self.get_remaining_fund():
             revert(f'{self.address} : Budget Exceeds than Treasury Amount. '
-                   f'{self.get_remaining_fund() // MULTIPLIER} ICX')
+                   f'{self.get_remaining_fund()}')
 
         if proposal_key[SPONSOR_ADDRESS] not in self.valid_preps:
             revert(f"{self.address} : Sponsor P-Rep not a Top 100 P-Rep.")
 
-        if self.msg.value != to_loop(50):
-            revert(f"{self.address} : Deposit 50 ICX to submit a proposal.")
+        if self.msg.value != SPONSOR_FEE * MULTIPLIER:
+            revert(f"{self.address} : Deposit {SPONSOR_FEE} to submit a proposal.")
 
         proposal_key.pop(IPFS_LINK, None)
         proposal_key[TIMESTAMP] = self.now()
@@ -559,9 +555,9 @@ class CPS_Score(IconScoreBase):
         _progress[BUDGET_ADJUSTMENT_STATUS] = "N/A"
 
         if _progress[BUDGET_ADJUSTMENT]:
-            if to_loop(_progress[ADDITIONAL_BUDGET]) > self.get_remaining_fund():
+            if _progress[ADDITIONAL_BUDGET] > self.get_remaining_fund():
                 revert(f'{self.address} : Additional Budget Exceeds than Treasury Amount. '
-                       f'{self.get_remaining_fund() // MULTIPLIER} ICX')
+                       f'{self.get_remaining_fund()}')
             self.budget_approvals_list.put(_progress[REPORT_HASH])
             _progress[BUDGET_ADJUSTMENT_STATUS] = self._PENDING
 
@@ -618,7 +614,7 @@ class CPS_Score(IconScoreBase):
             if _status == self._SPONSOR_PENDING:
                 _budget: int = _proposal_details[TOTAL_BUDGET]
 
-                if self.msg.value != to_loop(_budget) // 10:
+                if self.msg.value != _budget // 10:
                     revert(f"{self.address} : Deposit 10% of the total budget of the project.")
 
                 self._update_proposal_status(_ipfs_key, self._PENDING)
@@ -781,15 +777,15 @@ class CPS_Score(IconScoreBase):
 
         _penalty_amount = self._get_penalty_amount(self.msg.sender)
 
-        if self.msg.value != to_loop(_penalty_amount):
-            revert(f"{self.address} :  Please pay Penalty amount of {_penalty_amount} ICX to register as a P-Rep.")
+        if self.msg.value != _penalty_amount:
+            revert(f"{self.address} :  Please pay Penalty amount of {_penalty_amount} to register as a P-Rep.")
 
         self._remove_array_item(self.denylist, self.msg.sender)
 
         self.valid_preps.put(self.msg.sender)
         self._burn(self.msg.value)
         self.PRepPenalty(self.msg.sender,
-                         f"{self.msg.value // 10 ** 18} ICX Penalty Received. P-Rep removed from Denylist.")
+                         f"{self.msg.value} Penalty Received. P-Rep removed from Denylist.")
 
     @only_owner
     @external
@@ -1528,7 +1524,7 @@ class CPS_Score(IconScoreBase):
                 try:
                     self.icx.transfer(_sponsor_address, _sponsor_deposit_amount)
                     self.SponsorBondReturned(_sponsor_address,
-                                             f'{_sponsor_deposit_amount // 10 ** 18} ICX returned to sponsor address.')
+                                             f'{_sponsor_deposit_amount} returned to sponsor address.')
                 except BaseException as e:
                     revert(f"{self.address} : Network problem. Sending back Sponsor Deposit fund. {e}")
 
@@ -1619,7 +1615,7 @@ class CPS_Score(IconScoreBase):
                     # Transferring the sponsor bond deposit to CPF after the project being disqualified
                     cpf_treasury_score.icx(_sponsor_deposit_amount).return_fund_amount(_sponsor_address)
                     self.SponsorBondReturned(self.cpf_score.get(),
-                                             f'Project Disqualified. {_sponsor_deposit_amount // 10 ** 18} ICX '
+                                             f'Project Disqualified. {_sponsor_deposit_amount} '
                                              f'returned to CPF Treasury Address.')
 
     def _check_progress_report_submission(self):
@@ -1655,7 +1651,7 @@ class CPS_Score(IconScoreBase):
                         # Transferring the sponsor bond deposit to CPF after the project being disqualified
                         cpf_treasury_score.icx(_sponsor_deposit_amount).return_fund_amount(_sponsor_address)
                         self.SponsorBondReturned(self.cpf_score.get(),
-                                                 f'Project Disqualified. {_sponsor_deposit_amount // 10 ** 18} ICX '
+                                                 f'Project Disqualified. {_sponsor_deposit_amount} '
                                                  f'returned to CPF Treasury Address.')
 
     def _update_budget_adjustments(self, _budget_key: str):
