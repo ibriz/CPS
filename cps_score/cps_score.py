@@ -181,7 +181,7 @@ class CPS_Score(IconScoreBase):
 
     @payable
     def fallback(self):
-        revert(f'{self.address} :ICX can only be sent while submitting a proposal or paying the penalty.')
+        revert(f"{self.address} :ICX can only be sent while submitting a proposal or paying the penalty.")
 
     def _burn(self, amount: int) -> None:
         """
@@ -353,18 +353,6 @@ class CPS_Score(IconScoreBase):
         if _address in self.contributors:
             self._remove_array_item(self.contributors, _address)
 
-    def _check_proposal(self, _proposal_key: str) -> bool:
-        """
-        Check if the _proposal_key is already set or not
-        :param _proposal_key: Proposal IPFS Hash
-        :type _proposal_key: str
-        :return: bool
-        """
-        if _proposal_key not in self.get_proposal_keys():
-            return False
-        else:
-            return True
-
     def _check_progress_report(self, _progress_key: str) -> bool:
         """
         Check if the _progress_key is already set or not
@@ -430,12 +418,11 @@ class CPS_Score(IconScoreBase):
         if 0 <= _percent_completed <= 100:
             self.proposals[prefix].percentage_completed.set(_percent_completed)
         else:
-            revert(f'{self.address} : Not valid percentage value.')
+            revert(f"{self.address} : Not valid percentage value.")
 
     def _add_proposals(self, _proposal: ProposalAttributes) -> None:
         proposal_data_obj = createProposalDataObject(_proposal)
-        if not self._check_proposal(proposal_data_obj.ipfs_hash):
-            self._add_new_proposal(proposal_data_obj.ipfs_hash)
+        self._add_new_proposal(proposal_data_obj.ipfs_hash)
         prefix = self.proposal_prefix(proposal_data_obj.ipfs_hash)
         addDataToProposalDB(prefix, self.proposals, proposal_data_obj)
 
@@ -491,12 +478,15 @@ class CPS_Score(IconScoreBase):
         if self.msg.sender.is_contract:
             revert(f"{self.address} : Contract Address not supported.")
 
+        if proposal_key[IPFS_HASH] in self.get_proposal_keys():
+            raise revert(f"{self.address} : Already add proposal: {proposal_key[IPFS_HASH]}")
+
         if proposal_key[PROJECT_DURATION] > MAX_PROJECT_PERIOD:
-            revert(f'{self.address} : Maximum Project Duration exceeds 6 months.')
+            revert(f"{self.address} : Maximum Project Duration exceeds 6 months.")
 
         if proposal_key[TOTAL_BUDGET] > self.get_remaining_fund():
-            revert(f'{self.address} : Budget Exceeds than Treasury Amount. '
-                   f'{self.get_remaining_fund()}')
+            revert(f"{self.address} : Budget Exceeds than Treasury Amount. "
+                   f"{self.get_remaining_fund()}")
 
         if proposal_key[SPONSOR_ADDRESS] not in self.valid_preps:
             revert(f"{self.address} : Sponsor P-Rep not a Top 100 P-Rep.")
@@ -550,8 +540,8 @@ class CPS_Score(IconScoreBase):
 
         if _progress[BUDGET_ADJUSTMENT]:
             if _progress[ADDITIONAL_BUDGET] > self.get_remaining_fund():
-                revert(f'{self.address} : Additional Budget Exceeds than Treasury Amount. '
-                       f'{self.get_remaining_fund()}')
+                revert(f"{self.address} : Additional Budget Exceeds than Treasury Amount. "
+                       f"{self.get_remaining_fund()}")
             self.budget_approvals_list.put(_progress[REPORT_HASH])
             _progress[BUDGET_ADJUSTMENT_STATUS] = self._PENDING
 
@@ -642,7 +632,7 @@ class CPS_Score(IconScoreBase):
             revert(f"{self.address} : Voting can only be done by registered P-Reps")
 
         if _vote not in [APPROVE, REJECT, ABSTAIN]:
-            revert(f'{self.address} : Vote should be on _approve, _reject or _abstain')
+            revert(f"{self.address} : Vote should be on _approve, _reject or _abstain")
 
         _proposal_details = self._get_proposal_details(_ipfs_key)
         _status = _proposal_details[STATUS]
