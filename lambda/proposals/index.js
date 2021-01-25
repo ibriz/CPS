@@ -43,7 +43,7 @@ async function send_email(emailAddress, body) {
 
 async function uploadProposal(body) {
 	try {
-		if(!body.ipfsKey)	{
+		if (!body.ipfsKey) {
 			const ipfsKey = body.type + uuidv4();
 			body.ipfsKey = ipfsKey;
 		} else {
@@ -115,12 +115,12 @@ exports.handler = async (event) => {
 
 		console.log(event);
 
-		const body = JSON.parse(event.body);
-
-		if (!body.type) throw new Error('type of the proposal needs to be specified');
-
 		if (event.httpMethod === 'POST') {
 			if (event.path === process.env.PROPOSAL_PATH) {
+
+				const body = JSON.parse(event.body);
+				if (!body.type) throw new Error('type of the proposal needs to be specified');
+
 				proposal = await uploadProposal(body);
 
 				const sponsorData = await getAsync(`users:address:${body.sponserPrep}`);
@@ -135,6 +135,9 @@ exports.handler = async (event) => {
 				proposal = await uploadFile(event);
 			}
 		} else if (event.httpMethod === 'PUT') {
+			const body = JSON.parse(event.body);
+			if (!body.type) throw new Error('type of the proposal needs to be specified');
+
 			proposal = await updateProposal(body);
 		} else {
 			throw new Error('Method doesnot exist');
