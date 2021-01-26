@@ -170,9 +170,8 @@ class CPF_TREASURY(IconScoreBase):
 
         self._validate_cps_score()
 
-        # Calculating sponsor reward for sponsor and total budget for contributor
-        # TODO what is 50?
-        _sponsor_reward = _total_budget // 50
+        # Calculating sponsor reward for sponsor(2%) and total budget for contributor
+        _sponsor_reward = _total_budget * 2 // 100
         total_transfer = _total_budget + _sponsor_reward
 
         if self.icx.get_balance(self.address) < total_transfer:
@@ -214,8 +213,8 @@ class CPF_TREASURY(IconScoreBase):
         self._validate_cps_score()
 
         _total_added_budget = _added_budget
-        # TODO what is 50?
-        _sponsor_reward = _total_added_budget // 50
+        # sponsor reward (2%)
+        _sponsor_reward = _total_added_budget * 2 // 100
         total_transfer = _total_added_budget + _sponsor_reward
 
         if self.icx.get_balance(self.address) < total_transfer:
