@@ -87,6 +87,24 @@ function DetailsModal(props) {
     fetchPrepsRequest();
   }, []);
 
+  useEffect(() => {
+    console.log("sponorRequest", sponsorRequest, document.getElementById("sponsorVoteReason"))
+    if(sponsorRequest && (status === 'Pending') && (period === 'APPLICATION') && (remainingTime > 0)) {
+      if (!sponsorVoteReason) {
+        document.getElementById("sponsorVoteReason").setCustomValidity(`Please type a reason for your decision.`);
+    } else {
+        document.getElementById("sponsorVoteReason").setCustomValidity(``);
+      }
+    }
+
+}, [sponsorVoteReason, sponsorRequest, status, period, remainingTime])
+
+ const handleSponsorVoteSubmission = () => {
+    if(document.getElementById("sponsorVoteReason").reportValidity()) {
+         setSponsorConfirmationShow(true)
+    }
+  }
+
   // useEffect(() => {
   //   if (status !== 'Pending') {
   //     console.log("STATUSPENDING");
@@ -420,6 +438,8 @@ function DetailsModal(props) {
                   setSponsorVoteReason(
                     data
                   )} />
+             <input className={styles.fakeInput} style={{ left: '15px' }} id="sponsorVoteReason" />
+
             </Col>
 
           </Row>
@@ -430,7 +450,7 @@ function DetailsModal(props) {
            </Alert>
 
           <Row style={{ justifyContent: 'center' }}>
-            <Button variant="primary" onClick={() => setSponsorConfirmationShow(true)} style={{ marginTop: '10px', width: '199px' }}>Submit Sponsor Vote</Button>
+            <Button variant="primary" onClick={() => handleSponsorVoteSubmission()} style={{ marginTop: '10px', width: '199px' }}>Submit Sponsor Vote</Button>
 
           </Row>
 

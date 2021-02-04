@@ -23,3 +23,12 @@
 .rejectButton {
     margin-left: 10px;
 }
+
+.fakeInput {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    left: 50%;
+    z-index: -1000;
+
+}
