@@ -48,6 +48,25 @@ function DetailsModal(props) {
   const status = progressReportStatusMapping.find(mapping => mapping.status === progressReport?.status)?.name
 
   useEffect(() => {
+    console.log("voteReason", voting && (period === 'VOTING') && (remainingTime > 0) && !votesByProposal.some(vote => vote.sponsorAddress === walletAddress))
+    if(voting && (period === 'VOTING') && (remainingTime > 0) && !votesByProposal.some(vote => vote.sponsorAddress === walletAddress)) {
+      console.log("voteReasonhere", document.getElementById("voteReason"))
+      if (!voteReason) {
+        document.getElementById("voteReason") && document.getElementById("voteReason").setCustomValidity(`Please type a reason for your decision.`);
+    } else {
+      document.getElementById("voteReason") && document.getElementById("voteReason").setCustomValidity(``);
+      }
+    }
+
+}, [voteReason, voting, period, remainingTime, votesByProposal, walletAddress])
+
+ const handleVoteSubmission = () => {
+    if(document.getElementById("voteReason").reportValidity()) {
+         setVoteConfirmationShow(true)
+    }
+  }
+
+  useEffect(() => {
     props.progressReport && props.fetchProgressReportDetailRequest(
       {
         hash: props.progressReport.ipfsHash
@@ -459,6 +478,8 @@ function DetailsModal(props) {
                           setVoteReason(
                             data
                           )} />
+                    <input className={styles.fakeInput} style={{ left: '15px' }} id="voteReason" />
+
                     </Col>
 
                   </Row>
@@ -470,7 +491,7 @@ function DetailsModal(props) {
                   }
 
                   <Row style={{ justifyContent: 'center' }}>
-                    <Button variant="primary" onClick={() => setVoteConfirmationShow(true)} style={{ marginTop: '10px', width: '150px' }}>Submit Vote</Button>
+                    <Button variant="primary" onClick={() => handleVoteSubmission()} style={{ marginTop: '10px', width: '150px' }}>Submit Vote</Button>
 
                   </Row>
                 </> :
