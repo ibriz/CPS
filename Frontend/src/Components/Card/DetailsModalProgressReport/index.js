@@ -473,6 +473,7 @@ function DetailsModal(props) {
 
                     <Col xs="12">
                       <RichTextEditor
+                        initialData = {voteReason}
                         required
                         onChange={(data) =>
                           setVoteReason(

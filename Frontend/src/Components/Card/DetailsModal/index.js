@@ -455,6 +455,7 @@ function DetailsModal(props) {
             <Col xs="12">
               <RichTextEditor
                 required
+                initialData = {sponsorVoteReason}
                 onChange={(data) =>
                   setSponsorVoteReason(
                     data
@@ -518,6 +519,7 @@ function DetailsModal(props) {
 
                     <Col xs="12">
                       <RichTextEditor
+                      initialData = {voteReason}
                         required
                         onChange={(data) =>
                           setVoteReason(
