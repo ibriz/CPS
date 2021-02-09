@@ -15,6 +15,9 @@ MAX_PROJECT_PERIOD = 6
 # 2/3 Vote
 MAJORITY = 0.67
 
+# PROPOSAL SUBMISSION AMOUNT
+SUBMISSION_FEE = 50
+
 # Period Interval Time
 DAY_COUNT = 1
 
@@ -66,6 +69,7 @@ PREP_NAME = "prep_name"
 # VarDB/ArrayDB Params
 PROPOSALS_KEY_LIST = 'proposals_key_list'
 PROGRESS_KEY_LIST = 'progress_key_list'
+PROGRESS_REPORT = "progress_report"
 CONTRIBUTORS = "contributors"
 SPONSORS = "sponsors"
 BUDGET_APPROVALS_LIST = "budget_approvals_list"
