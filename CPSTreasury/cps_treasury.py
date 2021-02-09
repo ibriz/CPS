@@ -313,24 +313,28 @@ class CPS_TREASURY(IconScoreBase):
             prefix = self.proposal_prefix(_ipfs_key)
             proposal = self.proposals[prefix]
 
-            _total_budget: int = proposal.total_budget.get()
-            _total_duration: int = proposal.project_duration.get()
             _installment_count: int = proposal.installment_count.get()
             withdraw_amount: int = proposal.withdraw_amount.get()
-            contributor_address: Address = proposal.contributor_address.get()
-
-            if _total_duration - _installment_count == 1:
-                proposal.status.set(self._COMPLETED)
+            remaining_amount: int = proposal.remaining_amount.get()
+            contributor_address: 'Address' = proposal.contributor_address.get()
 
             # Calculating Installment Amount and adding to Wallet Address
             try:
-                _installment_amount = _total_budget // _total_duration
-                proposal.installment_count.set(_installment_count + 1)
+                if _installment_count == 1:
+                    _installment_amount = remaining_amount
+                else:
+                    _installment_amount = remaining_amount // _installment_count
+                proposal.installment_count.set(_installment_count - 1)
+                proposal.remaining_amount.set(remaining_amount - _installment_amount)
                 proposal.withdraw_amount.set(withdraw_amount + _installment_amount)
                 self._fund_record[str(contributor_address)] += _installment_amount
 
                 self.ProposalFundSent(contributor_address, _installment_amount,
-                                      f"Installment No. {_installment_count + 1} added to contributors address.")
+                                      f"New Installment sent to contributors address.")
+
+                if proposal.installment_count.get() == 0:
+                    proposal.status.set(self._COMPLETED)
+
             except BaseException as e:
                 revert(f'{self.address}: Network problem. Sending project funds. {e}')
 
@@ -350,25 +354,28 @@ class CPS_TREASURY(IconScoreBase):
             prefix = self.proposal_prefix(_ipfs_key)
             proposals = self.proposals[prefix]
 
-            _sponsor_reward: int = proposals.sponsor_reward.get()
-            _total_duration: int = proposals.project_duration.get()
             _sponsor_reward_count: int = proposals.sponsor_reward_count.get()
             _sponsor_withdraw_amount: int = proposals.sponsor_withdraw_amount.get()
-            _sponsor_address: Address = proposals.sponsor_address.get()
-
-            if _total_duration - _sponsor_reward_count == 1:
-                proposals.status.set(self._COMPLETED)
+            _sponsor_remaining_amount: int = proposals.sponsor_remaining_amount.get()
+            _sponsor_address: 'Address' = proposals.sponsor_address.get()
 
             # Calculating Installment Amount and adding to Wallet Address
             try:
-                _installment_amount = _sponsor_reward // _total_duration
-                proposals.sponsor_reward_count.set(_sponsor_reward_count + 1)
+                if _sponsor_reward_count == 1:
+                    _installment_amount = _sponsor_remaining_amount
+                else:
+                    _installment_amount = _sponsor_remaining_amount // _sponsor_reward_count
+                proposals.sponsor_reward_count.set(_sponsor_reward_count - 1)
                 proposals.sponsor_withdraw_amount.set(_sponsor_withdraw_amount + _installment_amount)
-
+                proposals.sponsor_remaining_amount.set(_sponsor_remaining_amount - _installment_amount)
                 self._fund_record[str(_sponsor_address)] += _installment_amount
 
                 self.ProposalFundSent(_sponsor_address, _installment_amount,
-                                      f"Installment No. {_sponsor_reward_count + 1} added to sponsor address.")
+                                      f"New Installment sent to sponsor address.")
+
+                if proposals.sponsor_reward_count.get() == 0:
+                    proposals.status.set(self._COMPLETED)
+
             except BaseException as e:
                 revert(f'{self.address}: Network problem. Sending project funds. {e}')
 
@@ -415,7 +422,7 @@ class CPS_TREASURY(IconScoreBase):
     @external
     def claim_reward(self) -> None:
         """
-        Claim he reward or the installment amount
+        Claim the reward or the installment amount
         """
         _available_amount = self._fund_record[str(self.msg.sender)]
         if _available_amount > 0:
