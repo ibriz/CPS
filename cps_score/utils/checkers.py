@@ -50,31 +50,3 @@ def only_owner(func):
         return func(self, *args, **kwargs)
 
     return __wrapper
-
-
-def application_period(func):
-    if not isfunction(func):
-        raise NotAFunctionError
-
-    @wraps(func)
-    def __wrapper(self: object, *args, **kwargs):
-        if self.period_name.get() != APPLICATION_PERIOD:
-            raise NotApplicationPeriodError("Not Application Period")
-
-        return func(self, *args, **kwargs)
-
-    return __wrapper
-
-
-def voting_period(func):
-    if not isfunction(func):
-        raise NotAFunctionError
-
-    @wraps(func)
-    def __wrapper(self: object, *args, **kwargs):
-        if self.period_name.get() != VOTING_PERIOD:
-            raise NotVotingPeriodError("Not Voting Period")
-
-        return func(self, *args, **kwargs)
-
-    return __wrapper
