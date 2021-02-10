@@ -32,7 +32,6 @@ class ProposalData(object):
 
         self.progress_reports = ArrayDB('progress_reports', db, str)
         self.budget_adjustment = VarDB("budget_adjustment", db, bool)
-        self.submit_progress_report = VarDB("submit_progress_report", db, bool)
 
 
 class ProposalDataDB:
@@ -68,7 +67,6 @@ def addDataToProposalDB(prefix: bytes, _proposals: 'ProposalDataDB', proposal_da
     _proposals[prefix].rejected_votes.set(0)
     _proposals[prefix].approved_reports.set(0)
     _proposals[prefix].budget_adjustment.set(False)
-    _proposals[prefix].submit_progress_report.set(False)
 
 
 def getDataFromProposalDB(prefix: bytes, _proposals: 'ProposalDataDB') -> dict:
@@ -78,8 +76,8 @@ def getDataFromProposalDB(prefix: bytes, _proposals: 'ProposalDataDB') -> dict:
     total_budget = _proposals[prefix].total_budget.get()
     project_duration = _proposals[prefix].project_duration.get()
     approved_reports = _proposals[prefix].approved_reports.get()
-    sponsor_address: 'Address' = _proposals[prefix].sponsor_address.get()
-    contributor_address: 'Address' = _proposals[prefix].contributor_address.get()
+    sponsor_address = _proposals[prefix].sponsor_address.get()
+    contributor_address = _proposals[prefix].contributor_address.get()
     status = _proposals[prefix].status.get()
     tx_hash = _proposals[prefix].tx_hash.get()
     percentage_completed = _proposals[prefix].percentage_completed.get()
@@ -91,13 +89,12 @@ def getDataFromProposalDB(prefix: bytes, _proposals: 'ProposalDataDB') -> dict:
     sponsored_timestamp = _proposals[prefix].sponsored_timestamp.get()
     sponsor_deposit_status = _proposals[prefix].sponsor_deposit_status.get()
     sponsor_vote_reason = _proposals[prefix].sponsor_vote_reason.get()
-    if sponsor_vote_reason != b"":
+    if sponsor_vote_reason is not None:
         sponsor_vote_reason = sponsor_vote_reason.decode('utf-8')
 
     approve_voters = len(_proposals[prefix].approve_voters)
     reject_voters = len(_proposals[prefix].reject_voters)
     budget_adjustment = _proposals[prefix].budget_adjustment.get()
-    submit_progress_report = _proposals[prefix].submit_progress_report.get()
 
     return {
         'ipfs_hash': ipfs_hash,
@@ -112,7 +109,6 @@ def getDataFromProposalDB(prefix: bytes, _proposals: 'ProposalDataDB') -> dict:
         'tx_hash': tx_hash,
         'percentage_completed': percentage_completed,
         'budget_adjustment': budget_adjustment,
-        'submit_progress_report': submit_progress_report,
         'sponsor_deposit_amount': sponsor_deposit_amount,
         'sponsored_timestamp': sponsored_timestamp,
         'sponsor_deposit_status': sponsor_deposit_status,
