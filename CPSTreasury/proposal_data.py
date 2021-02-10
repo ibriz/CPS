@@ -13,8 +13,12 @@ class ProposalData(object):
 
         self.withdraw_amount = VarDB('withdraw_amount', db, int)
         self.sponsor_withdraw_amount = VarDB('sponsor_withdraw_amount', db, int)
+        self.remaining_amount = VarDB('remaining_amount', db, int)
+        self.sponsor_remaining_amount = VarDB('sponsor_remaining_amount', db, int)
+
         self.installment_count = VarDB('installment_count', db, int)
         self.sponsor_reward_count = VarDB('sponsor_reward_count', db, int)
+
         self.status = VarDB('status', db, str)
 
 
@@ -43,9 +47,11 @@ def addDataToProposalDB(prefix: bytes, _proposals: 'ProposalDataDB', proposal_da
     _proposals[prefix].sponsor_address.set(proposal_data.sponsor_address)
     _proposals[prefix].contributor_address.set(proposal_data.contributor_address)
     _proposals[prefix].withdraw_amount.set(0)
-    _proposals[prefix].installment_count.set(0)
     _proposals[prefix].sponsor_withdraw_amount.set(0)
-    _proposals[prefix].sponsor_reward_count.set(0)
+    _proposals[prefix].remaining_amount.set(proposal_data.total_budget)
+    _proposals[prefix].sponsor_remaining_amount.set(proposal_data.sponsor_reward)
+    _proposals[prefix].installment_count.set(proposal_data.project_duration)
+    _proposals[prefix].sponsor_reward_count.set(proposal_data.project_duration)
 
 
 def getDataFromProposalDB(prefix: bytes, _proposals: 'ProposalDataDB') -> dict:
@@ -59,6 +65,8 @@ def getDataFromProposalDB(prefix: bytes, _proposals: 'ProposalDataDB') -> dict:
     installment_count = _proposals[prefix].installment_count.get()
     sponsor_withdraw_amount = _proposals[prefix].sponsor_withdraw_amount.get()
     sponsor_reward_count = _proposals[prefix].sponsor_reward_count.get()
+    remaining_amount = _proposals[prefix].remaining_amount.get()
+    sponsor_remaining_amount = _proposals[prefix].sponsor_remaining_amount.get()
 
     return {
         'ipfs_hash': ipfs_hash,
@@ -70,8 +78,9 @@ def getDataFromProposalDB(prefix: bytes, _proposals: 'ProposalDataDB') -> dict:
         'withdraw_amount': withdraw_amount,
         'installment_count': installment_count,
         'sponsor_reward_count': sponsor_reward_count,
-        'sponsor_withdraw_amount': sponsor_withdraw_amount
-
+        'sponsor_withdraw_amount': sponsor_withdraw_amount,
+        'remaining_amount': remaining_amount,
+        'sponsor_remaining_amount': sponsor_remaining_amount,
     }
 
 
