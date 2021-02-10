@@ -16,14 +16,11 @@ MAX_PROJECT_PERIOD = 6
 MAJORITY = 0.67
 
 # Period Interval Time
-DAY_COUNT = 1
+DAY_COUNT = 15
 
 # Total Blocks in 1 day
 # BLOCKS_DAY_COUNT = 43120
-BLOCKS_DAY_COUNT = 300
-
-# BURN COIN ADDRESS
-ZERO_WALLET_ADDRESS = Address.from_string('hx0000000000000000000000000000000000000000')
+BLOCKS_DAY_COUNT = 30
 
 # User Defined Db
 PROPOSAL_DB_PREFIX = b'proposal'
@@ -110,3 +107,6 @@ ABSTAIN = "_abstain"
 ACCEPT = "_accept"
 YES = "yes"
 NO = "no"
+
+# Sponsor Fee
+SPONSOR_FEE = 50

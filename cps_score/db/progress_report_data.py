@@ -59,7 +59,7 @@ def addDataToProgressReportDB(prefix: bytes, _proposals: 'ProgressReportDataDB',
     _proposals[prefix].status.set(proposal_data.status)
     _proposals[prefix].tx_hash.set(proposal_data.tx_hash)
     _proposals[prefix].budget_adjustment.set(proposal_data.budget_adjustment)
-    _proposals[prefix].budget_adjustment.set(proposal_data.budget_adjustment_status)
+    _proposals[prefix].budget_adjustment_status.set(proposal_data.budget_adjustment_status)
     _proposals[prefix].total_votes.set(0)
     _proposals[prefix].approved_votes.set(0)
     _proposals[prefix].rejected_votes.set(0)
