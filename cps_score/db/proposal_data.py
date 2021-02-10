@@ -64,6 +64,7 @@ def addDataToProposalDB(prefix: bytes, _proposals: 'ProposalDataDB', proposal_da
     _proposals[prefix].tx_hash.set(proposal_data.tx_hash)
     _proposals[prefix].percentage_completed.set(proposal_data.percentage_completed)
     _proposals[prefix].total_votes.set(0)
+    _proposals[prefix].total_voters.set(0)
     _proposals[prefix].approved_votes.set(0)
     _proposals[prefix].rejected_votes.set(0)
     _proposals[prefix].approved_reports.set(0)
@@ -85,6 +86,7 @@ def getDataFromProposalDB(prefix: bytes, _proposals: 'ProposalDataDB') -> dict:
     percentage_completed = _proposals[prefix].percentage_completed.get()
 
     total_votes = _proposals[prefix].total_votes.get()
+    total_voters = _proposals[prefix].total_voters.get()
     approved_votes = _proposals[prefix].approved_votes.get()
     rejected_votes = _proposals[prefix].rejected_votes.get()
     sponsor_deposit_amount = _proposals[prefix].sponsor_deposit_amount.get()
@@ -120,6 +122,7 @@ def getDataFromProposalDB(prefix: bytes, _proposals: 'ProposalDataDB') -> dict:
         'total_votes': total_votes,
         'approved_votes': approved_votes,
         'rejected_votes': rejected_votes,
+        'total_voters': total_voters,
         'approve_voters': approve_voters,
         'reject_voters': reject_voters
     }

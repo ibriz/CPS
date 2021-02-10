@@ -677,10 +677,13 @@ class CPS_Score(IconScoreBase):
             revert(f"{self.address} : Already voted on this Proposal.")
 
         if _status == self._PENDING:
-            _voter_stake = self._get_stake(self.msg.sender)
-            _total_votes: int = _proposal_details['total_votes']
-            _approved_votes: int = _proposal_details['approved_votes']
-            _rejected_votes: int = _proposal_details['rejected_votes']
+            _voter_stake: int = self._get_stake(self.msg.sender)
+            _total_votes: int = _proposal_details[TOTAL_VOTES]
+            _approved_votes: int = _proposal_details[APPROVED_VOTES]
+            _rejected_votes: int = _proposal_details[REJECTED_VOTES]
+
+            if _proposal_details[TOTAL_VOTERS] == 0:
+                proposals_prefix_.total_voters.set(len(self.valid_preps))
 
             proposals_prefix_.total_votes.set(_total_votes + _voter_stake)
             proposals_prefix_.voters_list.put(self.msg.sender)
@@ -734,6 +737,8 @@ class CPS_Score(IconScoreBase):
             _approved_votes: int = _progress_report_details['approved_votes']
             _rejected_votes: int = _progress_report_details['rejected_votes']
 
+            if _progress_report_details[TOTAL_VOTERS] == 0:
+                reports_prefix_.total_voters.set(len(self.valid_preps))
             reports_prefix_.total_votes.set(_total_votes + _voter_stake)
             reports_prefix_.voters_list.put(self.msg.sender)
             reports_prefix_.voters_reasons.put(_vote_reason.encode())
