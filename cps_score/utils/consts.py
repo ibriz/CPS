@@ -15,18 +15,12 @@ MAX_PROJECT_PERIOD = 6
 # 2/3 Vote
 MAJORITY = 0.67
 
-# PROPOSAL SUBMISSION AMOUNT
-SUBMISSION_FEE = 50
-
 # Period Interval Time
-DAY_COUNT = 1
+DAY_COUNT = 15
 
 # Total Blocks in 1 day
 # BLOCKS_DAY_COUNT = 43120
-BLOCKS_DAY_COUNT = 300
-
-# BURN COIN ADDRESS
-ZERO_WALLET_ADDRESS = Address.from_string('hx0000000000000000000000000000000000000000')
+BLOCKS_DAY_COUNT = 30
 
 # User Defined Db
 PROPOSAL_DB_PREFIX = b'proposal'
@@ -69,7 +63,6 @@ PREP_NAME = "prep_name"
 # VarDB/ArrayDB Params
 PROPOSALS_KEY_LIST = 'proposals_key_list'
 PROGRESS_KEY_LIST = 'progress_key_list'
-PROGRESS_REPORT = "progress_report"
 CONTRIBUTORS = "contributors"
 SPONSORS = "sponsors"
 BUDGET_APPROVALS_LIST = "budget_approvals_list"
@@ -82,10 +75,18 @@ AMOUNT = "_total_amount"
 ADDRESS = "address"
 
 # Proposals and Progress reports keys
+PROPOSAL = "proposal"
+PROGRESS_REPORTS = "progress_report"
+NEW_PROGRESS_REPORT = "new_progress_report"
 PROJECT_TITLE = "project_title"
 PROGRESS_REPORT_TITLE = "progress_report_title"
 TOTAL_VOTES = "total_votes"
 TOTAL_VOTERS = "total_voters"
+REJECTED_VOTES = "rejected_votes"
+APPROVED_VOTES = "approved_votes"
+REJECT_VOTERS = "reject_voters"
+APPROVE_VOTERS = "approve_voters"
+
 TIMESTAMP = 'timestamp'
 CONTRIBUTOR_ADDRESS = "contributor_address"
 TX_HASH = "tx_hash"
@@ -100,6 +101,7 @@ ADDITIONAL_BUDGET = 'additional_budget'
 ADDITIONAL_DURATION = 'additional_month'
 BUDGET_ADJUSTMENT = 'budget_adjustment'
 BUDGET_ADJUSTMENT_STATUS = "budget_adjustment_status"
+SPONSOR_DEPOSIT_AMOUNT = 'sponsor_deposit_amount'
 PREPS_DENYLIST = "preps_denylist"
 DENYLIST = "denylist"
 PENALTY_AMOUNT = "penalty_amount"
@@ -114,3 +116,6 @@ ABSTAIN = "_abstain"
 ACCEPT = "_accept"
 YES = "yes"
 NO = "no"
+
+# Sponsor Fee
+SPONSOR_FEE = 50
