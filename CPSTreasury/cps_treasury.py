@@ -2,6 +2,7 @@ from iconservice import *
 from .proposal_data import *
 
 PROPOSAL_DB_PREFIX = b'proposal'
+TAG = "CPS_TREASURY"
 
 
 class ProposalAttributes(TypedDict):
@@ -86,11 +87,11 @@ class CPS_TREASURY(IconScoreBase):
         :return: SCORE Name
         :rtype: str
         """
-        return "CPS_TREASURY_SCORE"
+        return TAG
 
     @payable
     def fallback(self):
-        revert(f"{self.address} : ICX can only be sent by CPF Treasury Score.")
+        revert(f"{TAG} : ICX can only be sent by CPF Treasury Score.")
 
     def set_id(self, _val: str):
         self.id.set(_val)
@@ -101,27 +102,32 @@ class CPS_TREASURY(IconScoreBase):
     def proposal_prefix(self, _proposal_key: str) -> bytes:
         return b'|'.join([PROPOSAL_DB_PREFIX, self.id.get().encode(), _proposal_key.encode()])
 
-    def _add_new_proposal(self, _key: str) -> None:
-        self._proposals_keys.put(_key)
+    def _validate_owner(self):
+        if self.msg.sender != self.owner:
+            revert(f"{TAG} :Only owner can call this method.")
 
-    def _check_proposal(self, _proposal_key: str) -> bool:
-        """
-        Check if the _proposal_key is already set or not
-        :param _proposal_key: Proposal IPFS Hash
-        :type _proposal_key: str
-        :return: bool
-        """
-        if _proposal_key not in self._proposals_keys:
-            return False
-        else:
-            return True
+    def _validate_owner_score(self, _score: Address):
+        self._validate_owner()
+        if not _score.is_contract:
+            revert(f"{TAG} :Target({_score}) is not SCORE.")
+
+    def _validate_cps_score(self):
+        if self.msg.sender != self._cps_score.get():
+            revert(f"{TAG} :Only CPS({self._cps_score.get()}) SCORE can send fund using this method.")
+
+    def _validate_cpf_treasury_score(self):
+        if self.msg.sender != self._cpf_treasury_score.get():
+            revert(
+                f"{TAG} :Only CPF Treasury({self._cpf_treasury_score.get()}) SCORE can send fund using this method.")
 
     def _add_record(self, _proposal: ProposalAttributes) -> None:
         proposal_data_obj = createProposalDataObject(_proposal)
-        if not self._check_proposal(proposal_data_obj.ipfs_hash):
-            self._add_new_proposal(proposal_data_obj.ipfs_hash)
-        prefix = self.proposal_prefix(proposal_data_obj.ipfs_hash)
-        addDataToProposalDB(prefix, self.proposals, proposal_data_obj)
+        if proposal_data_obj.ipfs_hash not in self._proposals_keys:
+            self._proposals_keys.put(proposal_data_obj.ipfs_hash)
+            prefix = self.proposal_prefix(proposal_data_obj.ipfs_hash)
+            addDataToProposalDB(prefix, self.proposals, proposal_data_obj)
+        else:
+            revert(f"{TAG} : Already have this project.")
 
     def _get_projects(self, _proposal_key: str) -> dict:
         prefix = self.proposal_prefix(_proposal_key)
@@ -280,7 +286,7 @@ class CPS_TREASURY(IconScoreBase):
         _sponsor_reward: int = self.proposals[prefix].sponsor_reward.get()
         _total_duration: int = self.proposals[prefix].project_duration.get()
 
-        if self._check_proposal(_ipfs_key):
+        if _ipfs_key in self._proposals_keys:
             self.proposals[prefix].total_budget.set(_total_budget + _added_budget)
             self.proposals[prefix].sponsor_reward.set(_sponsor_reward + _added_sponsor_reward)
             self.proposals[prefix].project_duration.set(_total_duration + _added_installment_count)
@@ -288,7 +294,7 @@ class CPS_TREASURY(IconScoreBase):
             self.ProposalFundDeposited(_ipfs_key, _added_budget,
                                        f"{_ipfs_key} : Added Budget : {_added_budget} Successfully")
         else:
-            revert(f"{self.address} : IPFS key doesn't exist")
+            revert(f"{TAG} : IPFS Hash doesn't exist")
 
     @external
     def send_installment_to_contributor(self, _ipfs_key: str) -> None:
@@ -300,30 +306,34 @@ class CPS_TREASURY(IconScoreBase):
         """
         self._validate_cps_score()
 
-        if self._check_proposal(_ipfs_key):
+        if _ipfs_key in self._proposals_keys:
             prefix = self.proposal_prefix(_ipfs_key)
             proposal = self.proposals[prefix]
 
-            _total_budget: int = proposal.total_budget.get()
-            _total_duration: int = proposal.project_duration.get()
             _installment_count: int = proposal.installment_count.get()
             withdraw_amount: int = proposal.withdraw_amount.get()
-            contributor_address: Address = proposal.contributor_address.get()
-
-            if _total_duration - _installment_count == 1:
-                proposal.status.set(self._COMPLETED)
+            remaining_amount: int = proposal.remaining_amount.get()
+            contributor_address: 'Address' = proposal.contributor_address.get()
 
             # Calculating Installment Amount and adding to Wallet Address
             try:
-                _installment_amount = _total_budget // _total_duration
-                proposal.installment_count.set(_installment_count + 1)
+                if _installment_count == 1:
+                    _installment_amount = remaining_amount
+                else:
+                    _installment_amount = remaining_amount // _installment_count
+                proposal.installment_count.set(_installment_count - 1)
+                proposal.remaining_amount.set(remaining_amount - _installment_amount)
                 proposal.withdraw_amount.set(withdraw_amount + _installment_amount)
                 self._fund_record[str(contributor_address)] += _installment_amount
 
                 self.ProposalFundSent(contributor_address, _installment_amount,
-                                      f"Installment No. {_installment_count + 1} added to contributors address.")
+                                      f"New Installment sent to contributors address.")
+
+                if proposal.installment_count.get() == 0:
+                    proposal.status.set(self._COMPLETED)
+
             except BaseException as e:
-                revert(f"{self.address} : Network problem. Sending project funds. {e}")
+                revert(f'{TAG}: Network problem. Sending project funds. {e}')
 
     @external
     def send_reward_to_sponsor(self, _ipfs_key: str) -> None:
@@ -335,31 +345,33 @@ class CPS_TREASURY(IconScoreBase):
         """
         self._validate_cps_score()
 
-        if self._check_proposal(_ipfs_key):
+        if _ipfs_key in self._proposals_keys:
             prefix = self.proposal_prefix(_ipfs_key)
             proposals = self.proposals[prefix]
 
-            _sponsor_reward: int = proposals.sponsor_reward.get()
-            _total_duration: int = proposals.project_duration.get()
             _sponsor_reward_count: int = proposals.sponsor_reward_count.get()
             _sponsor_withdraw_amount: int = proposals.sponsor_withdraw_amount.get()
-            _sponsor_address: Address = proposals.sponsor_address.get()
-
-            if _total_duration - _sponsor_reward_count == 1:
-                proposals.status.set(self._COMPLETED)
+            _sponsor_remaining_amount: int = proposals.sponsor_remaining_amount.get()
+            _sponsor_address: 'Address' = proposals.sponsor_address.get()
 
             # Calculating Installment Amount and adding to Wallet Address
             try:
-                _installment_amount = _sponsor_reward // _total_duration
-                proposals.sponsor_reward_count.set(_sponsor_reward_count + 1)
+                if _sponsor_reward_count == 1:
+                    _installment_amount = _sponsor_remaining_amount
+                else:
+                    _installment_amount = _sponsor_remaining_amount // _sponsor_reward_count
+                proposals.sponsor_reward_count.set(_sponsor_reward_count - 1)
                 proposals.sponsor_withdraw_amount.set(_sponsor_withdraw_amount + _installment_amount)
-
+                proposals.sponsor_remaining_amount.set(_sponsor_remaining_amount - _installment_amount)
                 self._fund_record[str(_sponsor_address)] += _installment_amount
 
                 self.ProposalFundSent(_sponsor_address, _installment_amount,
-                                      f"Installment No. {_sponsor_reward_count + 1} added to sponsor address.")
+                                      f"New Installment sent to sponsor address.")
+
+                if proposals.sponsor_reward_count.get() == 0:
+                    proposals.status.set(self._COMPLETED)
             except BaseException as e:
-                revert(f"{self.address} : Network problem. Sending project funds. {e}")
+                revert(f"{TAG} : Network problem. Sending project funds. {e}")
 
     @external
     def disqualify_project(self, _ipfs_key: str) -> None:
@@ -371,7 +383,7 @@ class CPS_TREASURY(IconScoreBase):
 
         self._validate_cps_score()
 
-        if self._check_proposal(_ipfs_key):
+        if _ipfs_key in self._proposals_keys:
             prefix = self.proposal_prefix(_ipfs_key)
             proposals = self.proposals[prefix]
 
@@ -394,9 +406,9 @@ class CPS_TREASURY(IconScoreBase):
 
                 self.ProposalDisqualified(_ipfs_key, f"{_ipfs_key}, Proposal disqualified")
             except BaseException as e:
-                revert(f"{self.address} : Network problem. Sending proposal funds. {e}")
+                revert(f"{TAG} : Network problem. Sending proposal funds. {e}")
         else:
-            revert(f"{self.address} : Provided IPFS key not found.")
+            revert(f"{TAG} : Provided IPFS key not found.")
 
     @external
     def claim_reward(self) -> None:
@@ -413,24 +425,7 @@ class CPS_TREASURY(IconScoreBase):
                 self.ProposalFundWithdrawn(self.msg.sender, _available_amount, f"{_available_amount} withdrawn to "
                                                                                f"{self.msg.sender}")
             except BaseException as e:
-                revert(f"{self.address} : Network problem. Claiming Reward{e}")
+                revert(f"{TAG} : Network problem. Claiming Reward{e}")
 
         else:
-            revert(f"{self.address} :Claim Reward Fails. Available Amount = {_available_amount}.")
-
-    def _validate_owner(self):
-        if self.msg.sender != self.owner:
-            revert(f"{self.address} :Only owner can call this method.")
-
-    def _validate_owner_score(self, _score: Address):
-        self._validate_owner()
-        if not _score.is_contract:
-            revert(f"{self.address} :Target({_score}) is not SCORE.")
-
-    def _validate_cps_score(self):
-        if self.msg.sender != self._cps_score.get():
-            revert(f"{self.address} :Only CPS({self._cps_score.get()}) SCORE can send fund using this method.")
-
-    def _validate_cpf_treasury_score(self):
-        if self.msg.sender != self._cpf_treasury_score.get():
-            revert(f"{self.address} :Only CPF Treasury({self._cpf_treasury_score.get()}) SCORE can send fund using this method.")
+            revert(f"{TAG} :Claim Reward Fails. Available Amount = {_available_amount}.")
