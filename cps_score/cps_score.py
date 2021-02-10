@@ -616,7 +616,7 @@ class CPS_Score(IconScoreBase):
 
     @voting_period
     @external
-    def vote_proposal(self, _ipfs_key: str, _vote: str, _vote_reason: str = "") -> None:
+    def vote_proposal(self, _ipfs_key: str, _vote: str, _vote_reason: str) -> None:
         """
         P-Rep(s) voting for a proposal to be approved or not
         :param _ipfs_key : proposal ipfs hash
@@ -664,8 +664,8 @@ class CPS_Score(IconScoreBase):
 
     @voting_period
     @external
-    def vote_progress_report(self, _ipfs_key: str, _report_key: str, _vote: str, _budget_adjustment_vote: str = "",
-                             _vote_reason: str = "") -> None:
+    def vote_progress_report(self, _ipfs_key: str, _report_key: str, _vote: str, _vote_reason: str,
+                             _budget_adjustment_vote: str = "") -> None:
         """
         P-Rep(s) voting for a progress report of all active proposals
         :param _ipfs_key : proposal ipfs hash
