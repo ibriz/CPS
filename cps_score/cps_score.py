@@ -479,9 +479,11 @@ class CPS_Score(IconScoreBase):
     def _add_proposals(self, _proposal: ProposalAttributes) -> None:
         proposal_data_obj = createProposalDataObject(_proposal)
         if not self._check_proposal(proposal_data_obj.ipfs_hash):
-            self._add_new_proposal(proposal_data_obj.ipfs_hash)
-        prefix = self.proposal_prefix(proposal_data_obj.ipfs_hash)
-        addDataToProposalDB(prefix, self.proposals, proposal_data_obj)
+            self.proposals_key_list.put(proposal_data_obj.ipfs_hash)
+            prefix = self.proposal_prefix(proposal_data_obj.ipfs_hash)
+            addDataToProposalDB(prefix, self.proposals, proposal_data_obj)
+        else:
+            revert(f"{TAG} : Proposal Hash Already Exists.")
 
     def _get_proposal_details(self, _proposal_key: str) -> dict:
         prefix = self.proposal_prefix(_proposal_key)
@@ -513,9 +515,15 @@ class CPS_Score(IconScoreBase):
     def _add_progress_report(self, _progress_report: ProgressReportAttributes) -> None:
         progress_report_obj = createProgressDataObject(_progress_report)
         if not self._check_progress_report(progress_report_obj.report_hash):
-            self._add_new_progress_report_key(progress_report_obj.ipfs_hash, progress_report_obj.report_hash)
-        prefix = self.progress_report_prefix(progress_report_obj.report_hash)
-        addDataToProgressReportDB(prefix, self.progress_reports, progress_report_obj)
+            prefix = self.proposal_prefix(progress_report_obj.ipfs_hash)
+            if progress_report_obj.ipfs_hash not in self.proposals[prefix].progress_reports:
+                self.proposals[prefix].progress_reports.put(progress_report_obj.report_hash)
+
+            self.progress_key_list.put(progress_report_obj.report_hash)
+            prefix = self.progress_report_prefix(progress_report_obj.report_hash)
+            addDataToProgressReportDB(prefix, self.progress_reports, progress_report_obj)
+        else:
+            revert(f"{TAG} : Report Hash Already Exists.")
 
     def _get_progress_reports_details(self, _progress_hash: str) -> dict:
         prefix = self.progress_report_prefix(_progress_hash)
