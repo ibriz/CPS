@@ -317,17 +317,8 @@ class CPS_Score(IconScoreBase):
         if self.msg.sender not in self.valid_preps and self.msg.sender not in self.registered_preps:
             revert(f"{self.address} : P-Rep is not registered yet.")
 
-        _data_out = self.valid_preps.pop()
-        if _data_out != self.msg.sender:
-            for prep in range(0, len(self.valid_preps)):
-                if self.valid_preps[prep] == self.msg.sender:
-                    self.valid_preps[prep] = _data_out
-
-        registered_out = self.registered_preps.pop()
-        if registered_out != self.msg.sender:
-            for prep in range(0, len(self.registered_preps)):
-                if self.registered_preps[prep] == self.msg.sender:
-                    self.registered_preps[prep] = registered_out
+        ArrayDBUtils.remove_array_item(self.valid_preps, self.msg.sender)
+        ArrayDBUtils.remove_array_item(self.registered_preps, self.msg.sender)
 
         self.unregistered_preps.put(self.msg.sender)
         self.UnRegisterPRep(self.msg.sender, f'{self.msg.sender} has ben unregistered successfully.')
@@ -352,11 +343,7 @@ class CPS_Score(IconScoreBase):
             revert(f"{self.address} : You are in denylist. To register, You've to pay Penalty.")
 
         if _address in self.unregistered_preps:
-            _data_out = self.unregistered_preps.pop()
-            if _data_out != _address:
-                for prep in range(0, len(self.unregistered_preps)):
-                    if self.unregistered_preps[prep] == _address:
-                        self.unregistered_preps[prep] = _data_out
+            ArrayDBUtils.remove_array_item(self.unregistered_preps, _address)
 
         self.registered_preps.put(_address)
 
@@ -372,11 +359,7 @@ class CPS_Score(IconScoreBase):
         :return:
         """
         if _address in self.sponsors:
-            sponsor_address = self.sponsors.pop()
-            if sponsor_address != _address:
-                for index in range(0, len(self.sponsors)):
-                    if self.sponsors[index] == _address:
-                        self.sponsors[index] = sponsor_address
+            ArrayDBUtils.remove_array_item(self.sponsors, _address)
 
     def _remove_contributor(self, _address: Address) -> None:
         """
@@ -386,11 +369,7 @@ class CPS_Score(IconScoreBase):
         :return:
         """
         if _address in self.contributors:
-            contributor_address = self.contributors.pop()
-            if contributor_address != _address:
-                for index in range(0, len(self.contributors)):
-                    if self.contributors[index] == _address:
-                        self.contributors[index] = contributor_address
+            ArrayDBUtils.remove_array_item(self.contributors, _address)
 
     def _check_proposal(self, _proposal_key: str) -> bool:
         """
@@ -461,12 +440,7 @@ class CPS_Score(IconScoreBase):
         self.proposals[prefix].timestamp.set(self.now())
         self.proposals[prefix].status.set(_status)
 
-        _data_out = self.proposals_status[_current_status].pop()
-        if _data_out != _proposal_key:
-            for p in range(0, len(self.proposals_status[_current_status])):
-                if self.proposals_status[_current_status][p] == _proposal_key:
-                    self.proposals_status[_current_status][p] = _data_out
-
+        ArrayDBUtils.remove_array_item(self.proposals_status[_current_status], _proposal_key)
         self.proposals_status[_status].put(_proposal_key)
 
     def _update_percentage_completed(self, _key: str, _percent_completed: int) -> None:
@@ -504,12 +478,7 @@ class CPS_Score(IconScoreBase):
         self.progress_reports[prefix].timestamp.set(self.now())
         self.progress_reports[prefix].status.set(_status)
 
-        _data_out = self.progress_report_status[_current_status].pop()
-        if _data_out != progress_report_key:
-            for p in range(0, len(self.progress_report_status[_current_status])):
-                if self.progress_report_status[_current_status][p] == progress_report_key:
-                    self.progress_report_status[_current_status][p] = _data_out
-
+        ArrayDBUtils.remove_array_item(self.proposals_status[_current_status], progress_report_key)
         self.progress_report_status[_status].put(progress_report_key)
 
     def _add_progress_report(self, _progress_report: ProgressReportAttributes) -> None:
