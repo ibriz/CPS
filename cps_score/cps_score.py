@@ -191,6 +191,15 @@ class CPS_Score(IconScoreBase):
     def progress_report_prefix(self, _progress_key: str) -> bytes:
         return b'|'.join([PROGRESS_REPORT_DB_PREFIX, self.id.get().encode(), _progress_key.encode()])
 
+    def _validate_admins(self):
+        if self.msg.sender not in self.admins:
+            revert(f"{TAG} : Only Admins can call this method.")
+
+    def _validate_admin_score(self, _score: Address):
+        self._validate_admins()
+        if not _score.is_contract:
+            revert(f"{TAG} : Target({_score}) is not SCORE.")
+
     @payable
     def fallback(self):
         revert(f'{self.address} :ICX can only be sent while submitting a proposal or paying the penalty.')
@@ -460,12 +469,8 @@ class CPS_Score(IconScoreBase):
 
     def _add_progress_report(self, _progress_report: ProgressReportAttributes) -> None:
         progress_report_obj = createProgressDataObject(_progress_report)
-        if not self._check_progress_report(progress_report_obj.report_hash):
-            prefix = self.proposal_prefix(progress_report_obj.ipfs_hash)
-            if progress_report_obj.ipfs_hash not in self.proposals[prefix].progress_reports:
-                self.proposals[prefix].progress_reports.put(progress_report_obj.report_hash)
-
-            self.progress_key_list.put(progress_report_obj.report_hash)
+        if progress_report_obj.report_hash not in self._get_progress_keys():
+            self._add_new_progress_report_key(progress_report_obj.ipfs_hash, progress_report_obj.report_hash)
             prefix = self.progress_report_prefix(progress_report_obj.report_hash)
             addDataToProgressReportDB(prefix, self.progress_reports, progress_report_obj)
         else:
@@ -485,7 +490,6 @@ class CPS_Score(IconScoreBase):
         :return:
         """
         self.update_period()
-
         if self.period_name.get() != APPLICATION_PERIOD:
             revert(f"{self.address} : Proposals can only be submitted on Application Period")
 
@@ -803,6 +807,7 @@ class CPS_Score(IconScoreBase):
 
         :return: None
         """
+        self.set_PReps()
 
         self.initial_block.set(self.block_height)
         self.next_block.set(self.block_height + BLOCKS_DAY_COUNT * DAY_COUNT)
@@ -1512,7 +1517,7 @@ class CPS_Score(IconScoreBase):
                 if prep not in self.inactive_preps:
                     self.inactive_preps.put(prep)
 
-            if _total_voters == 0 or _total_votes == 0:
+            if _total_voters == 0 or _total_votes == 0 or len(self.valid_preps) < MINIMUM_PREPS:
                 self._update_proposal_status(_pending_proposals[proposal], self._REJECTED)
 
             elif _approve_voters / _total_voters >= MAJORITY and _approved_votes / _total_votes >= MAJORITY:
