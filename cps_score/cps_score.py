@@ -471,6 +471,9 @@ class CPS_Score(IconScoreBase):
         if self.msg.sender.is_contract:
             revert(f"{TAG} : Contract Address not supported.")
 
+        if proposal_key[IPFS_HASH] in self.get_proposal_keys():
+            raise revert(f"{self.address} : Already add proposal: {proposal_key[IPFS_HASH]}")
+
         if proposal_key[PROJECT_DURATION] > MAX_PROJECT_PERIOD:
             revert(f"{TAG} : Maximum Project Duration exceeds 6 months.")
 
@@ -751,6 +754,7 @@ class CPS_Score(IconScoreBase):
         for amount in _penalty:
             self.penalty_amount.put(to_loop(amount))
 
+    @application_period
     @payable
     @external
     def pay_prep_penalty(self):
@@ -782,7 +786,6 @@ class CPS_Score(IconScoreBase):
     def set_initialBlock(self) -> None:
         """
         To set the initial block of application period to start (once only)
-
         :return: None
         """
         self.set_PReps()
@@ -1696,3 +1699,19 @@ class CPS_Score(IconScoreBase):
 
         # Clear all data from the ArrayDB
         ArrayDBUtils.array_db_clear(self.inactive_preps)
+
+    def _validate_admins(self):
+        if self.msg.sender not in self.admins:
+            revert(f"{self.address} : Only Admins can call this method.")
+
+    def _validate_admin_score(self, _score: Address):
+        self._validate_admins()
+        if not _score.is_contract:
+            revert(f"{self.address} : Target({_score}) is not SCORE.")
+
+    def _remove_array_item(self, array_db, target):
+        _out: 'Address' = array_db.pop()
+        if _out != target:
+            for index in range(0, len(array_db)):
+                if array_db[index] == target:
+                    array_db[index] = _out
