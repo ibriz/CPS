@@ -18,6 +18,7 @@ class ProposalData(object):
 
         self.voters_reasons = ArrayDB("voters_reasons", db, bytes)
         self.total_votes = VarDB("total_votes", db, int)
+        self.total_voters = VarDB("total_voters", db, int)
         self.approved_votes = VarDB("approved_votes", db, int)
         self.rejected_votes = VarDB("rejected_votes", db, int)
 
