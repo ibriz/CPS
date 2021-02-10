@@ -306,7 +306,6 @@ class CPS_Score(IconScoreBase):
                     if prep in self.registered_preps:
                         self.valid_preps.put(prep)
 
-    @application_period
     @external
     def unregister_prep(self) -> None:
         """
@@ -431,9 +430,6 @@ class CPS_Score(IconScoreBase):
 
         return _penalty_amount
 
-    def _add_new_proposal(self, _key: str) -> None:
-        self.proposals_key_list.put(_key)
-
     def _update_proposal_status(self, _proposal_key: str, _status: str) -> None:
         prefix = self.proposal_prefix(_proposal_key)
         _current_status = self.proposals[prefix].status.get()
@@ -464,17 +460,9 @@ class CPS_Score(IconScoreBase):
         _proposal_details = getDataFromProposalDB(prefix, self.proposals)
         return _proposal_details
 
-    def _add_new_progress_report_key(self, proposal_key: str, progress_key: str) -> None:
-        self.progress_key_list.put(progress_key)
-
-        prefix = self.proposal_prefix(proposal_key)
-        if proposal_key not in self.proposals[prefix].progress_reports:
-            self.proposals[prefix].progress_reports.put(progress_key)
-
     def _update_progress_report_status(self, progress_report_key: str, _status: str) -> None:
         prefix = self.progress_report_prefix(progress_report_key)
         _current_status = self.progress_reports[prefix].status.get()
-
         self.progress_reports[prefix].timestamp.set(self.now())
         self.progress_reports[prefix].status.set(_status)
 
@@ -499,7 +487,6 @@ class CPS_Score(IconScoreBase):
         response = getDataFromProgressReportDB(prefix, self.progress_reports)
         return response
 
-    @application_period
     @external
     @payable
     def submit_proposal(self, _proposals: ProposalAttributes) -> None:
@@ -524,12 +511,12 @@ class CPS_Score(IconScoreBase):
 
         if to_loop(proposal_key[TOTAL_BUDGET]) > self.get_remaining_fund():
             revert(f'{self.address} : Budget Exceeds than Treasury Amount. '
-                   f'{self.get_remaining_fund() // MULTIPLIER} ICX')
+                   f'{self.get_remaining_fund()}')
 
         if proposal_key[SPONSOR_ADDRESS] not in self.valid_preps:
             revert(f"{self.address} : Sponsor P-Rep not a Top 100 P-Rep.")
 
-        if self.msg.value != to_loop(50):
+        if self.msg.value != to_loop(SUBMISSION_FEE):
             revert(f"{self.address} : Deposit 50 ICX to submit a proposal.")
 
         proposal_key.pop(IPFS_LINK, None)
@@ -545,9 +532,7 @@ class CPS_Score(IconScoreBase):
         self.ProposalSubmitted(self.msg.sender, "Successfully submitted a Proposal.")
         self._burn(self.msg.value)
 
-    @application_period
     @external
-    @payable
     def submit_progress_report(self, _progress_report: ProgressReportAttributes) -> None:
         """
         Submits a progress report, with ipfs_hash and report hash
@@ -558,11 +543,8 @@ class CPS_Score(IconScoreBase):
         if self.period_name.get() != APPLICATION_PERIOD:
             revert(f"{self.address} : Progress Reports can only be submitted on Application Period")
 
-        _contributor_address = self.msg.sender
-        _progress = _progress_report.copy()
-
         # TODO
-        if _contributor_address.is_contract:
+        if self.msg.sender.is_contract:
             revert(f"{self.address} : Contract Address not supported.")
 
         if self.msg.sender != self._get_proposal_details(_progress[IPFS_HASH])[CONTRIBUTOR_ADDRESS]:
