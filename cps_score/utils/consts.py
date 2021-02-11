@@ -75,10 +75,18 @@ AMOUNT = "_total_amount"
 ADDRESS = "address"
 
 # Proposals and Progress reports keys
+PROPOSAL = "proposal"
+PROGRESS_REPORTS = "progress_report"
+NEW_PROGRESS_REPORT = "new_progress_report"
 PROJECT_TITLE = "project_title"
 PROGRESS_REPORT_TITLE = "progress_report_title"
 TOTAL_VOTES = "total_votes"
 TOTAL_VOTERS = "total_voters"
+REJECTED_VOTES = "rejected_votes"
+APPROVED_VOTES = "approved_votes"
+REJECT_VOTERS = "reject_voters"
+APPROVE_VOTERS = "approve_voters"
+
 TIMESTAMP = 'timestamp'
 CONTRIBUTOR_ADDRESS = "contributor_address"
 TX_HASH = "tx_hash"
@@ -93,6 +101,7 @@ ADDITIONAL_BUDGET = 'additional_budget'
 ADDITIONAL_DURATION = 'additional_month'
 BUDGET_ADJUSTMENT = 'budget_adjustment'
 BUDGET_ADJUSTMENT_STATUS = "budget_adjustment_status"
+SPONSOR_DEPOSIT_AMOUNT = 'sponsor_deposit_amount'
 PREPS_DENYLIST = "preps_denylist"
 DENYLIST = "denylist"
 PENALTY_AMOUNT = "penalty_amount"

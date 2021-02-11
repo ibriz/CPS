@@ -18,6 +18,7 @@ class ProposalData(object):
 
         self.voters_reasons = ArrayDB("voters_reasons", db, bytes)
         self.total_votes = VarDB("total_votes", db, int)
+        self.total_voters = VarDB("total_voters", db, int)
         self.approved_votes = VarDB("approved_votes", db, int)
         self.rejected_votes = VarDB("rejected_votes", db, int)
 
@@ -32,6 +33,7 @@ class ProposalData(object):
 
         self.progress_reports = ArrayDB('progress_reports', db, str)
         self.budget_adjustment = VarDB("budget_adjustment", db, bool)
+        self.submit_progress_report = VarDB("submit_progress_report", db, bool)
 
 
 class ProposalDataDB:
@@ -63,10 +65,12 @@ def addDataToProposalDB(prefix: bytes, _proposals: 'ProposalDataDB', proposal_da
     _proposals[prefix].tx_hash.set(proposal_data.tx_hash)
     _proposals[prefix].percentage_completed.set(proposal_data.percentage_completed)
     _proposals[prefix].total_votes.set(0)
+    _proposals[prefix].total_voters.set(0)
     _proposals[prefix].approved_votes.set(0)
     _proposals[prefix].rejected_votes.set(0)
     _proposals[prefix].approved_reports.set(0)
     _proposals[prefix].budget_adjustment.set(False)
+    _proposals[prefix].submit_progress_report.set(False)
 
 
 def getDataFromProposalDB(prefix: bytes, _proposals: 'ProposalDataDB') -> dict:
@@ -76,25 +80,27 @@ def getDataFromProposalDB(prefix: bytes, _proposals: 'ProposalDataDB') -> dict:
     total_budget = _proposals[prefix].total_budget.get()
     project_duration = _proposals[prefix].project_duration.get()
     approved_reports = _proposals[prefix].approved_reports.get()
-    sponsor_address = _proposals[prefix].sponsor_address.get()
-    contributor_address = _proposals[prefix].contributor_address.get()
+    sponsor_address: 'Address' = _proposals[prefix].sponsor_address.get()
+    contributor_address: 'Address' = _proposals[prefix].contributor_address.get()
     status = _proposals[prefix].status.get()
     tx_hash = _proposals[prefix].tx_hash.get()
     percentage_completed = _proposals[prefix].percentage_completed.get()
 
     total_votes = _proposals[prefix].total_votes.get()
+    total_voters = _proposals[prefix].total_voters.get()
     approved_votes = _proposals[prefix].approved_votes.get()
     rejected_votes = _proposals[prefix].rejected_votes.get()
     sponsor_deposit_amount = _proposals[prefix].sponsor_deposit_amount.get()
     sponsored_timestamp = _proposals[prefix].sponsored_timestamp.get()
     sponsor_deposit_status = _proposals[prefix].sponsor_deposit_status.get()
     sponsor_vote_reason = _proposals[prefix].sponsor_vote_reason.get()
-    if sponsor_vote_reason is not None:
+    if sponsor_vote_reason != b"":
         sponsor_vote_reason = sponsor_vote_reason.decode('utf-8')
 
     approve_voters = len(_proposals[prefix].approve_voters)
     reject_voters = len(_proposals[prefix].reject_voters)
     budget_adjustment = _proposals[prefix].budget_adjustment.get()
+    submit_progress_report = _proposals[prefix].submit_progress_report.get()
 
     return {
         'ipfs_hash': ipfs_hash,
@@ -109,6 +115,7 @@ def getDataFromProposalDB(prefix: bytes, _proposals: 'ProposalDataDB') -> dict:
         'tx_hash': tx_hash,
         'percentage_completed': percentage_completed,
         'budget_adjustment': budget_adjustment,
+        'submit_progress_report': submit_progress_report,
         'sponsor_deposit_amount': sponsor_deposit_amount,
         'sponsored_timestamp': sponsored_timestamp,
         'sponsor_deposit_status': sponsor_deposit_status,
@@ -116,6 +123,7 @@ def getDataFromProposalDB(prefix: bytes, _proposals: 'ProposalDataDB') -> dict:
         'total_votes': total_votes,
         'approved_votes': approved_votes,
         'rejected_votes': rejected_votes,
+        'total_voters': total_voters,
         'approve_voters': approve_voters,
         'reject_voters': reject_voters
     }

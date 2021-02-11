@@ -23,6 +23,7 @@ class ProgressReportData(object):
         self.voters_list = ArrayDB("voters_list", db, Address)
         self.approve_voters = ArrayDB("approve_voters", db, Address)
         self.reject_voters = ArrayDB("reject_voters", db, Address)
+        self.total_voters = VarDB("total_voters", db, int)
 
         self.budget_approved_votes = VarDB("budget_approved_votes", db, int)
         self.budget_rejected_votes = VarDB("budget_rejected_votes", db, int)
@@ -61,6 +62,7 @@ def addDataToProgressReportDB(prefix: bytes, _proposals: 'ProgressReportDataDB',
     _proposals[prefix].budget_adjustment.set(proposal_data.budget_adjustment)
     _proposals[prefix].budget_adjustment_status.set(proposal_data.budget_adjustment_status)
     _proposals[prefix].total_votes.set(0)
+    _proposals[prefix].total_voters.set(0)
     _proposals[prefix].approved_votes.set(0)
     _proposals[prefix].rejected_votes.set(0)
 
@@ -80,6 +82,7 @@ def getDataFromProgressReportDB(prefix: bytes, _proposals: 'ProgressReportDataDB
     approved_votes = _proposals[prefix].approved_votes.get()
     rejected_votes = _proposals[prefix].rejected_votes.get()
 
+    total_voters = _proposals[prefix].total_voters.get()
     approve_voters = len(_proposals[prefix].approve_voters)
     reject_voters = len(_proposals[prefix].reject_voters)
 
@@ -104,6 +107,7 @@ def getDataFromProgressReportDB(prefix: bytes, _proposals: 'ProgressReportDataDB
         'approved_votes': approved_votes,
         'rejected_votes': rejected_votes,
 
+        'total_voters': total_voters,
         'approve_voters': approve_voters,
         'reject_voters': reject_voters,
 
