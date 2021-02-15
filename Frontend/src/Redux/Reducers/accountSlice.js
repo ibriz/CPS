@@ -39,7 +39,8 @@ const accountSlice = createSlice({
       state.isPrep = action.payload.isPrep
       state.isRegistered = action.payload.isRegistered
       state.payPenalty = action.payload.payPenalty
-      state.penaltyAmount = action.payload.penaltyAmount
+      state.penaltyAmount = IconConverter.toBigNumber(action.payload.penaltyAmount).dividedBy(10**18);
+
       state.walletBalance = IconConverter.toBigNumber(action.payload.walletBalance).dividedBy(10**18);
 
     },
