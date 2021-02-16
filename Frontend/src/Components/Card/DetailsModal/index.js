@@ -91,9 +91,9 @@ function DetailsModal(props) {
     console.log("sponorRequest", sponsorRequest, document.getElementById("sponsorVoteReason"))
     if(sponsorRequest && (status === 'Pending') && (period === 'APPLICATION') && (remainingTime > 0)) {
       if (!sponsorVoteReason) {
-        document.getElementById("sponsorVoteReason").setCustomValidity(`Please type a reason for your decision.`);
+        document.getElementById("sponsorVoteReason") && document.getElementById("sponsorVoteReason").setCustomValidity(`Please type a reason for your decision.`);
     } else {
-        document.getElementById("sponsorVoteReason").setCustomValidity(``);
+        document.getElementById("sponsorVoteReason") && document.getElementById("sponsorVoteReason").setCustomValidity(``);
       }
     }
 
