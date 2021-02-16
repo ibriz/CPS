@@ -28,7 +28,7 @@ const Vote = ({vote}) => {
                     {
                         showSponsorMessage && 
                         <Row className={styles.firstRow} style = {{paddingLeft: '15px'}}>
-                            <span style = {{fontWeight: 600, fontSize: '0.85rem'}}>Message From P-Rep:</span>
+                            <span style = {{fontWeight: 600, fontSize: '0.85rem'}}>Reason:</span>
                             {
                                 vote.reason ?
                                 <div style = {{fontSize: '0.85rem'}}                                 

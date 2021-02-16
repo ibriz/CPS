@@ -384,7 +384,7 @@ const proposalSlice = createSlice({
                 {
                     _proposal_title: proposal[PARAMS.proposalTitle],
                     ipfsKey: proposal[PARAMS.proposalHash],
-                    newProgressReport: !!parseInt(proposal[PARAMS.newProgressReport]),
+                    newProgressReport: !parseInt(proposal[PARAMS.newProgressReport]),
                     lastProgressReport: !!parseInt(proposal[PARAMS.lastProgressReport]),
                 }
             ));

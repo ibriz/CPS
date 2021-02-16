@@ -221,7 +221,7 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
                                 onConfirm={payPenaltyRequest}
                             >
                                 <div>Are you sure you pay the penalty?</div>
-                                <div style={{ color: 'red' }}>You will need to transfer {payPenaltyAmount} ICX</div>
+                                <div style={{ color: 'red' }}>You will need to transfer {`${payPenaltyAmount}`} ICX</div>
                             </ConfirmationModal>
 
                         </Alert>

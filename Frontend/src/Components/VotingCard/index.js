@@ -165,10 +165,10 @@ const VotingCard = ({ proposalList, fetchProposalListRequest, walletAddress, tot
                             }
 
 
-                            <Pagination
+                            {/* <Pagination
                                 currentPage={pageNumber?.[selectedTab]}
                                 setCurrentPage={(pageNumber) => setCurrentPages(selectedTab, pageNumber)}
-                                totalPages={totalPages[status]} />
+                                totalPages={totalPages[status]} /> */}
 
                             <DetailsModal
                                 show={modalShow}
