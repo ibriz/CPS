@@ -10,6 +10,7 @@ from iconservice import *
 def to_loop(value: int) -> int:
     return value * MULTIPLIER
 
+
 class ProposalAttributes(TypedDict):
     ipfs_hash: str
     project_title: str
@@ -166,7 +167,7 @@ class CPS_Score(IconScoreBase):
         :rtype: str
         """
         return "CPS_SCORE"
-  
+
     def set_id(self, _val: str):
         self.id.set(_val)
 
@@ -306,6 +307,9 @@ class CPS_Score(IconScoreBase):
 
         if self.msg.sender not in self.valid_preps and self.msg.sender not in self.registered_preps:
             revert(f"{TAG} : P-Rep is not registered yet.")
+
+        if self.period_name.get() != APPLICATION_PERIOD:
+            revert(f"{TAG} : P-Reps can only be unregister on Application Period")
 
         ArrayDBUtils.remove_array_item(self.valid_preps, self.msg.sender)
         ArrayDBUtils.remove_array_item(self.registered_preps, self.msg.sender)
@@ -552,7 +556,6 @@ class CPS_Score(IconScoreBase):
 
         self.ProgressReportSubmitted(self.msg.sender, f'{_progress[PROGRESS_REPORT_TITLE]} --> Progress '
                                                       f'Report Submitted Successfully.')
-
 
     @external(readonly=True)
     def get_proposals_keys_by_status(self, _status: str) -> list:
@@ -1391,7 +1394,6 @@ class CPS_Score(IconScoreBase):
                 REJECTED_VOTES: _proposal_details['budget_rejected_votes'],
                 TOTAL_VOTES: _proposal_details[TOTAL_VOTES]}
 
-
     @external
     def update_period(self):
         """
@@ -1438,7 +1440,6 @@ class CPS_Score(IconScoreBase):
                     self.previous_period_name.set(VOTING_PERIOD)
                     self.PeriodUpdate("5/5. Period Successfully Updated to Application Period.")
         self.set_PReps()
-
 
     def _update_application_result(self):
         """
