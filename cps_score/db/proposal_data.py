@@ -93,9 +93,10 @@ def getDataFromProposalDB(prefix: bytes, _proposals: 'ProposalDataDB') -> dict:
     sponsor_deposit_amount = _proposals[prefix].sponsor_deposit_amount.get()
     sponsored_timestamp = _proposals[prefix].sponsored_timestamp.get()
     sponsor_deposit_status = _proposals[prefix].sponsor_deposit_status.get()
-    sponsor_vote_reason = _proposals[prefix].sponsor_vote_reason.get()
-    if sponsor_vote_reason != b"":
-        sponsor_vote_reason = sponsor_vote_reason.decode('utf-8')
+    if _proposals[prefix].sponsor_vote_reason.get() is not None:
+        sponsor_vote_reason = _proposals[prefix].sponsor_vote_reason.get().decode('utf-8')
+    else:
+        sponsor_vote_reason = ""
 
     approve_voters = len(_proposals[prefix].approve_voters)
     reject_voters = len(_proposals[prefix].reject_voters)

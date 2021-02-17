@@ -108,6 +108,8 @@ PREPS_DENYLIST = "preps_denylist"
 DENYLIST = "denylist"
 PENALTY_AMOUNT = "penalty_amount"
 STATUS = "status"
+DATA = "data"
+COUNT = "count"
 
 # VOTE KEYS
 VOTE = "vote"
