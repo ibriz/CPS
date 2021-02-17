@@ -1,0 +1,38 @@
+.modalHeader {
+    border-bottom: none !important;
+}
+
+.container {
+    padding-left: 0px !important;
+}
+
+@media screen and (min-width: 992px) {
+    .progressTextContainer {
+        padding-left: 0px !important;
+    }
+}
+
+.modalBody img {
+    max-width: 100%;
+}   
+
+.modalBody button {
+    width: 100px;
+}
+
+.rejectButton {
+    margin-left: 10px;
+}
+
+.progressBarContainer > div {
+    margin-left: 3px
+}
+
+.fakeInput {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    left: 50%;
+    z-index: -1000;
+
+}
