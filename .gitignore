@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 cps_score/.idea/
 .idea/
 *.pkl
@@ -27,3 +28,8 @@ cps_score/.idea/
 /Frontend/yarn-debug.log*
 /Frontend/yarn-error.log*
 
+=======
+node_modules
+*.zip
+.env
+>>>>>>> Lambda_Scripts
