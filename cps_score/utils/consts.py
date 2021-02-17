@@ -12,15 +12,14 @@ MINIMUM_PREPS = 7
 # MAXIMUM PROJECT PERIOD
 MAX_PROJECT_PERIOD = 6
 
-# 2/3 Vote
+# 2/3 Vot
 MAJORITY = 0.67
 
 # Period Interval Time
 DAY_COUNT = 15
 
 # Total Blocks in 1 day
-# BLOCKS_DAY_COUNT = 43120
-BLOCKS_DAY_COUNT = 30
+BLOCKS_DAY_COUNT = 43120
 
 # User Defined Db
 PROPOSAL_DB_PREFIX = b'proposal'
@@ -30,6 +29,7 @@ PROGRESS_REPORT_DB_PREFIX = b'progressReport'
 APPLICATION_PERIOD = "Application Period"
 VOTING_PERIOD = "Voting Period"
 TRANSITION_PERIOD = "Transition Period"
+
 
 # Bond Status
 BOND_RECEIVED = "bond_received"

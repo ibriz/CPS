@@ -14,7 +14,7 @@ class ArrayDBUtils:
             _list.append(key)
 
         return _list
-
+      
     @staticmethod
     def remove_array_item(array_db, target):
         _out = array_db.pop()

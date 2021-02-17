@@ -10,7 +10,6 @@ from iconservice import *
 def to_loop(value: int) -> int:
     return value * MULTIPLIER
 
-
 class ProposalAttributes(TypedDict):
     ipfs_hash: str
     project_title: str
@@ -167,7 +166,7 @@ class CPS_Score(IconScoreBase):
         :rtype: str
         """
         return "CPS_SCORE"
-
+  
     def set_id(self, _val: str):
         self.id.set(_val)
 
@@ -554,6 +553,7 @@ class CPS_Score(IconScoreBase):
         self.ProgressReportSubmitted(self.msg.sender, f'{_progress[PROGRESS_REPORT_TITLE]} --> Progress '
                                                       f'Report Submitted Successfully.')
 
+
     @external(readonly=True)
     def get_proposals_keys_by_status(self, _status: str) -> list:
         """
@@ -686,7 +686,6 @@ class CPS_Score(IconScoreBase):
         :param _vote_reason : Any specific reason behind the vote
         :type _vote_reason : str
         """
-
         self.update_period()
         if self.period_name.get() != VOTING_PERIOD:
             revert(f"{TAG} : Progress Reports can be voted only on Voting Period.")
@@ -892,7 +891,6 @@ class CPS_Score(IconScoreBase):
         To get the period status
         :return: dict of status
         """
-
         _remaining_time = (self.next_block.get() - self.block_height) * 2
         if _remaining_time < 0:
             _remaining_time = 0
@@ -971,6 +969,7 @@ class CPS_Score(IconScoreBase):
     @external(readonly=True)
     def get_sponsors_record(self) -> dict:
         """
+
         :return: dict of P-Reps with their sponsored project counts
         """
         _proposals_keys = []
@@ -1110,7 +1109,6 @@ class CPS_Score(IconScoreBase):
 
             proposal_details = self._get_proposal_details(_ipfs_key)
             progressDetails = self._get_progress_reports_details(_progress_keys[reports])
-
             if progressDetails[STATUS] == _status:
                 progressDetails[PROJECT_TITLE] = proposal_details[PROJECT_TITLE]
                 progressDetails[CONTRIBUTOR_ADDRESS] = proposal_details[CONTRIBUTOR_ADDRESS]
@@ -1393,6 +1391,7 @@ class CPS_Score(IconScoreBase):
                 REJECTED_VOTES: _proposal_details['budget_rejected_votes'],
                 TOTAL_VOTES: _proposal_details[TOTAL_VOTES]}
 
+
     @external
     def update_period(self):
         """
@@ -1439,6 +1438,7 @@ class CPS_Score(IconScoreBase):
                     self.previous_period_name.set(VOTING_PERIOD)
                     self.PeriodUpdate("5/5. Period Successfully Updated to Application Period.")
         self.set_PReps()
+
 
     def _update_application_result(self):
         """

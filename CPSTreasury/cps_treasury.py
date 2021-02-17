@@ -272,6 +272,7 @@ class CPS_TREASURY(IconScoreBase):
         """
         After the budget adjustment is successfully approved. The added budget will be transferred from CPF
         :param _added_sponsor_reward: After budget adjustment, 2% of the total fund added for sponsor
+
         :param _ipfs_key: Proposal IPFS HASH key
         :param _added_budget: added budget
         :type _added_budget: int
@@ -380,7 +381,6 @@ class CPS_TREASURY(IconScoreBase):
         The remaining amount of the project is sent back to the CPF.
         :param _ipfs_key: Proposal IPFS HASH key
         """
-
         self._validate_cps_score()
 
         if _ipfs_key in self._proposals_keys:

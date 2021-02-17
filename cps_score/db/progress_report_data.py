@@ -106,7 +106,6 @@ def getDataFromProgressReportDB(prefix: bytes, _proposals: 'ProgressReportDataDB
         'total_votes': total_votes,
         'approved_votes': approved_votes,
         'rejected_votes': rejected_votes,
-
         'total_voters': total_voters,
         'approve_voters': approve_voters,
         'reject_voters': reject_voters,
