@@ -29,6 +29,7 @@ PROGRESS_REPORT_DB_PREFIX = b'progressReport'
 # Period Names
 APPLICATION_PERIOD = "Application Period"
 VOTING_PERIOD = "Voting Period"
+TRANSITION_PERIOD = "Transition Period"
 
 # Bond Status
 BOND_RECEIVED = "bond_received"
@@ -50,6 +51,7 @@ LASTBLOCK = "last_block"
 CURRENTBLOCK = "current_block"
 NEXTBLOCK = "next_block"
 REMAINING_TIME = "remaining_time"
+UPDATE_PERIOD_INDEX = "update_period_index"
 
 # PREPS Related Constants
 MAIN_PREPS = "main_preps"

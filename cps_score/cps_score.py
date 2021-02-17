@@ -112,6 +112,7 @@ class CPS_Score(IconScoreBase):
         self.period_name = VarDB(PERIOD_NAME, db, value_type=str)
         self.previous_period_name = VarDB(PREVIOUS_PERIOD_NAME, db, value_type=str)
         self.next_block = VarDB(NEXTBLOCK, db, value_type=int)
+        self.update_period_index = VarDB(UPDATE_PERIOD_INDEX, db, value_type=int)
 
         self.valid_preps = ArrayDB(MAIN_PREPS, db, value_type=Address)
         self.unregistered_preps = ArrayDB(UNREGISTERED_PREPS, db, value_type=Address)
@@ -1412,18 +1413,36 @@ class CPS_Score(IconScoreBase):
             if self.period_name.get() == APPLICATION_PERIOD:
                 self.period_name.set(VOTING_PERIOD)
                 self.previous_period_name.set(APPLICATION_PERIOD)
-                self.next_block.set(_current_block + BLOCKS_DAY_COUNT * DAY_COUNT)
+                self.next_block.set(self.next_block.get() + BLOCKS_DAY_COUNT * DAY_COUNT)
                 self._update_application_result()
+                self.update_period_index.set(0)
 
             else:
-                self.period_name.set(APPLICATION_PERIOD)
-                self.previous_period_name.set(VOTING_PERIOD)
-                self.next_block.set(_current_block + BLOCKS_DAY_COUNT * DAY_COUNT)
-                self._update_proposals_result()
-                self._check_progress_report_submission()
-                self._update_progress_report_result()
-                self._update_denylist_preps()
-                self.PeriodUpdate("Period Updated to Application Period.")
+                if self.update_period_index.get() == 0:
+                    self.period_name.set(TRANSITION_PERIOD)
+                    self.previous_period_name.set(APPLICATION_PERIOD)
+                    self.update_period_index.set(self.update_period_index.get() + 1)
+
+                    self.PeriodUpdate(f"1/5. Period Updated to Transition Period. After all the calculations are "
+                                      f"completed, Period will change to {APPLICATION_PERIOD}")
+                elif self.update_period_index.get() == 1:
+                    self._update_proposals_result()
+                    self.update_period_index.set(self.update_period_index.get() + 1)
+                    self.PeriodUpdate(f"2/5. Proposals Calculations Completed.")
+                elif self.update_period_index.get() == 2:
+                    self._check_progress_report_submission()
+                    self.update_period_index.set(self.update_period_index.get() + 1)
+                    self.PeriodUpdate(f"3/5. Progress Reports Checks Completed.")
+                elif self.update_period_index.get() == 3:
+                    self._update_progress_report_result()
+                    self.update_period_index.set(self.update_period_index.get() + 1)
+                    self.PeriodUpdate(f"4/5. Progress Reports Calculations Completed.")
+                else:
+                    self._update_denylist_preps()
+                    self.next_block.set(self.next_block.get() + BLOCKS_DAY_COUNT * DAY_COUNT)
+                    self.period_name.set(APPLICATION_PERIOD)
+                    self.previous_period_name.set(VOTING_PERIOD)
+                    self.PeriodUpdate("5/5. Period Successfully Updated to Application Period.")
         self.set_PReps()
 
     def _update_application_result(self):
