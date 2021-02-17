@@ -1456,6 +1456,13 @@ class CPS_Score(IconScoreBase):
             self.period_name.set(APPLICATION_PERIOD)
             self.PeriodUpdate("Period Updated back to Application Period due to less Registered P-Reps Count")
 
+        elif len(self.get_proposals_keys_by_status(self._PENDING)) == 0 and len(
+                self.progress_report_status[self._WAITING]) == 0:
+            # If there is no any voting proposals or Progress Reports then Application Period will restart
+            self.period_name.set(APPLICATION_PERIOD)
+            self.PeriodUpdate("Period Updated back to Application Period due not enough "
+                              "Voting Proposals or Progress Reports.")
+
         else:
             # Adding all the active and paused Proposals to check if they submitted any progress report or not
             for x in range(0, len(self._active)):
