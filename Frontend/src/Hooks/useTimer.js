@@ -84,11 +84,11 @@ const useTimer = () => {
             );
             let timestamp = new Date();
 
-            if(!updatePeriodTriggered) {
-                dispatch(updatePeriodFrontendWallet());
-                dispatch(fetchPeriodDetailsRequest());
-                setUpdatePeriodTriggered(true);
-            }
+            // if(!updatePeriodTriggered) {
+            //     dispatch(updatePeriodFrontendWallet());
+            //     dispatch(fetchPeriodDetailsRequest());
+            //     setUpdatePeriodTriggered(true);
+            // }
 
             if (timestamp % 40 == 0 && shouldDispatch) {
                 dispatch(fetchPeriodDetailsRequest());
