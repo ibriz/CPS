@@ -37,9 +37,7 @@
     "build": "GENERATE_SOURCEMAP=false react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "onandroid": "node node_modules/react-scripts/scripts/start.js",
-    "deploy": "npm run build && export AWS_PROFILE=CPS && aws s3 sync ./build s3://cps-frontend-stage --delete",
-    "invalidate": "aws --profile CPS cloudfront create-invalidation --distribution-id E3NS1WJPVS7Y4F --paths \"/*\""
+    "onandroid": "node node_modules/react-scripts/scripts/start.js"
   },
   "eslintConfig": {
     "extends": "react-app"
