@@ -11,7 +11,7 @@ import frontEndWallet from './FrontEndWallet';
 // var CPSScore = 'cxdf3c1ea6ba87e21957c63b21a54151a38a6ecb80';
 // var CPSScore = 'cx00c1e2d9b009fca69002c53c1ce3ed377708381e';
 // var CPSScore = 'cx6bb0e6683dd326165d42289c12b6bd0eaa596cc9';
-var CPSScore = 'cx14ceb665942b829b16ec6f969642c27a177c97e9';
+var CPSScore = 'cx0e766ec4ff71a54b66a3772c1a3fc2f24a42eb1d';
 
 export const provider = new HttpProvider('https://bicon.net.solidwallet.io/api/v3');
 export const iconService = new IconService(provider);
