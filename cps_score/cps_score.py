@@ -584,7 +584,7 @@ class CPS_Score(IconScoreBase):
         :type _ipfs_key : str
         """
         self.update_period()
-        if self.period_name.get() == VOTING_PERIOD:
+        if self.period_name.get() != APPLICATION_PERIOD:
             revert(f"{TAG} : Sponsor Vote can only be done on Application Period")
 
         _proposal_details = self._get_proposal_details(_ipfs_key)
@@ -1412,34 +1412,32 @@ class CPS_Score(IconScoreBase):
                 self.next_block.set(self.next_block.get() + BLOCKS_DAY_COUNT * DAY_COUNT)
                 self._update_application_result()
                 self.update_period_index.set(0)
+                self.set_PReps()
 
             else:
                 if self.update_period_index.get() == 0:
                     self.period_name.set(TRANSITION_PERIOD)
                     self.previous_period_name.set(APPLICATION_PERIOD)
                     self.update_period_index.set(self.update_period_index.get() + 1)
+                    self._update_proposals_result()
 
-                    self.PeriodUpdate(f"1/5. Period Updated to Transition Period. After all the calculations are "
+                    self.PeriodUpdate(f"1/4. Period Updated to Transition Period. After all the calculations are "
                                       f"completed, Period will change to {APPLICATION_PERIOD}")
                 elif self.update_period_index.get() == 1:
-                    self._update_proposals_result()
-                    self.update_period_index.set(self.update_period_index.get() + 1)
-                    self.PeriodUpdate(f"2/5. Proposals Calculations Completed.")
-                elif self.update_period_index.get() == 2:
                     self._check_progress_report_submission()
                     self.update_period_index.set(self.update_period_index.get() + 1)
-                    self.PeriodUpdate(f"3/5. Progress Reports Checks Completed.")
-                elif self.update_period_index.get() == 3:
+                    self.PeriodUpdate(f"2/4. Progress Reports Checks Completed.")
+                elif self.update_period_index.get() == 2:
                     self._update_progress_report_result()
                     self.update_period_index.set(self.update_period_index.get() + 1)
-                    self.PeriodUpdate(f"4/5. Progress Reports Calculations Completed.")
+                    self.PeriodUpdate(f"3/4. Progress Reports Calculations Completed.")
                 else:
                     self._update_denylist_preps()
                     self.next_block.set(self.next_block.get() + BLOCKS_DAY_COUNT * DAY_COUNT)
                     self.period_name.set(APPLICATION_PERIOD)
                     self.previous_period_name.set(VOTING_PERIOD)
-                    self.PeriodUpdate("5/5. Period Successfully Updated to Application Period.")
-        self.set_PReps()
+                    self.PeriodUpdate("4/4. Period Successfully Updated to Application Period.")
+                    self.set_PReps()
 
     def _update_application_result(self):
         """
@@ -1483,8 +1481,8 @@ class CPS_Score(IconScoreBase):
             prefix = self.proposal_prefix(_pending_proposals[proposal])
 
             _title = _proposal_details[PROJECT_TITLE]
-            _sponsor_address = _proposal_details[SPONSOR_ADDRESS]
-            _contributor_address = _proposal_details[CONTRIBUTOR_ADDRESS]
+            _sponsor_address: 'Address' = _proposal_details[SPONSOR_ADDRESS]
+            _contributor_address: 'Address' = _proposal_details[CONTRIBUTOR_ADDRESS]
             _total_budget: int = _proposal_details[TOTAL_BUDGET]
             _period_count: int = _proposal_details[PROJECT_DURATION]
             _sponsor_deposit_amount: int = _proposal_details[SPONSOR_DEPOSIT_AMOUNT]
@@ -1640,8 +1638,8 @@ class CPS_Score(IconScoreBase):
 
             _proposal_details = self._get_proposal_details(_ipfs_hash)
             _proposal_status = _proposal_details[STATUS]
-            _sponsor_address = _proposal_details[SPONSOR_ADDRESS]
-            _contributor_address = _proposal_details[CONTRIBUTOR_ADDRESS]
+            _sponsor_address: 'Address' = _proposal_details[SPONSOR_ADDRESS]
+            _contributor_address: 'Address' = _proposal_details[CONTRIBUTOR_ADDRESS]
 
             if not _prefix.submit_progress_report:
                 if _proposal_status == self._ACTIVE:
