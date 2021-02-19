@@ -7,7 +7,7 @@ import ProgressBar from '../../../UI/ProgressBar';
 import LowerCardTitle from '../../../UI/LowerCardList/LowerCardTitle';
 import LowerCardInfo from '../../../UI/LowerCardList/LowerCardInfo';
 import Budget from '../../../UI/LowerCardList/Budget';
-import { icxFormat } from 'helpers';
+import { icxFormat } from 'Helpers';
 import { proposalStatusMapping } from 'Constants';
 import ClassNames from 'classnames';
 import { Link } from 'react-router-dom';

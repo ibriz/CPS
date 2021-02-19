@@ -7,7 +7,7 @@ import { payPenaltyAmount } from 'Constants';
 import { connect } from 'react-redux';
 import useTimer from 'Hooks/useTimer';
 import InfoCard from './InfoCard';
-import { icxFormat } from 'helpers';
+import { icxFormat } from 'Helpers';
 import { fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, claimReward } from 'Redux/Reducers/fundSlice';
 import { fetchProjectAmountsRequest } from 'Redux/Reducers/proposalSlice';
 import styles from './Dashboard.module.scss';

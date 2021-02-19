@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import {IconConverter} from 'icon-sdk-js';
 import {progressReportStatusMapping as progressReportMapping} from 'Constants';
-import {calculatePercentage} from 'helpers';
+import {calculatePercentage} from 'Helpers';
 
 const PARAMS = {
     status: 'status',

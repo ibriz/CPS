@@ -1,4 +1,4 @@
-import {setCookie} from '../../../helpers/cookie';
+import {setCookie} from '../../../Helpers/cookie';
 
 export default function* logout() {
     try {

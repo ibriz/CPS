@@ -1,6 +1,6 @@
 import eventHandler from './EventHandler';
 import store from '../Store';
-import {getCookie} from '../../helpers/cookie';
+import {getCookie} from '../../Helpers/cookie';
 import {login, signTransaction} from '../Reducers/accountSlice';
 import {updateProposalStatus} from '../Reducers/proposalSlice';
 // import {callKeyStoreWallet} from './utils';

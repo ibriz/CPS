@@ -16,10 +16,11 @@ The CPS is part of the ICON Republic DAO governance. The CPS supports worthy pro
     ├── src                             # The source directory in the project
     │   ├── Assets                      # Assets of the Project
         │   ├── Images                  # The images used in the project
+        │   └── Styles                  # The styles (css/scss) used in the project.
     │   ├── Components                  # Presentational Components used in the project
     │   └── Constants                   # Constants Used in the Project
     │   └── Containers                  # Container Components (Pages) used in the project
-    │   └── helpers                     # Helper files used in the project
+    │   └── Helpers                     # Helper files used in the project
     │   └── Hooks                       # Custom Hooks for the project
     │   └── Redux                       # The directory for all the redux related files
         │   └── Constants               # The constants used in redux sagas (url endpoints)
@@ -32,7 +33,6 @@ The CPS is part of the ICON Republic DAO governance. The CPS supports worthy pro
         │   └── Store                   # The redux store used in the project
     │   └── Router                      # The custom files for react-router in the project
     │   └── Selectors                   # The selectors used in the project
-    │   └── styles                      # The styles (css/scss) used in the project.
 
 ## Documents
 
