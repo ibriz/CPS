@@ -9,7 +9,7 @@ The CPS is part of the ICON Republic DAO governance. The CPS supports worthy pro
 - In your terminal, cd into the directory you just created by typing ```cd CPS```
 - Type ```cd Frontend``` to navigate to the frontend directory.
 - Type ```npm install``` to install all dependencies
-- Last, but not least, type ```npm start``` to run the app locally.
+- Type ```npm start``` to run the app locally.
 
 ## Folder Structure
 
@@ -33,3 +33,8 @@ The CPS is part of the ICON Republic DAO governance. The CPS supports worthy pro
     │   └── Router                      # The custom files for react-router in the project
     │   └── Selectors                   # The selectors used in the project
     │   └── styles                      # The styles (css/scss) used in the project.
+
+## Documents
+
+- User Guide: https://medium.com/ibriz-iconosphere how-to-use-the-contribution-proposal-system-1efe714c9182 
+- CPS Whitepaper: https://docs.google.com/document/d/1g1idSDN7D64gHaBjOyhNw2dAD2YqEQcon_kB1WLJhas/edit
