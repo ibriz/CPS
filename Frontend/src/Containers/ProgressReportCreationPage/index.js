@@ -560,7 +560,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                             </Col>
                             <Col className={styles.saveButton}>
                                 {
-                                    period === "APPLICATION" ?
+                                    period !== "VOTING" ?
                                         <Button variant="info" type="submit">SUBMIT</Button>
 
                                         :

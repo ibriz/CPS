@@ -60,7 +60,7 @@ const Proposal = ({ proposal, selectedTab, onClick, proposalPendingPR = false, p
 
 
                         {
-                            ["Active", "Paused"].includes(proposalStatusMapping.find(mapping => mapping.status === proposal._status).name) && proposalPendingPRSameList && (period === "APPLICATION") && !isRemainingTimeZero &&
+                            ["Active", "Paused"].includes(proposalStatusMapping.find(mapping => mapping.status === proposal._status).name) && proposalPendingPRSameList && (period !== "VOTING") && !isRemainingTimeZero &&
                             <>
                                 <Link to={{
                                     pathname: "/newProgressReport",

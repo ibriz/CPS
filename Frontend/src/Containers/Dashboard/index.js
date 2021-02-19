@@ -47,7 +47,7 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
                 value: `${icxFormat(expectedGrant, true)} ICX`
             },
             {
-                title: `Remaining Time in ${period === "APPLICATION" ? 'Application Period' : 'Voting Period'}`,
+                title: `Remaining Time in ${period !== "VOTING" ? 'Application Period' : 'Voting Period'}`,
                 color: '#1AAABA',
                 // value={period === "APPLICATION" ? 'Application Period' : 'Voting Period'} />
                 value: `${highestSignificantTime.value} ${highestSignificantTime.text}`
@@ -75,7 +75,7 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
                 value: period === "APPLICATION" ? totalCountSponsorRequests.Pending : (remainingVotesProposal.length + remainingVotesPR.length)
             },
             {
-                title: `Remaining Time in ${period === "APPLICATION" ? 'Application Period' : 'Voting Period'}`,
+                title: `Remaining Time in ${period !== "VOTING" ? 'Application Period' : 'Voting Period'}`,
                 color: '#1AAABA',
                 // value={period === "APPLICATION" ? 'Application Period' : 'Voting Period'} />
                 value: ` ${highestSignificantTime.value} ${highestSignificantTime.text}`
@@ -140,7 +140,7 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
 
             <Row style={{ marginTop: '30px' }}>
                 <Col xs="12">
-                    <div className = {styles.period}>Period: {period === "APPLICATION" ? 'Application Period' : 'Voting Period'}</div>
+                    <div className = {styles.period}>Period: {period !== "VOTING" ? 'Application Period' : 'Voting Period'}</div>
                 </Col>
             </Row>
 

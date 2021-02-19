@@ -376,7 +376,7 @@ function DetailsModal(props) {
             <Col xs="12">
                 <div style = {{textAlign: 'center', color: '#262626', marginBottom: '5px', fontWeight: '600', fontSize: '1rem'}}>
                   <>
-                  {period === 'APPLICATION' ? 'Voting starts in ' : 'Voting ends in '}
+                  {period !== 'VOTING' ? 'Voting starts in ' : 'Voting ends in '}
                   </>
                   <b>{remainingTimer.day}</b> days <b>{remainingTimer.hour}</b> hours <b>{remainingTimer.minute}</b> minutes <b>{remainingTimer.second}</b> seconds
                   </div>

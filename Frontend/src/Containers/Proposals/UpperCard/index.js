@@ -19,23 +19,24 @@ const UpperCard = ({ numberOfSubmittedProposals, updatePeriod, sponsorRequest, v
         setPeriodConfirmationShow(true);
     }
 
-    if (remainingTimeSecond === 0) {
-        button = <Button variant="primary" className={styles.createProposalButton} onClick={onClickUpdatePeriod}>UPDATE PERIOD </Button>
-        text = <span className={styles.proposalNumber}>Click button to trigger {period === 'APPLICATION' ? 'Voting' : 'Application'} Period</span>
+    // if (remainingTimeSecond === 0) {
+    //     button = <Button variant="primary" className={styles.createProposalButton} onClick={onClickUpdatePeriod}>UPDATE PERIOD </Button>
+    //     text = <span className={styles.proposalNumber}>Click button to trigger {period === 'APPLICATION' ? 'Voting' : 'Application'} Period</span>
 
-    } else if (sponsorRequest || voting) {
+    // } else 
+    if (sponsorRequest || voting) {
         text = null;
         button = null;
 
     } else {
         button = <Link to="/newProposal">
 
-            <Button variant="info" className={styles.createProposalButton}>{period === 'APPLICATION' ? 'CREATE NEW PROPOSAL' : 'CREATE PROPOSAL DRAFT'}</Button>
+            <Button variant="info" className={styles.createProposalButton}>{period !== 'VOTING' ? 'CREATE NEW PROPOSAL' : 'CREATE PROPOSAL DRAFT'}</Button>
         </Link>
 
         // text = <span className={styles.proposalNumber}>{numberOfSubmittedProposals} Proposals submitted</span>
          
-        text = <span className={styles.proposalNumber}>{period === 'APPLICATION' ? 'Create a New Proposal' : 'This is voting period. You can still create a proposal draft'}</span>
+        text = <span className={styles.proposalNumber}>{period !== 'VOTING' ? 'Create a New Proposal' : 'This is voting period. You can still create a proposal draft'}</span>
 
     } 
     // else {

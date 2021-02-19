@@ -23,7 +23,7 @@ const TabularData = ({ numberOfPendingProposals, numberOfSubmittedProposals, tot
     const tabularData = [
         {
             key: 'Period',
-            value: period === 'APPLICATION' ? 'Application Period' : 'Voting Period'
+            value: period !== 'VOTING' ? 'Application Period' : 'Voting Period'
         },
         {
             key: 'No. of Registered P-Reps',
