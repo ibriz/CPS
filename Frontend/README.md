@@ -5,15 +5,11 @@
 The CPS is part of the ICON Republic DAO governance. The CPS supports worthy projects through grants from the Contribution Proposal Fund (CPF), which grows through the daily accumulation of block rewards. Learn how to submit a proposal and get paid to contribute to the ICON DAO by working on infrastructure, development, or community activities.
 
 ## Installation
-- Clone the repo in your terminal by clicking the _green_ clone or download button at the top right and copyin the url
-- In your terminal, type ```git clone https://github.com/ibriz/CPS.git```
-- This will copy all the files from this repo down to your computer
-- In your terminal, cd into the directory you just created
+- Clone the repo in your terminal by typing ```git clone https://github.com/ibriz/CPS.git```. This will copy all the files from this repo down to your computer
+- In your terminal, cd into the directory you just created by typing ```cd CPS```
 - Type ```cd Frontend``` to navigate to the frontend directory.
 - Type ```npm install``` to install all dependencies
 - Last, but not least, type ```npm start``` to run the app locally.
-
-- To look at the code, just open up the project in your favorite code editor!
 
 ## Folder Structure
 
