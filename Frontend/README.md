@@ -19,21 +19,21 @@ The CPS is part of the ICON Republic DAO governance. The CPS supports worthy pro
 
     ├── src                             # The source directory in the project
     │   ├── Assets                      # Assets of the Project
-        │   ├── Images                      # The images used in the project
+        │   ├── Images                  # The images used in the project
     │   ├── Components                  # Presentational Components used in the project
     │   └── Constants                   # Constants Used in the Project
     │   └── Containers                  # Container Components (Pages) used in the project
     │   └── helpers                     # Helper files used in the project
     │   └── Hooks                       # Custom Hooks for the project
     │   └── Redux                       # The directory for all the redux related files
-        │   └── Constants                   # The constants used in redux sagas (url endpoints)
-        │   └── ICON                        # The helper files for communicating with ICONEX
-            │   └── CustomEvents                # The custom events dispatched to send request to ICONEXX
-            │   └── EventHandler                # Event Handlers used to listen events from ICONEX
-            │   └── FrontendEndWalelt           # The wallet used in the frontend
-        │   └── Reducers                    # Redux Reducers / Slice used in the project.
-        │   └── Sagas                       # The Redux Sagas used in the project
-        │   └── Store                       # The redux store used in the project
+        │   └── Constants               # The constants used in redux sagas (url endpoints)
+        │   └── ICON                    # The helper files for communicating with ICONEX
+            │   └── CustomEvents        # The custom events dispatched to send request to ICONEXX
+            │   └── EventHandler        # Event Handlers used to listen events from ICONEX
+            │   └── FrontendEndWalelt   # The wallet used in the frontend
+        │   └── Reducers                # Redux Reducers / Slice used in the project.
+        │   └── Sagas                   # The Redux Sagas used in the project
+        │   └── Store                   # The redux store used in the project
     │   └── Router                      # The custom files for react-router in the project
     │   └── Selectors                   # The selectors used in the project
     │   └── styles                      # The styles (css/scss) used in the project.
