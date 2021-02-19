@@ -517,7 +517,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                             </Col>
                             <Col className={styles.saveButton}>
                                 {
-                                    period === "APPLICATION" ?
+                                    period !== "VOTING" ?
                                         <Button variant="info" type="submit">SUBMIT</Button>
 
                                         :
