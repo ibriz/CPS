@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { fetchProposalListRequest, fetchProjectAmountsRequest } from 'Redux/Reducers/proposalSlice';
 import wallet from 'Redux/ICON/FrontEndWallet';
 import {fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest} from 'Redux/Reducers/fundSlice';
-import {icxFormat} from 'helpers';
+import {icxFormat} from 'Helpers';
 import useTimer from 'Hooks/useTimer';
 import { fetchPrepsRequest } from 'Redux/Reducers/prepsSlice';
 

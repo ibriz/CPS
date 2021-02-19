@@ -22,7 +22,7 @@ import {
   getProgressReportRejectedPercentage, getProgressReportRejectedVotersPercentage,
   getBudgetAdjustmentRejectedPercentage, getBudgetAdjustmentRejectedVotersPercentage
 } from 'Selectors';
-import { icxFormat } from 'helpers';
+import { icxFormat } from 'Helpers';
 import ProgressBarCombined from 'Components/Card/ProgressBarCombined';
 import useTimer from 'Hooks/useTimer';
 import VoteProgressBar from 'Components/VoteProgressBar';

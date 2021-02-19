@@ -16,7 +16,7 @@ import {
   getProposalApprovedPercentage, getProposalApprovedVotersPercentage,
   getProposalRejectedPercentage, getProposalRejectedVotersPercentage
 } from 'Selectors';
-import { icxFormat } from 'helpers';
+import { icxFormat } from 'Helpers';
 import DetailsModalPR from 'Components/Card/DetailsModalProgressReport';
 import IconService from 'icon-sdk-js';
 import ProgressBarCombined from 'Components/Card/ProgressBarCombined';

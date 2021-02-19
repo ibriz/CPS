@@ -7,7 +7,7 @@ import {
   BrowserRouter as Router,
 } from "react-router-dom";
 // import 'bootstrap/dist/css/bootstrap.min.css';
-import './styles/App.scss';
+import 'Assets/Styles/App.scss';
 import 'react-notifications/lib/notifications.css';
 
 import { Provider } from 'react-redux';
