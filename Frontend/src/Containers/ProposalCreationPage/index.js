@@ -380,7 +380,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                             <Form.Label column sm="12">
                                 Description
                                 <span className={styles.required}></span>
-                                <InfoIcon description="A detailed description for the project (minimum 100 words)" />
+                                <InfoIcon description="A detailed description for the project (minimum 10 words)" />
                             </Form.Label>
                             <Col sm="12" style={{ position: 'relative' }}>
                                 <RichTextEditor
@@ -517,7 +517,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                             </Col>
                             <Col className={styles.saveButton}>
                                 {
-                                    period === "APPLICATION" ?
+                                    period !== "VOTING" ?
                                         <Button variant="info" type="submit">SUBMIT</Button>
 
                                         :

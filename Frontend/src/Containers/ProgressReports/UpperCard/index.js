@@ -30,11 +30,13 @@ const UpperCard = ({ numberOfSubmittedProposals, updatePeriod, sponsorRequest, v
         setPeriodConfirmationShow(true);
     }
 
-    if (remainingTimeSecond === 0) {
-        button = <Button variant="primary" className={styles.createProposalButton} onClick={onClickUpdatePeriod}>UPDATE PERIOD </Button>
-        text = <span className={styles.proposalNumber}>Click button to trigger {period === 'APPLICATION' ? 'Voting' : 'Application'} Period</span>
+    // if (remainingTimeSecond === 0) {
+    //     button = <Button variant="primary" className={styles.createProposalButton} onClick={onClickUpdatePeriod}>UPDATE PERIOD </Button>
+    //     text = <span className={styles.proposalNumber}>Click button to trigger {period === 'APPLICATION' ? 'Voting' : 'Application'} Period</span>
 
-    } else if (sponsorRequest || voting) {
+    // } 
+    // else 
+    if (sponsorRequest || voting) {
         text = null;
         button = null;
 
@@ -42,10 +44,10 @@ const UpperCard = ({ numberOfSubmittedProposals, updatePeriod, sponsorRequest, v
 
         if (newProgressReportInfo.totalProgressReportCount === 0) {
             text = <span className={styles.proposalNumber}>You have no active or paused proposal</span>
-            button = <span className={styles.proposalNumber}>You need to have active or paused proposal to {period === 'APPLICATION' ? 'create new progress report' : 'create progress report draft'}</span>
+            button = <span className={styles.proposalNumber}>You need to have active or paused proposal to {period !== 'VOTING' ? 'create new progress report' : 'create progress report draft'}</span>
         }
 
-        else if (newProgressReportInfo.canCreateNewProgressReportCount === 0 && period === 'APPLICATION') {
+        else if (newProgressReportInfo.canCreateNewProgressReportCount === 0 && period !== 'VOTING') {
             text = <span className={styles.proposalNumber}>You have created progress report for all of your active or paused proposals.</span>
             button = null
         }
@@ -54,9 +56,9 @@ const UpperCard = ({ numberOfSubmittedProposals, updatePeriod, sponsorRequest, v
         else {
             button = <Link to="/newProgressReport">
 
-                <Button variant="info" className={styles.createProposalButton}>{period === 'APPLICATION' ? 'CREATE NEW PROGRESS REPORT' : 'CREATE PROGRESS REPORT DRAFT'}</Button>
+                <Button variant="info" className={styles.createProposalButton}>{period !== 'VOTING' ? 'CREATE NEW PROGRESS REPORT' : 'CREATE PROGRESS REPORT DRAFT'}</Button>
             </Link>
-            if (period === 'APPLICATION')
+            if (period !== 'VOTING')
             {
                 text = <span className={styles.proposalNumber}>You have created progress report for <b>{newProgressReportInfo.totalProgressReportCount - newProgressReportInfo.canCreateNewProgressReportCount}</b> out of <b>{newProgressReportInfo.totalProgressReportCount}</b> active proposals. </span>
 
