@@ -1269,41 +1269,29 @@ class CPS_Score(IconScoreBase):
 
         _vote_status = []
 
-        if not _voters_list:
-            return {DATA: _vote_status, APPROVE_VOTERS: _proposal_details[APPROVE_VOTERS],
-                    REJECT_VOTERS: _proposal_details[REJECT_VOTERS],
-                    TOTAL_VOTERS: _proposal_details[TOTAL_VOTERS],
-                    APPROVED_VOTES: _proposal_details[APPROVED_VOTES],
-                    REJECTED_VOTES: _proposal_details[REJECTED_VOTES],
-                    TOTAL_VOTES: _proposal_details[TOTAL_VOTES]}
+        for i, voter in enumerate(_voters_list):
+            if voter in _approved_voters_list:
+                vote = APPROVE
+            elif voter in _rejected_voters_list:
+                vote = REJECT
+            else:
+                vote = ABSTAIN
 
-        else:
-            for voters in range(0, len(_voters_list)):
-                if _voters_list[voters] in _approved_voters_list:
-                    _voters = {ADDRESS: _voters_list[voters],
-                               PREP_NAME: self._get_prep_name(_voters_list[voters]),
-                               VOTE_REASON: proposals_prefix_.voters_reasons[voters].decode('utf-8'),
-                               VOTE: APPROVE}
+            reason = proposals_prefix_.voters_reasons[i]
+            reason = "" if reason is None else reason.decode('utf-8')
 
-                elif _voters_list[voters] in _rejected_voters_list:
-                    _voters = {ADDRESS: _voters_list[voters],
-                               PREP_NAME: self._get_prep_name(_voters_list[voters]),
-                               VOTE_REASON: proposals_prefix_.voters_reasons[voters].decode('utf-8'),
-                               VOTE: REJECT}
-                else:
-                    _voters = {ADDRESS: _voters_list[voters],
-                               PREP_NAME: self._get_prep_name(_voters_list[voters]),
-                               VOTE_REASON: proposals_prefix_.voters_reasons[voters].decode('utf-8'),
-                               VOTE: ABSTAIN}
+            _voters = {ADDRESS: voter,
+                       PREP_NAME: self._get_prep_name(voter),
+                       VOTE_REASON: reason,
+                       VOTE: vote}
+            _vote_status.append(_voters)
 
-                _vote_status.append(_voters)
-
-            return {DATA: _vote_status, APPROVE_VOTERS: _proposal_details[APPROVE_VOTERS],
-                    REJECT_VOTERS: _proposal_details[REJECT_VOTERS],
-                    TOTAL_VOTERS: _proposal_details[TOTAL_VOTERS],
-                    APPROVED_VOTES: _proposal_details[APPROVED_VOTES],
-                    REJECTED_VOTES: _proposal_details[REJECTED_VOTES],
-                    TOTAL_VOTES: _proposal_details[TOTAL_VOTES]}
+        return {DATA: _vote_status, APPROVE_VOTERS: _proposal_details[APPROVE_VOTERS],
+                REJECT_VOTERS: _proposal_details[REJECT_VOTERS],
+                TOTAL_VOTERS: _proposal_details[TOTAL_VOTERS],
+                APPROVED_VOTES: _proposal_details[APPROVED_VOTES],
+                REJECTED_VOTES: _proposal_details[REJECTED_VOTES],
+                TOTAL_VOTES: _proposal_details[TOTAL_VOTES]}
 
     @external(readonly=True)
     def get_progress_report_result(self, _report_key: str) -> dict:
