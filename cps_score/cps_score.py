@@ -563,11 +563,7 @@ class CPS_Score(IconScoreBase):
         if _status not in self.STATUS_TYPE:
             return [f"{TAG} : Not a valid status."]
 
-        _list = []
-        for x in self.proposals_status[_status]:
-            _list.append(x)
-
-        return _list
+        return [x for x in self.proposals_status[_status]]
 
     @external
     @payable
