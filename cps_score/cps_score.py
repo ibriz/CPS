@@ -1395,21 +1395,22 @@ class CPS_Score(IconScoreBase):
                 self.set_PReps()
 
             else:
-                if self.update_period_index.get() == 0:
+                update_period_index = self.update_period_index.get()
+                if update_period_index == 0:
                     self.period_name.set(TRANSITION_PERIOD)
                     self.previous_period_name.set(APPLICATION_PERIOD)
-                    self.update_period_index.set(self.update_period_index.get() + 1)
+                    self.update_period_index.set(update_period_index + 1)
                     self._update_proposals_result()
 
                     self.PeriodUpdate(f"1/4. Period Updated to Transition Period. After all the calculations are "
                                       f"completed, Period will change to {APPLICATION_PERIOD}")
-                elif self.update_period_index.get() == 1:
+                elif update_period_index == 1:
                     self._check_progress_report_submission()
-                    self.update_period_index.set(self.update_period_index.get() + 1)
+                    self.update_period_index.set(update_period_index + 1)
                     self.PeriodUpdate(f"2/4. Progress Reports Checks Completed.")
-                elif self.update_period_index.get() == 2:
+                elif update_period_index == 2:
                     self._update_progress_report_result()
-                    self.update_period_index.set(self.update_period_index.get() + 1)
+                    self.update_period_index.set(update_period_index + 1)
                     self.PeriodUpdate(f"3/4. Progress Reports Calculations Completed.")
                 else:
                     self._update_denylist_preps()
