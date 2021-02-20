@@ -117,7 +117,7 @@ class CPS_Score(IconScoreBase):
         self.denylist = ArrayDB(DENYLIST, db, value_type=Address)
 
         self.penalty_amount = ArrayDB(PENALTY_AMOUNT, db, value_type=int)
-        self.preps_denylist = DictDB(PREPS_DENYLIST, db, value_type=str)
+        self.preps_denylist = DictDB(PREPS_DENYLIST, db, value_type=int)
 
         self.proposals_key_list = ArrayDB(PROPOSALS_KEY_LIST, db, value_type=str)
         self.progress_key_list = ArrayDB(PROGRESS_KEY_LIST, db, value_type=str)
@@ -389,14 +389,12 @@ class CPS_Score(IconScoreBase):
         :param _address: Address of the Denied P-Rep
         :return: integer ICX amount for Penalty
         """
-        if self.preps_denylist[str(_address)] == "Denylist for once.":
-            _penalty_amount = self.penalty_amount[0]
-        elif self.preps_denylist[str(_address)] == "Denylist for twice.":
-            _penalty_amount = self.penalty_amount[1]
-        else:
-            _penalty_amount = self.penalty_amount[2]
+        count = self.preps_denylist[str(_address)]
+        if count == 0:
+            revert(f"{TAG} : {_address} does not need to pay penalty")
 
-        return _penalty_amount
+        idx = count - 1 if count < 3 else 2
+        return self.penalty_amount[idx]
 
     def _update_proposal_status(self, _proposal_key: str, _status: str) -> None:
         prefix = self.proposal_prefix(_proposal_key)
@@ -1679,12 +1677,8 @@ class CPS_Score(IconScoreBase):
             ArrayDBUtils.remove_array_item(self.registered_preps, _prep)
 
             self.denylist.put(_prep)
-            if self.preps_denylist[str(_prep)] == "":
-                self.preps_denylist[str(_prep)] = "Denylist for once."
-            elif self.preps_denylist[str(_prep)] == "Denylist for once.":
-                self.preps_denylist[str(_prep)] = "Denylist for twice."
-            else:
-                self.preps_denylist[str(_prep)] = "Denylist for more than twice."
+            count = self.preps_denylist[str(_prep)] + 1
+            self.preps_denylist[str(_prep)] = count if count < 3 else 3
 
             self.PRepPenalty(_prep, "P-Rep added to Denylist.")
 
