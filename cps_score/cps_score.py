@@ -984,6 +984,7 @@ class CPS_Score(IconScoreBase):
         """
         _proposals_keys = []
         _sponsors_list = []
+        sponsors_dict = {}
 
         for a in self.get_proposals_keys_by_status(self._ACTIVE):
             _proposals_keys.append(a)
@@ -996,9 +997,8 @@ class CPS_Score(IconScoreBase):
 
         for sponsors in _proposals_keys:
             _proposal_details = self._get_proposal_details(sponsors)
-            _sponsors_list.append(str(_proposal_details[SPONSOR_ADDRESS]))
-
-        sponsors_dict = {i: _sponsors_list.count(i) for i in _sponsors_list}
+            sponsor_address = str(_proposal_details[SPONSOR_ADDRESS])
+            sponsors_dict[sponsor_address] = sponsors_dict.get(sponsor_address, 0) + 1
 
         return sponsors_dict
 
