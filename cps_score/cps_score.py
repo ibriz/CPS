@@ -1600,7 +1600,7 @@ class CPS_Score(IconScoreBase):
             _sponsor_address: 'Address' = _proposal_details[SPONSOR_ADDRESS]
             _contributor_address: 'Address' = _proposal_details[CONTRIBUTOR_ADDRESS]
 
-            if not _prefix.submit_progress_report:
+            if not _prefix.submit_progress_report.get():
                 if _proposal_status == self._ACTIVE:
                     self._update_proposal_status(_ipfs_hash, self._PAUSED)
 
