@@ -1312,26 +1312,16 @@ class CPS_Score(IconScoreBase):
         _rejected_voters_list = reports_prefix_.reject_voters
         _vote_status = []
 
-        if not _voters_list:
-            return {DATA: _vote_status, APPROVE_VOTERS: _proposal_details[APPROVE_VOTERS],
-                    REJECT_VOTERS: _proposal_details[REJECT_VOTERS],
-                    TOTAL_VOTERS: _proposal_details[TOTAL_VOTERS],
-                    APPROVED_VOTES: _proposal_details[APPROVED_VOTES],
-                    REJECTED_VOTES: _proposal_details[REJECTED_VOTES],
-                    TOTAL_VOTES: _proposal_details[TOTAL_VOTES]}
-
         # Differentiating the P-Rep(s) votes according to their votes
-        for voters in range(0, len(_voters_list)):
-            if _voters_list[voters] in _approved_voters_list:
-                _voters = {ADDRESS: _voters_list[voters],
-                           PREP_NAME: self._get_prep_name(_voters_list[voters]),
-                           VOTE_REASON: reports_prefix_.voters_reasons[voters].decode('utf-8'),
-                           VOTE: APPROVE}
-            else:
-                _voters = {ADDRESS: _voters_list[voters],
-                           PREP_NAME: self._get_prep_name(_voters_list[voters]),
-                           VOTE_REASON: reports_prefix_.voters_reasons[voters].decode('utf-8'),
-                           VOTE: REJECT}
+        for i, voter in enumerate(_voters_list):
+            vote = APPROVE if voter in _approved_voters_list else REJECT
+            reason = reports_prefix_.voters_reasons[i]
+            reason = "" if reason is None else reason.decode('utf-8')
+
+            _voters = {ADDRESS: voter,
+                       PREP_NAME: self._get_prep_name(voter),
+                       VOTE_REASON: reason,
+                       VOTE: vote}
             _vote_status.append(_voters)
 
         return {DATA: _vote_status, APPROVE_VOTERS: _proposal_details[APPROVE_VOTERS],
