@@ -1117,9 +1117,9 @@ class CPS_Score(IconScoreBase):
             prefix = self.progress_report_prefix(_progress_keys[reports])
             _ipfs_key = self.progress_reports[prefix].ipfs_hash.get()
 
-            proposal_details = self._get_proposal_details(_ipfs_key)
             progressDetails = self._get_progress_reports_details(_progress_keys[reports])
             if progressDetails[STATUS] == _status:
+                proposal_details = self._get_proposal_details(_ipfs_key)
                 progressDetails[PROJECT_TITLE] = proposal_details[PROJECT_TITLE]
                 progressDetails[CONTRIBUTOR_ADDRESS] = proposal_details[CONTRIBUTOR_ADDRESS]
                 _progress_report_list.append(progressDetails)
