@@ -154,8 +154,8 @@ class CPS_Score(IconScoreBase):
                                        self._PROGRESS_REPORT_REJECTED: self._progress_rejected}
 
     def on_install(self) -> None:
-        self.admins.put(self.owner)
         super().on_install()
+        self.admins.put(self.owner)
 
     def on_update(self) -> None:
         super().on_update()
@@ -475,9 +475,10 @@ class CPS_Score(IconScoreBase):
         if proposal_key[PROJECT_DURATION] > MAX_PROJECT_PERIOD:
             revert(f"{TAG} : Maximum Project Duration exceeds 6 months.")
 
-        if to_loop(proposal_key[TOTAL_BUDGET]) > self.get_remaining_fund():
+        remaining_fund = self.get_remaining_fund()
+        if to_loop(proposal_key[TOTAL_BUDGET]) > remaining_fund:
             revert(f"{TAG} : Budget Exceeds than Treasury Amount. "
-                   f"{self.get_remaining_fund()}")
+                   f"{remaining_fund}")
 
         if proposal_key[SPONSOR_ADDRESS] not in self.valid_preps:
             revert(f"{TAG} : Sponsor P-Rep not a Top 100 P-Rep.")
@@ -536,8 +537,9 @@ class CPS_Score(IconScoreBase):
 
         if _progress[BUDGET_ADJUSTMENT]:
             if not _prefix.percentage_completed.get():
-                if _progress[ADDITIONAL_BUDGET] > self.get_remaining_fund():
-                    revert(f"{TAG} : Additional Budget Exceeds than Treasury Amount. {self.get_remaining_fund()}")
+                remaining_fund = self.get_remaining_fund()
+                if _progress[ADDITIONAL_BUDGET] > remaining_fund:
+                    revert(f"{TAG} : Additional Budget Exceeds than Treasury Amount. {remaining_fund}")
                 self.budget_approvals_list.put(_progress[REPORT_HASH])
                 _progress[BUDGET_ADJUSTMENT_STATUS] = self._PENDING
                 _prefix.budget_adjustment.set(True)
