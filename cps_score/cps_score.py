@@ -969,9 +969,10 @@ class CPS_Score(IconScoreBase):
         count = len(self.contributors)
         end = count if _end_index > count else _end_index
 
-        for address in range(_start_index, end):
+        for i in range(_start_index, end):
+            address = self.contributors[i]
             if address not in _contributors_list:
-                _contributors_list.append(self.contributors[address])
+                _contributors_list.append(address)
 
         return _contributors_list
 
