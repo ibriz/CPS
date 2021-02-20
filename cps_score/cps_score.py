@@ -1351,25 +1351,20 @@ class CPS_Score(IconScoreBase):
         _rejected_voters_list = reports_prefix_.budget_reject_voters
         _vote_status = []
 
-        for voters in range(0, len(_voters_list)):
-            if _voters_list[voters] in _approved_voters_list:
-                _voters = {ADDRESS: _voters_list[voters],
-                           PREP_NAME: self._get_prep_name(_voters_list[voters]),
-                           VOTE_REASON: reports_prefix_.voters_reasons[voters].decode('utf-8'),
-                           VOTE: APPROVE}
-
-            elif _voters_list[voters] in _rejected_voters_list:
-                _voters = {ADDRESS: _voters_list[voters],
-                           PREP_NAME: self._get_prep_name(_voters_list[voters]),
-                           VOTE_REASON: reports_prefix_.voters_reasons[voters].decode('utf-8'),
-                           VOTE: REJECT}
-
+        for i, voter in enumerate(_voters_list):
+            if voter in _approved_voters_list:
+                vote = APPROVE
+            elif voter in _rejected_voters_list:
+                vote = REJECT
             else:
-                _voters = {ADDRESS: _voters_list[voters],
-                           PREP_NAME: self._get_prep_name(_voters_list[voters]),
-                           VOTE_REASON: reports_prefix_.voters_reasons[voters].decode('utf-8'),
-                           VOTE: "not voted"}
+                vote = "not voted"
 
+            reason = reports_prefix_.voters_reasons[i]
+            reason = "" if reason is None else reason.decode('utf-8')
+            _voters = {ADDRESS: voter,
+                       PREP_NAME: self._get_prep_name(voter),
+                       VOTE_REASON: reason,
+                       VOTE: vote}
             _vote_status.append(_voters)
 
         return {DATA: _vote_status, APPROVE_VOTERS: _proposal_details['budget_approve_voters'],
