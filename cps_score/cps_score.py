@@ -373,20 +373,14 @@ class CPS_Score(IconScoreBase):
         Returns a list of proposal ipfs hash
         :return: list of proposal keys
         """
-        proposals = []
-        for item in self.proposals_key_list:
-            proposals.append(item)
-        return proposals
+        return [item for item in self.proposals_key_list]
 
     def _get_progress_keys(self) -> list:
         """
         Return a list of progress reports ipfs hash
         :return: list of progress report ipfs hash
         """
-        progress_reports = []
-        for item in self.progress_key_list:
-            progress_reports.append(item)
-        return progress_reports
+        return [item for item in self.progress_key_list]
 
     def _get_penalty_amount(self, _address: Address) -> int:
         """
@@ -887,12 +881,7 @@ class CPS_Score(IconScoreBase):
         """
         :return: list of P-Rep denylist
         """
-        _preps = []
-
-        for _address in self.denylist:
-            _preps.append(_address)
-
-        return _preps
+        return [_address for _address in self.denylist]
 
     @external(readonly=True)
     def get_period_status(self) -> dict:
