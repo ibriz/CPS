@@ -156,6 +156,8 @@ class CPS_Score(IconScoreBase):
     def on_install(self) -> None:
         super().on_install()
         self.admins.put(self.owner)
+        for _ in range(3):
+            self.penalty_amount.put(0)
 
     def on_update(self) -> None:
         super().on_update()
@@ -751,8 +753,10 @@ class CPS_Score(IconScoreBase):
 
         if len(_penalty) != 3:
             revert(f"{TAG} : Exactly 3 Penalty amount Required.")
-        for amount in _penalty:
-            self.penalty_amount.put(to_loop(amount))
+        for i, amount in enumerate(_penalty):
+            if amount < 0:
+                revert(f"{TAG} : Invalid amount({amount})")
+            self.penalty_amount[i] = to_loop(amount)
 
     @payable
     @external
