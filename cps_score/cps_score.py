@@ -117,7 +117,7 @@ class CPS_Score(IconScoreBase):
         self.denylist = ArrayDB(DENYLIST, db, value_type=Address)
 
         self.penalty_amount = ArrayDB(PENALTY_AMOUNT, db, value_type=int)
-        self.preps_denylist = DictDB(PREPS_DENYLIST, db, value_type=str)
+        self.preps_denylist_status = DictDB(PREPS_DENYLIST_STATUS, db, value_type=int)
 
         self.proposals_key_list = ArrayDB(PROPOSALS_KEY_LIST, db, value_type=str)
         self.progress_key_list = ArrayDB(PROGRESS_KEY_LIST, db, value_type=str)
