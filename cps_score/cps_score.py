@@ -369,20 +369,14 @@ class CPS_Score(IconScoreBase):
         Returns a list of proposal ipfs hash
         :return: list of proposal keys
         """
-        proposals = []
-        for item in self.proposals_key_list:
-            proposals.append(item)
-        return proposals
+        return [item for item in self.proposals_key_list]
 
     def _get_progress_keys(self) -> list:
         """
         Return a list of progress reports ipfs hash
         :return: list of progress report ipfs hash
         """
-        progress_reports = []
-        for item in self.progress_key_list:
-            progress_reports.append(item)
-        return progress_reports
+        return [item for item in self.progress_key_list]
 
     def _get_penalty_amount(self, _address: Address) -> int:
         """
@@ -471,9 +465,10 @@ class CPS_Score(IconScoreBase):
         if proposal_key[PROJECT_DURATION] > MAX_PROJECT_PERIOD:
             revert(f"{TAG} : Maximum Project Duration exceeds 6 months.")
 
-        if to_loop(proposal_key[TOTAL_BUDGET]) > self.get_remaining_fund():
+        remaining_fund = self.get_remaining_fund()
+        if to_loop(proposal_key[TOTAL_BUDGET]) > remaining_fund:
             revert(f"{TAG} : Budget Exceeds than Treasury Amount. "
-                   f"{self.get_remaining_fund()}")
+                   f"{remaining_fund}")
 
         if proposal_key[SPONSOR_ADDRESS] not in self.valid_preps:
             revert(f"{TAG} : Sponsor P-Rep not a Top 100 P-Rep.")
@@ -532,8 +527,9 @@ class CPS_Score(IconScoreBase):
 
         if _progress[BUDGET_ADJUSTMENT]:
             if not _prefix.percentage_completed.get():
-                if _progress[ADDITIONAL_BUDGET] > self.get_remaining_fund():
-                    revert(f"{TAG} : Additional Budget Exceeds than Treasury Amount. {self.get_remaining_fund()}")
+                remaining_fund = self.get_remaining_fund()
+                if _progress[ADDITIONAL_BUDGET] > remaining_fund:
+                    revert(f"{TAG} : Additional Budget Exceeds than Treasury Amount. {remaining_fund}")
                 self.budget_approvals_list.put(_progress[REPORT_HASH])
                 _progress[BUDGET_ADJUSTMENT_STATUS] = self._PENDING
                 _prefix.budget_adjustment.set(True)
@@ -563,11 +559,7 @@ class CPS_Score(IconScoreBase):
         if _status not in self.STATUS_TYPE:
             return [f"{TAG} : Not a valid status."]
 
-        _list = []
-        for x in self.proposals_status[_status]:
-            _list.append(x)
-
-        return _list
+        return [x for x in self.proposals_status[_status]]
 
     @external
     @payable
@@ -881,12 +873,7 @@ class CPS_Score(IconScoreBase):
         """
         :return: list of P-Rep denylist
         """
-        _preps = []
-
-        for _address in self.denylist:
-            _preps.append(_address)
-
-        return _preps
+        return [_address for _address in self.denylist]
 
     @external(readonly=True)
     def get_period_status(self) -> dict:
@@ -963,9 +950,10 @@ class CPS_Score(IconScoreBase):
         count = len(self.contributors)
         end = count if _end_index > count else _end_index
 
-        for address in range(_start_index, end):
+        for i in range(_start_index, end):
+            address = self.contributors[i]
             if address not in _contributors_list:
-                _contributors_list.append(self.contributors[address])
+                _contributors_list.append(address)
 
         return _contributors_list
 
@@ -977,6 +965,7 @@ class CPS_Score(IconScoreBase):
         """
         _proposals_keys = []
         _sponsors_list = []
+        sponsors_dict = {}
 
         for a in self.get_proposals_keys_by_status(self._ACTIVE):
             _proposals_keys.append(a)
@@ -989,9 +978,8 @@ class CPS_Score(IconScoreBase):
 
         for sponsors in _proposals_keys:
             _proposal_details = self._get_proposal_details(sponsors)
-            _sponsors_list.append(str(_proposal_details[SPONSOR_ADDRESS]))
-
-        sponsors_dict = {i: _sponsors_list.count(i) for i in _sponsors_list}
+            sponsor_address = str(_proposal_details[SPONSOR_ADDRESS])
+            sponsors_dict[sponsor_address] = sponsors_dict.get(sponsor_address, 0) + 1
 
         return sponsors_dict
 
@@ -1110,9 +1098,9 @@ class CPS_Score(IconScoreBase):
             prefix = self.progress_report_prefix(_progress_keys[reports])
             _ipfs_key = self.progress_reports[prefix].ipfs_hash.get()
 
-            proposal_details = self._get_proposal_details(_ipfs_key)
             progressDetails = self._get_progress_reports_details(_progress_keys[reports])
             if progressDetails[STATUS] == _status:
+                proposal_details = self._get_proposal_details(_ipfs_key)
                 progressDetails[PROJECT_TITLE] = proposal_details[PROJECT_TITLE]
                 progressDetails[CONTRIBUTOR_ADDRESS] = proposal_details[CONTRIBUTOR_ADDRESS]
                 _progress_report_list.append(progressDetails)
@@ -1262,41 +1250,29 @@ class CPS_Score(IconScoreBase):
 
         _vote_status = []
 
-        if not _voters_list:
-            return {DATA: _vote_status, APPROVE_VOTERS: _proposal_details[APPROVE_VOTERS],
-                    REJECT_VOTERS: _proposal_details[REJECT_VOTERS],
-                    TOTAL_VOTERS: _proposal_details[TOTAL_VOTERS],
-                    APPROVED_VOTES: _proposal_details[APPROVED_VOTES],
-                    REJECTED_VOTES: _proposal_details[REJECTED_VOTES],
-                    TOTAL_VOTES: _proposal_details[TOTAL_VOTES]}
+        for i, voter in enumerate(_voters_list):
+            if voter in _approved_voters_list:
+                vote = APPROVE
+            elif voter in _rejected_voters_list:
+                vote = REJECT
+            else:
+                vote = ABSTAIN
 
-        else:
-            for voters in range(0, len(_voters_list)):
-                if _voters_list[voters] in _approved_voters_list:
-                    _voters = {ADDRESS: _voters_list[voters],
-                               PREP_NAME: self._get_prep_name(_voters_list[voters]),
-                               VOTE_REASON: proposals_prefix_.voters_reasons[voters].decode('utf-8'),
-                               VOTE: APPROVE}
+            reason = proposals_prefix_.voters_reasons[i]
+            reason = "" if reason is None else reason.decode('utf-8')
 
-                elif _voters_list[voters] in _rejected_voters_list:
-                    _voters = {ADDRESS: _voters_list[voters],
-                               PREP_NAME: self._get_prep_name(_voters_list[voters]),
-                               VOTE_REASON: proposals_prefix_.voters_reasons[voters].decode('utf-8'),
-                               VOTE: REJECT}
-                else:
-                    _voters = {ADDRESS: _voters_list[voters],
-                               PREP_NAME: self._get_prep_name(_voters_list[voters]),
-                               VOTE_REASON: proposals_prefix_.voters_reasons[voters].decode('utf-8'),
-                               VOTE: ABSTAIN}
+            _voters = {ADDRESS: voter,
+                       PREP_NAME: self._get_prep_name(voter),
+                       VOTE_REASON: reason,
+                       VOTE: vote}
+            _vote_status.append(_voters)
 
-                _vote_status.append(_voters)
-
-            return {DATA: _vote_status, APPROVE_VOTERS: _proposal_details[APPROVE_VOTERS],
-                    REJECT_VOTERS: _proposal_details[REJECT_VOTERS],
-                    TOTAL_VOTERS: _proposal_details[TOTAL_VOTERS],
-                    APPROVED_VOTES: _proposal_details[APPROVED_VOTES],
-                    REJECTED_VOTES: _proposal_details[REJECTED_VOTES],
-                    TOTAL_VOTES: _proposal_details[TOTAL_VOTES]}
+        return {DATA: _vote_status, APPROVE_VOTERS: _proposal_details[APPROVE_VOTERS],
+                REJECT_VOTERS: _proposal_details[REJECT_VOTERS],
+                TOTAL_VOTERS: _proposal_details[TOTAL_VOTERS],
+                APPROVED_VOTES: _proposal_details[APPROVED_VOTES],
+                REJECTED_VOTES: _proposal_details[REJECTED_VOTES],
+                TOTAL_VOTES: _proposal_details[TOTAL_VOTES]}
 
     @external(readonly=True)
     def get_progress_report_result(self, _report_key: str) -> dict:
@@ -1318,17 +1294,15 @@ class CPS_Score(IconScoreBase):
         _vote_status = []
 
         # Differentiating the P-Rep(s) votes according to their votes
-        for voters in range(0, len(_voters_list)):
-            if _voters_list[voters] in _approved_voters_list:
-                _voters = {ADDRESS: _voters_list[voters],
-                           PREP_NAME: self._get_prep_name(_voters_list[voters]),
-                           VOTE_REASON: reports_prefix_.voters_reasons[voters].decode('utf-8'),
-                           VOTE: APPROVE}
-            else:
-                _voters = {ADDRESS: _voters_list[voters],
-                           PREP_NAME: self._get_prep_name(_voters_list[voters]),
-                           VOTE_REASON: reports_prefix_.voters_reasons[voters].decode('utf-8'),
-                           VOTE: REJECT}
+        for i, voter in enumerate(_voters_list):
+            vote = APPROVE if voter in _approved_voters_list else REJECT
+            reason = reports_prefix_.voters_reasons[i]
+            reason = "" if reason is None else reason.decode('utf-8')
+
+            _voters = {ADDRESS: voter,
+                       PREP_NAME: self._get_prep_name(voter),
+                       VOTE_REASON: reason,
+                       VOTE: vote}
             _vote_status.append(_voters)
 
         return {DATA: _vote_status, APPROVE_VOTERS: _proposal_details[APPROVE_VOTERS],
@@ -1358,32 +1332,27 @@ class CPS_Score(IconScoreBase):
         _rejected_voters_list = reports_prefix_.budget_reject_voters
         _vote_status = []
 
-        for voters in range(0, len(_voters_list)):
-            if _voters_list[voters] in _approved_voters_list:
-                _voters = {ADDRESS: _voters_list[voters],
-                           PREP_NAME: self._get_prep_name(_voters_list[voters]),
-                           VOTE_REASON: reports_prefix_.voters_reasons[voters].decode('utf-8'),
-                           VOTE: APPROVE}
-
-            elif _voters_list[voters] in _rejected_voters_list:
-                _voters = {ADDRESS: _voters_list[voters],
-                           PREP_NAME: self._get_prep_name(_voters_list[voters]),
-                           VOTE_REASON: reports_prefix_.voters_reasons[voters].decode('utf-8'),
-                           VOTE: REJECT}
-
+        for i, voter in enumerate(_voters_list):
+            if voter in _approved_voters_list:
+                vote = APPROVE
+            elif voter in _rejected_voters_list:
+                vote = REJECT
             else:
-                _voters = {ADDRESS: _voters_list[voters],
-                           PREP_NAME: self._get_prep_name(_voters_list[voters]),
-                           VOTE_REASON: reports_prefix_.voters_reasons[voters].decode('utf-8'),
-                           VOTE: "not voted"}
+                vote = "not voted"
 
+            reason = reports_prefix_.voters_reasons[i]
+            reason = "" if reason is None else reason.decode('utf-8')
+            _voters = {ADDRESS: voter,
+                       PREP_NAME: self._get_prep_name(voter),
+                       VOTE_REASON: reason,
+                       VOTE: vote}
             _vote_status.append(_voters)
 
-        return {DATA: _vote_status, APPROVE_VOTERS: _proposal_details['budget_approve_voters'],
-                REJECT_VOTERS: _proposal_details['budget_reject_voters'],
+        return {DATA: _vote_status, APPROVE_VOTERS: _proposal_details[BUDGET_APPROVE_VOTERS],
+                REJECT_VOTERS: _proposal_details[BUDGET_REJECT_VOTERS],
                 TOTAL_VOTERS: _proposal_details[TOTAL_VOTERS],
-                APPROVED_VOTES: _proposal_details['budget_approved_votes'],
-                REJECTED_VOTES: _proposal_details['budget_rejected_votes'],
+                APPROVED_VOTES: _proposal_details[BUDGET_APPROVED_VOTES],
+                REJECTED_VOTES: _proposal_details[BUDGET_REJECTED_VOTES],
                 TOTAL_VOTES: _proposal_details[TOTAL_VOTES]}
 
     @external
@@ -1394,8 +1363,7 @@ class CPS_Score(IconScoreBase):
         """
         _current_block = self.block_height
         if _current_block <= self.next_block.get():
-            self.PeriodNotUpdate(f"{TAG} : Current Block : {_current_block}, "
-                                 f"Next Changing  : {self.next_block.get()}, Period is not updated.")
+            pass
 
         else:
             if self.period_name.get() == APPLICATION_PERIOD:
@@ -1407,21 +1375,22 @@ class CPS_Score(IconScoreBase):
                 self.set_PReps()
 
             else:
-                if self.update_period_index.get() == 0:
+                update_period_index = self.update_period_index.get()
+                if update_period_index == 0:
                     self.period_name.set(TRANSITION_PERIOD)
                     self.previous_period_name.set(APPLICATION_PERIOD)
-                    self.update_period_index.set(self.update_period_index.get() + 1)
+                    self.update_period_index.set(update_period_index + 1)
                     self._update_proposals_result()
 
                     self.PeriodUpdate(f"1/4. Period Updated to Transition Period. After all the calculations are "
                                       f"completed, Period will change to {APPLICATION_PERIOD}")
-                elif self.update_period_index.get() == 1:
+                elif update_period_index == 1:
                     self._check_progress_report_submission()
-                    self.update_period_index.set(self.update_period_index.get() + 1)
+                    self.update_period_index.set(update_period_index + 1)
                     self.PeriodUpdate(f"2/4. Progress Reports Checks Completed.")
-                elif self.update_period_index.get() == 2:
+                elif update_period_index == 2:
                     self._update_progress_report_result()
-                    self.update_period_index.set(self.update_period_index.get() + 1)
+                    self.update_period_index.set(update_period_index + 1)
                     self.PeriodUpdate(f"3/4. Progress Reports Calculations Completed.")
                 else:
                     self._update_denylist_preps()
@@ -1530,9 +1499,7 @@ class CPS_Score(IconScoreBase):
         Reward is the progress report is accepted.
         :return:
         """
-        waiting_progress_reports = []
-        for proposals in range(0, len(self._waiting_progress_reports)):
-            waiting_progress_reports.append(self._waiting_progress_reports[proposals])
+        waiting_progress_reports = [item for item in self._waiting_progress_reports]
 
         for reports in range(0, len(waiting_progress_reports)):
             _reports = waiting_progress_reports[reports]
@@ -1633,7 +1600,7 @@ class CPS_Score(IconScoreBase):
             _sponsor_address: 'Address' = _proposal_details[SPONSOR_ADDRESS]
             _contributor_address: 'Address' = _proposal_details[CONTRIBUTOR_ADDRESS]
 
-            if not _prefix.submit_progress_report:
+            if not _prefix.submit_progress_report.get():
                 if _proposal_status == self._ACTIVE:
                     self._update_proposal_status(_ipfs_hash, self._PAUSED)
 
