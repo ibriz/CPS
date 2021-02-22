@@ -725,12 +725,14 @@ class CPS_Score(IconScoreBase):
                 reports_prefix_.rejected_votes.set(_rejected_votes + _voter_stake)
 
             if _report_key in self.budget_approvals_list:
+                _budget_approved_votes: int = _progress_report_details[BUDGET_APPROVED_VOTES]
+                _budget_rejected_votes: int = _progress_report_details[BUDGET_REJECTED_VOTES]
                 if _budget_adjustment_vote == APPROVE:
                     reports_prefix_.budget_approve_voters.put(self.msg.sender)
-                    reports_prefix_.budget_approved_votes.set(_approved_votes + _voter_stake)
+                    reports_prefix_.budget_approved_votes.set(_budget_approved_votes + _voter_stake)
                 elif _budget_adjustment_vote == REJECT:
                     reports_prefix_.budget_reject_voters.put(self.msg.sender)
-                    reports_prefix_.budget_rejected_votes.set(_rejected_votes + _voter_stake)
+                    reports_prefix_.budget_rejected_votes.set(_budget_rejected_votes + _voter_stake)
 
             self.VotedSuccessfully(self.msg.sender, f"Progress Report Vote for "
                                                     f"{_progress_report_details[PROGRESS_REPORT_TITLE]} Successful.")
