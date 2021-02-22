@@ -88,10 +88,6 @@ class CPS_Score(IconScoreBase):
     def PeriodUpdate(self, _notes: str):
         pass
 
-    @eventlog(indexed=1)
-    def PeriodNotUpdate(self, notes: str):
-        pass
-
     def __init__(self, db: IconScoreDatabase) -> None:
         super().__init__(db)
 
@@ -154,8 +150,10 @@ class CPS_Score(IconScoreBase):
                                        self._PROGRESS_REPORT_REJECTED: self._progress_rejected}
 
     def on_install(self) -> None:
-        self.admins.put(self.owner)
         super().on_install()
+        self.admins.put(self.owner)
+        for _ in range(3):
+            self.penalty_amount.put(0)
 
     def on_update(self) -> None:
         super().on_update()
@@ -166,7 +164,7 @@ class CPS_Score(IconScoreBase):
         :return: SCORE Name
         :rtype: str
         """
-        return "CPS_SCORE"
+        return TAG
 
     def set_id(self, _val: str):
         self.id.set(_val)
@@ -1318,14 +1316,6 @@ class CPS_Score(IconScoreBase):
         _approved_voters_list = reports_prefix_.approve_voters
         _rejected_voters_list = reports_prefix_.reject_voters
         _vote_status = []
-
-        if not _voters_list:
-            return {DATA: _vote_status, APPROVE_VOTERS: _proposal_details[APPROVE_VOTERS],
-                    REJECT_VOTERS: _proposal_details[REJECT_VOTERS],
-                    TOTAL_VOTERS: _proposal_details[TOTAL_VOTERS],
-                    APPROVED_VOTES: _proposal_details[APPROVED_VOTES],
-                    REJECTED_VOTES: _proposal_details[REJECTED_VOTES],
-                    TOTAL_VOTES: _proposal_details[TOTAL_VOTES]}
 
         # Differentiating the P-Rep(s) votes according to their votes
         for voters in range(0, len(_voters_list)):

@@ -30,7 +30,6 @@ APPLICATION_PERIOD = "Application Period"
 VOTING_PERIOD = "Voting Period"
 TRANSITION_PERIOD = "Transition Period"
 
-
 # Bond Status
 BOND_RECEIVED = "bond_received"
 BOND_APPROVED = "bond_approved"
