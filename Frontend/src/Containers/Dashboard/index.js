@@ -18,7 +18,7 @@ import VotingCard from 'Components/VotingCard';
 import { fetchExpectedGrantRequest, fetchCPSTreasuryScoreAddressRequest } from 'Redux/Reducers/fundSlice';
 import {setLoginButtonClicked} from 'Redux/Reducers/accountSlice';
 
-const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfRemainingFunds, cpfScoreAddress, fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, fetchProjectAmountsRequest, isPrep, isRegistered, myProposalList, fetchExpectedGrantRequest, expectedGrant, sponsorBond, totalCountSponsorRequests, remainingVotesProposal, remainingVotesPR, fetchCPSTreasuryScoreAddressRequest, cpsTreasuryScoreAddress, payPenaltyAmount, sponsorReward, withDrawAmountSponsorReward, withDrawAmountProposalGrant, claimReward, previousPeriod }) => {
+const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfRemainingFunds, cpfScoreAddress, fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, fetchProjectAmountsRequest, isPrep, isRegistered, myProposalList, fetchExpectedGrantRequest, expectedGrant, sponsorBond, totalCountSponsorRequests, remainingVotesProposal, remainingVotesPR, fetchCPSTreasuryScoreAddressRequest, cpsTreasuryScoreAddress, payPenaltyAmount, sponsorReward, withDrawAmountSponsorReward, withDrawAmountProposalGrant, claimReward, previousPeriod, preps }) => {
     const [showPayPenaltyConfirmationModal, setShowPayPenaltyConfirmationModal] = useState(false);
     const [showClaimRewardConfirmationModal, setShowClaimRewardConfirmationModal] = useState(false);
 
@@ -149,7 +149,7 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
                 <Row style={{ marginTop: '15px' }}>
                 <Col xs="12">
                     <Alert variant="info">
-                        <span>Note: The period switched back to application period because there were less than 7 P-Reps</span>
+                        <span>Note: The period switched back to application period because {preps.length < 7 ? 'there were less than 7 P-Reps' : 'there were no voting proposals or progress reports.'}</span>
 
                     </Alert>
                 </Col>
@@ -324,6 +324,8 @@ const mapStateToProps = state => (
 
         withDrawAmountSponsorReward: state.fund.withDrawAmountSponsorReward,
         withDrawAmountProposalGrant: state.fund.withDrawAmountProposalGrant,
+        preps: state.preps.preps,
+
 
 
 
