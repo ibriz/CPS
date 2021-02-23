@@ -30,7 +30,6 @@ APPLICATION_PERIOD = "Application Period"
 VOTING_PERIOD = "Voting Period"
 TRANSITION_PERIOD = "Transition Period"
 
-
 # Bond Status
 BOND_RECEIVED = "bond_received"
 BOND_APPROVED = "bond_approved"
@@ -103,8 +102,12 @@ ADDITIONAL_BUDGET = 'additional_budget'
 ADDITIONAL_DURATION = 'additional_month'
 BUDGET_ADJUSTMENT = 'budget_adjustment'
 BUDGET_ADJUSTMENT_STATUS = "budget_adjustment_status"
+BUDGET_APPROVED_VOTES = 'budget_approved_votes'
+BUDGET_REJECTED_VOTES = 'budget_rejected_votes'
+BUDGET_APPROVE_VOTERS = 'budget_approve_voters'
+BUDGET_REJECT_VOTERS = 'budget_reject_voters'
 SPONSOR_DEPOSIT_AMOUNT = 'sponsor_deposit_amount'
-PREPS_DENYLIST = "preps_denylist"
+PREPS_DENYLIST_STATUS = "preps_denylist_status"
 DENYLIST = "denylist"
 PENALTY_AMOUNT = "penalty_amount"
 STATUS = "status"

@@ -65,6 +65,8 @@ def addDataToProgressReportDB(prefix: bytes, _proposals: 'ProgressReportDataDB',
     _proposals[prefix].total_voters.set(0)
     _proposals[prefix].approved_votes.set(0)
     _proposals[prefix].rejected_votes.set(0)
+    _proposals[prefix].budget_approved_votes.set(0)
+    _proposals[prefix].budget_rejected_votes.set(0)
 
 
 def getDataFromProgressReportDB(prefix: bytes, _proposals: 'ProgressReportDataDB') -> dict:

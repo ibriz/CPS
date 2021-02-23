@@ -226,7 +226,7 @@ class CPS_TREASURY(IconScoreBase):
                     if _total_paid_count < _total_installment:
                         _total_budget = self.proposals[prefix].sponsor_reward.get()
                         _total_paid_amount = self.proposals[prefix].sponsor_withdraw_amount.get()
-                        _deposited_sponsor_bond = _total_budget // 10
+                        _deposited_sponsor_bond = self.proposals[prefix].total_budget.get() // 10
 
                         _installment_amount.append({self._IPFS_HASH: _ipfs_key,
                                                     self._SPONSOR_REWARD: _total_budget,
