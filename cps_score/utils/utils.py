@@ -12,10 +12,14 @@ class ArrayDBUtils:
         return [item for item in array]
 
     @staticmethod
-    def remove_array_item(array_db, target):
-        _out = array_db.pop()
-        if _out != target:
-            for index in range(0, len(array_db)):
-                if array_db[index] == target:
-                    array_db[index] = _out
-                    return
+    def remove_array_item(array_db, target) -> bool:
+        _out = array_db[-1]
+        if _out == target:
+            array_db.pop()
+            return True
+        for index in range(len(array_db) - 1):
+            if array_db[index] == target:
+                array_db[index] = _out
+                array_db.pop()
+                return True
+        return False
