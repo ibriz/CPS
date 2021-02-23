@@ -88,10 +88,6 @@ class CPS_Score(IconScoreBase):
     def PeriodUpdate(self, _notes: str):
         pass
 
-    @eventlog(indexed=1)
-    def PeriodNotUpdate(self, notes: str):
-        pass
-
     def __init__(self, db: IconScoreDatabase) -> None:
         super().__init__(db)
 
@@ -1367,8 +1363,7 @@ class CPS_Score(IconScoreBase):
         """
         _current_block = self.block_height
         if _current_block <= self.next_block.get():
-            self.PeriodNotUpdate(f"{TAG} : Current Block : {_current_block}, "
-                                 f"Next Changing  : {self.next_block.get()}, Period is not updated.")
+            pass
 
         else:
             if self.period_name.get() == APPLICATION_PERIOD:
