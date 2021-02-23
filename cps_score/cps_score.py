@@ -164,7 +164,7 @@ class CPS_Score(IconScoreBase):
         :return: SCORE Name
         :rtype: str
         """
-        return "CPS_SCORE"
+        return TAG
 
     def set_id(self, _val: str):
         self.id.set(_val)
