@@ -9,12 +9,8 @@ class ArrayDBUtils:
 
     @staticmethod
     def arraydb_to_list(array: ArrayDB) -> list:
-        _list = []
-        for key in array:
-            _list.append(key)
+        return [item for item in array]
 
-        return _list
-      
     @staticmethod
     def remove_array_item(array_db, target):
         _out = array_db.pop()

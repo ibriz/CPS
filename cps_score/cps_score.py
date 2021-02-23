@@ -1502,9 +1502,7 @@ class CPS_Score(IconScoreBase):
         Reward is the progress report is accepted.
         :return:
         """
-        waiting_progress_reports = []
-        for proposals in range(0, len(self._waiting_progress_reports)):
-            waiting_progress_reports.append(self._waiting_progress_reports[proposals])
+        waiting_progress_reports = [item for item in self._waiting_progress_reports]
 
         for reports in range(0, len(waiting_progress_reports)):
             _reports = waiting_progress_reports[reports]
