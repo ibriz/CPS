@@ -717,12 +717,14 @@ class CPS_Score(IconScoreBase):
                 reports_prefix_.rejected_votes.set(_rejected_votes + _voter_stake)
 
             if _report_key in self.budget_approvals_list:
+                _budget_approved_votes: int = _progress_report_details[BUDGET_APPROVED_VOTES]
+                _budget_rejected_votes: int = _progress_report_details[BUDGET_REJECTED_VOTES]
                 if _budget_adjustment_vote == APPROVE:
                     reports_prefix_.budget_approve_voters.put(self.msg.sender)
-                    reports_prefix_.budget_approved_votes.set(_approved_votes + _voter_stake)
+                    reports_prefix_.budget_approved_votes.set(_budget_approved_votes + _voter_stake)
                 elif _budget_adjustment_vote == REJECT:
                     reports_prefix_.budget_reject_voters.put(self.msg.sender)
-                    reports_prefix_.budget_rejected_votes.set(_rejected_votes + _voter_stake)
+                    reports_prefix_.budget_rejected_votes.set(_budget_rejected_votes + _voter_stake)
 
             self.VotedSuccessfully(self.msg.sender, f"Progress Report Vote for "
                                                     f"{_progress_report_details[PROGRESS_REPORT_TITLE]} Successful.")
@@ -1350,11 +1352,11 @@ class CPS_Score(IconScoreBase):
                        VOTE: vote}
             _vote_status.append(_voters)
 
-        return {DATA: _vote_status, APPROVE_VOTERS: _proposal_details['budget_approve_voters'],
-                REJECT_VOTERS: _proposal_details['budget_reject_voters'],
+        return {DATA: _vote_status, APPROVE_VOTERS: _proposal_details[BUDGET_APPROVE_VOTERS],
+                REJECT_VOTERS: _proposal_details[BUDGET_REJECT_VOTERS],
                 TOTAL_VOTERS: _proposal_details[TOTAL_VOTERS],
-                APPROVED_VOTES: _proposal_details['budget_approved_votes'],
-                REJECTED_VOTES: _proposal_details['budget_rejected_votes'],
+                APPROVED_VOTES: _proposal_details[BUDGET_APPROVED_VOTES],
+                REJECTED_VOTES: _proposal_details[BUDGET_REJECTED_VOTES],
                 TOTAL_VOTES: _proposal_details[TOTAL_VOTES]}
 
     @external
