@@ -113,7 +113,7 @@ class CPS_Score(IconScoreBase):
         self.denylist = ArrayDB(DENYLIST, db, value_type=Address)
 
         self.penalty_amount = ArrayDB(PENALTY_AMOUNT, db, value_type=int)
-        self.preps_denylist = DictDB(PREPS_DENYLIST, db, value_type=int)
+        self.preps_denylist_status = DictDB(PREPS_DENYLIST_STATUS, db, value_type=int)
 
         self.proposals_key_list = ArrayDB(PROPOSALS_KEY_LIST, db, value_type=str)
         self.progress_key_list = ArrayDB(PROGRESS_KEY_LIST, db, value_type=str)
@@ -385,7 +385,7 @@ class CPS_Score(IconScoreBase):
         :param _address: Address of the Denied P-Rep
         :return: integer ICX amount for Penalty
         """
-        count = self.preps_denylist[str(_address)]
+        count = self.preps_denylist_status[str(_address)]
         if count == 0:
             revert(f"{TAG} : {_address} does not need to pay penalty")
 
@@ -1668,8 +1668,8 @@ class CPS_Score(IconScoreBase):
             ArrayDBUtils.remove_array_item(self.registered_preps, _prep)
 
             self.denylist.put(_prep)
-            count = self.preps_denylist[str(_prep)] + 1
-            self.preps_denylist[str(_prep)] = count if count < 3 else 3
+            count = self.preps_denylist_status[str(_prep)] + 1
+            self.preps_denylist_status[str(_prep)] = count if count < 3 else 3
 
             self.PRepPenalty(_prep, "P-Rep added to Denylist.")
 
