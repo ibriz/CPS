@@ -11,10 +11,11 @@ import frontEndWallet from './FrontEndWallet';
 // var CPSScore = 'cxdf3c1ea6ba87e21957c63b21a54151a38a6ecb80';
 // var CPSScore = 'cx00c1e2d9b009fca69002c53c1ce3ed377708381e';
 // var CPSScore = 'cx6bb0e6683dd326165d42289c12b6bd0eaa596cc9';
-var CPSScore = 'cx0e766ec4ff71a54b66a3772c1a3fc2f24a42eb1d';
-
-export const provider = new HttpProvider('https://bicon.net.solidwallet.io/api/v3');
+var CPSScore = 'cx9f4ab72f854d3ccdc59aa6f2c3e2215dd62e879f';
+var nid = 1
+export const provider = new HttpProvider('https://ctz.solidwallet.io/api/v3');
 export const iconService = new IconService(provider);
+export const trackerURL = 'https://tracker.icon.foundation/address'
 
 // var testNet = "https://bicon.tracker.solidwallet.io/v3/address/info?address="
 // var mainNet = "https://tracker.icon.foundation/v3/address/info?address="
@@ -81,7 +82,7 @@ export function sendTransaction({
     const txnData = txnBuilder
         .from(fromAddress)
         .to(scoreAddress)
-        .nid(IconConverter.toBigNumber(3))
+        .nid(IconConverter.toBigNumber(nid))
         .timestamp(new Date().getTime() * 1000)
         .stepLimit(IconConverter.toBigNumber(100000000))
         .version(IconConverter.toBigNumber(3))
@@ -123,7 +124,7 @@ export async function sendTransactionFrontendWallet({
     const txnData = txnBuilder
         .from(fromAddress)
         .to(scoreAddress)
-        .nid(IconConverter.toBigNumber(3))
+        .nid(IconConverter.toBigNumber(nid))
         .timestamp(new Date().getTime() * 1000)
         .stepLimit(IconConverter.toBigNumber(100000000))
         .version(IconConverter.toBigNumber(3))
