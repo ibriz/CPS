@@ -26,6 +26,7 @@ import MilestonesTimeline from 'Components/Card/DetailsModal/MilestonesTimeline'
 import styled from 'styled-components';
 import InfoIcon from 'Components/InfoIcon';
 import VoteProgressBar from 'Components/VoteProgressBar';
+import {trackerURL} from 'Redux/ICON/utils';
 
 const DescriptionTitle = styled.div`
 font-style: normal;
@@ -370,7 +371,7 @@ function DetailsModal(props) {
                     },
                     {
                       key: 'Sponsor Prep',
-                    value: prepName ? <a href = {`https://bicon.tracker.solidwallet.io/address/${proposalDetail?.sponserPrep}`} target = "_blank" style = {{color: '#262626', textDecoration: 'underline'}}>{prepName}</a> : <a href = {`https://bicon.tracker.solidwallet.io/address/${proposalDetail?.sponserPrep}`} target = "_blank" style = {{color: '#262626', textDecoration: 'underline'}}>{`${proposalDetail?.sponserPrep?.slice(0, 6)}...`}</a> || 'N/A'
+                    value: prepName ? <a href = {`${trackerURL}/${proposalDetail?.sponserPrep}`} target = "_blank" style = {{color: '#262626', textDecoration: 'underline'}}>{prepName}</a> : <a href = {`${trackerURL}/${proposalDetail?.sponserPrep}`} target = "_blank" style = {{color: '#262626', textDecoration: 'underline'}}>{`${proposalDetail?.sponserPrep?.slice(0, 6)}...`}</a> || 'N/A'
                     },
                     {
                       key: 'Team Name',
