@@ -16,7 +16,7 @@ import {
   getProposalApprovedPercentage, getProposalApprovedVotersPercentage,
   getProposalRejectedPercentage, getProposalRejectedVotersPercentage
 } from 'Selectors';
-import { icxFormat } from 'helpers';
+import { icxFormat } from 'Helpers';
 import DetailsModalPR from 'Components/Card/DetailsModalProgressReport';
 import IconService from 'icon-sdk-js';
 import ProgressBarCombined from 'Components/Card/ProgressBarCombined';
@@ -26,6 +26,7 @@ import MilestonesTimeline from 'Components/Card/DetailsModal/MilestonesTimeline'
 import styled from 'styled-components';
 import InfoIcon from 'Components/InfoIcon';
 import VoteProgressBar from 'Components/VoteProgressBar';
+import {trackerURL} from 'Redux/ICON/utils';
 
 const DescriptionTitle = styled.div`
 font-style: normal;
@@ -370,7 +371,7 @@ function DetailsModal(props) {
                     },
                     {
                       key: 'Sponsor Prep',
-                    value: prepName ? <a href = {`https://bicon.tracker.solidwallet.io/address/${proposalDetail?.sponserPrep}`} target = "_blank" style = {{color: '#262626', textDecoration: 'underline'}}>{prepName}</a> : <a href = {`https://bicon.tracker.solidwallet.io/address/${proposalDetail?.sponserPrep}`} target = "_blank" style = {{color: '#262626', textDecoration: 'underline'}}>{`${proposalDetail?.sponserPrep?.slice(0, 6)}...`}</a> || 'N/A'
+                    value: prepName ? <a href = {`${trackerURL}/${proposalDetail?.sponserPrep}`} target = "_blank" style = {{color: '#262626', textDecoration: 'underline'}}>{prepName}</a> : <a href = {`${trackerURL}/${proposalDetail?.sponserPrep}`} target = "_blank" style = {{color: '#262626', textDecoration: 'underline'}}>{`${proposalDetail?.sponserPrep?.slice(0, 6)}...`}</a> || 'N/A'
                     },
                     {
                       key: 'Team Name',
@@ -423,7 +424,7 @@ function DetailsModal(props) {
             <Col xs="12">
               <div style={{ textAlign: 'center', color: '#262626', marginBottom: '5px', fontSize: '1rem' }}>
                 <>
-                  {period === 'APPLICATION' ? 'Voting starts in ' : 'Voting ends in '}
+                  {period !== 'VOTING' ? 'Voting starts in ' : 'Voting ends in '}
                 </>
                 <b>{remainingTimer.day}</b> days <b>{remainingTimer.hour}</b> hours <b>{remainingTimer.minute}</b> minutes <b>{remainingTimer.second}</b> seconds
                   </div>

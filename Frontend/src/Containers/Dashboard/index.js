@@ -7,7 +7,7 @@ import { payPenaltyAmount } from 'Constants';
 import { connect } from 'react-redux';
 import useTimer from 'Hooks/useTimer';
 import InfoCard from './InfoCard';
-import { icxFormat } from 'helpers';
+import { icxFormat } from 'Helpers';
 import { fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, claimReward } from 'Redux/Reducers/fundSlice';
 import { fetchProjectAmountsRequest } from 'Redux/Reducers/proposalSlice';
 import styles from './Dashboard.module.scss';
@@ -18,7 +18,7 @@ import VotingCard from 'Components/VotingCard';
 import { fetchExpectedGrantRequest, fetchCPSTreasuryScoreAddressRequest } from 'Redux/Reducers/fundSlice';
 import {setLoginButtonClicked} from 'Redux/Reducers/accountSlice';
 
-const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfRemainingFunds, cpfScoreAddress, fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, fetchProjectAmountsRequest, isPrep, isRegistered, myProposalList, fetchExpectedGrantRequest, expectedGrant, sponsorBond, totalCountSponsorRequests, remainingVotesProposal, remainingVotesPR, fetchCPSTreasuryScoreAddressRequest, cpsTreasuryScoreAddress, payPenaltyAmount, sponsorReward, withDrawAmountSponsorReward, withDrawAmountProposalGrant, claimReward, previousPeriod }) => {
+const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfRemainingFunds, cpfScoreAddress, fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, fetchProjectAmountsRequest, isPrep, isRegistered, myProposalList, fetchExpectedGrantRequest, expectedGrant, sponsorBond, totalCountSponsorRequests, remainingVotesProposal, remainingVotesPR, fetchCPSTreasuryScoreAddressRequest, cpsTreasuryScoreAddress, payPenaltyAmount, sponsorReward, withDrawAmountSponsorReward, withDrawAmountProposalGrant, claimReward, previousPeriod, preps }) => {
     const [showPayPenaltyConfirmationModal, setShowPayPenaltyConfirmationModal] = useState(false);
     const [showClaimRewardConfirmationModal, setShowClaimRewardConfirmationModal] = useState(false);
 
@@ -47,7 +47,7 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
                 value: `${icxFormat(expectedGrant, true)} ICX`
             },
             {
-                title: `Remaining Time in ${period === "APPLICATION" ? 'Application Period' : 'Voting Period'}`,
+                title: `Remaining Time in ${period !== "VOTING" ? 'Application Period' : 'Voting Period'}`,
                 color: '#1AAABA',
                 // value={period === "APPLICATION" ? 'Application Period' : 'Voting Period'} />
                 value: `${highestSignificantTime.value} ${highestSignificantTime.text}`
@@ -75,7 +75,7 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
                 value: period === "APPLICATION" ? totalCountSponsorRequests.Pending : (remainingVotesProposal.length + remainingVotesPR.length)
             },
             {
-                title: `Remaining Time in ${period === "APPLICATION" ? 'Application Period' : 'Voting Period'}`,
+                title: `Remaining Time in ${period !== "VOTING" ? 'Application Period' : 'Voting Period'}`,
                 color: '#1AAABA',
                 // value={period === "APPLICATION" ? 'Application Period' : 'Voting Period'} />
                 value: ` ${highestSignificantTime.value} ${highestSignificantTime.text}`
@@ -140,7 +140,7 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
 
             <Row style={{ marginTop: '30px' }}>
                 <Col xs="12">
-                    <div className = {styles.period}>Period: {period === "APPLICATION" ? 'Application Period' : 'Voting Period'}</div>
+                    <div className = {styles.period}>Period: {period !== "VOTING" ? 'Application Period' : 'Voting Period'}</div>
                 </Col>
             </Row>
 
@@ -149,7 +149,7 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
                 <Row style={{ marginTop: '15px' }}>
                 <Col xs="12">
                     <Alert variant="info">
-                        <span>Note: The period switched back to application period because there were less than 7 P-Reps</span>
+                        <span>Note: The period switched back to application period because {preps.length < 7 ? 'there were less than 7 P-Reps' : 'there were no voting proposals or progress reports.'}</span>
 
                     </Alert>
                 </Col>
@@ -163,8 +163,8 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
                         <Alert variant="success">
                             {
                                 isPrep ?
-                                    `Congratulations! You can claim a total of ${icxFormat(parseFloat(withDrawAmountSponsorReward) + parseFloat(withDrawAmountProposalGrant), true)} ICX (proposal grant: ${icxFormat(parseFloat(withDrawAmountProposalGrant), true)} ICX and sponsor reward: ${icxFormat(parseFloat(withDrawAmountSponsorReward), true)} ICX)` :
-                                    `Congratulations! You can claim proposal grant of ${icxFormat(parseFloat(withDrawAmountProposalGrant), true)} ICX`
+                                    `Congratulations! You can claim a total reward of ${icxFormat(parseFloat(withDrawAmountSponsorReward), true)} ICX.` :
+                                    `Congratulations! You can claim proposal grant of ${icxFormat(parseFloat(withDrawAmountProposalGrant), true)} ICX.`
                             }
 
                             {
@@ -324,6 +324,8 @@ const mapStateToProps = state => (
 
         withDrawAmountSponsorReward: state.fund.withDrawAmountSponsorReward,
         withDrawAmountProposalGrant: state.fund.withDrawAmountProposalGrant,
+        preps: state.preps.preps,
+
 
 
 

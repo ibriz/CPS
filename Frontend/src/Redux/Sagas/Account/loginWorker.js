@@ -1,4 +1,4 @@
-import { setCookie } from '../../../helpers/cookie';
+import { setCookie } from '../../../Helpers/cookie';
 import { put } from 'redux-saga/effects';
 import { loginPrepRequest } from 'Redux/Reducers/accountSlice';
 

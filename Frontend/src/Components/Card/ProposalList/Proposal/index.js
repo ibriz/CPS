@@ -7,7 +7,7 @@ import ProgressBar from '../../../UI/ProgressBar';
 import LowerCardTitle from '../../../UI/LowerCardList/LowerCardTitle';
 import LowerCardInfo from '../../../UI/LowerCardList/LowerCardInfo';
 import Budget from '../../../UI/LowerCardList/Budget';
-import { icxFormat } from 'helpers';
+import { icxFormat } from 'Helpers';
 import { proposalStatusMapping } from 'Constants';
 import ClassNames from 'classnames';
 import { Link } from 'react-router-dom';
@@ -60,7 +60,7 @@ const Proposal = ({ proposal, selectedTab, onClick, proposalPendingPR = false, p
 
 
                         {
-                            ["Active", "Paused"].includes(proposalStatusMapping.find(mapping => mapping.status === proposal._status).name) && proposalPendingPRSameList && (period === "APPLICATION") && !isRemainingTimeZero &&
+                            ["Active", "Paused"].includes(proposalStatusMapping.find(mapping => mapping.status === proposal._status).name) && proposalPendingPRSameList && (period !== "VOTING") && !isRemainingTimeZero &&
                             <>
                                 <Link to={{
                                     pathname: "/newProgressReport",

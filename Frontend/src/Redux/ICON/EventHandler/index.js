@@ -14,6 +14,7 @@ import { fetchRemainingVotesRequest } from 'Redux/Reducers/proposalSlice';
 import {fetchProgressReportListRequest} from 'Redux/Reducers/progressReportSlice';
 import {fetchPeriodDetailsRequest} from 'Redux/Reducers/periodSlice';
 import { fetchExpectedGrantRequest, fetchCPSTreasuryScoreAddressRequest } from 'Redux/Reducers/fundSlice';
+import {provider} from '../utils';
 
 // import { loginSuccess } from 'Redux/Reducers/accountSlice';
 
@@ -43,8 +44,6 @@ async function getResult({ txHash,
 
     try {
 
-        const provider = new HttpProvider('https://bicon.net.solidwallet.io/api/v3');
-        // const provider = new HttpProvider('https://zicon.net.solidwallet.io/api/v3');
         const iconService = new IconService(provider);
         await setTimeoutPromise();
         const result = await iconService.getTransactionResult(txHash).execute();

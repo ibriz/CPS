@@ -175,7 +175,7 @@ const Footer = ({ console = false }) => {
 
             <Row style={{ marginBottom: '10px' }}>
                 <Col lg="12" className={footerColumnStyles}>
-                    Copyright © 2020. <u><a href = "https://icon.foundation/" target = "_blank" style = {console ? {color: consoleColor, textDecoration: 'underline'} : {color: 'white', textDecoration: 'underline'}}>ICON Foundation</a></u>
+                    Copyright © {new Date().getFullYear()}. <u><a href = "https://icon.foundation/" target = "_blank" style = {console ? {color: consoleColor, textDecoration: 'underline'} : {color: 'white', textDecoration: 'underline'}}>ICON Foundation</a></u>
                 </Col>
             </Row>
 

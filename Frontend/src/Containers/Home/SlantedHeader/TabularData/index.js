@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { fetchProposalListRequest, fetchProjectAmountsRequest } from 'Redux/Reducers/proposalSlice';
 import wallet from 'Redux/ICON/FrontEndWallet';
 import {fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest} from 'Redux/Reducers/fundSlice';
-import {icxFormat} from 'helpers';
+import {icxFormat} from 'Helpers';
 import useTimer from 'Hooks/useTimer';
 import { fetchPrepsRequest } from 'Redux/Reducers/prepsSlice';
 
@@ -23,7 +23,7 @@ const TabularData = ({ numberOfPendingProposals, numberOfSubmittedProposals, tot
     const tabularData = [
         {
             key: 'Period',
-            value: period === 'APPLICATION' ? 'Application Period' : 'Voting Period'
+            value: period !== 'VOTING' ? 'Application Period' : 'Voting Period'
         },
         {
             key: 'No. of Registered P-Reps',
