@@ -34,7 +34,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "GENERATE_SOURCEMAP=false react-scripts build",
+    "build": "GENERATE_SOURCEMAP=false react-scripts build && cp icon_black.png build/static &&  cp icon_blue.png build/static",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "onandroid": "node node_modules/react-scripts/scripts/start.js"
