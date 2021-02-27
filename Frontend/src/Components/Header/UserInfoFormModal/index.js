@@ -75,7 +75,7 @@ const UserInfoFormModal = ({user, submitUserDataRequest, setModalShow, address, 
     >
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter" style = {{color: "#262626"}}>
-          User Registation
+          User Registration
           </Modal.Title>
       </Modal.Header>
       <Modal.Body className = {styles.modalBody}>
