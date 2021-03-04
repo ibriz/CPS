@@ -13,7 +13,7 @@ const Proposals = ({numberOfSubmittedProposals}) => {
 
             <UpperCard />
             <ProposalCard
-                proposalStatesList = {['Active', 'Paused', 'Pending', 'Voting', 'Completed', 'Rejected', 'Disqualified', 'Draft']}
+                proposalStatesList = {['Voting', 'Pending', 'Active', 'Paused', 'Completed', 'Rejected', 'Disqualified', 'Draft']}
                 initialState = {'Active'}
             />
         </Container>
