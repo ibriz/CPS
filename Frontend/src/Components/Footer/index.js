@@ -63,7 +63,7 @@ const links = [
     },
 
     {
-        title: "CPS Whitepaper",
+        title: "CPS Yellow Paper",
         link: "https://docs.google.com/document/d/1yPwgsXx4ow5NVnG1ktMKYp5JvjQvWEfuSkq6Iy-OIXA/"
     }
 
