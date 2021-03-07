@@ -3,7 +3,7 @@ import InfoIcon from 'Components/InfoIcon';
 import ProgressBarCombined from 'Components/Card/ProgressBarCombined';
 import ProgressText from 'Components/UI/ProgressText';
 
-const VoteProgressBar = ({voterCount, approvedPercentage = 0, rejectedPercentage = 0, proposal = false, noProgressBar = false, budgetAdjustment}) => {
+const VoteProgressBar = ({voterCount, approvedPercentage = 0, rejectedPercentage = 0, proposal = false, noProgressBar = false, budgetAdjustment, placement = "top"}) => {
 
     let type;
     if(proposal) {
@@ -21,7 +21,7 @@ const VoteProgressBar = ({voterCount, approvedPercentage = 0, rejectedPercentage
         <>
             <ProgressText>{progressText}</ProgressText>
             <InfoIcon description={description}
-                placement="top" />
+                placement={placement} />
 
             {
                 !noProgressBar && 
