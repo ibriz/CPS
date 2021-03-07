@@ -15,6 +15,8 @@ import {fetchProgressReportListRequest} from 'Redux/Reducers/progressReportSlice
 import {fetchPeriodDetailsRequest} from 'Redux/Reducers/periodSlice';
 import { fetchExpectedGrantRequest, fetchCPSTreasuryScoreAddressRequest } from 'Redux/Reducers/fundSlice';
 import {provider} from '../utils';
+import { request } from 'Redux/Sagas/helpers';
+import {TRIGGER_SPONSOR_APPROVAL_EMAIL_NOTIFICATION} from 'Redux/Constants';
 
 // import { loginSuccess } from 'Redux/Reducers/accountSlice';
 
@@ -242,7 +244,12 @@ export default (event) => {
                             failureMessage: "Error accepting Sponsor Request",
                             successMessage: "Sponsor request accepted successfully"
                         }, function(){
-    
+                            request({
+                                body: {
+                                    ipfsKey: store.getState().proposals.sponsorRequestIPFSKey,
+                                },
+                                url: TRIGGER_SPONSOR_APPROVAL_EMAIL_NOTIFICATION,
+                            });
                             store.dispatch(fetchSponsorRequestsListRequest(
                                 {
                                     status: "Pending",
