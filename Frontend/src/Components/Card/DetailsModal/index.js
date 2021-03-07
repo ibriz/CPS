@@ -285,6 +285,7 @@ function DetailsModal(props) {
                             rejectedPercentage = {rejectedPercentage}
                             noProgressBar
                             proposal
+                            placement="bottom"
                           />
                         }
 
@@ -315,6 +316,7 @@ function DetailsModal(props) {
                           noProgressBar
                           proposal
                           voterCount
+                          placement="bottom"
                           />
                         }
 

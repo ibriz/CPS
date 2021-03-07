@@ -36,7 +36,7 @@ const Home = ({ period, isPrep, isRegistered, address }) => {
             <div className={styles.proposalCard}>
                 <ProposalCard
                     proposalStatesList={['Voting', 'Active', 'Paused', 'Completed', 'Rejected' , 'Disqualified']}
-                    initialState={'Active'}
+                    initialState={'Voting'}
                     minHeight='150px'
                 />
 
