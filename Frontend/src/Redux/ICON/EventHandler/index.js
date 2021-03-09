@@ -246,7 +246,8 @@ export default (event) => {
                         }, function(){
                             request({
                                 body: {
-                                    ipfsKey: store.getState().proposals.sponsorRequestIPFSKey,
+                                    projectName: store.getState().proposals.sponsorRequestProposalTitle,
+                                    address: store.getState().account.address
                                 },
                                 url: TRIGGER_SPONSOR_APPROVAL_EMAIL_NOTIFICATION,
                             });

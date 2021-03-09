@@ -180,6 +180,7 @@ function DetailsModal(props) {
     approveSponserRequest(
       {
         ipfsKey: proposal.ipfsKey,
+        proposalTitle: proposalDetail && proposalDetail.projectName || '',
         sponsorBond: IconConverter.toBigNumber(proposalDetail?.totalBudget).dividedBy(10),
         reason: sponsorVoteReason
       }

@@ -13,4 +13,4 @@ export const IMAGE_UPLOAD_URL = 'proposals/image';
 export const ADD_PROPOSAL_DRAFT_URL = 'draft';
 export const ADD_PROGRESS_REPORT_DRAFT_URL = 'draft';
 
-export const TRIGGER_SPONSOR_APPROVAL_EMAIL_NOTIFICATION = 'sponsor-approval';
+export const TRIGGER_SPONSOR_APPROVAL_EMAIL_NOTIFICATION = 'proposals/notify';

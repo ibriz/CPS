@@ -1,5 +1,5 @@
 import { sendTransaction } from 'Redux/ICON/utils';
-import { setSponsorRequestIPFSKey } from "Redux/Reducers/proposalSlice";
+import { setSponsorRequestProposalTitle } from "Redux/Reducers/proposalSlice";
 import { put} from 'redux-saga/effects';
 
 function* approveSponserRequestWorker({ payload }) {
@@ -18,7 +18,7 @@ function* approveSponserRequestWorker({ payload }) {
     }
     );
     yield put(
-        setSponsorRequestIPFSKey({ ipfsKey: payload.ipfsKey })
+        setSponsorRequestProposalTitle({ proposalTitle: payload.proposalTitle })
     );
     
     console.log(params);
