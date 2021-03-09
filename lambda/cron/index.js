@@ -1,21 +1,39 @@
 const cron = require('./src/cron');
 
-exports.handler = async (_event) => {
+exports.handler = async (event) => {
 	try {
-		const cron_actions = await cron.execute();
 
-		console.log(cron_actions);
+		if (event.hasOwnProperty('httpMethod') && event.httpMethod === 'POST') {
+			await cron.proposal_notification(JSON.parse(event.body));
 
-		return Promise.all(cron_actions).then(() => {
-			console.log('==============Invoke Successful==========');
-			Promise.resolve({
+			const response = {
 				statusCode: 200,
 				headers: {
-					'Access-Control-Allow-Origin': '*'
+					'Access-Control-Allow-Origin': '*',
+					'Access-Control-Allow-Headers': '*'
 				},
-				body: 'Email sucessfully sent. Check logs for more details.'
+				body: JSON.stringify({
+					message: "Email sent"
+				})
+			};
+
+			return response;
+		} else {
+			const cron_actions = await cron.execute();
+
+			console.log(cron_actions);
+
+			return Promise.all(cron_actions).then(() => {
+				console.log('==============Invoke Successful==========');
+				Promise.resolve({
+					statusCode: 200,
+					headers: {
+						'Access-Control-Allow-Origin': '*'
+					},
+					body: 'Email sucessfully sent. Check logs for more details.'
+				});
 			});
-		});
+		}
 	} catch (err) {
 
 		console.log(err);
