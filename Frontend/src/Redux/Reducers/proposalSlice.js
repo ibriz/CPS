@@ -139,7 +139,8 @@ const initialState = {
     remainingVotes: [],
     sponsorMessage: [],
     sponsorRequestIPFSKey: '',
-    sponsorRequestProposalTitle: ''
+    sponsorRequestProposalTitle: '',
+    sponsorRequestProposal: null
 };
 
 const proposalSlice = createSlice({
@@ -605,6 +606,10 @@ const proposalSlice = createSlice({
         setSponsorRequestProposalTitle(state, action) {
             state.sponsorRequestProposalTitle = action.payload.proposalTitle;
             return;
+        },
+
+        setSponsorRequestProposal(state, action) {
+            state.sponsorRequestProposal = action.payload.proposal
         }
     },
 
@@ -631,5 +636,5 @@ export const { submitProposalRequest, submitProposalSuccess, submitProposalFailu
     fetchRemainingVotesRequest, fetchRemainingVotesProposalSuccess, fetchRemainingVotesFailure,
     setSubmittingProposal,
     fetchSponsorMessageRequest, fetchSponsorMessageSuccess, fetchSponsorMessageFailure,
-    setSponsorRequestIPFSKey, setSponsorRequestProposalTitle} = proposalSlice.actions;
+    setSponsorRequestIPFSKey, setSponsorRequestProposalTitle, setSponsorRequestProposal} = proposalSlice.actions;
 export default proposalSlice.reducer;

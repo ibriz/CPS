@@ -246,8 +246,8 @@ export default (event) => {
                         }, function(){
                             request({
                                 body: {
-                                    projectName: store.getState().proposals.sponsorRequestProposalTitle,
-                                    address: store.getState().account.address
+                                    projectName: store.getState().proposals.sponsorRequestProposal.title,
+                                    address: store.getState().proposals.sponsorRequestProposal.contributorAddress
                                 },
                                 url: TRIGGER_SPONSOR_APPROVAL_EMAIL_NOTIFICATION,
                             });

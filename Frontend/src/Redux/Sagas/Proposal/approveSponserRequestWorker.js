@@ -1,5 +1,5 @@
 import { sendTransaction } from 'Redux/ICON/utils';
-import { setSponsorRequestProposalTitle } from "Redux/Reducers/proposalSlice";
+import { setSponsorRequestProposal } from "Redux/Reducers/proposalSlice";
 import { put} from 'redux-saga/effects';
 
 function* approveSponserRequestWorker({ payload }) {
@@ -18,7 +18,7 @@ function* approveSponserRequestWorker({ payload }) {
     }
     );
     yield put(
-        setSponsorRequestProposalTitle({ proposalTitle: payload.proposalTitle })
+        setSponsorRequestProposal({ proposal: payload.proposal })
     );
     
     console.log(params);
