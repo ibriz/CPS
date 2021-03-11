@@ -11,7 +11,7 @@ function* submitProgressReportWorker({payload}) {
       params: {_status: progressReportStatusMapping.find(mapping => 
         mapping.name === payload.status).status,
       // _address: payload.walletAddress,
-      _end_index: `${(payload.pageNumber * 10) - 1}`,
+      _end_index: `${(payload.pageNumber * 10)}`,
       _start_index: `${(payload.pageNumber * 10) - 10}`,
     
     }
