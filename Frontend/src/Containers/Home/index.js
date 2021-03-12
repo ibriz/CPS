@@ -51,7 +51,8 @@ const mapStateToProps = state => (
     {
         address: state.account.address,
         isPrep: state.account.isPrep,
-        isRegistered: state.account.isRegistered
+        isRegistered: state.account.isRegistered,
+        period: state.period.period
     }
 );
 
