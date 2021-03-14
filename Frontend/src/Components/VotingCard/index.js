@@ -169,23 +169,27 @@ const VotingCard = ({ proposalList, fetchProposalListRequest, walletAddress, tot
                                 currentPage={pageNumber?.[selectedTab]}
                                 setCurrentPage={(pageNumber) => setCurrentPages(selectedTab, pageNumber)}
                                 totalPages={totalPages[status]} /> */}
-
-                            <DetailsModal
+                            {
+                                modalShow && <DetailsModal
                                 show={modalShow}
                                 onHide={() => setModalShow(false)}
                                 proposal={selectedProposal}
                                 status={status}
                                 voting = {true}
                             />
+                            }
 
-                            <DetailsModalProgressReport
+                            {
+                                modalShowPR && <DetailsModalProgressReport
                                 show={modalShowPR}
                                 onHide={() => setModalShowPR(false)}
                                 progressReport={selectedProgressReport}
                                 status={status}
                                 voting = {true}
 
-                            />    
+                            /> 
+                            }
+   
 
                         </Card.Body>
                     </Card>
