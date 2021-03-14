@@ -201,6 +201,7 @@ function DetailsModal(props) {
                             approvedPercentage = {approvedPercentage}
                             rejectedPercentage = {rejectedPercentage}
                             noProgressBar
+                            placement="bottom"
                             />
                         }
 
@@ -227,6 +228,7 @@ function DetailsModal(props) {
                           rejectedPercentage = {rejectedVotersPercentage}
                           noProgressBar
                           voterCount
+                          placement="bottom"
                           />
                         }
 
@@ -258,6 +260,7 @@ function DetailsModal(props) {
                           rejectedPercentage = {rejectedPercentageBudgetChange}
                           noProgressBar
                           budgetAdjustment
+                          placement="bottom"
                           />
 
                           
@@ -287,6 +290,7 @@ function DetailsModal(props) {
                           noProgressBar
                           budgetAdjustment
                           voterCount
+                          placement="bottom"
                           />
                         }
 

@@ -180,6 +180,10 @@ function DetailsModal(props) {
     approveSponserRequest(
       {
         ipfsKey: proposal.ipfsKey,
+        proposal: {
+          contributorAddress: proposal?._contributor_address,
+          title: proposalDetail && proposalDetail.projectName || '',
+        },
         sponsorBond: IconConverter.toBigNumber(proposalDetail?.totalBudget).dividedBy(10),
         reason: sponsorVoteReason
       }
@@ -285,6 +289,7 @@ function DetailsModal(props) {
                             rejectedPercentage = {rejectedPercentage}
                             noProgressBar
                             proposal
+                            placement="bottom"
                           />
                         }
 
@@ -315,6 +320,7 @@ function DetailsModal(props) {
                           noProgressBar
                           proposal
                           voterCount
+                          placement="bottom"
                           />
                         }
 

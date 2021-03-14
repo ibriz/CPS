@@ -62,6 +62,11 @@ const links = [
         link: "https://forum.icon.community/c/contribution-proposals/45"
     },
 
+    {
+        title: "CPS Yellow Paper",
+        link: "https://docs.google.com/document/d/1yPwgsXx4ow5NVnG1ktMKYp5JvjQvWEfuSkq6Iy-OIXA/"
+    }
+
 ]
 
 const Footer = ({ console = false }) => {
@@ -160,7 +165,7 @@ const Footer = ({ console = false }) => {
 
                     }
 
-                <Col lg="3" className={ClassNames(footerColumnStyles, linksStyle)}>
+                <Col lg="3" className={ClassNames(footerColumnStyles, linksStyle)} style = {{paddingRight: 0}}>
                     {
                         links.map(link =>
                             <div style={{ marginTop: '10px' }}>

@@ -109,11 +109,11 @@ const Aside = ({ collapsed, rtl, toggled, handleToggleSidebar, handleCollapsedCh
 
               </MenuItem> 
 
-              <MenuItem icon={<CgFileDocument/>}
+              {/* <MenuItem icon={<CgFileDocument/>}
               > {<span>CPS Whitepaper</span>}
-                <a href="https://docs.google.com/document/d/1g1idSDN7D64gHaBjOyhNw2dAD2YqEQcon_kB1WLJhas/edit?usp=sharing" target = "_blank" />
+                <a href="https://docs.google.com/document/d/1yPwgsXx4ow5NVnG1ktMKYp5JvjQvWEfuSkq6Iy-OIXA/" target = "_blank" />
 
-              </MenuItem> 
+              </MenuItem>  */}
           </Menu>
 
         }
@@ -173,11 +173,11 @@ const Aside = ({ collapsed, rtl, toggled, handleToggleSidebar, handleCollapsedCh
 
               </MenuItem> 
 
-              <MenuItem icon={<CgFileDocument/>}
+              {/* <MenuItem icon={<CgFileDocument/>}
               > {<span>CPS Whitepaper</span>}
-                <a href="https://docs.google.com/document/d/1g1idSDN7D64gHaBjOyhNw2dAD2YqEQcon_kB1WLJhas/edit?usp=sharing" target = "_blank" />
+                <a href="https://docs.google.com/document/d/1yPwgsXx4ow5NVnG1ktMKYp5JvjQvWEfuSkq6Iy-OIXA/" target = "_blank" />
 
-              </MenuItem> 
+              </MenuItem>  */}
 
               
 

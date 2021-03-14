@@ -56,11 +56,21 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
     const [descriptionWords, setDescriptionWords] = React.useState(0);
     const [descriptionCharacters, setDescriptionCharacters] = React.useState(0);
     const [totalNumberOfMonthsInMilestone, setTotalNumberOfMonthsInMilestone] = React.useState(0);
-
+    let [prepList, setPrepList] = React.useState([]);
 
     useEffect(() => {
         fetchCPFRemainingFundRequest();
     }, [fetchCPFRemainingFundRequest, cpfScoreAddress]);
+
+    useEffect(() => {
+        let prepList = preps.slice();
+         prepList = prepList.sort(function (a, b) {
+            if(a.name.toLowerCase() < b.name.toLowerCase() ) return -1;
+            if(a.name.toLowerCase() > b.name.toLowerCase()) return 1;
+            return 0;
+            })
+        setPrepList(prepList);
+    }, [preps])
 
     const [proposal, setProposal] = useState(
         {
@@ -278,7 +288,6 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
         }
         document.getElementById(name) && document.getElementById(name).reportValidity();
     }
-
     return (
         <div className={styles.proposalCreationPage}>
             <Header title="Create New Proposal" />
@@ -365,8 +374,13 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                                 <Form.Control size="md" as="select" value={proposal.sponserPrep} name="sponserPrep" id="sponserPrep" onChange={handleChange} required>
                                     <option disabled selected value="">Select PREP</option>
                                     {
-                                        preps.map(prep =>
-                                            <option value={prep.address}>{`${prep.name} (${prep.address.slice(0, 4)}...${prep.address.slice(prep.address.length - 2)})`}</option>
+                                        prepList.map(prep => {
+
+                                                return (
+                                                    <option value={prep.address} key = {prep.address}>{`${prep.name} (${prep.address.slice(0, 4)}...${prep.address.slice(prep.address.length - 2)})`}</option>
+
+                                                )
+                                            }
 
                                         )
                                     }

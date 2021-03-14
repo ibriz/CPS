@@ -22,7 +22,7 @@ function* fetchProposalListWorker({payload}) {
       method: 'get_proposal_details',
       params: {_status: proposalListStatusMapping[payload.status],
         _wallet_address: payload.walletAddress,
-        _end_index: `${(payload.pageNumber * 10) - 1}`,
+        _end_index: `${(payload.pageNumber * 10)}`,
       _start_index: `${(payload.pageNumber * 10) - 10}`,
     
     }

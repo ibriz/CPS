@@ -7,6 +7,7 @@ import {fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest} from 'Redux/R
 import {icxFormat} from 'Helpers';
 import useTimer from 'Hooks/useTimer';
 import { fetchPrepsRequest } from 'Redux/Reducers/prepsSlice';
+import PRepListModal from '../PRepListModal';
 
 const TabularData = ({ numberOfPendingProposals, numberOfSubmittedProposals, totalPendingProposalBudge, totalSubmittedProposalBudget, cpfRemainingFunds, numberOfApprovedProposals, totalApprovedProposalBudget, fetchProposalListRequest, walletAddress,totalCount, fetchCPFScoreAddressRequest, fetchCPFRemainingFundRequest, cpfScoreAddress, fetchProjectAmountsRequest, projectAmounts, fetchPrepsRequest, preps }) => {
     const {period} = useTimer();
@@ -20,6 +21,8 @@ const TabularData = ({ numberOfPendingProposals, numberOfSubmittedProposals, tot
         fetchCPFRemainingFundRequest();
     }, [fetchCPFRemainingFundRequest, cpfScoreAddress])
 
+    const [prepListModalShow, setPrepListModalShow] = React.useState(false);
+
     const tabularData = [
         {
             key: 'Period',
@@ -27,7 +30,7 @@ const TabularData = ({ numberOfPendingProposals, numberOfSubmittedProposals, tot
         },
         {
             key: 'No. of Registered P-Reps',
-            value: preps.length
+            value: <span onClick = {() => setPrepListModalShow(true)} style = {{textDecoration: 'underline', cursor: 'pointer'}}>{preps.length}</span>
         },
         {
             key: 'Voting Proposals',
@@ -64,6 +67,12 @@ const TabularData = ({ numberOfPendingProposals, numberOfSubmittedProposals, tot
 
                 ))
             }
+
+        <PRepListModal
+                show={prepListModalShow}
+                onHide={() => setPrepListModalShow(false)}
+                preps = {preps}
+            />
         </div>
     )
 }

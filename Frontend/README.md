@@ -37,4 +37,4 @@ The CPS is part of the ICON Republic DAO governance. The CPS supports worthy pro
 ## Documents
 
 - User Guide: https://medium.com/ibriz-iconosphere/how-to-use-the-contribution-proposal-system-1efe714c9182 
-- CPS Whitepaper: https://docs.google.com/document/d/1g1idSDN7D64gHaBjOyhNw2dAD2YqEQcon_kB1WLJhas/edit
+- CPS Yellow Paper: https://docs.google.com/document/d/1yPwgsXx4ow5NVnG1ktMKYp5JvjQvWEfuSkq6Iy-OIXA/
