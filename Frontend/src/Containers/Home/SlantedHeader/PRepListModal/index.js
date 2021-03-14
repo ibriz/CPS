@@ -50,8 +50,7 @@ function PRepListModal({preps, ...props}) {
 
 
         </Modal.Body>
-        <Modal.Footer>
-        </Modal.Footer>
+
       </Modal>
     );
   }

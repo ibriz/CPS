@@ -130,13 +130,15 @@ const ProposalCard = ({ proposalList, fetchProposalListRequest, walletAddress, t
                                 currentPage={pageNumber?.[selectedTab]}
                                 setCurrentPage={(pageNumber) => setCurrentPages(selectedTab, pageNumber)}
                                 totalPages={totalPages[selectedTab] ?? 1} />
-
-                            <DetailsModal
+                            {
+                                modalShow && <DetailsModal
                                 show={modalShow}
                                 onHide={() => setModalShow(false)}
                                 proposal={selectedProposal}
                                 status={selectedTab}
                             />
+                            }
+
 
                         </Card.Body>
                     </Card>

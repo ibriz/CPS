@@ -28,6 +28,7 @@
 
  .address {
     color: #262626;
+    word-wrap: break-word;
  }
 
  .link:hover {
