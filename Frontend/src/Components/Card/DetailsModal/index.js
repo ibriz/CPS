@@ -168,7 +168,7 @@ function DetailsModal(props) {
     voteProposal(
       {
         vote,
-        voteReason,
+        voteReason: voteReason.replace(/&nbsp;/g, ''),
         ipfsKey: proposal.ipfsKey,
 
       }
@@ -185,7 +185,7 @@ function DetailsModal(props) {
           title: proposalDetail && proposalDetail.projectName || '',
         },
         sponsorBond: IconConverter.toBigNumber(proposalDetail?.totalBudget).dividedBy(10),
-        reason: sponsorVoteReason
+        reason: sponsorVoteReason.replace(/&nbsp;/g, '')
       }
     );
     // props.onHide();
@@ -195,7 +195,7 @@ function DetailsModal(props) {
     rejectSponsorRequest(
       {
         ipfsKey: proposal.ipfsKey,
-        reason: sponsorVoteReason
+        reason: sponsorVoteReason.replace(/&nbsp;/g, '')
 
       }
     );

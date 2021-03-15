@@ -94,7 +94,7 @@ function DetailsModal(props) {
     voteProgressReport(
       {
         vote,
-        voteReason,
+        voteReason: voteReason.replace(/&nbsp;/g, ''),
         voteProjectTermRevision: progressDetail?.projectTermRevision ? voteProjectTermRevision : null,
         proposalKey: progressReport.proposalKey,
         reportKey: progressReport.reportKey
