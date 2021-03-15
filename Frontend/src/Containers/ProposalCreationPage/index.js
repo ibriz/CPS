@@ -624,7 +624,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                     submitProposal(
                         {
                             ...proposal,
-                            description: description.replace(/&nbsp;/g, '')
+                            description: proposal.description.replace(/&nbsp;/g, '')
                         }
                     )
                 }} >

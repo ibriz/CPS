@@ -593,8 +593,8 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                     submitProgressReport(
                         {
                             ...progressReport,
-                            description: description.replace(/&nbsp;/g, ''),
-                            revisionDescription: revisionDescription.replace(/&nbsp;/g, '')
+                            description: progressReport.description.replace(/&nbsp;/g, ''),
+                            revisionDescription: progressReport.revisionDescription.replace(/&nbsp;/g, '')
                         }
                     )
                 }} >
