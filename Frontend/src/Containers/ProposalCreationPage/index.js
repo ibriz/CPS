@@ -623,8 +623,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                 onConfirm={() => {
                     submitProposal(
                         {
-                            ...proposal,
-                            description: proposal.description.replace(/&nbsp;/g, '')
+                            proposal
                         }
                     )
                 }} >
