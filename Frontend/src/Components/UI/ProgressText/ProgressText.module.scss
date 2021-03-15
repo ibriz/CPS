@@ -5,3 +5,10 @@ font-size: 0.7rem;
 line-height: 15px;
 color: rgba(38, 38, 38, 0.85);
 }
+
+@media screen and (-webkit-min-device-pixel-ratio:0) { 
+    /* Safari only override */
+    ::i-block-chrome,.progressText {
+     font-size: 0.59rem
+    }
+}
