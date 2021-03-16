@@ -8,10 +8,10 @@ function PRepListModal({preps, ...props}) {
     let [prepList, setPrepList] = React.useState([]);
 
     React.useEffect(() => {
-        let prepList = preps.slice();
-         prepList = prepList.sort(function (a, b) {
-            if(a.name.toLowerCase() < b.name.toLowerCase() ) return -1;
-            if(a.name.toLowerCase() > b.name.toLowerCase()) return 1;
+        let prepList = preps?.slice();
+         prepList = prepList?.sort(function (a, b) {
+            if(a?.name?.toLowerCase() < b?.name?.toLowerCase() ) return -1;
+            if(a?.name?.toLowerCase() > b?.name?.toLowerCase()) return 1;
             return 0;
             })
         setPrepList(prepList);
@@ -31,14 +31,14 @@ function PRepListModal({preps, ...props}) {
         </Modal.Header>
         <Modal.Body>
           {
-              prepList.map(prep => <>
+              prepList?.map(prep => <>
             <a href = {`${trackerURL}/${prep.address}`} target = "_blank" style = {{color: '#262626'}} className = {styles.link}>
 
               <Row>
 
-                    <Col lg = "5" className = {styles.name}>{prep.name}</Col>
+                    <Col lg = "5" className = {styles.name}>{prep?.name}</Col>
                     <Col lg = "7" className = {styles.address}>
-                        {prep.address}
+                        {prep?.address}
                     </Col>
                 </Row>
             </a>
