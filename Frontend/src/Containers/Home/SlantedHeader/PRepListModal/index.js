@@ -36,7 +36,7 @@ function PRepListModal({preps, ...props}) {
 
               <Row>
 
-                    <Col lg = "5" className = {styles.name}>{prep?.name}</Col>
+                    <Col lg = "5" className = {styles.name}>{prep?.name ?? <span style = {{textAlign: 'center'}}>-</span>}</Col>
                     <Col lg = "7" className = {styles.address}>
                         {prep?.address}
                     </Col>
