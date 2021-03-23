@@ -22,6 +22,7 @@ import { requestIPFS } from 'Redux/Sagas/helpers';
 import InfoIcon from "Components/InfoIcon";
 import Popup from 'Components/Popup';
 import useTimer from 'Hooks/useTimer';
+import { specialCharacterMessage } from 'Constants';
 
 const signingInfoMessage = (
     <div className="text-information">
@@ -328,7 +329,7 @@ const ProgressReportCreationPage = ({ submitProgressReport, history, submittingP
                                 
                                 Progress Report Name
                                 <span className = {styles.required}></span>
-                                {/* <InfoIcon description = "A suitable name for the progress report"/>   */}
+                                <InfoIcon description={specialCharacterMessage('progress report name')} />
                             </AppFormLabel>
                             <Col lg="9" className={styles.inputSameLine}>
                                 <Form.Control placeholder="Progress Report Name" size="md" value={progressReport.progressReportTitle} name="progressReportTitle" id="progressReportTitle" onChange={handleChange} required />

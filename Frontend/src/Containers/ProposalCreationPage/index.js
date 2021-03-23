@@ -24,6 +24,7 @@ import ConfirmationModal from 'Components/UI/ConfirmationModal';
 import { requestIPFS } from 'Redux/Sagas/helpers';
 import useTimer from 'Hooks/useTimer';
 import Popup from 'Components/Popup';
+import { specialCharacterMessage } from 'Constants';
 
 const signingInfoMessage = (
     <div className="text-information">
@@ -302,7 +303,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                             <Form.Label column sm="2" >
                                 Project Name
                                 <span className={styles.required}></span>
-                                {/* <InfoIcon description="A suitable name for the project" /> */}
+                                <InfoIcon description={specialCharacterMessage('project name')} />
                             </Form.Label>
 
                             <Col sm="10" className={styles.inputSameLine}>

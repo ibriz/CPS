@@ -473,6 +473,7 @@ function DetailsModal(props) {
                   <Row style={{ marginTop: '10px' }}>
                     <Col xs="12">
                       <span style={{ color: '#262626', fontWeight: 600 }}>Explain in brief the reason behind your decision:</span>
+                      <InfoIcon description={specialCharacterMessage()} />
                     </Col>
 
                     <Col xs="12">
