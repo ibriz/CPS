@@ -12,7 +12,7 @@ import { approveSponserRequest, rejectSponsorRequest, voteProposal } from 'Redux
 import { voteProgressReport, fetchVoteResultRequest, fetchVoteResultBudgetChangeRequest } from 'Redux/Reducers/progressReportSlice';
 import { connect } from 'react-redux';
 import ProgressReportList from './ProgressReportList';
-import { progressReportStatusMapping } from '../../../Constants';
+import { progressReportStatusMapping, specialCharacterMessage } from '../../../Constants';
 import VoteList from '../DetailsModal/VoteList';
 import RichTextEditor from 'Components/RichTextEditor';
 import ConfirmationModal from 'Components/UI/ConfirmationModal';
@@ -26,6 +26,7 @@ import { icxFormat } from 'Helpers';
 import ProgressBarCombined from 'Components/Card/ProgressBarCombined';
 import useTimer from 'Hooks/useTimer';
 import VoteProgressBar from 'Components/VoteProgressBar';
+import InfoIcon from 'Components/InfoIcon';
 
 function DetailsModal(props) {
 
