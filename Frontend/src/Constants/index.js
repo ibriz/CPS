@@ -114,9 +114,11 @@ export const proposalStatusMapping = [
 
 export const payPenaltyAmount = 10;
 export const specialCharacterMessage = (name) => {
-    let specialCharacterMessage = `Please do not include special characters ('#', '&' , '<' and '>')`
+    let specialCharacterMessage = `Please do not include special characters`
     if (name) {
         specialCharacterMessage += ` in the ${name}.`
+    } else {
+        specialCharacterMessage += `.`
     }
     return specialCharacterMessage;
     
