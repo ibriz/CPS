@@ -530,7 +530,7 @@ function DetailsModal(props) {
           <Row>
             <Col xs="12">
               {
-                (status === 'Voting' && progressDetail?.projectTermRevision) ?
+                (progressDetail?.projectTermRevision) ?
                   <>
                     <ListTitle>BUDGET CHANGE REQUEST VOTES</ListTitle>
                     <VoteList

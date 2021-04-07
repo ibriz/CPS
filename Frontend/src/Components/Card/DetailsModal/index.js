@@ -561,7 +561,7 @@ function DetailsModal(props) {
             <Col xs="12">
 
               {
-                  (status === 'Voting' || status === 'Active' || status === 'Completed' || status === 'Paused' || status === 'Disqualified') ?
+                  (status === 'Voting' || status === 'Active' || status === 'Completed' || status === 'Paused' || status === 'Disqualified' || (status === "Rejected" && votesByProposal?.length)) ?
                     <>
                       <ListTitle>VOTES</ListTitle>
                       <VoteList
