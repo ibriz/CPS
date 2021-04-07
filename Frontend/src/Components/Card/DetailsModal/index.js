@@ -8,7 +8,7 @@ import { FetchProposalDetailRequest, fetchProposalDetailRequest, approveSponserR
 import { fetchProgressReportByProposalRequest } from 'Redux/Reducers/progressReportSlice';
 import { connect } from 'react-redux';
 import ProgressReportList from 'Components/Card/ProgressReportList';
-import { proposalStatusMapping } from '../../../Constants';
+import { proposalStatusMapping, specialCharacterMessage } from '../../../Constants';
 import VoteList from './VoteList';
 import RichTextEditor from 'Components/RichTextEditor';
 import ConfirmationModal from 'Components/UI/ConfirmationModal';
@@ -457,6 +457,8 @@ function DetailsModal(props) {
           <Row>
             <Col xs="12">
               <span>Explain in brief the reason behind your decision</span>
+              <InfoIcon description={specialCharacterMessage()} />
+
             </Col>
 
             <Col xs="12">
@@ -522,6 +524,8 @@ function DetailsModal(props) {
                   <Row>
                     <Col xs="12">
                       <span>Explain in brief the reason behind your decision</span>
+                      <InfoIcon description={specialCharacterMessage()} />
+
                     </Col>
 
                     <Col xs="12">
@@ -557,7 +561,7 @@ function DetailsModal(props) {
             <Col xs="12">
 
               {
-                  (status === 'Voting' || status === 'Active' || status === 'Completed' || status === 'Paused' || status === 'Disqualified') ?
+                  (status === 'Voting' || status === 'Active' || status === 'Completed' || status === 'Paused' || status === 'Disqualified' || (status === "Rejected" && votesByProposal?.length)) ?
                     <>
                       <ListTitle>VOTES</ListTitle>
                       <VoteList
