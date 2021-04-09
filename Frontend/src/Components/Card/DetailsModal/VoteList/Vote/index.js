@@ -4,10 +4,18 @@ import styles from './Vote.module.scss';
 import LowerCardInfo from 'Components/UI/LowerCardList/LowerCardInfo';
 import LowerCardTitle from 'Components/UI/LowerCardList/LowerCardTitle';
 import {proposalStatusMapping} from 'Constants'
+import { formatDescription } from 'Helpers';
 
 const Vote = ({vote}) => {
 
     const [showSponsorMessage, setShowSponsorMessage] = React.useState(false);
+
+    const [voteReason, setVoteReason] = React.useState('');
+
+    React.useEffect(() => {
+        let description = formatDescription(vote?.reason);
+        setVoteReason(description);
+      }, [vote?.reason])
     return (
         <>
             <Row className={styles.proposalContainer} 
@@ -32,7 +40,7 @@ const Vote = ({vote}) => {
                             {
                                 vote.reason ?
                                 <div style = {{fontSize: '0.85rem'}}                                 
-                                    dangerouslySetInnerHTML={{ __html: vote.reason }}
+                                    dangerouslySetInnerHTML={{ __html: voteReason }}
                                 /> :
                                 <div style = {{fontSize: '0.85rem'}}                                 
                                 
