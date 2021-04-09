@@ -22,7 +22,7 @@ import {
   getProgressReportRejectedPercentage, getProgressReportRejectedVotersPercentage,
   getBudgetAdjustmentRejectedPercentage, getBudgetAdjustmentRejectedVotersPercentage
 } from 'Selectors';
-import { icxFormat } from 'Helpers';
+import { formatDescription, icxFormat } from 'Helpers';
 import ProgressBarCombined from 'Components/Card/ProgressBarCombined';
 import useTimer from 'Hooks/useTimer';
 import VoteProgressBar from 'Components/VoteProgressBar';
@@ -37,7 +37,8 @@ function DetailsModal(props) {
   const [voteReason, setVoteReason] = useState('');
   const [sponsorConfirmationShow, setSponsorConfirmationShow] = React.useState(false);
   const [sponsorVote, setSponsorVote] = useState('');
-
+  const [description, setDescription] = useState(null);
+  const [revisionDescription, setRevisionDescription] = useState(null);
 
   const [voteConfirmationShow, setVoteConfirmationShow] = React.useState(false);
   const {remainingTime: remainingTimer} = useTimer();
@@ -78,6 +79,15 @@ function DetailsModal(props) {
 
   }, [props.progressReport])
 
+  useEffect(() => {
+    let description = formatDescription(progressDetail?.description);
+    setDescription(description);
+  }, [progressDetail?.description])
+
+  useEffect(() => {
+    let description = formatDescription(progressDetail?.revisionDescription);
+    setRevisionDescription(description);
+  }, [progressDetail?.revisionDescription])
 
   useEffect(() => {
       // alert("Voting");
@@ -317,10 +327,10 @@ function DetailsModal(props) {
         <Row>
           <Col lg="8" xs="12">
             {/* <div dangerouslySetInnerHTML={{ __html: description }} /> */}
-            <Description description={(progressDetail && progressDetail.description) || '<span>No Description</span>'} />
+            <Description description={(progressDetail && description) || '<span>No Description</span>'} />
             {
               progressDetail && progressDetail.projectTermRevision ?
-                <Description description={(progressDetail && progressDetail.revisionDescription) || '<span>No Description</span>'}
+                <Description description={(progressDetail && revisionDescription) || '<span>No Description</span>'}
                   title="REVISION DESCRIPTION" /> : null
             }
 
