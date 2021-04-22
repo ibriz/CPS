@@ -1,5 +1,6 @@
 import { sendTransaction } from 'Redux/ICON/utils';
-import { select } from 'redux-saga/effects';
+import { put, select } from 'redux-saga/effects';
+import { setBackendTriggerData } from 'Redux/Reducers/proposalSlice';
 
 function* claimRewardWorker({ payload }) {
 
