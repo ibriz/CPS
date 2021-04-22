@@ -15,6 +15,13 @@ function* claimRewardWorker({ payload }) {
 
     )
 
+    yield put(
+        setBackendTriggerData({
+            backendTriggerData: {
+            }
+        })
+    );
+
 }
 
 export default claimRewardWorker;
