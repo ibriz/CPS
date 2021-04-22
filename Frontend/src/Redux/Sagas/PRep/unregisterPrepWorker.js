@@ -1,4 +1,6 @@
+import { put } from '@redux-saga/core/effects';
 import { sendTransaction } from 'Redux/ICON/utils';
+import { setBackendTriggerData } from 'Redux/Reducers/proposalSlice';
 
 function* unregisterPrepWorker({ payload }) {
 
@@ -6,6 +8,13 @@ function* unregisterPrepWorker({ payload }) {
         method: 'unregister_prep',
     }
     )
+
+    yield put(
+        setBackendTriggerData({
+            backendTriggerData: {
+            }
+        })
+    );
 
 }
 

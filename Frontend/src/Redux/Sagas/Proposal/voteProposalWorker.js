@@ -1,4 +1,6 @@
+import { put } from '@redux-saga/core/effects';
 import { sendTransaction } from 'Redux/ICON/utils';
+import { setBackendTriggerData } from 'Redux/Reducers/proposalSlice';
 
 const voteStatusMapping = {
     Abstain: '_abstain',
@@ -19,6 +21,16 @@ function* voteProposalWorker({ payload }) {
         params,
     }
     )
+
+    yield put(
+        setBackendTriggerData({
+            backendTriggerData: {
+                _vote: voteStatusMapping[payload.vote],
+                _vote_reason: payload.voteReason,
+                _ipfs_key: payload.ipfsKey
+            }
+        })
+    );
 
     console.log(params);
 }

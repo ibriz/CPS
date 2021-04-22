@@ -1,4 +1,6 @@
+import { put } from '@redux-saga/core/effects';
 import { sendTransaction } from 'Redux/ICON/utils';
+import { setBackendTriggerData } from 'Redux/Reducers/proposalSlice';
 
 function* rejectSponserRequestWorker({ payload }) {
 
@@ -15,6 +17,16 @@ function* rejectSponserRequestWorker({ payload }) {
         id: 'reject_sponsor'
     }
     )
+
+    yield put(
+        setBackendTriggerData({
+            backendTriggerData: {
+                _ipfs_key: payload.ipfsKey,
+                _vote: '_reject',
+                _vote_reason: payload.reason,
+            }
+        })
+    );
 
     console.log(params);
 }

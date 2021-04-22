@@ -16,7 +16,7 @@ import {fetchPeriodDetailsRequest} from 'Redux/Reducers/periodSlice';
 import { fetchExpectedGrantRequest, fetchCPSTreasuryScoreAddressRequest } from 'Redux/Reducers/fundSlice';
 import {provider} from '../utils';
 import { request } from 'Redux/Sagas/helpers';
-import {TRIGGER_SPONSOR_APPROVAL_EMAIL_NOTIFICATION} from 'Redux/Constants';
+import {TRIGGER_SPONSOR_APPROVAL_EMAIL_NOTIFICATION, BACKEND_TRIGGER_URL} from 'Redux/Constants';
 
 // import { loginSuccess } from 'Redux/Reducers/accountSlice';
 
@@ -149,6 +149,11 @@ export default (event) => {
 
                     }, function(){
 
+                        request({
+                            body: store.getState().proposals.backendTriggerData,
+                            url: BACKEND_TRIGGER_URL,
+                        });
+
                         store.dispatch( fetchProposalListRequest(
                             {
                                 status: "Pending",
@@ -173,6 +178,11 @@ export default (event) => {
                         failureMessage: "Progress Report Creation Failed",
                         successMessage: "Progress Report Created Successfully"
                     },  function(){
+                        request({
+                            body: store.getState().proposals.backendTriggerData,
+                            url: BACKEND_TRIGGER_URL,
+                        });
+
                         store.dispatch( fetchProposalByAddressRequest(
                             {
                                 walletAddress: store.getstate().account.address,
@@ -204,6 +214,11 @@ export default (event) => {
                         failureMessage: "Sponsor Voting Failed",
                         successMessage: "Sponsor Voted Successfully"
                     }, function(){
+
+                        request({
+                            body: store.getState().proposals.backendTriggerData,
+                            url: BACKEND_TRIGGER_URL,
+                        });
 
                         store.dispatch(fetchSponsorRequestsListRequest(
                             {
@@ -251,6 +266,12 @@ export default (event) => {
                                 },
                                 url: TRIGGER_SPONSOR_APPROVAL_EMAIL_NOTIFICATION,
                             });
+
+                            request({
+                                body: store.getState().proposals.backendTriggerData,
+                                url: BACKEND_TRIGGER_URL,
+                            });
+
                             store.dispatch(fetchSponsorRequestsListRequest(
                                 {
                                     status: "Pending",
@@ -290,6 +311,11 @@ export default (event) => {
                                 failureMessage: "Error denying Sponsor Request",
                                 successMessage: "Sponsor request denied successfully"
                             }, function(){
+
+                                request({
+                                    body: store.getState().proposals.backendTriggerData,
+                                    url: BACKEND_TRIGGER_URL,
+                                });
         
                                 store.dispatch(fetchSponsorRequestsListRequest(
                                     {
@@ -330,6 +356,10 @@ export default (event) => {
                         failureMessage: "Vote Proposal Failed",
                         successMessage: "Proposal Vote Succeded"
                     }, function(){
+                        request({
+                            body: store.getState().proposals.backendTriggerData,
+                            url: BACKEND_TRIGGER_URL,
+                        });
                         store.dispatch(fetchRemainingVotesRequest(
                             {
                                 type: "proposal"
@@ -349,6 +379,10 @@ export default (event) => {
                         failureMessage: "Vote Progress Report Failed",
                         successMessage: "Progress Report Vote Succeded"
                     }, function(){
+                        request({
+                            body: store.getState().proposals.backendTriggerData,
+                            url: BACKEND_TRIGGER_URL,
+                        });
                         store.dispatch(fetchRemainingVotesRequest(
                             {
                                 type: "progress_report"
@@ -369,6 +403,10 @@ export default (event) => {
                         successMessage: "Period Updated Successfully",
 
                     }, function() {
+                        request({
+                            body: store.getState().proposals.backendTriggerData,
+                            url: BACKEND_TRIGGER_URL,
+                        });
                         store.dispatch(fetchPeriodDetailsRequest());
 
                     });
@@ -384,6 +422,10 @@ export default (event) => {
                         successMessage: "Prep Unregistered Successfully",
 
                     }, function(){
+                        request({
+                            body: store.getState().proposals.backendTriggerData,
+                            url: BACKEND_TRIGGER_URL,
+                        });
                         console.log("loginPrepRequestreq");
 
                         store.dispatch(loginPrepRequest());
@@ -403,6 +445,10 @@ export default (event) => {
                         successMessage: "Prep Registered Successfully",
 
                     }, function(){
+                        request({
+                            body: store.getState().proposals.backendTriggerData,
+                            url: BACKEND_TRIGGER_URL,
+                        });
                         console.log("loginPrepRequestreq");
 
                         store.dispatch(loginPrepRequest());
@@ -421,6 +467,10 @@ export default (event) => {
                             successMessage: "Penalty Paid Successfully",
         
                         }, function(){
+                            request({
+                                body: store.getState().proposals.backendTriggerData,
+                                url: BACKEND_TRIGGER_URL,
+                            });
         
                             store.dispatch(loginPrepRequest());
                             return true;
@@ -437,6 +487,10 @@ export default (event) => {
                                 successMessage: "Reward Claimed Successfully",
             
                             }, function(){
+                                request({
+                                    body: store.getState().proposals.backendTriggerData,
+                                    url: BACKEND_TRIGGER_URL,
+                                });
             
                                 store.dispatch(fetchCPSTreasuryScoreAddressRequest());
                                 store.dispatch(fetchExpectedGrantRequest({

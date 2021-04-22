@@ -1,5 +1,5 @@
 import { sendTransaction } from 'Redux/ICON/utils';
-import { setSponsorRequestProposal } from "Redux/Reducers/proposalSlice";
+import { setBackendTriggerData, setSponsorRequestProposal } from "Redux/Reducers/proposalSlice";
 import { put} from 'redux-saga/effects';
 
 function* approveSponserRequestWorker({ payload }) {
@@ -19,6 +19,16 @@ function* approveSponserRequestWorker({ payload }) {
     );
     yield put(
         setSponsorRequestProposal({ proposal: payload.proposal })
+    );
+
+    yield put(
+        setBackendTriggerData({
+            backendTriggerData: {
+                ipfs_hash: payload.ipfsKey,
+                vote: '_accept',
+                vote_reason: payload.reason,
+            }
+        })
     );
     
     console.log(params);

@@ -138,7 +138,7 @@ const initialState = {
 
     remainingVotes: [],
     sponsorMessage: [],
-    sponsorRequestIPFSKey: '',
+    backendTriggerData: '',
     sponsorRequestProposalTitle: '',
     sponsorRequestProposal: null
 };
@@ -598,8 +598,8 @@ const proposalSlice = createSlice({
             return;
         },
 
-        setSponsorRequestIPFSKey(state, action) {
-            state.sponsorRequestIPFSKey = action.payload.ipfsKey
+        setBackendTriggerData(state, action) {
+            state.backendTriggerData = action.payload.backendTriggerData
             return;
         },
 
@@ -636,5 +636,5 @@ export const { submitProposalRequest, submitProposalSuccess, submitProposalFailu
     fetchRemainingVotesRequest, fetchRemainingVotesProposalSuccess, fetchRemainingVotesFailure,
     setSubmittingProposal,
     fetchSponsorMessageRequest, fetchSponsorMessageSuccess, fetchSponsorMessageFailure,
-    setSponsorRequestIPFSKey, setSponsorRequestProposalTitle, setSponsorRequestProposal} = proposalSlice.actions;
+    setBackendTriggerData, setSponsorRequestProposalTitle, setSponsorRequestProposal} = proposalSlice.actions;
 export default proposalSlice.reducer;
