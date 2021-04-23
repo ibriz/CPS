@@ -38,14 +38,19 @@ async function execute() {
 		let period_triggered = false;
 
 		let present_period = await score.period_check();
+		// transition is as : voting -> transition -> application
 		console.log('Period from Blockchain' + JSON.stringify(present_period));
 
 		if (parseInt(present_period.remaining_time, 'hex') === 0) {
+			// if current period is "Voting Period" -> update_period moves it to transition period
+			// wait for 20 secs, then again trigger the update_period if the current period is transition period
+			// then verify that the period is now application period
 			console.log('Period updated');
 			await score.update_period(present_period);
 			period_triggered = true;
 			present_period = await score.period_check();
 			console.log('Changed period: ' + period_triggered);
+			// Trigger webhook if not transition period
 		}
 
 		const preps = await score.get_preps();
