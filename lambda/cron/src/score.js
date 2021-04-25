@@ -57,7 +57,7 @@ function icon_transaction_call_builder(methodName, params = {}) {
 		.from(user_address)
 		.to(score_address)
 		.stepLimit(IconConverter.toBigNumber('2000000'))
-		.nid(IconConverter.toBigNumber('3'))
+		.nid(IconConverter.toBigNumber('1'))
 		.nonce(IconConverter.toBigNumber('1'))
 		.version(IconConverter.toBigNumber('3'))
 		.timestamp((new Date()).getTime() * 1000)
