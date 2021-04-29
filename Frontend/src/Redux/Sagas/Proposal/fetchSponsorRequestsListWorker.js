@@ -18,8 +18,8 @@ function* fetchSponsorRequestsListWorker({payload}) {
       method: 'get_sponsors_requests',
       params: {_status: proposalListStatusMapping[payload.status],
         _sponsor_address: payload.walletAddress,
-      _end_index: `${(payload.pageNumber * 10)}`,
-      _start_index: `${(payload.pageNumber * 10) - 10}`,
+      // _end_index: `${(payload.pageNumber * 10)}`,
+      // _start_index: `${(payload.pageNumber * 10) - 10}`,
     
     }
 });
