@@ -56,7 +56,7 @@ function icon_transaction_call_builder(methodName, params = {}) {
 	const call = callTransactionBuilder
 		.from(user_address)
 		.to(score_address)
-		.stepLimit(IconConverter.toBigNumber('2000000'))
+		.stepLimit(IconConverter.toBigNumber('20000000'))
 		.nid(IconConverter.toBigNumber('1'))
 		.nonce(IconConverter.toBigNumber('1'))
 		.version(IconConverter.toBigNumber('3'))
