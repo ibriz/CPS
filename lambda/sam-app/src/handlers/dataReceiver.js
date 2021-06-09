@@ -17,6 +17,7 @@ const eventTypesMapping = {
     voteProposal: 'voteProposal',
     sponsorApproval: 'sponsorApproval',
     submitProgressReport: 'submitProgressReport',
+    voteProgressReport: 'voteProgressReport'
 };
 
 const resHeaders = {
@@ -204,6 +205,63 @@ exports.handler = async (req) => {
                 }
 
                 
+                //-----------------------------------------------------------------------------
+                case eventTypesMapping.voteProgressReport: 
+                {
+                    const { proposalIpfsHash, progressIpfsHash, userAddress } = body.data;
+                    if(!proposalIpfsHash) throw new Error("proposalIpfsHash is required");
+                    if(!progressIpfsHash) throw new Error("progressIpfsHash is required");
+                    if(!userAddress) throw new Error("userAddress is required");
+                    
+                    // get progress report's latest state
+                    const progressReportsList = await contractMethodCallService(
+                        process.env['CPS_SCORE'],
+                        scoreMethods.getProgressReportsByProposal,
+                        { '_ipfs_key': proposalIpfsHash }
+                    );
+                    const currProgressReport = progressReportsList.data.find(report => 
+                        report.report_hash == progressIpfsHash
+                    );
+                    if(!currProgressReport) {
+                        throw ({ 
+                            statusCode: 400, 
+                            name: "Progress Report not found", 
+                            message: "Ensure that the IPFS hashes for proposal and progress report are correct"
+                        });
+                    }
+
+                    const { prep_name, address, vote_reason, vote } = voterDetails;
+                    const finalResponse = {
+                        prepName: prep_name,
+                        prepAddress: address,
+                        remarks: vote_reason,
+                        vote,
+                        approvingVoters: IconConverter.toBigNumber(proposalVotingInfo.approve_voters).toFixed(0),
+                        approvingVotersPercentage: IconConverter.toNumber(proposalVotingInfo.total_voters) > 0 ?
+                            IconConverter.toBigNumber(proposalVotingInfo.approve_voters).dividedBy(proposalVotingInfo.total_voters).toFixed(2, 1)
+                            :
+                            '0',
+                        rejectingVoters: IconConverter.toBigNumber(proposalVotingInfo.reject_voters).toFixed(0),
+                        abstainingVoters: IconConverter.toBigNumber(proposalVotingInfo.total_voters)
+                            .minus(proposalVotingInfo.approve_voters)
+                            .minus(proposalVotingInfo.reject_voters)
+                            .toFixed(0),
+                        approvedVotes: IconConverter.toBigNumber(proposalVotingInfo.approved_votes).toFixed(0),
+                        approvedVotesPercentage: IconConverter.toNumber(proposalVotingInfo.total_votes) > 0 ?
+                            IconConverter.toBigNumber(proposalVotingInfo.approved_votes).dividedBy(proposalVotingInfo.total_votes).toFixed(2,1)
+                            :
+                            '0',
+                        rejectedVotes: IconConverter.toBigNumber(proposalVotingInfo.rejected_votes).toFixed(0),
+                        abstainedVotes: IconConverter.toBigNumber(proposalVotingInfo.total_votes)
+                            .minus(proposalVotingInfo.approved_votes)
+                            .minus(proposalVotingInfo.rejected_votes)
+                            .toFixed(0),
+                    };
+
+                    await triggerWebhook(eventTypesMapping.voteProposal, finalResponse);
+                    break;
+                }
+
                 default:
                     throw new Error("Invalid eventType");
             }
