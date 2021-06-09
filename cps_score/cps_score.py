@@ -1016,6 +1016,18 @@ class CPS_Score(IconScoreBase):
         return {DATA: _proposals_list, COUNT: count}
 
     @external(readonly=True)
+    def get_proposal_details_by_hash(self, _ipfs_key: str) -> dict:
+        """
+        Returns all the progress reports for a specific project
+        :param _ipfs_key : project key i.e. proposal ipfs hash
+        :type _ipfs_key : str
+
+        :return : List of all progress report with status
+        :rtype : dict
+        """
+        return self._get_proposal_details(_ipfs_key)
+
+    @external(readonly=True)
     def get_active_proposals(self, _wallet_address: Address) -> list:
         """
         Returns the list of all all active or paused proposal from that address
@@ -1108,6 +1120,28 @@ class CPS_Score(IconScoreBase):
 
         progress_report_dict = {DATA: _progress_report_list, COUNT: count}
         return progress_report_dict
+
+    @external(readonly=True)
+    def get_progress_reports_by_hash(self, _report_key: str) -> dict:
+        """
+        Returns all the progress reports for a specific project
+        :param _report_key : project key i.e. progress report ipfs hash
+        :type _report_key : str
+
+        :return : List of all progress report with status
+        :rtype : dict
+        """
+
+        if _report_key not in self.progress_key_list:
+            return {-1: f"{TAG} : Not a valid IPFS Hash for Progress Report"}
+
+        progressDetails = self._get_progress_reports_details(_report_key)
+        _ipfs_hash = progressDetails.get(IPFS_HASH)
+        proposal_details = self._get_proposal_details(_ipfs_hash)
+        progressDetails[PROJECT_TITLE] = proposal_details.get(PROJECT_TITLE)
+        progressDetails[CONTRIBUTOR_ADDRESS] = proposal_details.get(CONTRIBUTOR_ADDRESS)
+
+        return progressDetails
 
     @external(readonly=True)
     def get_progress_reports_by_proposal(self, _ipfs_key: str) -> dict:
