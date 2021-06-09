@@ -526,7 +526,8 @@ class CPS_Score(IconScoreBase):
         _progress[ADDITIONAL_BUDGET] = to_loop(_progress[ADDITIONAL_BUDGET])
 
         if _progress[BUDGET_ADJUSTMENT]:
-            if not _prefix.percentage_completed.get():
+            # Check if budget adjustment is already submitted or not
+            if not _prefix.budget_adjustment.get():
                 remaining_fund = self.get_remaining_fund()
                 if _progress[ADDITIONAL_BUDGET] > remaining_fund:
                     revert(f"{TAG} : Additional Budget Exceeds than Treasury Amount. {remaining_fund}")
