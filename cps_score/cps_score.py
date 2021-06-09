@@ -157,6 +157,13 @@ class CPS_Score(IconScoreBase):
 
     def on_update(self) -> None:
         super().on_update()
+        # Sending the Sponsor Bond to the Sponsor P-Rep whose Sponsored project is already completed but not sent
+        for _ipfs_hash in self.get_proposals_keys_by_status(self._COMPLETED):
+            _proposal_details = self._get_proposal_details(_ipfs_hash)
+            _sponsor_address: 'Address' = _proposal_details[SPONSOR_ADDRESS]
+            _sponsor_deposit_amount: int = _proposal_details[SPONSOR_DEPOSIT_AMOUNT]
+
+            self.icx.transfer(_sponsor_address, _sponsor_deposit_amount)
 
     @external(readonly=True)
     def name(self) -> str:
@@ -1557,6 +1564,7 @@ class CPS_Score(IconScoreBase):
             _contributor_address: 'Address' = _proposal_details[CONTRIBUTOR_ADDRESS]
             _completed: int = _proposal_details[PERCENTAGE_COMPLETED]
             _budget_adjustment: int = _report_result[BUDGET_ADJUSTMENT]
+            _sponsor_deposit_amount: int = _proposal_details[SPONSOR_DEPOSIT_AMOUNT]
 
             _approve_voters: int = _report_result[APPROVE_VOTERS]
             _reject_voters: int = _report_result[REJECT_VOTERS]
@@ -1590,6 +1598,11 @@ class CPS_Score(IconScoreBase):
 
                 if _approved_reports_count == _project_duration:
                     self._update_proposal_status(_ipfs_hash, self._COMPLETED)
+                    # Transfer the Sponsor-Bond back to the Sponsor P-Rep after the project is completed.
+                    try:
+                        self.icx.transfer(_sponsor_address, _sponsor_deposit_amount)
+                    except BaseException as e:
+                        revert(f"{TAG}: Failed transferring the sponsor bond amount to Sponsor P-Rep. Error: {e}")
 
                 elif _proposal_status == self._PAUSED:
                     self._update_proposal_status(_ipfs_hash, self._ACTIVE)
@@ -1613,7 +1626,6 @@ class CPS_Score(IconScoreBase):
                     self._remove_sponsor(_sponsor_address)
 
                     self.proposals[proposal_prefix].sponsor_deposit_status.set(BOND_CANCELLED)
-                    _sponsor_deposit_amount: int = _proposal_details[SPONSOR_DEPOSIT_AMOUNT]
 
                     # Transferring the sponsor bond deposit to CPF after the project being disqualified
                     cpf_treasury_score.icx(_sponsor_deposit_amount).return_fund_amount(_sponsor_address)
