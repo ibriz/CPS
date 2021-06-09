@@ -809,7 +809,8 @@ class CPS_Score(IconScoreBase):
 
                 _login_dict["penaltyAmount"] = self._get_penalty_amount(_address)
 
-            if _address in self.valid_preps:
+            # If a P-Rep registers on Voting period, P-Rep status will be registered.
+            if _address in self.valid_preps or _address in self.registered_preps:
                 _login_dict["isRegistered"] = True
                 _login_dict["payPenalty"] = False
 
