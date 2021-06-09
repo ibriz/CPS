@@ -1135,7 +1135,7 @@ class CPS_Score(IconScoreBase):
 
     @external(readonly=True)
     def get_sponsors_requests(self, _status: str, _sponsor_address: Address, _start_index: int = 0,
-                              _end_index: int = 20) -> dict:
+                              _end_index: int = 50) -> dict:
         """
         Returns all the sponsored requests for given sponsor address
         :param _status : status in ['_sponsor_pending','_approved','_rejected','_disqualified']
