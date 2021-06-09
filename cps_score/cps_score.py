@@ -1226,6 +1226,8 @@ class CPS_Score(IconScoreBase):
 
                 if _wallet_address not in _voters_list:
                     _progress_reports_details = self._get_progress_reports_details(_report_key)
+                    _ipfs_hash = _progress_reports_details.get(IPFS_HASH)
+                    _progress_reports_details[PROJECT_TITLE] = self._get_proposal_details(_ipfs_hash).get(PROJECT_TITLE)
                     _remaining_progress_report.append(_progress_reports_details)
 
             return _remaining_progress_report
