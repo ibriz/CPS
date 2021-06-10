@@ -188,7 +188,7 @@ class CPS_TREASURY(IconScoreBase):
             if self.proposals[prefix].status.get() != self._DISQUALIFIED:
                 if self.proposals[prefix].contributor_address.get() == _wallet_address:
                     _total_installment = self.proposals[prefix].project_duration.get()
-                    _total_paid_count = self.proposals[prefix].installment_count.get()
+                    _total_paid_count = _total_installment - self.proposals[prefix].installment_count.get()
                     if _total_paid_count < _total_installment:
                         _total_budget = self.proposals[prefix].total_budget.get()
                         _total_paid_amount = self.proposals[prefix].withdraw_amount.get()
@@ -222,7 +222,7 @@ class CPS_TREASURY(IconScoreBase):
             if self.proposals[prefix].status.get() != self._DISQUALIFIED:
                 if self.proposals[prefix].sponsor_address.get() == _wallet_address:
                     _total_installment = self.proposals[prefix].project_duration.get()
-                    _total_paid_count = self.proposals[prefix].sponsor_reward_count.get()
+                    _total_paid_count = _total_installment - self.proposals[prefix].sponsor_reward_count.get()
                     if _total_paid_count < _total_installment:
                         _total_budget = self.proposals[prefix].sponsor_reward.get()
                         _total_paid_amount = self.proposals[prefix].sponsor_withdraw_amount.get()

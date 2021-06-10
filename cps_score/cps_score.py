@@ -158,6 +158,23 @@ class CPS_Score(IconScoreBase):
     def on_update(self) -> None:
         super().on_update()
 
+    @external
+    def distribute_unreturned_sponsor_bond(self) -> None:
+        """
+        This method should only be called once to fix the issue in unreturned sponsor bond.
+        :return:
+        """
+        self._validate_admins()
+        # Sending the Sponsor Bond to the Sponsor P-Rep whose Sponsored project is already completed but not sent
+        for _ipfs_hash in self.get_proposals_keys_by_status(self._COMPLETED):
+            _proposal_details = self._get_proposal_details(_ipfs_hash)
+            _sponsor_address: 'Address' = _proposal_details[SPONSOR_ADDRESS]
+            _sponsor_deposit_amount: int = _proposal_details[SPONSOR_DEPOSIT_AMOUNT]
+            try:
+                self.icx.transfer(_sponsor_address, _sponsor_deposit_amount)
+            except BaseException as e:
+                revert(f"{TAG}: Error in returning the bond amount. Error: {e}")
+
     @external(readonly=True)
     def name(self) -> str:
         """
@@ -526,7 +543,8 @@ class CPS_Score(IconScoreBase):
         _progress[ADDITIONAL_BUDGET] = to_loop(_progress[ADDITIONAL_BUDGET])
 
         if _progress[BUDGET_ADJUSTMENT]:
-            if not _prefix.percentage_completed.get():
+            # Check if budget adjustment is already submitted or not
+            if not _prefix.budget_adjustment.get():
                 remaining_fund = self.get_remaining_fund()
                 if _progress[ADDITIONAL_BUDGET] > remaining_fund:
                     revert(f"{TAG} : Additional Budget Exceeds than Treasury Amount. {remaining_fund}")
@@ -808,7 +826,8 @@ class CPS_Score(IconScoreBase):
 
                 _login_dict["penaltyAmount"] = self._get_penalty_amount(_address)
 
-            if _address in self.valid_preps:
+            # If a P-Rep registers on Voting period, P-Rep status will be registered.
+            if _address in self.valid_preps or _address in self.registered_preps:
                 _login_dict["isRegistered"] = True
                 _login_dict["payPenalty"] = False
 
@@ -1015,6 +1034,18 @@ class CPS_Score(IconScoreBase):
         return {DATA: _proposals_list, COUNT: count}
 
     @external(readonly=True)
+    def get_proposal_details_by_hash(self, _ipfs_key: str) -> dict:
+        """
+        Returns all the progress reports for a specific project
+        :param _ipfs_key : project key i.e. proposal ipfs hash
+        :type _ipfs_key : str
+
+        :return : List of all progress report with status
+        :rtype : dict
+        """
+        return self._get_proposal_details(_ipfs_key)
+
+    @external(readonly=True)
     def get_active_proposals(self, _wallet_address: Address) -> list:
         """
         Returns the list of all all active or paused proposal from that address
@@ -1109,6 +1140,28 @@ class CPS_Score(IconScoreBase):
         return progress_report_dict
 
     @external(readonly=True)
+    def get_progress_reports_by_hash(self, _report_key: str) -> dict:
+        """
+        Returns all the progress reports for a specific project
+        :param _report_key : project key i.e. progress report ipfs hash
+        :type _report_key : str
+
+        :return : List of all progress report with status
+        :rtype : dict
+        """
+
+        if _report_key not in self.progress_key_list:
+            return {-1: f"{TAG} : Not a valid IPFS Hash for Progress Report"}
+
+        progressDetails = self._get_progress_reports_details(_report_key)
+        _ipfs_hash = progressDetails.get(IPFS_HASH)
+        proposal_details = self._get_proposal_details(_ipfs_hash)
+        progressDetails[PROJECT_TITLE] = proposal_details.get(PROJECT_TITLE)
+        progressDetails[CONTRIBUTOR_ADDRESS] = proposal_details.get(CONTRIBUTOR_ADDRESS)
+
+        return progressDetails
+
+    @external(readonly=True)
     def get_progress_reports_by_proposal(self, _ipfs_key: str) -> dict:
         """
         Returns all the progress reports for a specific project
@@ -1134,7 +1187,7 @@ class CPS_Score(IconScoreBase):
 
     @external(readonly=True)
     def get_sponsors_requests(self, _status: str, _sponsor_address: Address, _start_index: int = 0,
-                              _end_index: int = 20) -> dict:
+                              _end_index: int = 50) -> dict:
         """
         Returns all the sponsored requests for given sponsor address
         :param _status : status in ['_sponsor_pending','_approved','_rejected','_disqualified']
@@ -1225,6 +1278,8 @@ class CPS_Score(IconScoreBase):
 
                 if _wallet_address not in _voters_list:
                     _progress_reports_details = self._get_progress_reports_details(_report_key)
+                    _ipfs_hash = _progress_reports_details.get(IPFS_HASH)
+                    _progress_reports_details[PROJECT_TITLE] = self._get_proposal_details(_ipfs_hash).get(PROJECT_TITLE)
                     _remaining_progress_report.append(_progress_reports_details)
 
             return _remaining_progress_report
@@ -1519,6 +1574,7 @@ class CPS_Score(IconScoreBase):
             _contributor_address: 'Address' = _proposal_details[CONTRIBUTOR_ADDRESS]
             _completed: int = _proposal_details[PERCENTAGE_COMPLETED]
             _budget_adjustment: int = _report_result[BUDGET_ADJUSTMENT]
+            _sponsor_deposit_amount: int = _proposal_details[SPONSOR_DEPOSIT_AMOUNT]
 
             _approve_voters: int = _report_result[APPROVE_VOTERS]
             _reject_voters: int = _report_result[REJECT_VOTERS]
@@ -1552,6 +1608,11 @@ class CPS_Score(IconScoreBase):
 
                 if _approved_reports_count == _project_duration:
                     self._update_proposal_status(_ipfs_hash, self._COMPLETED)
+                    # Transfer the Sponsor-Bond back to the Sponsor P-Rep after the project is completed.
+                    try:
+                        self.icx.transfer(_sponsor_address, _sponsor_deposit_amount)
+                    except BaseException as e:
+                        revert(f"{TAG}: Failed transferring the sponsor bond amount to Sponsor P-Rep. Error: {e}")
 
                 elif _proposal_status == self._PAUSED:
                     self._update_proposal_status(_ipfs_hash, self._ACTIVE)
@@ -1575,7 +1636,6 @@ class CPS_Score(IconScoreBase):
                     self._remove_sponsor(_sponsor_address)
 
                     self.proposals[proposal_prefix].sponsor_deposit_status.set(BOND_CANCELLED)
-                    _sponsor_deposit_amount: int = _proposal_details[SPONSOR_DEPOSIT_AMOUNT]
 
                     # Transferring the sponsor bond deposit to CPF after the project being disqualified
                     cpf_treasury_score.icx(_sponsor_deposit_amount).return_fund_amount(_sponsor_address)
