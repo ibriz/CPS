@@ -157,13 +157,23 @@ class CPS_Score(IconScoreBase):
 
     def on_update(self) -> None:
         super().on_update()
+
+    @external
+    def distribute_unreturned_sponsor_bond(self) -> None:
+        """
+        This method should only be called once to fix the issue in unreturned sponsor bond.
+        :return:
+        """
+        self._validate_admins()
         # Sending the Sponsor Bond to the Sponsor P-Rep whose Sponsored project is already completed but not sent
         for _ipfs_hash in self.get_proposals_keys_by_status(self._COMPLETED):
             _proposal_details = self._get_proposal_details(_ipfs_hash)
             _sponsor_address: 'Address' = _proposal_details[SPONSOR_ADDRESS]
             _sponsor_deposit_amount: int = _proposal_details[SPONSOR_DEPOSIT_AMOUNT]
-
-            self.icx.transfer(_sponsor_address, _sponsor_deposit_amount)
+            try:
+                self.icx.transfer(_sponsor_address, _sponsor_deposit_amount)
+            except BaseException as e:
+                revert(f"{TAG}: Error in returning the bond amount. Error: {e}")
 
     @external(readonly=True)
     def name(self) -> str:
