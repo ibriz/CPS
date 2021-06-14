@@ -12,7 +12,7 @@ import { approveSponserRequest, rejectSponsorRequest, voteProposal } from 'Redux
 import { voteProgressReport, fetchVoteResultRequest, fetchVoteResultBudgetChangeRequest } from 'Redux/Reducers/progressReportSlice';
 import { connect } from 'react-redux';
 import ProgressReportList from './ProgressReportList';
-import { progressReportStatusMapping } from '../../../Constants';
+import { progressReportStatusMapping, specialCharacterMessage } from '../../../Constants';
 import VoteList from '../DetailsModal/VoteList';
 import RichTextEditor from 'Components/RichTextEditor';
 import ConfirmationModal from 'Components/UI/ConfirmationModal';
@@ -22,10 +22,11 @@ import {
   getProgressReportRejectedPercentage, getProgressReportRejectedVotersPercentage,
   getBudgetAdjustmentRejectedPercentage, getBudgetAdjustmentRejectedVotersPercentage
 } from 'Selectors';
-import { icxFormat } from 'Helpers';
+import { formatDescription, icxFormat } from 'Helpers';
 import ProgressBarCombined from 'Components/Card/ProgressBarCombined';
 import useTimer from 'Hooks/useTimer';
 import VoteProgressBar from 'Components/VoteProgressBar';
+import InfoIcon from 'Components/InfoIcon';
 
 function DetailsModal(props) {
 
@@ -36,7 +37,8 @@ function DetailsModal(props) {
   const [voteReason, setVoteReason] = useState('');
   const [sponsorConfirmationShow, setSponsorConfirmationShow] = React.useState(false);
   const [sponsorVote, setSponsorVote] = useState('');
-
+  const [description, setDescription] = useState(null);
+  const [revisionDescription, setRevisionDescription] = useState(null);
 
   const [voteConfirmationShow, setVoteConfirmationShow] = React.useState(false);
   const {remainingTime: remainingTimer} = useTimer();
@@ -77,6 +79,15 @@ function DetailsModal(props) {
 
   }, [props.progressReport])
 
+  useEffect(() => {
+    let description = formatDescription(progressDetail?.description);
+    setDescription(description);
+  }, [progressDetail?.description])
+
+  useEffect(() => {
+    let description = formatDescription(progressDetail?.revisionDescription);
+    setRevisionDescription(description);
+  }, [progressDetail?.revisionDescription])
 
   useEffect(() => {
       // alert("Voting");
@@ -94,7 +105,7 @@ function DetailsModal(props) {
     voteProgressReport(
       {
         vote,
-        voteReason,
+        voteReason: voteReason.replace(/&nbsp;/g, ''),
         voteProjectTermRevision: progressDetail?.projectTermRevision ? voteProjectTermRevision : null,
         proposalKey: progressReport.proposalKey,
         reportKey: progressReport.reportKey
@@ -316,10 +327,10 @@ function DetailsModal(props) {
         <Row>
           <Col lg="8" xs="12">
             {/* <div dangerouslySetInnerHTML={{ __html: description }} /> */}
-            <Description description={(progressDetail && progressDetail.description) || '<span>No Description</span>'} />
+            <Description description={(progressDetail && description) || '<span>No Description</span>'} />
             {
               progressDetail && progressDetail.projectTermRevision ?
-                <Description description={(progressDetail && progressDetail.revisionDescription) || '<span>No Description</span>'}
+                <Description description={(progressDetail && revisionDescription) || '<span>No Description</span>'}
                   title="REVISION DESCRIPTION" /> : null
             }
 
@@ -473,6 +484,7 @@ function DetailsModal(props) {
                   <Row style={{ marginTop: '10px' }}>
                     <Col xs="12">
                       <span style={{ color: '#262626', fontWeight: 600 }}>Explain in brief the reason behind your decision:</span>
+                      <InfoIcon description={specialCharacterMessage()} />
                     </Col>
 
                     <Col xs="12">
@@ -528,7 +540,7 @@ function DetailsModal(props) {
           <Row>
             <Col xs="12">
               {
-                (status === 'Voting' && progressDetail?.projectTermRevision) ?
+                (progressDetail?.projectTermRevision) ?
                   <>
                     <ListTitle>BUDGET CHANGE REQUEST VOTES</ListTitle>
                     <VoteList

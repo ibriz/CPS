@@ -105,13 +105,16 @@ const SponsorRequestsCard = ({ proposalList, fetchProposalListRequest, walletAdd
                                 setCurrentPage={(pageNumber) => setCurrentPages(selectedTab, pageNumber)}
                                 totalPages={totalPages[selectedTab]} />
 
-                            <DetailsModal
+                            {
+                                modalShow && <DetailsModal
                                 show={modalShow}
                                 onHide={() => setModalShow(false)}
                                 proposal={selectedProposal}
                                 status={selectedTab}
                                 sponsorRequest = {true}
                             />
+                            }
+
 
                         </Card.Body>
                     </Card>

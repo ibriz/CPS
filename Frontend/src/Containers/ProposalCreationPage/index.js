@@ -24,6 +24,7 @@ import ConfirmationModal from 'Components/UI/ConfirmationModal';
 import { requestIPFS } from 'Redux/Sagas/helpers';
 import useTimer from 'Hooks/useTimer';
 import Popup from 'Components/Popup';
+import { specialCharacterMessage } from 'Constants';
 
 const signingInfoMessage = (
     <div className="text-information">
@@ -63,10 +64,10 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
     }, [fetchCPFRemainingFundRequest, cpfScoreAddress]);
 
     useEffect(() => {
-        let prepList = preps.slice();
-         prepList = prepList.sort(function (a, b) {
-            if(a.name.toLowerCase() < b.name.toLowerCase() ) return -1;
-            if(a.name.toLowerCase() > b.name.toLowerCase()) return 1;
+        let prepList = preps?.slice();
+         prepList = prepList?.sort(function (a, b) {
+            if(a?.name?.toLowerCase() < b?.name?.toLowerCase() ) return -1;
+            if(a?.name?.toLowerCase() > b?.name?.toLowerCase()) return 1;
             return 0;
             })
         setPrepList(prepList);
@@ -302,7 +303,7 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                             <Form.Label column sm="2" >
                                 Project Name
                                 <span className={styles.required}></span>
-                                {/* <InfoIcon description="A suitable name for the project" /> */}
+                                <InfoIcon description={specialCharacterMessage('project name')} />
                             </Form.Label>
 
                             <Col sm="10" className={styles.inputSameLine}>
@@ -374,10 +375,10 @@ const ProposalCreationPage = ({ submitProposal, history, submittingProposal, fet
                                 <Form.Control size="md" as="select" value={proposal.sponserPrep} name="sponserPrep" id="sponserPrep" onChange={handleChange} required>
                                     <option disabled selected value="">Select PREP</option>
                                     {
-                                        prepList.map(prep => {
+                                        prepList?.map(prep => {
 
                                                 return (
-                                                    <option value={prep.address} key = {prep.address}>{`${prep.name} (${prep.address.slice(0, 4)}...${prep.address.slice(prep.address.length - 2)})`}</option>
+                                                    <option value={prep?.address} key = {prep?.address}>{`${prep?.name} (${prep?.address?.slice(0, 4)}...${prep?.address?.slice(prep.address.length - 2)})`}</option>
 
                                                 )
                                             }

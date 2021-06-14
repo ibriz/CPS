@@ -8,7 +8,7 @@ import { FetchProposalDetailRequest, fetchProposalDetailRequest, approveSponserR
 import { fetchProgressReportByProposalRequest } from 'Redux/Reducers/progressReportSlice';
 import { connect } from 'react-redux';
 import ProgressReportList from 'Components/Card/ProgressReportList';
-import { proposalStatusMapping } from '../../../Constants';
+import { proposalStatusMapping, specialCharacterMessage } from '../../../Constants';
 import VoteList from './VoteList';
 import RichTextEditor from 'Components/RichTextEditor';
 import ConfirmationModal from 'Components/UI/ConfirmationModal';
@@ -16,7 +16,7 @@ import {
   getProposalApprovedPercentage, getProposalApprovedVotersPercentage,
   getProposalRejectedPercentage, getProposalRejectedVotersPercentage
 } from 'Selectors';
-import { icxFormat } from 'Helpers';
+import { formatDescription, icxFormat } from 'Helpers';
 import DetailsModalPR from 'Components/Card/DetailsModalProgressReport';
 import IconService from 'icon-sdk-js';
 import ProgressBarCombined from 'Components/Card/ProgressBarCombined';
@@ -66,7 +66,8 @@ function DetailsModal(props) {
   const { remainingTime: remainingTimer } = useTimer();
 
   const [voteConfirmationShow, setVoteConfirmationShow] = React.useState(false);
-
+  const [description, setDescription] = useState(null);
+  const [sponsorVoteReasonDescription, setSponsorVoteReasonDescription] = useState(null);
 
   const { proposalDetail, proposal, sponsorRequest = false, approveSponserRequest, rejectSponsorRequest, voting = false, voteProposal, progressReportByProposal, votesByProposal, fetchVoteResultRequest, approvedPercentage,
     fetchProgressReportByProposalRequest, period, remainingTime, approvedVoterPercentage, fetchProposalDetail, walletAddress, rejectedPercentage, rejectedVoterPercentage, fetchPrepsRequest, preps, sponsorMessage, ...remainingProps } = props;
@@ -106,7 +107,15 @@ function DetailsModal(props) {
     }
   }
 
+  useEffect(() => {
+    let description = formatDescription(proposalDetail?.description);
+    setDescription(description);
+  }, [proposalDetail?.description])
 
+  useEffect(() => {
+    let description = formatDescription(proposal?.sponsorVoteReason);
+    setSponsorVoteReasonDescription(description);
+  }, [proposal?.sponsorVoteReason])
 
   useEffect(() => {
     console.log("voteReason", voting && (period === 'VOTING') && (remainingTime > 0) && !votesByProposal.some(vote => vote.sponsorAddress === walletAddress))
@@ -168,7 +177,7 @@ function DetailsModal(props) {
     voteProposal(
       {
         vote,
-        voteReason,
+        voteReason: voteReason.replace(/&nbsp;/g, ''),
         ipfsKey: proposal.ipfsKey,
 
       }
@@ -185,7 +194,7 @@ function DetailsModal(props) {
           title: proposalDetail && proposalDetail.projectName || '',
         },
         sponsorBond: IconConverter.toBigNumber(proposalDetail?.totalBudget).dividedBy(10),
-        reason: sponsorVoteReason
+        reason: sponsorVoteReason.replace(/&nbsp;/g, '')
       }
     );
     // props.onHide();
@@ -195,7 +204,7 @@ function DetailsModal(props) {
     rejectSponsorRequest(
       {
         ipfsKey: proposal.ipfsKey,
-        reason: sponsorVoteReason
+        reason: sponsorVoteReason.replace(/&nbsp;/g, '')
 
       }
     );
@@ -342,10 +351,10 @@ function DetailsModal(props) {
         <Row>
           <Col lg="8" xs="12">
             {/* <div dangerouslySetInnerHTML={{ __html: description }} /> */}
-            <Description description={(proposalDetail && proposalDetail.description) || '<span>No Description</span>'} />
+            <Description description={(proposalDetail && description) || '<span>No Description</span>'} />
             {
             proposal?.sponsorVoteReason &&
-              <Description description={proposal.sponsorVoteReason || '<span>No Message</span>'} title = "Message from Sponsor" />
+              <Description description={sponsorVoteReasonDescription || '<span>No Message</span>'} title = "Message from Sponsor" />
 
             }
                
@@ -457,6 +466,8 @@ function DetailsModal(props) {
           <Row>
             <Col xs="12">
               <span>Explain in brief the reason behind your decision</span>
+              <InfoIcon description={specialCharacterMessage()} />
+
             </Col>
 
             <Col xs="12">
@@ -522,6 +533,8 @@ function DetailsModal(props) {
                   <Row>
                     <Col xs="12">
                       <span>Explain in brief the reason behind your decision</span>
+                      <InfoIcon description={specialCharacterMessage()} />
+
                     </Col>
 
                     <Col xs="12">
@@ -557,7 +570,7 @@ function DetailsModal(props) {
             <Col xs="12">
 
               {
-                  (status === 'Voting' || status === 'Active' || status === 'Completed' || status === 'Paused' || status === 'Disqualified') ?
+                  (status === 'Voting' || status === 'Active' || status === 'Completed' || status === 'Paused' || status === 'Disqualified' || (status === "Rejected" && votesByProposal?.length)) ?
                     <>
                       <ListTitle>VOTES</ListTitle>
                       <VoteList
