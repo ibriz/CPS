@@ -163,8 +163,8 @@ const Dashboard = ({ payPenaltyRequest, payPenalty, period, projectAmounts, cpfR
                         <Alert variant="success">
                             {
                                 isPrep ?
-                                    `Congratulations! You can claim a total reward of ${icxFormat(parseFloat(withDrawAmountSponsorReward), true)} ICX.` :
-                                    `Congratulations! You can claim proposal grant of ${icxFormat(parseFloat(withDrawAmountProposalGrant), true)} ICX.`
+                                `Congratulations! You can claim a total reward of ${icxFormat(parseFloat(Number(withDrawAmountSponsorReward) ? withDrawAmountSponsorReward : withDrawAmountProposalGrant), true)} ICX.` :
+                                `Congratulations! You can claim proposal grant of ${icxFormat(parseFloat(withDrawAmountProposalGrant), true)} ICX.`
                             }
 
                             {
