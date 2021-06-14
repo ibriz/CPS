@@ -5,7 +5,7 @@ import LowerCardInfo from 'Components/UI/LowerCardList/LowerCardInfo';
 import LowerCardTitle from 'Components/UI/LowerCardList/LowerCardTitle';
 import {proposalStatusMapping} from 'Constants'
 
-const Vote = ({vote}) => {
+const Vote = ({vote, budgetChange = false}) => {
 
     const [showSponsorMessage, setShowSponsorMessage] = React.useState(false);
     return (
@@ -13,7 +13,7 @@ const Vote = ({vote}) => {
             <Row className={styles.proposalContainer} 
  onClick = {() => setShowSponsorMessage(prevState => !prevState)}                    >
                 <Col sm="12" className = {styles.infos}>
-                    <Row style={{ alignItems: 'center' }} className={styles.firstRow}>
+                    <Row style={{ alignItems: 'center' }} className={styles.firstRow} style={budgetChange ? {cursor: 'auto'} : {}}>
                         {/* <Badge size="xs" variant={badgeColor[selectedTab]} className={styles.badge}>{selectedTab}</Badge>{' '} */}
                         <Col lg = "8" xs = "12" style = {{paddingLeft: '0px'}}>
     <LowerCardTitle style = {{fontSize:'14px'}}>{vote.prepName} ({vote.sponsorAddress?.slice(0, 4)}...{vote.sponsorAddress?.slice(vote.sponsorAddress.length - 4)})</LowerCardTitle>
@@ -26,7 +26,7 @@ const Vote = ({vote}) => {
 
                     </Row>
                     {
-                        showSponsorMessage && 
+                        showSponsorMessage && !budgetChange &&
                         <Row className={styles.firstRow} style = {{paddingLeft: '15px'}}>
                             <span style = {{fontWeight: 600, fontSize: '0.85rem'}}>Reason:</span>
                             {

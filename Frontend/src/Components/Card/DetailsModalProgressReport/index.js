@@ -533,7 +533,8 @@ function DetailsModal(props) {
                     <ListTitle>BUDGET CHANGE REQUEST VOTES</ListTitle>
                     <VoteList
                       votes={votesByBudgetChange}
-                      progressReport />
+                      progressReport
+                      budgetChange />
                   </> :
                   (
                     null

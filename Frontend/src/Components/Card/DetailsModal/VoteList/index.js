@@ -3,7 +3,7 @@ import {Container} from 'react-bootstrap';
 import Vote from './Vote';
 import styles from './VoteList.module.css';
 
-const VoteList = ({votes, progressReport}) => {
+const VoteList = ({votes, progressReport, budgetChange = false}) => {
 
     return(
         <Container fluid>
@@ -12,6 +12,7 @@ const VoteList = ({votes, progressReport}) => {
                 <Vote
                 key = {index}
                 vote = {vote}
+                budgetChange = {budgetChange}
                 />
 
             ) : <span className={styles.noProposals}>No Votes for this {progressReport? 'Progress Report' : 'Proposal'}</span>
