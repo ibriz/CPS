@@ -318,7 +318,8 @@ const proposalSlice = createSlice({
                     sponsorAddress: vote.address,
                     status: progressReportMapping.find(mapping =>
                         mapping.status === vote.vote)?.name,
-                    timestamp: vote._timestamp
+                    timestamp: vote._timestamp,
+                    prepName: vote.prep_name,
                 }
             ));
             state.votesBudgetChangeByProgressReport = state.votesBudgetChangeByProgressReport.filter(vote => 
