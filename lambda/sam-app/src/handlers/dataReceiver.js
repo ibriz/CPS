@@ -28,7 +28,8 @@ const resHeaders = {
 
 const scoreMethods = {
     getVoteResult : 'get_vote_result',
-    getProgressReportsByProposal: 'get_progress_reports_by_proposal'
+    getProgressReportsByProposal: 'get_progress_reports_by_proposal',
+    getAllPreps: 'get_PReps',
 }
 
 async function triggerWebhook(eventType, data) {
@@ -97,6 +98,17 @@ exports.handler = async (req) => {
                     const { proposalIpfsHash, userAddress } = body.data;
                     if(!proposalIpfsHash) throw new Error("proposalIpfsHash is required");
                     if(!userAddress) throw new Error("userAddress is required");
+
+                    let proposalDetails;
+                    try {
+                        proposalDetails = await axios.get(ipfsBaseUrl + proposalIpfsHash);
+                    } catch (err) {
+                        console.error("ERROR FETCHING PROPOSAL DATA" + JSON.stringify(err));
+                        throw { statusCode: 400, name: "IPFS url", message: "Invalid IPFS hash provided" };
+                    }
+
+                    const { projectName, teamName, sponserPrepName } = proposalDetails.data;
+
                     const proposalVotingInfo = await contractMethodCallService(
                         process.env['CPS_SCORE'],
                         scoreMethods.getVoteResult,
@@ -120,6 +132,9 @@ exports.handler = async (req) => {
                         prepAddress: address,
                         remarks: vote_reason,
                         vote,
+                        proposalName: projectName,
+                        proposalTeamName: teamName,
+                        proposalSponsor: sponserPrepName,
                         approvingVoters: IconConverter.toBigNumber(proposalVotingInfo.approve_voters).toFixed(0),
                         approvingVotersPercentage: IconConverter.toNumber(proposalVotingInfo.total_voters) > 0 ?
                             IconConverter.toBigNumber(proposalVotingInfo.approve_voters).dividedBy(proposalVotingInfo.total_voters).toFixed(2, 1)
@@ -153,24 +168,6 @@ exports.handler = async (req) => {
                     if(!proposalIpfsHash) throw new Error('proposalIpfsHash is required');
                     if(!progressIpfsHash) throw new Error('progressIpfsHash is required');
                     
-                    // get proposal name and progress report name
-                    // const progressReportsList = await contractMethodCallService(
-                    //     process.env['CPS_SCORE'],
-                    //     scoreMethods.getProgressReportsByProposal,
-                    //     { '_ipfs_key': proposalIpfsHash }
-                    // );
-                    // const currProgressReport = progressReportsList.data.find(report => 
-                    //     report.report_hash == progressIpfsHash
-                    // );
-                    // if(!currProgressReport) {
-                    //     throw ({ 
-                    //         statusCode: 400, 
-                    //         name: "Progress Report not found", 
-                    //         message: "Ensure that the IPFS hashes for proposal and progress report are correct"
-                    //     });
-                    // }
-                    // currProgressReport.progress_report_title & currProgressReport.project_title gotten
-
                     // fetch proposal and progress report details from ipfs
                     let proposalDetails, progressDetails;
                     try {
@@ -208,10 +205,12 @@ exports.handler = async (req) => {
                 //-----------------------------------------------------------------------------
                 case eventTypesMapping.voteProgressReport: 
                 {
-                    const { proposalIpfsHash, progressIpfsHash, userAddress } = body.data;
+                    const { proposalIpfsHash, progressIpfsHash, userAddress, voteReason, vote } = body.data;
                     if(!proposalIpfsHash) throw new Error("proposalIpfsHash is required");
                     if(!progressIpfsHash) throw new Error("progressIpfsHash is required");
                     if(!userAddress) throw new Error("userAddress is required");
+                    if(!voteReason) throw new Error("voteReason is required");
+                    if(!vote) throw new Error("vote is required");
                     
                     // get progress report's latest state
                     const progressReportsList = await contractMethodCallService(
@@ -222,6 +221,7 @@ exports.handler = async (req) => {
                     const currProgressReport = progressReportsList.data.find(report => 
                         report.report_hash == progressIpfsHash
                     );
+                    
                     if(!currProgressReport) {
                         throw ({ 
                             statusCode: 400, 
@@ -230,35 +230,44 @@ exports.handler = async (req) => {
                         });
                     }
 
-                    const { prep_name, address, vote_reason, vote } = voterDetails;
+                    // fetch voter prep name
+                    const prepsList = await contractMethodCallService(
+                        process.env['CPS_SCORE'],
+                        scoreMethods.getAllPreps
+                    );
+                    const voterPrep = prepsList.find(prep => 
+                        prep.address == userAddress
+                    );
+
                     const finalResponse = {
-                        prepName: prep_name,
-                        prepAddress: address,
-                        remarks: vote_reason,
+                        prepName: voterPrep.name,
+                        prepAddress: voterPrep.address,
+                        remarks: voteReason,
                         vote,
-                        approvingVoters: IconConverter.toBigNumber(proposalVotingInfo.approve_voters).toFixed(0),
-                        approvingVotersPercentage: IconConverter.toNumber(proposalVotingInfo.total_voters) > 0 ?
-                            IconConverter.toBigNumber(proposalVotingInfo.approve_voters).dividedBy(proposalVotingInfo.total_voters).toFixed(2, 1)
+                        progressReportName: currProgressReport.progress_report_title,
+                        approvingVoters: IconConverter.toBigNumber(currProgressReport.approve_voters).toFixed(0),
+                        approvingVotersPercentage: IconConverter.toNumber(currProgressReport.total_voters) > 0 ?
+                            IconConverter.toBigNumber(currProgressReport.approve_voters).dividedBy(currProgressReport.total_voters).toFixed(2, 1)
                             :
                             '0',
-                        rejectingVoters: IconConverter.toBigNumber(proposalVotingInfo.reject_voters).toFixed(0),
-                        abstainingVoters: IconConverter.toBigNumber(proposalVotingInfo.total_voters)
-                            .minus(proposalVotingInfo.approve_voters)
-                            .minus(proposalVotingInfo.reject_voters)
+                        rejectingVoters: IconConverter.toBigNumber(currProgressReport.reject_voters).toFixed(0),
+                        abstainOrRemainingVoters: IconConverter.toBigNumber(currProgressReport.total_voters)
+                            .minus(currProgressReport.approve_voters)
+                            .minus(currProgressReport.reject_voters)
                             .toFixed(0),
-                        approvedVotes: IconConverter.toBigNumber(proposalVotingInfo.approved_votes).toFixed(0),
-                        approvedVotesPercentage: IconConverter.toNumber(proposalVotingInfo.total_votes) > 0 ?
-                            IconConverter.toBigNumber(proposalVotingInfo.approved_votes).dividedBy(proposalVotingInfo.total_votes).toFixed(2,1)
+                        approvedVotes: IconConverter.toBigNumber(currProgressReport.approved_votes).toFixed(0),
+                        approvedVotesPercentage: IconConverter.toNumber(currProgressReport.total_votes) > 0 ?
+                            IconConverter.toBigNumber(currProgressReport.approved_votes).dividedBy(currProgressReport.total_votes).toFixed(2,1)
                             :
                             '0',
-                        rejectedVotes: IconConverter.toBigNumber(proposalVotingInfo.rejected_votes).toFixed(0),
-                        abstainedVotes: IconConverter.toBigNumber(proposalVotingInfo.total_votes)
-                            .minus(proposalVotingInfo.approved_votes)
-                            .minus(proposalVotingInfo.rejected_votes)
+                        rejectedVotes: IconConverter.toBigNumber(currProgressReport.rejected_votes).toFixed(0),
+                        abstainOrRemainingVotes: IconConverter.toBigNumber(currProgressReport.total_votes)
+                            .minus(currProgressReport.approved_votes)
+                            .minus(currProgressReport.rejected_votes)
                             .toFixed(0),
                     };
 
-                    await triggerWebhook(eventTypesMapping.voteProposal, finalResponse);
+                    await triggerWebhook(eventTypesMapping.voteProgressReport, finalResponse);
                     break;
                 }
 
