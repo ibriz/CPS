@@ -1,8 +1,25 @@
 const mail = require('./mail');
 const redis = require('./redis');
 const score = require('./score');
+const { PERIOD_MAPPINGS, PROPOSAL_STATUS, EVENT_TYPES } = require('./constants')
 
 const DAY = 24 * 60 * 60;
+
+// todo: move to another file
+async function triggerWebhook(eventType, data) {
+	// get all the subscribed Urls for receiving webhooks
+	const subscribedUrls = await redis.getSubscribedUrls();
+	console.log(subscribedUrls);
+
+	console.log("-----------------SENDING THESE TO SUBSCRIBERS---------------------");
+	console.log(eventType);
+	console.log(JSON.stringify(data));
+}
+
+// todo: move to utils
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 async function period_changed(preps_list, period) {
 	if (preps_list !== undefined && preps_list.length > 0) {
@@ -46,10 +63,24 @@ async function execute() {
 			// wait for 20 secs, then again trigger the update_period if the current period is transition period
 			// then verify that the period is now application period
 			console.log('Period updated');
-			await score.update_period(present_period);
+			await score.update_period();
 			period_triggered = true;
 			present_period = await score.period_check();
-			console.log('Changed period: ' + period_triggered);
+			console.log('Changed period to: ' + present_period['period_name']);
+
+			if(present_period['period_name'] == PERIOD_MAPPINGS.TRANSITION_PERIOD) {
+				console.log('In transition period, should change to application period in 20 secs');
+				await sleep(20000);	// sleep for 20secs
+				await score.update_period();
+				present_period = await score.period_check();
+				if(present_period['period_name'] != PERIOD_MAPPINGS.APPLICATION_PERIOD) {
+					throw new Error('Error transitioning from transition period to application period');
+				}
+			}
+
+			const periodEndingDate = new Date();
+			endingDate.setDate(endingDate.getDate() + 15);
+
 			// Trigger webhook if not transition period
 		}
 

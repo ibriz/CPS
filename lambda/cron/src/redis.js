@@ -1,10 +1,14 @@
 const redis = require('redis');
 
+// const REDIS_URL = process.env.REDIS_URL
+const REDIS_URL = 'redis://192.168.1.72:6379';
+
 // Redis initialize
-const client = redis.createClient(process.env.REDIS_URL);
+const client = redis.createClient(REDIS_URL);
 const { promisify } = require('util');
 const getAsync = promisify(client.get).bind(client);
 const getAllUserAsync = promisify(client.keys).bind(client);
+const hgetallAsync = promisify(client.hgetall).bind(redisClient);
 
 async function populate_users_details(addresses_list) {
 	let user_details_list = [];
@@ -37,7 +41,12 @@ async function get_registered_users_keys() {
 	return registered_users;
 }
 
+function getSubscribedUrls() {
+	return hgetallAsync(subscriptionKey);
+}
+
 module.exports = {
 	populate_users_details,
-	get_registered_users_keys
+	get_registered_users_keys,
+	getSubscribedUrls
 }
