@@ -141,6 +141,17 @@ async function get_active_proposals(address) {
 	return active_proposals;
 }
 
+function get_remaining_funds() {
+	console.log('RPC call for remaining funds');
+	return iconService.call(icon_call_builder('get_remaining_fund'));
+}
+
+async function get_project_amounts_by_status(status) {
+	console.log('RPC call for project amounts');
+	const res = await iconService.call(icon_call_builder('get_project_amounts'));
+	return res[status];
+}
+
 async function get_progress_reports_by_status(status = '_approved') {
 	console.log('RPC Call for Accepted Progress Reports');
 	const accepted_active_proposals = await recursive_score_call('get_progress_reports', { _status: status });
@@ -447,5 +458,7 @@ module.exports = {
 	get_remaining_projects,
 	update_period,
 	period_check,
-	get_preps
+	get_preps,
+	get_remaining_funds,
+	get_project_amounts_by_status
 }

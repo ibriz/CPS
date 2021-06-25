@@ -1,3 +1,4 @@
+const BigNumber = require('bignumber.js');
 const mail = require('./mail');
 const redis = require('./redis');
 const score = require('./score');
@@ -82,6 +83,17 @@ async function execute() {
 			endingDate.setDate(endingDate.getDate() + 15);
 
 			// Trigger webhook if not transition period
+			if(present_period['period_name'] == PERIOD_MAPPINGS.APPLICATION_PERIOD) {
+				const remainingFunds = await score.get_remaining_funds();
+				const activeProjectAmt = await score.get_project_amounts_by_status(PROPOSAL_STATUS.ACTIVE);
+				const proposalStats = {
+					remainingFunds: new BigNumber(remainingFunds).div(Math.pow(10,18)).toFixed(2),
+					periodEndsOn: periodEndingDate.getTime().toString(),
+					projectsCount: new BigNumber(activeProjectAmt['_count']).toFixed(),
+					totalProjectsBudget: new BigNumber(activeProjectAmt['_total_amount']).div(Math.pow(10, 18)).toFixed(2)
+				};
+				triggerWebhook(EVENT_TYPES, proposalStats);
+			}
 		}
 
 		const preps = await score.get_preps();
