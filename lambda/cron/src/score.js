@@ -1,5 +1,8 @@
 const IconService = require('icon-sdk-js');
 
+const { PERIOD_MAPPINGS } = require('./constants')
+const { sleep } = require('./utils');
+
 // Environment variable declaration
 const provider = process.env.BLOCKCHAIN_PROVIDER;
 const score_address = process.env.SCORE_ADDRESS;
@@ -129,6 +132,26 @@ async function update_period() {
 	} catch (error) {
 		console.error(error);
 		throw new Error(error);
+	}
+}
+
+async function recursivelyUpdatePeriod(retry = 0) {
+	try {
+		present_period = await period_check();
+		if(present_period['period_name'] == PERIOD_MAPPINGS.TRANSITION_PERIOD) {
+			console.log('In transition period, should change to application period in 20 secs');
+			await update_period();
+			await sleep(2000);	// sleep for 2 secs
+			// todo: move to recursive func, max 10 calls
+			if(retry < 10) {
+				await recursivelyUpdatePeriod(++retry);
+			} else {
+				throw new Error('Retry limit reached. Error transitioning from transition period to application period');
+			}
+		}
+	} catch(e) {
+		console.log("Error updating period recursively", e);
+		await recursivelyUpdatePeriod(++retry);
 	}
 }
 
@@ -460,5 +483,6 @@ module.exports = {
 	period_check,
 	get_preps,
 	get_remaining_funds,
-	get_project_amounts_by_status
+	get_project_amounts_by_status,
+	recursivelyUpdatePeriod
 }

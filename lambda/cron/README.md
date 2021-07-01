@@ -11,3 +11,5 @@ Environment Variable:
 - USER_ADDRESS                      hx...........
 - EMAIL_FROM                        icon@ibriz.ai
 - ICX_PENALTY                       1500
+
+Triggered by AWS event bridge

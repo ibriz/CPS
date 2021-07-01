@@ -2,25 +2,10 @@ const BigNumber = require('bignumber.js');
 const mail = require('./mail');
 const redis = require('./redis');
 const score = require('./score');
-const { PERIOD_MAPPINGS, PROPOSAL_STATUS, EVENT_TYPES } = require('./constants')
+const { PERIOD_MAPPINGS, PROPOSAL_STATUS, EVENT_TYPES } = require('./constants');
+const { sleep, triggerWebhook } = require('./utils');
 
 const DAY = 24 * 60 * 60;
-
-// todo: move to another file
-async function triggerWebhook(eventType, data) {
-	// get all the subscribed Urls for receiving webhooks
-	const subscribedUrls = await redis.getSubscribedUrls();
-	console.log(subscribedUrls);
-
-	console.log("-----------------SENDING THESE TO SUBSCRIBERS---------------------");
-	console.log(eventType);
-	console.log(JSON.stringify(data));
-}
-
-// todo: move to utils
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
 
 async function period_changed(preps_list, period) {
 	if (preps_list !== undefined && preps_list.length > 0) {
@@ -66,23 +51,20 @@ async function execute() {
 			console.log('Period updated');
 			await score.update_period();
 			period_triggered = true;
+			await sleep(2000);	// sleep for 2 secs
 			present_period = await score.period_check();
 			console.log('Changed period to: ' + present_period['period_name']);
 
 			if(present_period['period_name'] == PERIOD_MAPPINGS.TRANSITION_PERIOD) {
-				console.log('In transition period, should change to application period in 20 secs');
-				await sleep(20000);	// sleep for 20secs
-				await score.update_period();
-				present_period = await score.period_check();
-				if(present_period['period_name'] != PERIOD_MAPPINGS.APPLICATION_PERIOD) {
-					throw new Error('Error transitioning from transition period to application period');
-				}
+				await score.recursivelyUpdatePeriod();
 			}
 
 			const periodEndingDate = new Date();
-			endingDate.setDate(endingDate.getDate() + 15);
+			periodEndingDate.setDate(periodEndingDate.getDate() + 15);
 
-			// Trigger webhook if not transition period
+			// ========================================CPS BOT TRIGGERS=========================================
+
+			// Send out minified proposal stats
 			if(present_period['period_name'] == PERIOD_MAPPINGS.APPLICATION_PERIOD) {
 				const remainingFunds = await score.get_remaining_funds();
 				const activeProjectAmt = await score.get_project_amounts_by_status(PROPOSAL_STATUS.ACTIVE);
@@ -95,6 +77,7 @@ async function execute() {
 				triggerWebhook(EVENT_TYPES, proposalStats);
 			}
 		}
+		// ===================================================================================================
 
 		const preps = await score.get_preps();
 		const preps_key = preps.map(prep => 'users:address:' + prep.address);
@@ -112,7 +95,7 @@ async function execute() {
 
 		console.log(present_period);
 
-		if (present_period.period_name === 'Application Period' && user_details_list.length > 0) {
+		if (present_period.period_name === PERIOD_MAPPINGS.APPLICATION_PERIOD && user_details_list.length > 0) {
 			console.log('=====================Notifications for Application Period=======================');
 
 			if (parseInt(present_period.remaining_time) <= DAY) {

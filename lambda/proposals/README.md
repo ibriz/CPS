@@ -9,3 +9,5 @@ Environment Variable Sample:
 - MAIL_FROM                         icon@ibriz.ai
 - SUBJECT                           Sponsorship Request in ICON CPS
 - SPONSORSHIP_REQUEST_TEMPLATE      sponsorship-requested
+
+templates are stored in ses
