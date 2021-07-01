@@ -12,7 +12,14 @@ export const PROPOSAL_STATUS = {
   DISQUALIFIED: '_disqualified',
 }
 
+export const PROGRESS_REPORT_STATUS = {
+  WAITING: '_waiting',
+  APPROVED: '_approved',
+}
+
 export const EVENT_TYPES = {
   PROPOSAL_STATS: 'proposalStats',
   PROGRESS_REPORT_STATS: 'prStats',
+  VOTING_PERIOD_STATS: 'votingPeriodStats',
+  APPLICATION_PERIOD_STATS: 'applicationPeriodStats',
 }

@@ -2,7 +2,7 @@ const BigNumber = require('bignumber.js');
 const mail = require('./mail');
 const redis = require('./redis');
 const score = require('./score');
-const { PERIOD_MAPPINGS, PROPOSAL_STATUS, EVENT_TYPES } = require('./constants');
+const { PERIOD_MAPPINGS, PROPOSAL_STATUS, PROGRESS_REPORT_STATUS, EVENT_TYPES } = require('./constants');
 const { sleep, triggerWebhook } = require('./utils');
 
 const DAY = 24 * 60 * 60;
@@ -64,17 +64,30 @@ async function execute() {
 
 			// ========================================CPS BOT TRIGGERS=========================================
 
-			// Send out minified proposal stats
+			// Send out last voting period's stats
 			if(present_period['period_name'] == PERIOD_MAPPINGS.APPLICATION_PERIOD) {
 				const remainingFunds = await score.get_remaining_funds();
 				const activeProjectAmt = await score.get_project_amounts_by_status(PROPOSAL_STATUS.ACTIVE);
-				const proposalStats = {
+				const votingPeriodStats = {
 					remainingFunds: new BigNumber(remainingFunds).div(Math.pow(10,18)).toFixed(2),
 					periodEndsOn: periodEndingDate.getTime().toString(),
 					projectsCount: new BigNumber(activeProjectAmt['_count']).toFixed(),
 					totalProjectsBudget: new BigNumber(activeProjectAmt['_total_amount']).div(Math.pow(10, 18)).toFixed(2)
 				};
-				triggerWebhook(EVENT_TYPES, proposalStats);
+				triggerWebhook(EVENT_TYPES.VOTING_PERIOD_STATS, votingPeriodStats);
+			}
+
+			// Send out last application period's stats
+			if(present_period['period_name'] == PERIOD_MAPPINGS.VOTING_PERIOD) {
+				const pendingProjectAmt = await score.get_project_amounts_by_status(PROPOSAL_STATUS.PENDING);
+				const waitingProgressReportCount = await score.get_progress_reports_by_status(PROGRESS_REPORT_STATUS.WAITING);
+				const applicationPeriodStats = {
+					votingProposalsCount: new BigNumber(pendingProjectAmt['_count']).toFixed(),
+					votingProposalsBudget: new BigNumber(activeProjectAmt['_total_amount']).toFixed(),
+					periodEndsOn: periodEndingDate.getTime().toString(),
+					votingPRsCount: new BigNumber(waitingProgressReportCount['count']).toFixed(),
+				};
+				triggerWebhook(EVENT_TYPES.APPLICATION_PERIOD_STATS, applicationPeriodStats);
 			}
 		}
 		// ===================================================================================================
