@@ -1,7 +1,10 @@
 // TODOs: only allow owners to update their subscription record
 
 const redis = require('redis');
+const rndToken = require('random-token').gen('abcdefghijklmnopqrstuvwxzyABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789');
 const { promisify } = require('util');
+
+const { ClientError } = require('./helpers');
 
 const redisClient = redis.createClient(process.env.REDIS_URL);
 const hsetAsync = promisify(redisClient.hset).bind(redisClient);
@@ -16,7 +19,7 @@ redisClient.on('end', function () {
     console.log("Redis connection closed");
 });
 
-const subscriptionKey = 'subscriber';
+const subscriptionKey = 'botSubscriber';
 
 const userActions = {
     subscribe: 'subscribe',
@@ -37,38 +40,47 @@ exports.handler = async (req) => {
 
         if(req.httpMethod === 'POST') {
             const reqBody = JSON.parse(req.body);
+            if(!reqBody) throw new ClientError('POST Body is required');
             const { action, receivingUrl, name } = reqBody;
 
-            if (!action) throw new Error("action is required");
-            if (!name) throw new Error("name is required");
+            if (!action) throw new ClientError("action is required");
+            if (!name) throw new ClientError("name is required");
 
             switch (action) {
-                case userActions.subscribe:
+                case userActions.subscribe: {
+                    // TODO: add username authentication when subscribing
                     // add the website info to redis
-                    if (!receivingUrl) throw new Error("receivingUrl is required");
-                    await hsetAsync(subscriptionKey, name, receivingUrl);
-                    resMessage = {message: "Successfully subscribed"};
+                    if (!receivingUrl) throw new ClientError("receivingUrl is required");
+                    // check if the name already exists
+                    const subscriber = await hgetAsync(subscriptionKey, name);
+                    if(subscriber) throw new ClientError('Name already taken. Use a new name');
+                    const secretKey = rndToken(60);
+                    await hsetAsync(subscriptionKey, name, JSON.stringify({ receivingUrl, secretKey }));
+                    resMessage = {message: "Successfully subscribed", secretKey};
                     break;
-
-                case userActions.unsubscribe:
+                }
+                case userActions.unsubscribe: {
                     // check if already subscribed, then remove the website info from redis
                     const subscriber = await hgetAsync(subscriptionKey, name);
                     if(subscriber) {
+                        const secretKey = JSON.parse(subscriber)['secretKey'];
+                        if(!req.headers['Token'] || (req.headers['Token'] && req.headers['Token'] !== secretKey)) {
+                            throw new ClientError("Unauthorized!", 401);
+                        }
                         await hdelAsync(subscriptionKey, name);
                         resMessage = { message: "Successfully unsubscribed"};
                     }
-                    else throw new Error("Entity with given name is not subscribed yet");
+                    else throw new ClientError("Entity with given name is not subscribed yet");
                     break;
-
+                }
                 default:
-                    throw new Error("Invalid action");
+                    throw new ClientError("Invalid action");
             }
 
         } else if (req.httpMethod == 'GET') {
             const urls = await hgetallAsync(subscriptionKey);
             console.log(urls);
             resMessage = JSON.parse(JSON.stringify(urls));
-
         }
         const response = {
             statusCode: responseCode,

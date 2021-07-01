@@ -13,7 +13,15 @@ async function contractMethodCallService (scoreAddr, method, params=null) {
     return await iconService.call(callObj).execute();
 }
 
+class ClientError extends Error {
+    constructor(msg, statusCode=400) {
+        super(msg);
+        this.statusCode = statusCode;
+    }
+}
+
 module.exports = {
     iconService,
-    contractMethodCallService
+    contractMethodCallService,
+    ClientError
 }
