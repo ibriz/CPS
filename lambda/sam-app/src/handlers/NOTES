@@ -1,0 +1,11 @@
+REDIS:
+  redis-cli:
+    - starts interactive mode
+  KEYS <pattern>:
+    - KEYS * => Get all keys
+  SET <key> <value>
+  DEL <key1> <key2> ... <keyN>
+  TYPE <key> => Get the type of the key. according to type you should use different variants of GET (GET, HGET)
+    GET <key>
+    HGETALL <key>
+    HGET <key> <field>

@@ -1,37 +1,10 @@
 // TODOs: only allow owners to update their subscription record
 
-const redis = require('redis');
 const rndToken = require('random-token').gen('abcdefghijklmnopqrstuvwxzyABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789');
-const { promisify } = require('util');
 
 const { ClientError } = require('./helpers');
-
-const redisClient = redis.createClient(process.env.REDIS_URL);
-const hsetAsync = promisify(redisClient.hset).bind(redisClient);
-const hgetAsync = promisify(redisClient.hget).bind(redisClient);
-const hdelAsync = promisify(redisClient.hdel).bind(redisClient);
-const hgetallAsync = promisify(redisClient.hgetall).bind(redisClient);
-
-redisClient.on('error', function (err) {
-    console.error("Redis error encountered ", JSON.stringify(err));
-});
-redisClient.on('end', function () {
-    console.log("Redis connection closed");
-});
-
-const subscriptionKey = 'botSubscriber';
-
-const userActions = {
-    subscribe: 'subscribe',
-    unsubscribe: 'unsubscribe',
-    getAll: 'list'
-};
-
-const resHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': '*',
-    'Content-Type': 'application/json'
-};
+const { userActions, resHeaders, subscriptionKey } = require('./constants');
+const { hsetAsync, hgetAsync, hgetallAsync, hdelAsync } = require('./redis');
 
 exports.handler = async (req) => {
     try {

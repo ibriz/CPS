@@ -1,53 +1,9 @@
 const axios = require('axios');
-const redis = require('redis');
-const { promisify } = require('util');
 const { IconConverter } = require('icon-sdk-js');
 
-const { contractMethodCallService }  = require('./helpers');
+const { ipfsBaseUrl, eventTypesMapping, resHeaders, scoreMethods } = require('./constants');
+const { contractMethodCallService, triggerWebhook }  = require('./helpers');
 
-const redisClient = redis.createClient(process.env.REDIS_URL);
-// const getAsync = promisify(redisClient.get).bind(redisClient);
-// const setAsync = promisify(redisClient.set).bind(redisClient);
-const hgetallAsync = promisify(redisClient.hgetall).bind(redisClient);
-
-const ipfsBaseUrl = 'https://gateway.ipfs.io/ipfs/';
-const subscriptionKey = 'subscriber';
-
-const eventTypesMapping = {
-    voteProposal: 'voteProposal',
-    sponsorApproval: 'sponsorApproval',
-    submitProgressReport: 'submitProgressReport',
-    voteProgressReport: 'voteProgressReport'
-};
-
-const resHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': '*',
-    'Content-Type': 'application/json'
-};
-
-const scoreMethods = {
-    getVoteResult : 'get_vote_result',
-    getProgressReportsByProposal: 'get_progress_reports_by_proposal',
-    getAllPreps: 'get_PReps',
-    getProposalDetailsByHash: 'get_proposal_details_by_hash'
-}
-
-async function triggerWebhook(eventType, data) {
-    // get all the subscribed Urls for receiving webhooks
-    const subscribedUrls = await hgetallAsync(subscriptionKey);
-    console.log(subscribedUrls);
-
-    console.log("-----------------SENDING THESE TO SUBSCRIBERS---------------------");
-    console.log(eventType);
-    console.log(JSON.stringify(data));
-}
-
-
-
-function sendEmail(eventType, data) {
-
-}
 
 exports.handler = async (req) => {
     try {
