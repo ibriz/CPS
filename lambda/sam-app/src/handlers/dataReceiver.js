@@ -30,6 +30,7 @@ const scoreMethods = {
     getVoteResult : 'get_vote_result',
     getProgressReportsByProposal: 'get_progress_reports_by_proposal',
     getAllPreps: 'get_PReps',
+    getProposalDetailsByHash: 'get_proposal_details_by_hash'
 }
 
 async function triggerWebhook(eventType, data) {
@@ -212,6 +213,12 @@ exports.handler = async (req) => {
                     if(!voteReason) throw new Error("voteReason is required");
                     if(!vote) throw new Error("vote is required");
                     
+                    const proposalDetails = await contractMethodCallService(
+                        process.env['CPS_SCORE'],
+                        scoreMethods.getProposalDetailsByHash,
+                        { '_ipfs_key': proposalIpfsHash }
+                    );
+
                     // get progress report's latest state
                     const progressReportsList = await contractMethodCallService(
                         process.env['CPS_SCORE'],
@@ -244,6 +251,7 @@ exports.handler = async (req) => {
                         prepAddress: voterPrep.address,
                         remarks: voteReason,
                         vote,
+                        proposalName: proposalDetails['project_title'],
                         progressReportName: currProgressReport.progress_report_title,
                         approvingVoters: IconConverter.toBigNumber(currProgressReport.approve_voters).toFixed(0),
                         approvingVotersPercentage: IconConverter.toNumber(currProgressReport.total_voters) > 0 ?
