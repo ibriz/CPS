@@ -1,3 +1,7 @@
+TODOs:
+  - Authorize frontend
+  - Authorize subscriber
+
 REDIS:
   redis-cli:
     - starts interactive mode

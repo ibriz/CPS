@@ -74,7 +74,7 @@ async function execute() {
 					projectsCount: new BigNumber(activeProjectAmt['_count']).toFixed(),
 					totalProjectsBudget: new BigNumber(activeProjectAmt['_total_amount']).div(Math.pow(10, 18)).toFixed(2)
 				};
-				triggerWebhook(EVENT_TYPES.VOTING_PERIOD_STATS, votingPeriodStats);
+				await triggerWebhook(EVENT_TYPES.VOTING_PERIOD_STATS, votingPeriodStats);
 			}
 
 			// Send out last application period's stats

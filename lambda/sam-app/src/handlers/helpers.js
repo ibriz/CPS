@@ -1,4 +1,5 @@
 const IconService = require('icon-sdk-js');
+const axios = require('axios');
 
 const { hgetallAsync } = require('./redis');
 const { subscriptionKey } = require('./constants');
@@ -11,11 +12,29 @@ const iconService = new IconService(provider);
 async function triggerWebhook(eventType, data) {
     // get all the subscribed Urls for receiving webhooks
     const subscribedUrls = await hgetallAsync(subscriptionKey);
-    console.log(subscribedUrls);
 
-    console.log("-----------------SENDING THESE TO SUBSCRIBERS---------------------");
-    console.log(eventType);
-    console.log(JSON.stringify(data));
+    if(subscribedUrls) {
+        for (subscriberStr of Object.values(subscribedUrls)) {
+            const subscriberDetails = JSON.parse(subscriberStr);
+            const { receivingUrl, secretKey } = subscriberDetails;
+            console.log(`Trying to notify ${receivingUrl}`);
+            const axiosObj = {
+                method: 'post',
+                url: receivingUrl, 
+                data: { eventType, data }, 
+                headers: { 'Token': secretKey },
+                timeout: 8000,
+            };
+
+            try {
+                await axios(axiosObj);
+                console.log(`Successfully notified ${receivingUrl}`);
+            } catch (e) {
+                console.error(`Error nofifying ${receivingUrl}`);
+                console.error(e);
+            }
+        }
+    }
 }
 
 async function contractMethodCallService (scoreAddr, method, params=null) {
