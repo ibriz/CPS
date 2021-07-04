@@ -249,6 +249,7 @@ exports.handler = async (req) => {
         }
     } catch (err) {
         console.error(JSON.stringify(err));
+        console.error(err);
         return {
             statusCode: err.statusCode ? err.statusCode : 500,
             headers: resHeaders,

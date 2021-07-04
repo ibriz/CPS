@@ -1,6 +1,21 @@
 TODOs:
   - Authorize frontend
   - Authorize subscriber
+  - Move lambda to s3 if >10MB
+
+LAMBDA:
+  Create and upload lambda
+  On the API gateway resources, create methods (GET, POST) and link to your lambda. Create resources if you need sub-url paths.
+  Then deploy API.
+  Copy url from dashboard
+  You can view the logs in cloudwatch
+  Be wary of the timeout of lambda, api gateway, ENV vars, and ram, etc
+  If your lambdas are in a VPC they need to go through a NAT Gateway in order to reach external services.
+    One way to achieve this is:
+    configure your lambda to use a (or multiple) specific subnets (the Lambda console will suggest you associate at least 2 subnets in different availability zones to your lambda to ensure availability)
+    create a NAT Gateway in a different subnet
+    have the route table associated with your lambda's subnets send all outbound traffic (0.0.0.0/0) to the NAT Gateway you created (you do that by choosing the NAT in the target field)
+    have the route table in the NAT's subnet send all outbound traffic to an Internet Gateway
 
 REDIS:
   redis-cli:
@@ -13,3 +28,9 @@ REDIS:
     GET <key>
     HGETALL <key>
     HGET <key> <field>
+
+  Redis on AWS:
+    - Confgire from elasticCache -> redis (not from globalStore)
+    - Configure NAT on the same subnet as redis
+    - https://aws.amazon.com/premiumsupport/knowledge-center/pass-api-gateway-rest-api-parameters/
+      => Same lambda to check for url path and based on that should operate differently
