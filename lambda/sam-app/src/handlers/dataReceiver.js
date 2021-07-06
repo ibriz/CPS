@@ -12,7 +12,7 @@ exports.handler = async (req) => {
 
         if (req.httpMethod === 'POST') {
             const body = JSON.parse(req.body);
-            
+            console.log(body.eventType);
             //eventType => one of: add, vote, approve, ...
             if(!body.eventType) {
                 // throw new Error({ name: "Input Validation", message: "eventType is required"});

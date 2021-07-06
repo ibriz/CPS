@@ -3,6 +3,7 @@ const triggerManager = require('./dataReceiver');
 const { resHeaders } = require('./constants');
 
 exports.handler = async (event) => {
+  console.log(event.path);
   switch (event.path) {
     case process.env.SUBSCRIPTION_PATH:
       return await subscriptionManager.handler(event);

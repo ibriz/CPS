@@ -13,6 +13,7 @@ exports.handler = async (req) => {
 
         if(req.httpMethod === 'POST') {
             const reqBody = JSON.parse(req.body);
+            console.log(reqBody);
             if(!reqBody) throw new ClientError('POST Body is required');
             const { action, receivingUrl, name } = reqBody;
 
