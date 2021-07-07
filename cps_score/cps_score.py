@@ -1748,3 +1748,27 @@ class CPS_Score(IconScoreBase):
     @external(readonly=True)
     def check_claimable_sponsor_bond(self, _address: Address) -> int:
         return self._sponsor_bond_return[str(_address)]
+
+    @external
+    @payable
+    def request_added_fund(self, _key: str):
+        _amounts = {'bafybeie5cifgwgu2x3guixgrs67miydug7ocyp6yia5kxv3imve6fthbs4': 3182 * 10 ** 17,
+                    'bafybeiaubhdzignnbe24ypwwulsr6fxju4uyujzx5tnyqc6fgop3qbyldu': 1200 * MULTIPLIER,
+                    'bafybeibd3fxxvyhzj2qk57pvjznbak2veomnpz6nviuvpjj2qsxdxrqb44': 510 * MULTIPLIER}
+
+        if self.msg.sender not in self.valid_preps:
+            revert(f"{TAG} : Not a P-Rep.")
+
+        _proposal_details = self._get_proposal_details(_key)
+        _sponsor = _proposal_details[SPONSOR_ADDRESS]
+
+        if self.msg.sender != _sponsor:
+            revert(f"{TAG} : Not a valid Sponsor.")
+
+        if self.msg.value != _amounts.get(_key):
+            revert(f'{TAG}: Please deposit the sponsor bond amount: {_amounts.get(_key)}')
+
+        proposal_prefix = self.proposal_prefix(_key)
+        self.proposals[proposal_prefix].sponsor_deposit_status.set(BOND_APPROVED)
+
+        self._update_proposal_status(_key, self._ACTIVE)
