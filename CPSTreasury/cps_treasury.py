@@ -506,8 +506,8 @@ class CPS_TREASURY(IconScoreBase):
             total_remaining_sponsor_amount = _sponsor_remaining_amount + _sent_sponsor_reward
             _total_sending_sponsor_amount = total_remaining_sponsor_amount // _total_installment_remaining
 
-            proposals.remaining_amount.set(_remaining_amount - _total_sending_amount)
-            proposals.sponsor_remaining_amount.set(_sponsor_remaining_amount - _total_sending_sponsor_amount)
+            proposals.remaining_amount.set(total_remaining_amount - _total_sending_amount)
+            proposals.sponsor_remaining_amount.set(total_remaining_sponsor_amount - _total_sending_sponsor_amount)
 
             self._fund_record[str(_contributor_address)] += (_total_sending_amount - _sent_installment)
             self._fund_record[str(_sponsor_address)] += (_total_sending_sponsor_amount - _sent_sponsor_reward)
