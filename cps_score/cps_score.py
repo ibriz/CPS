@@ -48,6 +48,8 @@ class CPS_Score(IconScoreBase):
     _PROGRESS_REPORT_REJECTED = "_progress_report_rejected"
     PROGRESS_REPORT_STATUS_TYPE = [_APPROVED, _WAITING, _PROGRESS_REPORT_REJECTED]
 
+    _SPONSOR_BOND_RETURN = '_sponsor_bond_return'
+
     @eventlog(indexed=1)
     def ProposalSubmitted(self, _sender_address: Address, note: str):
         pass
@@ -86,6 +88,10 @@ class CPS_Score(IconScoreBase):
 
     @eventlog(indexed=1)
     def PeriodUpdate(self, _notes: str):
+        pass
+
+    @eventlog(indexed=1)
+    def SponsorBondClaimed(self, _receiver_address: Address, _fund: int, note: str):
         pass
 
     def __init__(self, db: IconScoreDatabase) -> None:
@@ -149,6 +155,8 @@ class CPS_Score(IconScoreBase):
                                        self._APPROVED: self._approved_progress_reports,
                                        self._PROGRESS_REPORT_REJECTED: self._progress_rejected}
 
+        self._sponsor_bond_return = DictDB(self._SPONSOR_BOND_RETURN, db, value_type=int)
+
     def on_install(self) -> None:
         super().on_install()
         self.admins.put(self.owner)
@@ -157,23 +165,6 @@ class CPS_Score(IconScoreBase):
 
     def on_update(self) -> None:
         super().on_update()
-
-    @external
-    def distribute_unreturned_sponsor_bond(self) -> None:
-        """
-        This method should only be called once to fix the issue in unreturned sponsor bond.
-        :return:
-        """
-        self._validate_admins()
-        # Sending the Sponsor Bond to the Sponsor P-Rep whose Sponsored project is already completed but not sent
-        for _ipfs_hash in self.get_proposals_keys_by_status(self._COMPLETED):
-            _proposal_details = self._get_proposal_details(_ipfs_hash)
-            _sponsor_address: 'Address' = _proposal_details[SPONSOR_ADDRESS]
-            _sponsor_deposit_amount: int = _proposal_details[SPONSOR_DEPOSIT_AMOUNT]
-            try:
-                self.icx.transfer(_sponsor_address, _sponsor_deposit_amount)
-            except BaseException as e:
-                revert(f"{TAG}: Error in returning the bond amount. Error: {e}")
 
     @external(readonly=True)
     def name(self) -> str:
@@ -241,7 +232,8 @@ class CPS_Score(IconScoreBase):
         :return:
         """
         if _address != self.owner:
-            ArrayDBUtils.remove_array_item(self.admins, _address)
+            revert(f"{TAG}: Owner cannot be removed from the admin list.")
+        ArrayDBUtils.remove_array_item(self.admins, _address)
 
     @external
     def set_cps_treasury_score(self, _score: Address) -> None:
@@ -1541,12 +1533,9 @@ class CPS_Score(IconScoreBase):
                 self.proposals[prefix].sponsor_deposit_status.set(BOND_RETURNED)
 
                 # Returning back the Sponsor Bond to the sponsor address
-                try:
-                    self.icx.transfer(_sponsor_address, _sponsor_deposit_amount)
-                    self.SponsorBondReturned(_sponsor_address,
-                                             f"{_sponsor_deposit_amount} returned to sponsor address.")
-                except BaseException as e:
-                    revert(f"{TAG} : Network problem. Sending back Sponsor Deposit fund. {e}")
+                self._sponsor_bond_return[str(_sponsor_address)] = _sponsor_deposit_amount
+                self.SponsorBondReturned(_sponsor_address,
+                                         f"{_sponsor_deposit_amount} returned to sponsor address.")
 
     def _update_progress_report_result(self):
         """
@@ -1568,7 +1557,6 @@ class CPS_Score(IconScoreBase):
             self.proposals[proposal_prefix].submit_progress_report.set(False)
 
             _proposal_status = _proposal_details[STATUS]
-            _project_duration: int = _proposal_details[PROJECT_DURATION]
             _approved_reports_count: int = _proposal_details[APPROVED_REPORTS]
             _sponsor_address: 'Address' = _proposal_details[SPONSOR_ADDRESS]
             _contributor_address: 'Address' = _proposal_details[CONTRIBUTOR_ADDRESS]
@@ -1599,6 +1587,7 @@ class CPS_Score(IconScoreBase):
             if _budget_adjustment == 1:
                 self._update_budget_adjustments(_reports)
 
+            _project_duration: int = _proposal_details[PROJECT_DURATION]
             cps_treasury_score = self.create_interface_score(self.cps_treasury_score.get(), CPS_TREASURY_INTERFACE)
             cpf_treasury_score = self.create_interface_score(self.cpf_score.get(), CPF_TREASURY_INTERFACE)
 
@@ -1609,10 +1598,10 @@ class CPS_Score(IconScoreBase):
                 if _approved_reports_count == _project_duration:
                     self._update_proposal_status(_ipfs_hash, self._COMPLETED)
                     # Transfer the Sponsor-Bond back to the Sponsor P-Rep after the project is completed.
-                    try:
-                        self.icx.transfer(_sponsor_address, _sponsor_deposit_amount)
-                    except BaseException as e:
-                        revert(f"{TAG}: Failed transferring the sponsor bond amount to Sponsor P-Rep. Error: {e}")
+                    self._sponsor_bond_return[str(_sponsor_address)] = _sponsor_deposit_amount
+                    self.proposals[proposal_prefix].sponsor_deposit_status.set(BOND_RETURNED)
+                    self.SponsorBondReturned(_sponsor_address,
+                                             f"{_sponsor_deposit_amount} returned to sponsor address.")
 
                 elif _proposal_status == self._PAUSED:
                     self._update_proposal_status(_ipfs_hash, self._ACTIVE)
@@ -1735,3 +1724,27 @@ class CPS_Score(IconScoreBase):
 
         # Clear all data from the ArrayDB
         ArrayDBUtils.array_db_clear(self.inactive_preps)
+
+    @external
+    def claim_sponsor_bond(self) -> None:
+        """
+        Claim he reward or the installment amount
+        """
+        _available_amount = self._sponsor_bond_return[str(self.msg.sender)]
+        if _available_amount > 0:
+            try:
+                # set the remaining fund 0
+                self._sponsor_bond_return[str(self.msg.sender)] = 0
+
+                self.icx.transfer(self.msg.sender, _available_amount)
+                self.SponsorBondClaimed(self.msg.sender, _available_amount, f"{_available_amount} withdrawn to "
+                                                                            f"{self.msg.sender}")
+            except BaseException as e:
+                revert(f"{TAG} : Network problem. Claiming Reward{e}")
+
+        else:
+            revert(f"{TAG} :Claim Reward Fails. Available Amount = {_available_amount}.")
+
+    @external(readonly=True)
+    def check_claimable_sponsor_bond(self, _address: Address) -> int:
+        return self._sponsor_bond_return[str(_address)]
