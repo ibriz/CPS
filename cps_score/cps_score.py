@@ -1775,5 +1775,6 @@ class CPS_Score(IconScoreBase):
 
     @external
     def send_remaining_funds(self, _project_key: str):
+        self._validate_admins()
         cps_treasury_score = self.create_interface_score(self.cps_treasury_score.get(), CPS_TREASURY_INTERFACE)
         cps_treasury_score.request_additional_budget(_project_key)
