@@ -201,7 +201,7 @@ class CPS_TREASURY(IconScoreBase):
                                                     self._INSTALLMENT_AMOUNT: _total_budget // _total_installment})
                         _total_amount_to_be_paid += _total_budget // _total_installment
 
-        _withdraw_amount = self._fund_record[str(_wallet_address)] if _total_amount_to_be_paid > 0 else 0
+        _withdraw_amount = self._fund_record[str(_wallet_address)]
         return {"data": _installment_amount,
                 "project_count": len(_installment_amount),
                 "total_amount": _total_amount_to_be_paid,
@@ -238,7 +238,7 @@ class CPS_TREASURY(IconScoreBase):
                         _total_amount_to_be_paid += _total_budget // _total_installment
                         _total_sponsor_bond += _deposited_sponsor_bond
 
-        _withdraw_amount = self._fund_record[str(_wallet_address)] if _total_amount_to_be_paid > 0 else 0
+        _withdraw_amount = self._fund_record[str(_wallet_address)]
 
         return {"data": _installment_amount,
                 "project_count": len(_installment_amount),
