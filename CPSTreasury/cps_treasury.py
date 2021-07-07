@@ -286,17 +286,23 @@ class CPS_TREASURY(IconScoreBase):
         self._validate_cpf_treasury_score()
 
         prefix = self.proposal_prefix(_ipfs_key)
-        _total_budget: int = self.proposals[prefix].total_budget.get()
-        _sponsor_reward: int = self.proposals[prefix].sponsor_reward.get()
-        _total_duration: int = self.proposals[prefix].project_duration.get()
+        _proposal_prefix = self.proposals[prefix]
+        _total_budget: int = _proposal_prefix.total_budget.get()
+        _sponsor_reward: int = _proposal_prefix.sponsor_reward.get()
+        _total_duration: int = _proposal_prefix.project_duration.get()
+        _remaining_amount: int = _proposal_prefix.remaining_amount.get()
+        _sponsor_remaining_amount: int = _proposal_prefix.sponsor_remaining_amount.get()
 
         if _ipfs_key in self._proposals_keys:
-            self.proposals[prefix].total_budget.set(_total_budget + _added_budget)
-            self.proposals[prefix].sponsor_reward.set(_sponsor_reward + _added_sponsor_reward)
-            self.proposals[prefix].project_duration.set(_total_duration + _added_installment_count)
+            _proposal_prefix.total_budget.set(_total_budget + _added_budget)
+            _proposal_prefix.sponsor_reward.set(_sponsor_reward + _added_sponsor_reward)
+            _proposal_prefix.project_duration.set(_total_duration + _added_installment_count)
+            _proposal_prefix.remaining_amount.set(_remaining_amount + _added_budget)
+            _proposal_prefix.sponsor_remaining_amount.set(_sponsor_remaining_amount + _added_sponsor_reward)
 
             self.ProposalFundDeposited(_ipfs_key, _added_budget,
-                                       f"{_ipfs_key} : Added Budget : {_added_budget} Successfully")
+                                       f"{_ipfs_key} : Added Budget : {_added_budget} and Added Time: "
+                                       f"{_added_installment_count} Successfully")
         else:
             revert(f"{TAG} : IPFS Hash doesn't exist")
 
@@ -432,3 +438,77 @@ class CPS_TREASURY(IconScoreBase):
 
         else:
             revert(f"{TAG} :Claim Reward Fails. Available Amount = {_available_amount}.")
+
+    @external
+    def request_additional_budget(self, _ipfs_key: str) -> None:
+        self._validate_cps_score()
+        _added_amounts = {'bafybeibd3fxxvyhzj2qk57pvjznbak2veomnpz6nviuvpjj2qsxdxrqb44': 3000000000000000000000,
+                          'bafybeighs4wxki52zadu2rftuopdua2357zztgbcy4ioikgjr6javyhb7y': 1840000000000000000000,
+                          'bafybeid3xfky4rx2bvqzybip6jg5xgjm2uonvuxbhkc7sxa375hgw7736e': 2980000000000000000000,
+                          'bafybeia2ixxrl2kapogh56mwc4nnn24333t5cntuquepxyifbr4bk3wb6a': 29580000000000000000000,
+                          'bafybeiaubhdzignnbe24ypwwulsr6fxju4uyujzx5tnyqc6fgop3qbyldu': 18357000000000000000000,
+                          'bafybeie5cifgwgu2x3guixgrs67miydug7ocyp6yia5kxv3imve6fthbs4': 0}
+
+        _added_time = {'bafybeibd3fxxvyhzj2qk57pvjznbak2veomnpz6nviuvpjj2qsxdxrqb44': 1,
+                       'bafybeighs4wxki52zadu2rftuopdua2357zztgbcy4ioikgjr6javyhb7y': 0,
+                       'bafybeid3xfky4rx2bvqzybip6jg5xgjm2uonvuxbhkc7sxa375hgw7736e': 0,
+                       'bafybeia2ixxrl2kapogh56mwc4nnn24333t5cntuquepxyifbr4bk3wb6a': 0,
+                       'bafybeiaubhdzignnbe24ypwwulsr6fxju4uyujzx5tnyqc6fgop3qbyldu': 1,
+                       'bafybeie5cifgwgu2x3guixgrs67miydug7ocyp6yia5kxv3imve6fthbs4': 3}
+
+        prefix = self.proposal_prefix(_ipfs_key)
+        proposals = self.proposals[prefix]
+
+        _contributor_address = proposals.contributor_address.get()
+        _sponsor_address = proposals.sponsor_address.get()
+
+        _remaining_amount = proposals.remaining_amount.get()
+        _sponsor_remaining_amount = proposals.sponsor_remaining_amount.get()
+        _added_amount = _added_amounts.get(_ipfs_key)
+        _added_sponsor_reward = (_added_amount * 2) // 100
+        _total_budget = proposals.total_budget.get()
+
+        proposals.remaining_amount.set(_remaining_amount + _added_amount)
+        proposals.sponsor_remaining_amount.set(_sponsor_remaining_amount + _added_sponsor_reward)
+
+        _remaining_amount = proposals.remaining_amount.get()
+        _sponsor_remaining_amount = proposals.sponsor_remaining_amount.get()
+
+        if _ipfs_key == 'bafybeie5cifgwgu2x3guixgrs67miydug7ocyp6yia5kxv3imve6fthbs4':
+            _remaining_amount = self._fund_record[str(_contributor_address)]
+            _remaining_sponsor_amount = self._fund_record[str(_sponsor_address)]
+            proposals.remaining_amount.set(_remaining_amount - _remaining_amount // 4)
+            proposals.sponsor_remaining_amount.set(_remaining_sponsor_amount - _remaining_sponsor_amount // 4)
+            self._fund_record[str(_contributor_address)] = _remaining_amount // 4
+            self._fund_record[str(_sponsor_address)] = _remaining_sponsor_amount // 4
+            proposals.status.set(self._ACTIVE)
+
+        elif _ipfs_key == 'bafybeid3xfky4rx2bvqzybip6jg5xgjm2uonvuxbhkc7sxa375hgw7736e':
+            self._fund_record[str(_contributor_address)] += _remaining_amount
+            self._fund_record[str(_sponsor_address)] += _sponsor_remaining_amount
+            proposals.status.set(self._COMPLETED)
+
+        else:
+            _total_installment_sent = proposals.installment_count.get()
+            _total_installment_remaining = _total_installment_sent + 1
+
+            _old_budget = _total_budget - _added_amount
+            _total_duration = proposals.project_duration.get()
+            _old_duration = _total_duration - _added_time.get(_ipfs_key)
+            _sent_installment = _old_budget // _old_duration
+
+            _old_sponsor_budget = (_old_budget * 2) // 100
+            _sent_sponsor_reward = _old_sponsor_budget // _old_duration
+
+            total_remaining_amount = _remaining_amount + _sent_installment
+            _total_sending_amount = total_remaining_amount // _total_installment_remaining
+
+            total_remaining_sponsor_amount = _sponsor_remaining_amount + _sent_sponsor_reward
+            _total_sending_sponsor_amount = total_remaining_sponsor_amount // _total_installment_remaining
+
+            proposals.remaining_amount.set(_remaining_amount - _total_sending_amount)
+            proposals.sponsor_remaining_amount.set(_sponsor_remaining_amount - _total_sending_sponsor_amount)
+
+            self._fund_record[str(_contributor_address)] += (_total_sending_amount - _sent_installment)
+            self._fund_record[str(_sponsor_address)] += (_total_sending_sponsor_amount - _sent_sponsor_reward)
+            proposals.status.set(self._ACTIVE)
