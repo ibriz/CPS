@@ -231,7 +231,7 @@ class CPS_Score(IconScoreBase):
         :type _address: Address
         :return:
         """
-        if _address != self.owner:
+        if _address == self.owner:
             revert(f"{TAG}: Owner cannot be removed from the admin list.")
         ArrayDBUtils.remove_array_item(self.admins, _address)
 
