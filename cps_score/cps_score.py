@@ -1587,7 +1587,7 @@ class CPS_Score(IconScoreBase):
             if _budget_adjustment == 1:
                 self._update_budget_adjustments(_reports)
 
-            _project_duration: int = _proposal_details[PROJECT_DURATION]
+            _project_duration: int = self.proposals[proposal_prefix].project_duration.get()
             cps_treasury_score = self.create_interface_score(self.cps_treasury_score.get(), CPS_TREASURY_INTERFACE)
             cpf_treasury_score = self.create_interface_score(self.cpf_score.get(), CPF_TREASURY_INTERFACE)
 
