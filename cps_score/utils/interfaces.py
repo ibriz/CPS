@@ -44,3 +44,6 @@ class CPS_TREASURY_INTERFACE(InterfaceScore):
 
     @interface
     def get_sponsor_projected_fund(self, _wallet_address: Address) -> dict: pass
+
+    @interface
+    def request_additional_budget(self, _ipfs_key: str) -> None: pass
