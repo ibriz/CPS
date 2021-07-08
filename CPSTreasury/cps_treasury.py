@@ -292,6 +292,8 @@ class CPS_TREASURY(IconScoreBase):
         _total_duration: int = _proposal_prefix.project_duration.get()
         _remaining_amount: int = _proposal_prefix.remaining_amount.get()
         _sponsor_remaining_amount: int = _proposal_prefix.sponsor_remaining_amount.get()
+        installment_count: int = _proposal_prefix.installment_count.get()
+        sponsor_reward_count: int = _proposal_prefix.sponsor_reward_count.get()
 
         if _ipfs_key in self._proposals_keys:
             _proposal_prefix.total_budget.set(_total_budget + _added_budget)
@@ -299,6 +301,8 @@ class CPS_TREASURY(IconScoreBase):
             _proposal_prefix.project_duration.set(_total_duration + _added_installment_count)
             _proposal_prefix.remaining_amount.set(_remaining_amount + _added_budget)
             _proposal_prefix.sponsor_remaining_amount.set(_sponsor_remaining_amount + _added_sponsor_reward)
+            _proposal_prefix.installment_count.set(installment_count + _added_installment_count)
+            _proposal_prefix.sponsor_reward_count.set(sponsor_reward_count + _added_installment_count)
 
             self.ProposalFundDeposited(_ipfs_key, _added_budget,
                                        f"{_ipfs_key} : Added Budget : {_added_budget} and Added Time: "
