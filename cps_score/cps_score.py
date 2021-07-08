@@ -1728,7 +1728,7 @@ class CPS_Score(IconScoreBase):
     @external
     def claim_sponsor_bond(self) -> None:
         """
-        Claim he reward or the installment amount
+        Claim the reward or the installment amount
         """
         _available_amount = self._sponsor_bond_return[str(self.msg.sender)]
         if _available_amount > 0:
