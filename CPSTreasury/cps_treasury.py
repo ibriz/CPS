@@ -498,6 +498,8 @@ class CPS_TREASURY(IconScoreBase):
         elif _ipfs_key == 'bafybeid3xfky4rx2bvqzybip6jg5xgjm2uonvuxbhkc7sxa375hgw7736e':
             self._fund_record[str(_contributor_address)] += _remaining_amount
             self._fund_record[str(_sponsor_address)] += _sponsor_remaining_amount
+            proposals.remaining_amount.set(0)
+            proposals.sponsor_remaining_amount.set(0)
             proposals.status.set(self._COMPLETED)
 
         else:
