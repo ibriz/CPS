@@ -1772,8 +1772,6 @@ class CPS_Score(IconScoreBase):
         self.proposals[proposal_prefix].sponsor_deposit_status.set(BOND_APPROVED)
 
         self._update_proposal_status(_key, self._ACTIVE)
-        cps_treasury_score = self.create_interface_score(self.cps_treasury_score.get(), CPS_TREASURY_INTERFACE)
-        cps_treasury_score.request_additional_budget(_key)
 
     @external
     def send_remaining_funds(self, _project_key: str):
