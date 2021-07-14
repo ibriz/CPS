@@ -1,5 +1,5 @@
 const IconService = require('icon-sdk-js');
-
+const BigNumber = require('bignumber.js');
 const { PERIOD_MAPPINGS } = require('./constants')
 const { sleep } = require('./utils');
 
@@ -69,6 +69,27 @@ function icon_transaction_call_builder(methodName, params = {}) {
 		.build();
 	return call;
 }
+
+async function paginated_score_call(func, params = {}, data = []) {
+	console.log(params);
+	if (Object.keys(params).length !== 0) {
+		if (!params._start_index) params._start_index = 0;
+		if (!params._end_index) params._end_index = params._start_index + 20;
+	}
+
+	const results = await iconService.call(icon_call_builder(func, params)).execute();
+
+	data = data.concat(results.data);
+
+	if (parseInt(results.count, 'hex') > results.data.length) {
+		params._start_index = params._end_index;
+		params._end_index = params._end_index + 20;
+		return await paginated_score_call(func, params, data)
+	} else {
+		return data;
+	}
+}
+
 
 async function recursive_score_call(func, params = {}, data = []) {
 	console.log(params);
@@ -211,6 +232,32 @@ async function get_proposals_details(address) {
 
 	console.log('get_proposals_details: ' + JSON.stringify(proposal_details));
 	return proposal_details;
+}
+
+async function getProposalDetailsByStatus(status, fromLastPeriodOnly) {
+	console.log('Recursive RPC Call for method get_proposal_details for status ', status);
+
+	// let proposalDetails = [];
+	const proposalDetails = await paginated_score_call(
+		'get_proposal_details', 
+		{
+			'_status': status,
+			'_wallet_address': user_address,
+			'_start_index': 0,
+			'_end_index': 20,
+		}
+	);
+	console.log('getProposalDetailsByStatus: ' + JSON.stringify(proposalDetails));
+	
+	if(lastPeriodOnly) {
+		// retrun data from last period only (timestamp < 24hrs)
+		return proposalDetails.filter(proposal => {
+			const timeDiff = new BigNumber(proposal.timestamp).div(1000).minus(Date.now());
+			return timeDiff.div(1000*24*60*60).toNumber() < 1;
+		})
+	}
+
+	return proposalDetails;
 }
 
 async function progress_report_reminder_before_one_day(user_details_list) {
@@ -484,5 +531,6 @@ module.exports = {
 	get_preps,
 	get_remaining_funds,
 	get_project_amounts_by_status,
-	recursivelyUpdatePeriod
+	recursivelyUpdatePeriod,
+	getProposalDetailsByStatus
 }

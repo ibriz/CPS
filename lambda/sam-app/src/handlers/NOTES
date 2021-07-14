@@ -2,6 +2,7 @@ TODOs:
   - Authorize frontend
   - Authorize subscriber
   - Move lambda to s3 if >10MB
+  - Test recursive_score_call with multiple pages on get_proposal_details method
 
 LAMBDA:
   Create and upload lambda
