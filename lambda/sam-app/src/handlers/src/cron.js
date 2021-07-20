@@ -87,19 +87,23 @@ async function formatProposalDetailsResponse(allProposals) {
 
 			case PROPOSAL_STATUS.PAUSED: {
 				response.pausedProposals.push(proposalRes);
+				break;
 			}
 			
 			case PROPOSAL_STATUS.DISQUALIFIED: {
 				response.disqualifiedProposals.push(proposalRes);
+				break;
 			}
 
 			case PROPOSAL_STATUS.COMPLETED: {
 				response.completedProposals.push(proposalRes);
+				break;
 			}
 		}
-
-		return response;
 	}
+
+	return response;
+
 }
 
 
@@ -117,27 +121,31 @@ async function execute() {
 		// TODO: Remove this
 		console.log(present_period.remaining_time);
 		
-		if (parseInt(present_period.remaining_time, 'hex') === 0) {
+		if (parseInt(present_period.remaining_time, 'hex') != 0) {
 			// if current period is "Voting Period" -> update_period moves it to transition period
 			// wait for 20 secs, then again trigger the update_period if the current period is transition period
 			// then verify that the period is now application period
-			console.log('Period updated');
-			await score.update_period();
-			period_triggered = true;
-			await sleep(2000);	// sleep for 2 secs
-			present_period = await score.period_check();
-			console.log('Changed period to: ' + present_period['period_name']);
+			console.log('Updating period...');
 
-			if(present_period['period_name'] == PERIOD_MAPPINGS.TRANSITION_PERIOD) {
-				await score.recursivelyUpdatePeriod();
-			}
+			// TODO: Uncomment
+			// await score.update_period();
+			// period_triggered = true;
+			// await sleep(2000);	// sleep for 2 secs
+			// present_period = await score.period_check();
+			// console.log('Changed period to: ' + present_period['period_name']);
+
+			// if(present_period['period_name'] == PERIOD_MAPPINGS.TRANSITION_PERIOD) {
+			// 	await score.recursivelyUpdatePeriod();
+			// }
+	//  ----------------------------------------- uncomment close -----------------------------------
 
 			const periodEndingDate = new Date();
 			periodEndingDate.setDate(periodEndingDate.getDate() + 15);
 
 			// ========================================CPS BOT TRIGGERS=========================================
 
-			if(present_period['period_name'] == PERIOD_MAPPINGS.APPLICATION_PERIOD) {
+			// TODO: Set to ==
+			if(present_period['period_name'] != PERIOD_MAPPINGS.APPLICATION_PERIOD) {
 				// Send out last voting period's stats
 				const remainingFunds = await score.get_remaining_funds();
 				const activeProjectAmt = await score.get_project_amounts_by_status(PROPOSAL_STATUS.ACTIVE);
@@ -159,22 +167,36 @@ async function execute() {
 				const disqualifiedProposals = await score.getProposalDetailsByStatus(PROPOSAL_STATUS.DISQUALIFIED, true);
 				const completedProposals = await score.getProposalDetailsByStatus(PROPOSAL_STATUS.COMPLETED, true);
 
-				const formattedProposalDetails = formatProposalDetailsResponse(approvedProposals.concat(rejectedProposals).concat(pausedProposals).concat(disqualifiedProposals).concat(completedProposals));
+				// TODO: remove these
+				// console.log("ALL APPROVED PROPOSALS");
+				// console.log(JSON.stringify(allApprovedProposals));
+				// console.log("APPROVED PROPOSALS");
+				// console.log(JSON.stringify(approvedProposals));
+				// console.log("REJECTED PROPOSALS");
+				// console.log(JSON.stringify(rejectedProposals));
+				// console.log("PAUSED PROPOSALS");
+				// console.log(JSON.stringify(pausedProposals));
+				// console.log("DISQUALIFIED PROPOSALS");
+				// console.log(JSON.stringify(disqualifiedProposals));
+				// console.log(JSON.stringify(completedProposals));
+
+				const formattedProposalDetails = await formatProposalDetailsResponse(approvedProposals.concat(rejectedProposals).concat(pausedProposals).concat(disqualifiedProposals).concat(completedProposals));
 
 				await triggerWebhook(EVENT_TYPES.PROPOSAL_STATS, formattedProposalDetails);
 			}
 
 			// Send out last application period's stats
-			if(present_period['period_name'] == PERIOD_MAPPINGS.VOTING_PERIOD) {
+			// TODO: set to ==
+			if(present_period['period_name'] != PERIOD_MAPPINGS.VOTING_PERIOD) {
 				const pendingProjectAmt = await score.get_project_amounts_by_status(PROPOSAL_STATUS.PENDING);
-				const waitingProgressReportCount = await score.get_progress_reports_by_status(PROGRESS_REPORT_STATUS.WAITING);
+				const waitingProgressReports = await score.get_progress_reports_by_status(PROGRESS_REPORT_STATUS.WAITING);
 				const applicationPeriodStats = {
 					votingProposalsCount: new BigNumber(pendingProjectAmt['_count']).toFixed(),
-					votingProposalsBudget: new BigNumber(activeProjectAmt['_total_amount']).toFixed(),
+					votingProposalsBudget: new BigNumber(pendingProjectAmt['_total_amount']).toFixed(),
 					periodEndsOn: periodEndingDate.getTime().toString(),
-					votingPRsCount: new BigNumber(waitingProgressReportCount['count']).toFixed(),
+					votingPRsCount: new BigNumber(waitingProgressReports.length).toFixed(),
 				};
-				triggerWebhook(EVENT_TYPES.APPLICATION_PERIOD_STATS, applicationPeriodStats);
+				await triggerWebhook(EVENT_TYPES.APPLICATION_PERIOD_STATS, applicationPeriodStats);
 			}
 		}
 		// ===================================================================================================

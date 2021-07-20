@@ -19,7 +19,9 @@ Resources:
   # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
 
   # This is a Lambda function config associated with the source code: get-all-items.js
-  proposals:
+  
+
+  CronGET:
     Type: AWS::Serverless::Function
     Properties:
       Handler: src/handlers/index.handler
@@ -32,93 +34,22 @@ Resources:
       Environment:
         Variables:
           # Make table name accessible as environment variable from function code during execution
-          PROPOSAL_PATH: /proposals
-          API_KEY: +p9sArqKr/itlUg+AllYbw==
-          API_SECRET: wtwqYMafL5kgXYKJerg66qchF2uksqThzoqAGZEy3Hg=
-          REDIS_URL: redis://192.168.1.72:6379
-      Events:
-        Api:
-          Type: Api
-          Properties:
-            Path: /proposals
-            Method: POST
-  # Each Lambda function is defined by properties:
-  # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-
-
-  Notifications:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: src/handlers/dataReceiver.handler
-      Runtime: nodejs10.x
-      MemorySize: 128
-      Timeout: 100
-      Description: A simple example includes a HTTP get method to get all items from a DynamoDB table.
-      Policies:
-        # Give Create/Read/Update/Delete Permissions to the SampleTable
-      Environment:
-        Variables:
-          # Make table name accessible as environment variable from function code during execution
-          PROPOSAL_PATH: /submit_notification
-          API_KEY: +p9sArqKr/itlUg+AllYbw==
-          API_SECRET: wtwqYMafL5kgXYKJerg66qchF2uksqThzoqAGZEy3Hg=
-          REDIS_URL: redis://192.168.1.72:6379
-          CPS_SCORE: cx9f4ab72f854d3ccdc59aa6f2c3e2215dd62e879f #mainnet
-          ICON_PROVIDER: https://ctz.solidwallet.io/api/v3
-      Events:
-        Api:
-          Type: Api
-          Properties:
-            Path: /submit_notification
-            Method: POST
-  
-  SubscriptionGET:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: src/handlers/webhook-manager.handler
-      Runtime: nodejs10.x
-      MemorySize: 128
-      Timeout: 100
-      Description: A simple example includes a HTTP get method to get all items from a DynamoDB table.
-      Policies:
-        # Give Create/Read/Update/Delete Permissions to the SampleTable
-      Environment:
-        Variables:
-          # Make table name accessible as environment variable from function code during execution
           # PROPOSAL_PATH: /submit_notification
           API_KEY: +p9sArqKr/itlUg+AllYbw==
           API_SECRET: wtwqYMafL5kgXYKJerg66qchF2uksqThzoqAGZEy3Hg=
-          REDIS_URL: redis://192.168.1.72:6379
+          REDIS_URL: redis://192.168.1.70:6379
+          PROPOSAL_PATH: /submit_notification
+          API_KEY: +p9sArqKr/itlUg+AllYbw==
+          API_SECRET: wtwqYMafL5kgXYKJerg66qchF2uksqThzoqAGZEy3Hg=
+          SCORE_ADDRESS: cx9f4ab72f854d3ccdc59aa6f2c3e2215dd62e879f #mainnet
+          BLOCKCHAIN_PROVIDER: https://ctz.solidwallet.io/api/v3
+          USER_ADDRESS: hx74a3f20a3c0a4bb5ccbf6e103ed624cbe444ac1e #random address
       Events:
         Api:
           Type: Api
           Properties:
             Path: /subscription
             Method: GET
-
-  SubscriptionPOST:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: src/handlers/webhook-manager.handler
-      Runtime: nodejs10.x
-      MemorySize: 128
-      Timeout: 100
-      Description: A simple example includes a HTTP get method to get all items from a DynamoDB table.
-      Policies:
-        # Give Create/Read/Update/Delete Permissions to the SampleTable
-      Environment:
-        Variables:
-          # Make table name accessible as environment variable from function code during execution
-          # PROPOSAL_PATH: /submit_notification
-          API_KEY: +p9sArqKr/itlUg+AllYbw==
-          API_SECRET: wtwqYMafL5kgXYKJerg66qchF2uksqThzoqAGZEy3Hg=
-          REDIS_URL: redis://192.168.1.72:6379
-      Events:
-        Api:
-          Type: Api
-          Properties:
-            Path: /subscription
-            Method: POST
 
 Outputs:
   WebEndpoint:

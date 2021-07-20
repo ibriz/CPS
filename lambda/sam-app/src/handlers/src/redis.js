@@ -6,9 +6,18 @@ const REDIS_URL = process.env.REDIS_URL
 // Redis initialize
 const client = redis.createClient(REDIS_URL);
 const { promisify } = require('util');
+const { SUBSCRIPTION_KEY } = require('./constants');
 const getAsync = promisify(client.get).bind(client);
 const getAllUserAsync = promisify(client.keys).bind(client);
-const hgetallAsync = promisify(client.hgetall).bind(redisClient);
+const hgetallAsync = promisify(client.hgetall).bind(client);
+
+client.on('error', function (err) {
+	console.error("Redis error encountered ", JSON.stringify(err));
+});
+client.on('end', function () {
+	console.log("Redis connection closed");
+});
+
 
 async function populate_users_details(addresses_list) {
 	let user_details_list = [];
@@ -42,7 +51,7 @@ async function get_registered_users_keys() {
 }
 
 function getSubscribedUrls() {
-	return hgetallAsync(subscriptionKey);
+	return hgetallAsync(SUBSCRIPTION_KEY);
 }
 
 module.exports = {

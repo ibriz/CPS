@@ -1,22 +1,32 @@
-const subscriptionManager = require('./webhook-manager');
-const triggerManager = require('./dataReceiver');
-const { resHeaders } = require('./constants');
+const cron = require('./src/cron');
 
 exports.handler = async (event) => {
-  console.log(event.path);
-  switch (event.path) {
-    case process.env.SUBSCRIPTION_PATH:
-      return await subscriptionManager.handler(event);
-    case process.env.TRIGGER_PATH:
-      return await triggerManager.handler(event);
-    default:
-      return {
-        statusCode: 400,
-        headers: resHeaders,
-        body: JSON.stringify({
-          error: 'Exception',
-          message: 'Invalid URI path',
-        }),
-      }
-  }
-}
+	try {
+
+		if (event.hasOwnProperty('httpMethod') && event.httpMethod === 'GET') {
+			await cron.execute();
+			console.log('==============Invoke Successful==========');
+			return {
+				statusCode: 200,
+				headers: {
+					'Access-Control-Allow-Origin': '*'
+				},
+				body: 'Successfully triggered notifications on proposal change'
+			};
+		}
+	} catch (err) {
+
+		console.log(err);
+		return {
+			statusCode: err.statusCode ? err.statusCode : 500,
+			headers: {
+				'Access-Control-Allow-Origin': '*',
+				'Access-Control-Allow-Headers': '*'
+			},
+			body: JSON.stringify({
+				error: err.name ? err.name : 'Exception',
+				message: err.message ? err.message : 'Unknown error',
+			}),
+		};
+	}
+};
