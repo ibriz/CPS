@@ -135,6 +135,8 @@ async function execute() {
 
 			if(present_period['period_name'] == PERIOD_MAPPINGS.TRANSITION_PERIOD) {
 				await score.recursivelyUpdatePeriod();
+				present_period = await score.period_check();
+				console.log('Changed period to: ' + present_period['period_name']);
 			}
 
 			const periodEndingDate = new Date();

@@ -146,14 +146,14 @@ async function recursivelyUpdatePeriod(retry = 0) {
 			await update_period();
 			await sleep(2000);	// sleep for 2 secs
 			// todo: move to recursive func, max 10 calls
-			if(retry < 10) {
+			if(retry < 8) {
 				await recursivelyUpdatePeriod(++retry);
 			} else {
 				throw new Error('Retry limit reached. Error transitioning from transition period to application period');
 			}
 		}
 	} catch(e) {
-		console.log("Error updating period recursively", e);
+		console.log("Error updating period recursively", JSON.stringify(e));
 		await recursivelyUpdatePeriod(++retry);
 	}
 }
