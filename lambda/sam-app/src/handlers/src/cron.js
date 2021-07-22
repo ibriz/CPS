@@ -165,17 +165,17 @@ async function execute() {
 				const completedProposals = await score.getProposalDetailsByStatus(PROPOSAL_STATUS.COMPLETED, true);
 
 				// TODO: remove these
-				// console.log("ALL APPROVED PROPOSALS");
-				// console.log(JSON.stringify(allApprovedProposals));
-				// console.log("APPROVED PROPOSALS");
-				// console.log(JSON.stringify(approvedProposals));
-				// console.log("REJECTED PROPOSALS");
-				// console.log(JSON.stringify(rejectedProposals));
-				// console.log("PAUSED PROPOSALS");
-				// console.log(JSON.stringify(pausedProposals));
-				// console.log("DISQUALIFIED PROPOSALS");
-				// console.log(JSON.stringify(disqualifiedProposals));
-				// console.log(JSON.stringify(completedProposals));
+				console.log("ALL APPROVED PROPOSALS");
+				console.log(JSON.stringify(allApprovedProposals));
+				console.log("APPROVED PROPOSALS");
+				console.log(JSON.stringify(approvedProposals));
+				console.log("REJECTED PROPOSALS");
+				console.log(JSON.stringify(rejectedProposals));
+				console.log("PAUSED PROPOSALS");
+				console.log(JSON.stringify(pausedProposals));
+				console.log("DISQUALIFIED PROPOSALS");
+				console.log(JSON.stringify(disqualifiedProposals));
+				console.log(JSON.stringify(completedProposals));
 
 				const formattedProposalDetails = await formatProposalDetailsResponse(approvedProposals.concat(rejectedProposals).concat(pausedProposals).concat(disqualifiedProposals).concat(completedProposals));
 

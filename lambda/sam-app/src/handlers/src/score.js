@@ -22,8 +22,8 @@ const httpProvider = new HttpProvider(provider);
 const iconService = new IconService(httpProvider);
 
 // TODO: uncomment
-let wallet;
-// const wallet = IconWallet.loadPrivateKey(priv_key);
+// let wallet;
+const wallet = IconWallet.loadPrivateKey(priv_key);
 
 const timeout = instance => {
 	const seconds = instance === 1 ? 2000 : 1000;
@@ -62,7 +62,7 @@ function icon_transaction_call_builder(methodName, params = {}) {
 		.from(user_address)
 		.to(score_address)
 		.stepLimit(IconConverter.toBigNumber('2000000'))
-		.nid(IconConverter.toBigNumber('1'))
+		.nid(IconConverter.toBigNumber(process.env.NID))
 		.nonce(IconConverter.toBigNumber('1'))
 		.version(IconConverter.toBigNumber('3'))
 		.timestamp((new Date()).getTime() * 1000)
@@ -125,7 +125,7 @@ async function update_period() {
 
 		const updatePeriodTransaction = await icon_transaction_call_builder('update_period');
 
-		console.log(updatePeriodTransaction, wallet);
+		console.log(JSON.stringify(updatePeriodTransaction), JSON.stringify(wallet));
 
 		const signedTransaction = new SignedTransaction(updatePeriodTransaction, wallet);
 		const txHash = await iconService.sendTransaction(signedTransaction).execute();
