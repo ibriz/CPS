@@ -35,14 +35,22 @@ Resources:
         Variables:
           # Make table name accessible as environment variable from function code during execution
           # PROPOSAL_PATH: /submit_notification
-          API_KEY: +p9sArqKr/itlUg+AllYbw==
-          API_SECRET: wtwqYMafL5kgXYKJerg66qchF2uksqThzoqAGZEy3Hg=
+          # API_KEY: +p9sArqKr/itlUg+AllYbw==
+          # API_SECRET: wtwqYMafL5kgXYKJerg66qchF2uksqThzoqAGZEy3Hg=
+          # REDIS_URL: redis://192.168.1.70:6379
+          # PROPOSAL_PATH: /submit_notification
+          # API_KEY: +p9sArqKr/itlUg+AllYbw==
+          # API_SECRET: wtwqYMafL5kgXYKJerg66qchF2uksqThzoqAGZEy3Hg=
+          # SCORE_ADDRESS: cx9f4ab72f854d3ccdc59aa6f2c3e2215dd62e879f #mainnet
+          # BLOCKCHAIN_PROVIDER: https://ctz.solidwallet.io/api/v3
+          # USER_ADDRESS: hx74a3f20a3c0a4bb5ccbf6e103ed624cbe444ac1e #random address
+          # testnet
           REDIS_URL: redis://192.168.1.70:6379
           PROPOSAL_PATH: /submit_notification
           API_KEY: +p9sArqKr/itlUg+AllYbw==
           API_SECRET: wtwqYMafL5kgXYKJerg66qchF2uksqThzoqAGZEy3Hg=
-          SCORE_ADDRESS: cx9f4ab72f854d3ccdc59aa6f2c3e2215dd62e879f #mainnet
-          BLOCKCHAIN_PROVIDER: https://ctz.solidwallet.io/api/v3
+          SCORE_ADDRESS: cx7b98401aa6578296abd311b4cb70e90812e9ebae #testnet
+          BLOCKCHAIN_PROVIDER: https://bicon.net.solidwallet.io/api/v3
           USER_ADDRESS: hx74a3f20a3c0a4bb5ccbf6e103ed624cbe444ac1e #random address
       Events:
         Api:

@@ -121,31 +121,28 @@ async function execute() {
 		// TODO: Remove this
 		console.log(present_period.remaining_time);
 		
-		if (parseInt(present_period.remaining_time, 'hex') != 0) {
+		if (parseInt(present_period.remaining_time, 'hex') == 0) {
 			// if current period is "Voting Period" -> update_period moves it to transition period
 			// wait for 20 secs, then again trigger the update_period if the current period is transition period
 			// then verify that the period is now application period
 			console.log('Updating period...');
 
-			// TODO: Uncomment
-			// await score.update_period();
-			// period_triggered = true;
-			// await sleep(2000);	// sleep for 2 secs
-			// present_period = await score.period_check();
-			// console.log('Changed period to: ' + present_period['period_name']);
+			await score.update_period();
+			period_triggered = true;
+			await sleep(2000);	// sleep for 2 secs
+			present_period = await score.period_check();
+			console.log('Changed period to: ' + present_period['period_name']);
 
-			// if(present_period['period_name'] == PERIOD_MAPPINGS.TRANSITION_PERIOD) {
-			// 	await score.recursivelyUpdatePeriod();
-			// }
-	//  ----------------------------------------- uncomment close -----------------------------------
+			if(present_period['period_name'] == PERIOD_MAPPINGS.TRANSITION_PERIOD) {
+				await score.recursivelyUpdatePeriod();
+			}
 
 			const periodEndingDate = new Date();
 			periodEndingDate.setDate(periodEndingDate.getDate() + 15);
 
 			// ========================================CPS BOT TRIGGERS=========================================
 
-			// TODO: Set to ==
-			if(present_period['period_name'] != PERIOD_MAPPINGS.APPLICATION_PERIOD) {
+			if(present_period['period_name'] == PERIOD_MAPPINGS.APPLICATION_PERIOD) {
 				// Send out last voting period's stats
 				const remainingFunds = await score.get_remaining_funds();
 				const activeProjectAmt = await score.get_project_amounts_by_status(PROPOSAL_STATUS.ACTIVE);
@@ -186,8 +183,7 @@ async function execute() {
 			}
 
 			// Send out last application period's stats
-			// TODO: set to ==
-			if(present_period['period_name'] != PERIOD_MAPPINGS.VOTING_PERIOD) {
+			if(present_period['period_name'] == PERIOD_MAPPINGS.VOTING_PERIOD) {
 				const pendingProjectAmt = await score.get_project_amounts_by_status(PROPOSAL_STATUS.PENDING);
 				const waitingProgressReports = await score.get_progress_reports_by_status(PROGRESS_REPORT_STATUS.WAITING);
 				const applicationPeriodStats = {
