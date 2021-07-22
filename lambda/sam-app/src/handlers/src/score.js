@@ -59,7 +59,7 @@ function icon_call_builder(methodName, params = {}) {
 function icon_transaction_call_builder(methodName, params = {}) {
 	const callTransactionBuilder = new CallTransactionBuilder();
 	const call = callTransactionBuilder
-		.from(user_address)
+		.from(wallet.getAddress())
 		.to(score_address)
 		.stepLimit(IconConverter.toBigNumber('2000000'))
 		.nid(IconConverter.toBigNumber(process.env.NID))

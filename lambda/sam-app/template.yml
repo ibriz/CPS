@@ -52,7 +52,7 @@ Resources:
           SCORE_ADDRESS: cx7b98401aa6578296abd311b4cb70e90812e9ebae #testnet
           BLOCKCHAIN_PROVIDER: https://bicon.net.solidwallet.io/api/v3
           NID: 3
-          USER_ADDRESS: hx177b10efe3018961a405cc7c20ee811c552831a5 # admin wallet address
+          USER_ADDRESS: hx177b10efe3018961a405cc7c20ee811c552831a5 # random wallet address
           PRIVATE_KEY: 4490dec8e8d4f643e96eb4ebf1fe8ec46a0ba509db8d9c1e447fd5ae6b0ab1d0 # score admin private key
       Events:
         Api:
