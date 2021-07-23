@@ -31,7 +31,9 @@ import {
   fetchProjectAmountsWorker,
   fetchRemainingVotesRequestWorker,
   fetchSponsorMessageRequestWorker,
-} from './Proposal';
+  fetchProposalByIpfsWorker,
+  emptyProposalDetailWorker,
+} from './Proposal/index';
 
 import {
   submitProgressReportToIPFSWorker,
@@ -44,6 +46,8 @@ import {
   fetchProgressReportVoteResultRequestWorker,
   fetchProgressReportByProposalRequestWorker,
   fetchVoteResultBudgetChangeRequestWorker,
+  fetchProgressReportByIpfsWorker,
+  emptyProgressReportDetailWorker,
 } from './ProgressReport';
 
 import {
@@ -52,6 +56,8 @@ import {
   fetchExpectedGrantRequestWorker,
   fetchCPSTreasuryScoreAddressWorker,
   claimRewardWorker,
+  fetchSponsorBondWorker,
+  claimSponsorBondWorker,
 } from './Fund';
 
 import {
@@ -92,6 +98,8 @@ import {
   fetchProjectAmountsRequest,
   fetchRemainingVotesRequest,
   fetchSponsorMessageRequest,
+  fetchProposalByIpfsRequest,
+  emptyProposalDetailRequest,
 } from '../Reducers/proposalSlice';
 import {
   submitProgressReportRequest,
@@ -104,6 +112,8 @@ import {
   fetchVoteResultRequest as fetchProgressReportVoteResultRequest,
   fetchProgressReportByProposalRequest,
   fetchVoteResultBudgetChangeRequest,
+  fetchProgressReportByIpfsRequest,
+  emptyProgressReportDetailRequest,
 } from '../Reducers/progressReportSlice';
 import {
   fetchPeriodDetailsRequest,
@@ -122,6 +132,8 @@ import {
   fetchExpectedGrantRequest,
   fetchCPSTreasuryScoreAddressRequest,
   claimReward,
+  fetchSponsorBondRequest,
+  claimSponsorBondReward,
 } from '../Reducers/fundSlice';
 import {
   fetchUserDataRequest,
@@ -144,6 +156,7 @@ function* rootSaga() {
   yield takeEvery(fetchProposalListRequest.type, fetchProposalListWorker);
 
   yield takeEvery(fetchMyProposalListRequest.type, fetchMyProposalListWorker);
+  yield takeEvery(fetchProposalByIpfsRequest.type, fetchProposalByIpfsWorker);
 
   yield takeEvery(
     submitProgressReportRequest.type,
@@ -157,6 +170,10 @@ function* rootSaga() {
   yield takeEvery(
     fetchProgressReportListRequest.type,
     fetchProgressReportListWorker,
+  );
+  yield takeEvery(
+    fetchProgressReportByIpfsRequest.type,
+    fetchProgressReportByIpfsWorker,
   );
 
   yield takeEvery(updateProposalStatus.type, updateProposalStatusWorker);
@@ -261,6 +278,9 @@ function* rootSaga() {
   );
 
   yield takeEvery(claimReward.type, claimRewardWorker);
+  yield takeEvery(claimSponsorBondReward.type, claimSponsorBondWorker);
+
+  yield takeEvery(fetchSponsorBondRequest.type, fetchSponsorBondWorker);
 
   yield takeEvery(
     resendVerificationEmailRequest.type,
@@ -276,6 +296,11 @@ function* rootSaga() {
   yield takeEvery(
     disableUserPromptRequest.type,
     disableUserPromptRequestWorker,
+  );
+  yield takeEvery(emptyProposalDetailRequest.type, emptyProposalDetailWorker);
+  yield takeEvery(
+    emptyProgressReportDetailRequest.type,
+    emptyProgressReportDetailWorker,
   );
 }
 

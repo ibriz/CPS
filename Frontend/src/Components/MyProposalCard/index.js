@@ -100,7 +100,9 @@ const MyProposalCard = ({
 
   useEffect(() => {
     let filteredProposals = proposalPendingProgressReport.filter(proposal =>
-      proposal._proposal_title.includes(searchText),
+      proposal._proposal_title
+        ?.toLowerCase()
+        .includes(searchText?.toLowerCase()),
     );
 
     setFilteredProposalList(filteredProposals);
