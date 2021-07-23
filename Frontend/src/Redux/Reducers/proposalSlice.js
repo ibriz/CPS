@@ -138,6 +138,7 @@ const initialState = {
   sponsorRequestIPFSKey: '',
   sponsorRequestProposalTitle: '',
   sponsorRequestProposal: null,
+  selectedProposal: {},
 };
 
 const proposalSlice = createSlice({
@@ -242,11 +243,21 @@ const proposalSlice = createSlice({
     fetchProposalDetailSuccess(state, payload) {
       state.proposalDetail = payload.payload.response;
     },
-
     fetchProposalDetailFailure() {
       return;
     },
-
+    emptyProposalDetailRequest()
+    {
+      return
+    },
+    emptyProposalDetailSuccess(state)
+    {
+      delete state.proposalDetail
+    },
+    emptyProposalDetailFailure()
+    {
+      return;
+    },
     fetchSponsorRequestsListRequest(state) {
       return;
     },
@@ -644,6 +655,61 @@ const proposalSlice = createSlice({
     setSponsorRequestProposal(state, action) {
       state.sponsorRequestProposal = action.payload.proposal;
     },
+    fetchProposalByIpfsRequest(state) {
+      return;
+    },
+    fetchProposalByIpfsSuccess(state, action) {
+      console.log('Response', action.payload.response);
+      let proposal = action.payload.response;
+      state.selectedProposal = {
+        _status: proposal[PARAMS.status],
+        _proposal_title: proposal[PARAMS.proposalTitle],
+        _contributor_address: proposal[PARAMS.contributorAddress],
+        // budget: parseInt(proposal[PARAMS.totalBudget]),
+        budget: IconConverter.toBigNumber(
+          proposal[PARAMS.totalBudget],
+        ).dividedBy(10 ** 18),
+        _timestamp: proposal[PARAMS.timestamp],
+        ipfsHash: proposal[PARAMS.proposalHash],
+        ipfsKey: proposal[PARAMS.proposalHash],
+        approvedVotes: IconConverter.toBigNumber(
+          proposal[PARAMS.approvedVotes],
+        ),
+        totalVotes: IconConverter.toBigNumber(proposal[PARAMS.totalVotes]),
+        projectDuration: IconConverter.toBigNumber(
+          proposal[PARAMS.projectDuration],
+        ),
+
+        sponsorVoteReason: proposal[PARAMS.sponsorVoteReason],
+        // approvedPercentage: (!proposal[PARAMS.totalVotes] || parseInt(proposal[PARAMS.totalVotes]) === 0) ? 0 : ((proposal[PARAMS.approvedVotes] / proposal[PARAMS.totalVotes]) * 100),
+
+        approvedPercentage: calculatePercentage({
+          total: proposal[PARAMS.totalVotes],
+          actual: proposal[PARAMS.approvedVotes],
+        }),
+        approvedVotesPercentageCount: calculatePercentage({
+          total: proposal[PARAMS.totalVoters],
+          actual: proposal[PARAMS.approvedVoters],
+        }),
+
+        rejectedPercentage: calculatePercentage({
+          total: proposal[PARAMS.totalVotes],
+          actual: proposal[PARAMS.rejectedVotes],
+        }),
+        rejectedVotesPercentageCount: calculatePercentage({
+          total: proposal[PARAMS.totalVoters],
+          actual: proposal[PARAMS.rejectedVoters],
+        }),
+
+        completedPercentage: parseInt(
+          IconConverter.toBigNumber(proposal[PARAMS.percentageCompleted]),
+        ),
+      };
+      return;
+    },
+    fetchProposalByIpfsFailure(state) {
+      return;
+    },
   },
 
   extraReducers: {
@@ -700,5 +766,11 @@ export const {
   setSponsorRequestIPFSKey,
   setSponsorRequestProposalTitle,
   setSponsorRequestProposal,
+  fetchProposalByIpfsFailure,
+  fetchProposalByIpfsSuccess,
+  fetchProposalByIpfsRequest,
+  emptyProposalDetailSuccess,
+  emptyProposalDetailRequest,
+  emptyProposalDetailFailure
 } = proposalSlice.actions;
 export default proposalSlice.reducer;
