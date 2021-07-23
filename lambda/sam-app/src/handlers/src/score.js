@@ -179,13 +179,23 @@ async function get_project_amounts_by_status(status) {
 	return res[status];
 }
 
-async function get_progress_reports_by_status(status = '_approved') {
+async function get_progress_reports_by_status(status = '_approved', fromLastPeriodOnly=false) {
 	console.log('RPC Call for Accepted Progress Reports');
-	const accepted_active_proposals = await recursive_score_call('get_progress_reports', { _status: status });
+	const progressReports = await recursive_score_call('get_progress_reports', { _status: status });
 	// const accepted_active_proposals = await iconService.call(icon_call_builder('get_progress_reports', { status: '_approved' }));
 
+	if(fromLastPeriodOnly) {
+		return progressReports.filter(progressReport => {
+			const timeDiff = new BigNumber(progressReport.timestamp).div(1000).minus(Date.now());	// micro to milli
+			// TODO: remove console msgs
+			console.log(progressReport.progress_report_title);
+			console.log(Math.abs(timeDiff.div(1000*24*60*60).toNumber()));
+			return Math.abs(timeDiff.div(1000*24*60*60).toNumber()) < 1;
+		})
+	}
+
 	// console.log('get_progress_reports_by_status: ' + JSON.stringify(accepted_active_proposals));
-	return accepted_active_proposals;
+	return progressReports;
 }
 
 async function get_proposal_and_progress_report_count() {
@@ -217,7 +227,7 @@ async function get_proposals_details(address) {
 	return proposal_details;
 }
 
-async function getProposalDetailsByStatus(status, fromLastPeriodOnly) {
+async function getProposalDetailsByStatus(status, fromLastPeriodOnly=false) {
 	console.log('Recursive RPC Call for method get_proposal_details for status ', status);
 
 	// let proposalDetails = [];

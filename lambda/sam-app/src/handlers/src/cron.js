@@ -7,6 +7,55 @@ const { sleep, triggerWebhook } = require('./utils');
 const DAY = 24 * 60 * 60;
 
 
+async function formatPRsResponse(allPRs) {
+	const response = {
+		passedProgressReports: [],
+		rejectedProgressReports: [],
+	};
+
+	for(progressReport of allPRs) {
+		let progressReportDetails;
+		try {
+				progressReportDetails = await axios.get(IPFS_BASE_URL + progressReport.ipfs_hash)
+		} catch (err) {
+				console.error("ERROR FETCHING PROGRESS REPORT DATA" + JSON.stringify(err));
+				throw { statusCode: 400, name: "IPFS url", message: "Invalid IPFS hash provided" };
+		}
+
+		const { projectName, projectDuration, totalBudget, sponserPrepName, teamName } = progressReportDetails;
+
+		const amtReleased = new BigNumber(totalBudget).div(projectDuration);
+
+		const progressReportRes = {
+			progressReportName: progressReport.progress_report_title,
+			projectName,
+			projectDuration,
+			totalBudget,
+			sponsorName: sponserPrepName,
+			teamName,
+		}
+
+		switch(progressReport.status) {
+			case PROGRESS_REPORT_STATUS.REJECTED: {
+				response.rejectedProgressReports.push(progressReportRes);
+				break;
+			}
+
+			case PROGRESS_REPORT_STATUS.APPROVED: {
+				const passedPRDetails = {
+					...progressReportRes,
+					amtReleasedToApplicant: amtReleased.toFixed(0),
+					amtReleasedToSponsor: amtReleased.times(0.02).toFixed(0),
+				};
+				response.passedProgressReports.push(passedPRDetails);
+			}
+		}
+	}
+
+	return response;
+}
+
+
 async function formatProposalDetailsResponse(allProposals) {
 	
 	// ==============================BUILD RESPONSE FOR PROPOSALS DETAILS==============================
@@ -156,7 +205,7 @@ async function execute() {
 				};
 				await triggerWebhook(EVENT_TYPES.VOTING_PERIOD_STATS, votingPeriodStats);
 
-				// ------Send out details different proposals by category-----
+				// ------Send out details of different proposals by category-----
 
 				// get proposals by status
 				const allApprovedProposals = await score.getProposalDetailsByStatus(PROPOSAL_STATUS.ACTIVE);
@@ -182,6 +231,16 @@ async function execute() {
 				const formattedProposalDetails = await formatProposalDetailsResponse(approvedProposals.concat(rejectedProposals).concat(pausedProposals).concat(disqualifiedProposals).concat(completedProposals));
 
 				await triggerWebhook(EVENT_TYPES.PROPOSAL_STATS, formattedProposalDetails);
+
+				// Send out details of different progress reports by category
+
+				// get progress reports by status
+				const passedPRs = await score.get_progress_reports_by_status(PROGRESS_REPORT_STATUS.APPROVED, true);
+				const rejectedPRs = await score.get_progress_reports_by_status(PROGRESS_REPORT_STATUS.REJECTED, true);
+
+				const formattedPRsDetails = await formatPRsResponse(passedPRs.concat(rejectedPRs));
+
+				await triggerWebhook(EVENT_TYPES.PROGRESS_REPORT_STATS, formattedPRsDetails);
 			}
 
 			// Send out last application period's stats

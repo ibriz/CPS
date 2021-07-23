@@ -16,6 +16,7 @@ const PROPOSAL_STATUS = {
 const PROGRESS_REPORT_STATUS = {
   WAITING: '_waiting',
   APPROVED: '_approved',
+  REJECTED: '_progress_report_rejected',
 }
 
 const EVENT_TYPES = {
