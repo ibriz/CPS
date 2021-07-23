@@ -139,6 +139,7 @@ const initialState = {
 
   progressReportByProposal: [],
   remainingVotes: [],
+  selectedProgressReport: {},
 };
 
 const proposalSlice = createSlice({
@@ -220,6 +221,15 @@ const proposalSlice = createSlice({
     },
 
     fetchProgressReportDetailFailure() {
+      return;
+    },
+    emptyProgressReportDetailRequest() {
+      return;
+    },
+    emptyProgressReportDetailSuccess(state) {
+      delete state.progressReportDetail;
+    },
+    emptyProposalReportDetailFailure() {
       return;
     },
 
@@ -445,6 +455,49 @@ const proposalSlice = createSlice({
         }))
         .sort((a, b) => b.timestamp - a.timestamp);
     },
+    fetchProgressReportByIpfsRequest(state) {
+      return;
+    },
+    fetchProgressReportByIpfsSuccess(state, action) {
+      console.log('Response', action.payload.response);
+      let progressReport = action.payload.response;
+      state.selectedProgressReport = {
+        status: progressReport[PARAMS.status],
+        progressReportTitle: progressReport[PARAMS.progressReportTitle],
+        projectTitle: progressReport[PARAMS.proposalTitle],
+        contributorAddress: progressReport[PARAMS.contributorAddress],
+        timestamp: progressReport[PARAMS.timestamp],
+        ipfsHash: progressReport[PARAMS.reportHash],
+        reportKey: progressReport[PARAMS.reportHash],
+        proposalKey: progressReport[PARAMS.proposalHash],
+        approvedVotes: IconConverter.toBigNumber(
+          progressReport[PARAMS.approvedVotes],
+        ),
+        totalVotes: IconConverter.toBigNumber(
+          progressReport[PARAMS.totalVotes],
+        ),
+        approvedPercentage: calculatePercentage({
+          total: progressReport[PARAMS.totalVotes],
+          actual: progressReport[PARAMS.approvedVotes],
+        }),
+        approvedVotesPercentageCount: calculatePercentage({
+          total: progressReport[PARAMS.totalVoters],
+          actual: progressReport[PARAMS.approvedVoters],
+        }),
+
+        rejectedPercentage: calculatePercentage({
+          total: progressReport[PARAMS.totalVotes],
+          actual: progressReport[PARAMS.rejectedVotes],
+        }),
+        rejectedVotesPercentageCount: calculatePercentage({
+          total: progressReport[PARAMS.totalVoters],
+          actual: progressReport[PARAMS.rejectedVoters],
+        }),
+      };
+    },
+    fetchProgressReportByIpfsFailure(state) {
+      return;
+    },
   },
 });
 
@@ -477,5 +530,11 @@ export const {
   fetchVoteResultBudgetChangeSuccess,
   fetchVoteResultBudgetChangeFailure,
   setSubmittingProgressReport,
+  fetchProgressReportByIpfsRequest,
+  fetchProgressReportByIpfsSuccess,
+  fetchProgressReportByIpfsFailure,
+  emptyProgressReportDetailRequest,
+  emptyProgressReportDetailSuccess,
+  emptyProposalReportDetailFailure,
 } = proposalSlice.actions;
 export default proposalSlice.reducer;
