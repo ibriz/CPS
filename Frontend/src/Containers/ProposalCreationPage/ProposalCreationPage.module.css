@@ -1,105 +1,97 @@
 .newProposal {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    font-style: normal;
-    font-weight: 600;
-    font-size: 22px;
-    line-height: 22px;
-    text-align: center;
-    color: #262626;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 22px;
+  text-align: center;
+  color: #262626;
 }
 
-.draftButton button, .saveButton button {
-    font-size: 0.95rem;
+.draftButton button,
+.saveButton button {
+  font-size: 0.95rem;
 }
 
 .cardContainer {
-    justify-content: center;
-    margin-top: 10px;
-
+  justify-content: center;
+  margin-top: 10px;
 }
 
 .cardContainer label {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .proposalCreationPage {
-    width: 100%;
+  width: 100%;
 }
 
 .card {
-    width: 95%;
-    padding-top: 20px;
-    padding-left: 15px;
-    padding-right: 15px;
-
+  width: 95%;
+  padding-top: 20px;
+  padding-left: 15px;
+  padding-right: 15px;
 }
 
-.card input, .card select {
-    font-size: 0.86rem;
+.card input,
+.card select {
+  font-size: 0.86rem;
 }
 
-.card label, .form label {
-    font-style: normal;
-    font-weight: 600;
-    font-size: 0.85rem;
-    line-height: 17px;
-    color: #262626;
+.card label,
+.form label {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 0.85rem;
+  line-height: 17px;
+  color: #262626;
 }
 
-@media(min-width: 768px) {
-    .inputSameLine {
-        padding-left: 0px !important;
+@media (min-width: 768px) {
+  .inputSameLine {
+    padding-left: 0px !important;
+  }
 
-
-    }
-
-    .labelSameLine {
-            padding-left: 0px !important;
-    }
+  .labelSameLine {
+    padding-left: 0px !important;
+  }
 }
-
 
 .cardContainer .form-group.row {
-    display: flex;
-    align-items: center;
-
+  display: flex;
+  align-items: center;
 }
 
 .cardContainer label {
-padding-right: 0px;
-
+  padding-right: 0px;
 }
 
 .card label:nth-child(2) {
-    color: red !important;
-  }
+  color: red !important;
+}
 
-  .card > form > div {
-      align-items: center;
-  }
-
+.card > form > div {
+  align-items: center;
+}
 
 .saveButton {
-    justify-content: flex-end;
-    display: flex;
+  justify-content: flex-end;
+  display: flex;
 }
 
 .required:after {
-    content: '*';
-    color: red;
-    margin-left: 2px;
+  content: '*';
+  color: red;
+  margin-left: 2px;
 }
 
 .milestoneFakeInput {
-    position: absolute;
-    top: 0;
-    height: 100%;
-    left: 50%;
-    z-index: -1000;
-
+  position: absolute;
+  top: 0;
+  height: 100%;
+  left: 50%;
+  z-index: -1000;
 }
-
-

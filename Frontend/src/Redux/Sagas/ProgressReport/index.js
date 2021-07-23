@@ -1,7 +1,7 @@
 import fetchProgressReportListWorker from './fetchProgressReportListWorker';
 import submitProgressReportToScoreWorker from './submitProgressReportToScoreWorker';
 import submitProgressReportToIPFSWorker from './submitProgressReportWorker';
-import fetchProgressReportDetailWorker from './fetchProgressReportDetailWorker'
+import fetchProgressReportDetailWorker from './fetchProgressReportDetailWorker';
 import fetchDraftRequestProgressReportWorker from './fetchDraftRequestProgressReportWorker';
 import saveDraftRequestProgressReportWorker from './saveDraftRequestProgressReportWorker';
 import voteProgressReportWorker from './voteProgressReportWorker';
@@ -10,15 +10,14 @@ import fetchProgressReportByProposalRequestWorker from './fetchProgressReportByP
 import fetchVoteResultBudgetChangeRequestWorker from './fetchVoteResultBudgetChangeRequestWorker';
 
 export {
-    fetchProgressReportListWorker,
-    submitProgressReportToScoreWorker,
-    submitProgressReportToIPFSWorker,
-    fetchDraftRequestProgressReportWorker,
-    saveDraftRequestProgressReportWorker,
-    fetchProgressReportDetailWorker,
-    voteProgressReportWorker,
-    fetchProgressReportVoteResultRequestWorker,
-    fetchProgressReportByProposalRequestWorker,
-    fetchVoteResultBudgetChangeRequestWorker
-
-}
+  fetchProgressReportListWorker,
+  submitProgressReportToScoreWorker,
+  submitProgressReportToIPFSWorker,
+  fetchDraftRequestProgressReportWorker,
+  saveDraftRequestProgressReportWorker,
+  fetchProgressReportDetailWorker,
+  voteProgressReportWorker,
+  fetchProgressReportVoteResultRequestWorker,
+  fetchProgressReportByProposalRequestWorker,
+  fetchVoteResultBudgetChangeRequestWorker,
+};

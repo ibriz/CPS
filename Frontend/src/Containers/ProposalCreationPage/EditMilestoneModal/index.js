@@ -1,97 +1,106 @@
 import React, { useState, useEffect } from 'react';
 
-import { Modal, Button, Form, Row, Col, InputGroup, FormControl } from 'react-bootstrap';
+import {
+  Modal,
+  Button,
+  Form,
+  Row,
+  Col,
+  InputGroup,
+  FormControl,
+} from 'react-bootstrap';
 import styles from './EditMilestoneModal.module.css';
 import RichTextEditor from '../../../Components/RichTextEditor';
 import AppFormLabel from '../../../Components/UI/AppFormLabel';
 
 function EditMilestoneModal(props) {
+  const [milestone, setMilestone] = useState({
+    name: null,
+    duration: null,
+    budget: null,
+    description: null,
+  });
 
-    const [milestone, setMilestone] = useState(
-        {
-                    name: null,
-                    duration: null,
-                    budget: null,
-                    description: null,
-        }      
-    );
+  useEffect(() => {
+    props.milestone &&
+      setMilestone({
+        name: props.milestone.name,
+        duration: props.milestone.duration,
+        budget: props.milestone.budget,
+        description: props.milestone.description,
+      });
+  }, [props.show, props.milestone]);
 
-    useEffect(() => {
-        props.milestone && setMilestone(         {
-            name: props.milestone.name,
-            duration: props.milestone.duration,
-            budget: props.milestone.budget,
-            description: props.milestone.description,
-}    );
-    }, [props.show, props.milestone])
+  const handleChange = event => {
+    let name = event.target.name;
+    let value = event.target.value;
 
-    const handleChange = (event) => {
-        let name = event.target.name;
-        let value = event.target.value
+    setMilestone(prevState => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
 
-        setMilestone(prevState =>
-            ({
-                ...prevState,
-                [name]: value
-            })
-        );
-    }
+  const handleSubmit = event => {
+    event.preventDefault();
 
+    props.onAddMilestone(milestone);
+    props.onHide();
+    // submitProposal(
+    //     {
+    //         proposal
+    //     }
+    // )
+  };
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
+  return (
+    <Modal
+      {...props}
+      size='lg'
+      aria-labelledby='contained-modal-title-vcenter'
+      centered
+    >
+      <Modal.Header closeButton>
+        <Modal.Title id='contained-modal-title-vcenter'>Milestone</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form onSubmit={handleSubmit} className={styles.form}>
+          <Form.Group as={Row} controlId='formPlaintextEmail'>
+            <AppFormLabel sm='2'>Milestone Name</AppFormLabel>
+            <Col sm='10' className={styles.inputSameLine}>
+              <Form.Control
+                placeholder='Enter Milestone Name'
+                size='md'
+                value={milestone.name}
+                name='name'
+                onChange={handleChange}
+                required
+              />
+            </Col>
+          </Form.Group>
+          <Form.Group as={Row} controlId='formPlaintextEmail'>
+            <AppFormLabel column sm='2' className={styles.labelSameLine}>
+              Duration
+            </AppFormLabel>
+            <Col sm='4' className={styles.inputSameLine}>
+              <InputGroup size='md'>
+                <FormControl
+                  placeholder='Duration'
+                  type='number'
+                  min={0}
+                  max={6}
+                  value={milestone.duration}
+                  name='duration'
+                  onChange={handleChange}
+                  required
+                />
+                <InputGroup.Append>
+                  <InputGroup.Text>Months</InputGroup.Text>
+                </InputGroup.Append>
+              </InputGroup>
+            </Col>
 
-        props.onAddMilestone(milestone);
-        props.onHide();
-        // submitProposal(
-        //     {
-        //         proposal
-        //     }
-        // )
-    }
-
-    return (
-        <Modal
-            {...props}
-            size="lg"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-        >
-            <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
-                    Milestone
-                </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-
-
-
-                <Form onSubmit={handleSubmit} className={styles.form}>
-                    <Form.Group as={Row} controlId="formPlaintextEmail">
-                        <AppFormLabel sm="2">
-                            Milestone Name
-                        </AppFormLabel>
-                        <Col sm="10" className={styles.inputSameLine}>
-                            <Form.Control placeholder="Enter Milestone Name" size="md" value={milestone.name} name="name" onChange={handleChange} required />
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} controlId="formPlaintextEmail">
-
-                        <AppFormLabel column sm="2" className={styles.labelSameLine}>
-                            Duration
-                        </AppFormLabel>
-                        <Col sm="4" className={styles.inputSameLine}>
-                            <InputGroup size="md">
-
-                                <FormControl placeholder="Duration" type="number" min = {0} max = {6} value={milestone.duration} name="duration" onChange={handleChange} required />
-                                <InputGroup.Append>
-                                    <InputGroup.Text>Months</InputGroup.Text>
-                                </InputGroup.Append>
-                            </InputGroup>
-                        </Col>
-
-
-                        {/* <AppFormLabel column sm="1">
+            {/* <AppFormLabel column sm="1">
                             Budget
                             </AppFormLabel>
                         <Col sm="5" className={styles.inputSameLine}>
@@ -103,11 +112,9 @@ function EditMilestoneModal(props) {
                                 </InputGroup.Append>
                             </InputGroup>
                         </Col> */}
+          </Form.Group>
 
-                    </Form.Group>
-
-
-                    {/* <Form.Group as={Row} controlId="formPlaintextPassword">
+          {/* <Form.Group as={Row} controlId="formPlaintextPassword">
                         <AppFormLabel column sm="12">
                             Description
                             </AppFormLabel>
@@ -124,19 +131,17 @@ function EditMilestoneModal(props) {
                             </Col>
                     </Form.Group> */}
 
-
-                    <Form.Group as={Row} controlId="formPlaintextPassword">
-                        <Col className={styles.saveButton}>
-                            <Button variant="info" type="submit">EDIT MILESTONE</Button>
-                        </Col>
-                    </Form.Group>
-                </Form>
-
-
-            </Modal.Body>
-
-        </Modal>
-    );
+          <Form.Group as={Row} controlId='formPlaintextPassword'>
+            <Col className={styles.saveButton}>
+              <Button variant='info' type='submit'>
+                EDIT MILESTONE
+              </Button>
+            </Col>
+          </Form.Group>
+        </Form>
+      </Modal.Body>
+    </Modal>
+  );
 }
 
 export default EditMilestoneModal;

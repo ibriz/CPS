@@ -7,11 +7,11 @@ import MilestoneTable from './MilestoneTable';
 import ListTitle from './ListTitle';
 
 export {
-    Header,
-    Address,
-    ProgressBar,
-    DetailsTable,
-    Description,
-    MilestoneTable,
-    ListTitle
+  Header,
+  Address,
+  ProgressBar,
+  DetailsTable,
+  Description,
+  MilestoneTable,
+  ListTitle,
 };

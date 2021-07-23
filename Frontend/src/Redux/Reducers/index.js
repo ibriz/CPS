@@ -8,13 +8,13 @@ import fundSlice from './fundSlice';
 import userSlice from './userSlice';
 
 const rootReducer = combineReducers({
-    proposals: proposalsReducer,
-    account: accountReducer,
-    progressReport: progressReportReducer,
-    preps: prepsSlice,
-    period: periodSlice,
-    fund: fundSlice,
-    user: userSlice
+  proposals: proposalsReducer,
+  account: accountReducer,
+  progressReport: progressReportReducer,
+  preps: prepsSlice,
+  period: periodSlice,
+  fund: fundSlice,
+  user: userSlice,
 });
 
 export default rootReducer;
