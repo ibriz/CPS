@@ -22,8 +22,8 @@ const httpProvider = new HttpProvider(provider);
 const iconService = new IconService(httpProvider);
 
 // TODO: uncomment
-// let wallet;
-const wallet = IconWallet.loadPrivateKey(priv_key);
+let wallet;
+// const wallet = IconWallet.loadPrivateKey(priv_key);
 
 const timeout = instance => {
 	const seconds = instance === 1 ? 2000 : 1000;
@@ -77,6 +77,7 @@ async function recursive_score_call(func, params = {}, data = []) {
 
 	if (Object.keys(params).length !== 0) {
 		if (!params._start_index) params._start_index = 0;
+		if (!params._end_index) params._end_index = '20';
 	}
 
 	const results = await iconService.call(icon_call_builder(func, params)).execute();
@@ -85,8 +86,10 @@ async function recursive_score_call(func, params = {}, data = []) {
 
 	data = data.concat(results.data);
 
-	if (parseInt(results.count, 'hex') > results.data.length) {
-		params._start_index = params._end_index + 20;
+	if (parseInt(results.count, 'hex') > data.length) {
+		const interval = parseInt(params._end_index) - parseInt(params._start_index);
+		params._start_index = (parseInt(params._start_index) + interval).toFixed(0);
+		params._end_index = (parseInt(params._end_index) + interval).toFixed(0);
 		return await recursive_score_call(func, params, data)
 	} else {
 		return data;
@@ -180,16 +183,13 @@ async function get_project_amounts_by_status(status) {
 }
 
 async function get_progress_reports_by_status(status = '_approved', fromLastPeriodOnly=false) {
-	console.log('RPC Call for Accepted Progress Reports');
+	console.log(`RPC Call for ${status} Progress Reports`);
 	const progressReports = await recursive_score_call('get_progress_reports', { _status: status });
 	// const accepted_active_proposals = await iconService.call(icon_call_builder('get_progress_reports', { status: '_approved' }));
 
 	if(fromLastPeriodOnly) {
 		return progressReports.filter(progressReport => {
 			const timeDiff = new BigNumber(progressReport.timestamp).div(1000).minus(Date.now());	// micro to milli
-			// TODO: remove console msgs
-			console.log(progressReport.progress_report_title);
-			console.log(Math.abs(timeDiff.div(1000*24*60*60).toNumber()));
 			return Math.abs(timeDiff.div(1000*24*60*60).toNumber()) < 1;
 		})
 	}

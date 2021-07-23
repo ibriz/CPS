@@ -1,8 +1,7 @@
 const BigNumber = require('bignumber.js');
-const axios = require('axios');
 const score = require('./score');
-const { PERIOD_MAPPINGS, PROPOSAL_STATUS, PROGRESS_REPORT_STATUS, EVENT_TYPES, IPFS_BASE_URL } = require('./constants');
-const { sleep, triggerWebhook } = require('./utils');
+const { PERIOD_MAPPINGS, PROPOSAL_STATUS, PROGRESS_REPORT_STATUS, EVENT_TYPES } = require('./constants');
+const { sleep, triggerWebhook, fetchFromIpfs } = require('./utils');
 
 const DAY = 24 * 60 * 60;
 
@@ -16,7 +15,7 @@ async function formatPRsResponse(allPRs) {
 	for(progressReport of allPRs) {
 		let progressReportDetails;
 		try {
-				progressReportDetails = await axios.get(IPFS_BASE_URL + progressReport.ipfs_hash)
+				progressReportDetails = await fetchFromIpfs(progressReport.ipfs_hash);
 		} catch (err) {
 				console.error("ERROR FETCHING PROGRESS REPORT DATA" + JSON.stringify(err));
 				throw { statusCode: 400, name: "IPFS url", message: "Invalid IPFS hash provided" };
@@ -48,6 +47,11 @@ async function formatPRsResponse(allPRs) {
 					amtReleasedToSponsor: amtReleased.times(0.02).toFixed(0),
 				};
 				response.passedProgressReports.push(passedPRDetails);
+				break;
+			}
+
+			default: {
+				break;
 			}
 		}
 	}
@@ -72,13 +76,13 @@ async function formatProposalDetailsResponse(allProposals) {
 		
 		let proposalDetails;
 		try {
-				proposalDetails = await axios.get(IPFS_BASE_URL + proposal.ipfs_hash);
+				proposalDetails = await fetchFromIpfs(proposal.ipfs_hash);
 		} catch (err) {
 				console.error("ERROR FETCHING PROPOSAL DATA" + JSON.stringify(err));
 				throw { statusCode: 400, name: "IPFS url", message: "Invalid IPFS hash provided" };
 		}
 
-		const {teamName, sponserPrepName } = proposalDetails.data;
+		const {teamName, sponserPrepName } = proposalDetails;
 
 		const proposalRes = {
 			proposalName: proposal.project_title,
@@ -215,19 +219,6 @@ async function execute() {
 				const disqualifiedProposals = await score.getProposalDetailsByStatus(PROPOSAL_STATUS.DISQUALIFIED, true);
 				const completedProposals = await score.getProposalDetailsByStatus(PROPOSAL_STATUS.COMPLETED, true);
 
-				// TODO: remove these
-				console.log("ALL APPROVED PROPOSALS");
-				console.log(JSON.stringify(allApprovedProposals));
-				console.log("APPROVED PROPOSALS");
-				console.log(JSON.stringify(approvedProposals));
-				console.log("REJECTED PROPOSALS");
-				console.log(JSON.stringify(rejectedProposals));
-				console.log("PAUSED PROPOSALS");
-				console.log(JSON.stringify(pausedProposals));
-				console.log("DISQUALIFIED PROPOSALS");
-				console.log(JSON.stringify(disqualifiedProposals));
-				console.log(JSON.stringify(completedProposals));
-
 				const formattedProposalDetails = await formatProposalDetailsResponse(approvedProposals.concat(rejectedProposals).concat(pausedProposals).concat(disqualifiedProposals).concat(completedProposals));
 
 				await triggerWebhook(EVENT_TYPES.PROPOSAL_STATS, formattedProposalDetails);
@@ -237,7 +228,7 @@ async function execute() {
 				// get progress reports by status
 				const passedPRs = await score.get_progress_reports_by_status(PROGRESS_REPORT_STATUS.APPROVED, true);
 				const rejectedPRs = await score.get_progress_reports_by_status(PROGRESS_REPORT_STATUS.REJECTED, true);
-
+				
 				const formattedPRsDetails = await formatPRsResponse(passedPRs.concat(rejectedPRs));
 
 				await triggerWebhook(EVENT_TYPES.PROGRESS_REPORT_STATS, formattedPRsDetails);
@@ -249,7 +240,7 @@ async function execute() {
 				const waitingProgressReports = await score.get_progress_reports_by_status(PROGRESS_REPORT_STATUS.WAITING);
 				const applicationPeriodStats = {
 					votingProposalsCount: new BigNumber(pendingProjectAmt['_count']).toFixed(),
-					votingProposalsBudget: new BigNumber(pendingProjectAmt['_total_amount']).toFixed(),
+					votingProposalsBudget: new BigNumber(pendingProjectAmt['_total_amount']).div(Math.pow(10,18)).toFixed(),
 					periodEndsOn: periodEndingDate.getTime().toString(),
 					votingPRsCount: new BigNumber(waitingProgressReports.length).toFixed(),
 				};
