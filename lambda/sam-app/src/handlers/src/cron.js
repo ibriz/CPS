@@ -151,8 +151,8 @@ async function execute() {
 				const votingPeriodStats = {
 					remainingFunds: new BigNumber(remainingFunds).div(Math.pow(10,18)).toFixed(2),
 					periodEndsOn: periodEndingDate.getTime().toString(),
-					projectsCount: new BigNumber(activeProjectAmt['_count']).toFixed(),
-					totalProjectsBudget: new BigNumber(activeProjectAmt['_total_amount']).div(Math.pow(10, 18)).toFixed(2)
+					activeProjectsCount: new BigNumber(activeProjectAmt['_count']).toFixed(),
+					activeProjectsBudget: new BigNumber(activeProjectAmt['_total_amount']).div(Math.pow(10, 18)).toFixed(2)
 				};
 				await triggerWebhook(EVENT_TYPES.VOTING_PERIOD_STATS, votingPeriodStats);
 

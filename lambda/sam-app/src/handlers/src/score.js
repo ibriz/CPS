@@ -234,6 +234,9 @@ async function getProposalDetailsByStatus(status, fromLastPeriodOnly) {
 		// retrun data from last period only (timestamp < 24hrs)
 		return proposalDetails.filter(proposal => {
 			const timeDiff = new BigNumber(proposal.timestamp).div(1000).minus(Date.now());	// micro to milli
+			// TODO: remove console msgs
+			console.log(proposal.project_title);
+			console.log(Math.abs(timeDiff.div(1000*24*60*60).toNumber()));
 			return Math.abs(timeDiff.div(1000*24*60*60).toNumber()) < 1;
 		})
 	}
