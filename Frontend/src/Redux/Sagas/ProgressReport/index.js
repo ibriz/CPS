@@ -8,6 +8,8 @@ import voteProgressReportWorker from './voteProgressReportWorker';
 import fetchProgressReportVoteResultRequestWorker from './fetchProgressReportVoteResultRequestWorker';
 import fetchProgressReportByProposalRequestWorker from './fetchProgressReportByProposalRequestWorker';
 import fetchVoteResultBudgetChangeRequestWorker from './fetchVoteResultBudgetChangeRequestWorker';
+import fetchProgressReportByIpfsWorker from './fetchProgressReportByIpfsWorker';
+import emptyProgressReportDetailWorker from './emptyProgressReportDetailWorker';
 
 export {
   fetchProgressReportListWorker,
@@ -20,4 +22,6 @@ export {
   fetchProgressReportVoteResultRequestWorker,
   fetchProgressReportByProposalRequestWorker,
   fetchVoteResultBudgetChangeRequestWorker,
+  fetchProgressReportByIpfsWorker,
+  emptyProgressReportDetailWorker,
 };

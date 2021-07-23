@@ -3,3 +3,5 @@ export { default as fetchCPFRemainingFundWorker } from './fetchCPFRemainingFundW
 export { default as fetchExpectedGrantRequestWorker } from './fetchExpectedGrantRequestWorker';
 export { default as fetchCPSTreasuryScoreAddressWorker } from './fetchCPSTreasuryScoreAddressWorker';
 export { default as claimRewardWorker } from './claimRewardWorker';
+export { default as fetchSponsorBondWorker } from './fetchSponsorBondWorker';
+export { default as claimSponsorBondWorker } from './claimSponsorBondWorker ';

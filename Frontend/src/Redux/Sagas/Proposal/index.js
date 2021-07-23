@@ -5,9 +5,10 @@ import submitProposalToScoreWorker from './submitProposalToScoreWorker';
 import submitProposalToIPFSWorker from './submitProposalWorker';
 import updateProposalStatusWorker from './updateProposalStatusWorker';
 import fetchProposalDetailWorker from './fetchProposalDetailWorker';
+import emptyProposalDetailWorker from './emptyProposalDetailWorker';
 import fetchSponsorRequestsListWorker from './fetchSponsorRequestsListWorker';
 import approveSponserRequestWorker from './approveSponserRequestWorker';
-import rejectSponserRequestWorker from './rejectSponserRequestWorker';
+import rejectSponserRequestWorker from './rejectSponserRequestWorker'
 import saveDraftRequestWorker from './saveDraftRequestWorker';
 import fetchDraftRequestWorker from './fetchDraftRequestWorker';
 import voteProposalWorker from './voteProposalWorker';
@@ -16,23 +17,26 @@ import fetchProposalVoteResultRequestWorker from './fetchProposalVoteResultReque
 import fetchProjectAmountsWorker from './fetchProjectAmountsWorker';
 import fetchRemainingVotesRequestWorker from './fetchRemainingVotesRequestWorker';
 import fetchSponsorMessageRequestWorker from './fetchSponsorMessageRequestWorker';
+import fetchProposalByIpfsWorker from './fetchProposalByIpfsWorker';
 
 export {
-  fetchProposalListWorker,
-  fetchMyProposalListWorker,
-  submitProposalToScoreWorker,
-  submitProposalToIPFSWorker,
-  updateProposalStatusWorker,
-  fetchProposalDetailWorker,
-  fetchSponsorRequestsListWorker,
-  approveSponserRequestWorker,
-  rejectSponserRequestWorker,
-  saveDraftRequestWorker,
-  fetchDraftRequestWorker,
-  voteProposalWorker,
-  fetchProposalByAddressWorker,
-  fetchProposalVoteResultRequestWorker,
-  fetchProjectAmountsWorker,
-  fetchRemainingVotesRequestWorker,
-  fetchSponsorMessageRequestWorker,
-};
+    fetchProposalListWorker,
+    fetchMyProposalListWorker,
+    submitProposalToScoreWorker,
+    submitProposalToIPFSWorker,
+    updateProposalStatusWorker,
+    fetchProposalDetailWorker,
+    emptyProposalDetailWorker,
+    fetchSponsorRequestsListWorker,
+    approveSponserRequestWorker,
+    rejectSponserRequestWorker,
+    saveDraftRequestWorker,
+    fetchDraftRequestWorker,
+    voteProposalWorker,
+    fetchProposalByAddressWorker,
+    fetchProposalVoteResultRequestWorker,
+    fetchProjectAmountsWorker,
+    fetchRemainingVotesRequestWorker,
+    fetchSponsorMessageRequestWorker,
+    fetchProposalByIpfsWorker
+}

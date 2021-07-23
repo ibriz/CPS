@@ -12,6 +12,8 @@ import {
   fetchCPFScoreAddressRequest,
   fetchCPFRemainingFundRequest,
   claimReward,
+  fetchSponsorBondRequest,
+  claimSponsorBondReward,
 } from 'Redux/Reducers/fundSlice';
 import { fetchProjectAmountsRequest } from 'Redux/Reducers/proposalSlice';
 import styles from './Dashboard.module.scss';
@@ -53,6 +55,9 @@ const Dashboard = ({
   claimReward,
   previousPeriod,
   preps,
+  fetchSponsorBondRequest,
+  claimSponsorBondReward,
+  sponsorBondReward,
 }) => {
   const [
     showPayPenaltyConfirmationModal,
@@ -61,6 +66,10 @@ const Dashboard = ({
   const [
     showClaimRewardConfirmationModal,
     setShowClaimRewardConfirmationModal,
+  ] = useState(false);
+  const [
+    showClaimSponsorBondRewardConfirmationModal,
+    setShowClaimSponsorBondRewardConfirmationModal,
   ] = useState(false);
 
   const {
@@ -190,6 +199,7 @@ const Dashboard = ({
         fetchExpectedGrantRequest({
           type: 'sponsorReward',
         });
+        fetchSponsorBondRequest();
       }
     }
   }, [
@@ -197,6 +207,7 @@ const Dashboard = ({
     fetchExpectedGrantRequest,
     isPrep,
     isRegistered,
+    fetchSponsorBondRequest,
   ]);
 
   useEffect(() => {
@@ -237,7 +248,7 @@ const Dashboard = ({
           <Col xs='12'>
             <Alert variant='success'>
               {isPrep
-                ? `Congratulations! You can claim a total reward of ${icxFormat(
+                ? `Congratulations! You can claim installment amount of ${icxFormat(
                     parseFloat(
                       Number(withDrawAmountSponsorReward)
                         ? withDrawAmountSponsorReward
@@ -257,7 +268,7 @@ const Dashboard = ({
                     variant='info'
                     onClick={setShowClaimRewardConfirmationModal}
                   >
-                    Claim Reward
+                    Claim Installment
                   </Button>
                 </>
               }
@@ -267,6 +278,43 @@ const Dashboard = ({
                 onHide={() => setShowClaimRewardConfirmationModal(false)}
                 heading={'Reward Claim Confirmation'}
                 onConfirm={claimReward}
+              >
+                <div>Are you sure you want to claim the reward?</div>
+              </ConfirmationModal>
+            </Alert>
+          </Col>
+        </Row>
+      )}
+
+      {parseFloat(sponsorBondReward) > 0 && (
+        <Row style={{ marginTop: '15px' }}>
+          <Col xs='12'>
+            <Alert variant='success'>
+              {isPrep &&
+                `Congratulations! You can claim a total sponsor bond reward of ${icxFormat(
+                  parseFloat(sponsorBondReward),
+                  true,
+                )} ICX.`}
+
+              {
+                <>
+                  <br />
+                  <Button
+                    variant='info'
+                    onClick={setShowClaimSponsorBondRewardConfirmationModal}
+                  >
+                    Claim Sponsor Bond
+                  </Button>
+                </>
+              }
+
+              <ConfirmationModal
+                show={showClaimSponsorBondRewardConfirmationModal}
+                onHide={() =>
+                  setShowClaimSponsorBondRewardConfirmationModal(false)
+                }
+                heading={'Reward Claim Confirmation'}
+                onConfirm={claimSponsorBondReward}
               >
                 <div>Are you sure you want to claim the reward?</div>
               </ConfirmationModal>
@@ -388,6 +436,7 @@ const mapStateToProps = state => ({
   expectedGrant: state.fund.expectedGrant,
   sponsorBond: state.fund.sponsorBond,
   sponsorReward: state.fund.sponsorReward,
+  sponsorBondReward: state.fund.sponsorBondReward,
   totalCountSponsorRequests: state.proposals.totalCountSponsorRequests,
 
   remainingVotesProposal: state.proposals.remainingVotes,
@@ -410,6 +459,8 @@ const mapDispatchToProps = {
   fetchExpectedGrantRequest,
   fetchCPSTreasuryScoreAddressRequest,
   claimReward,
+  claimSponsorBondReward,
+  fetchSponsorBondRequest,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);

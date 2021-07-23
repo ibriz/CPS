@@ -13,8 +13,15 @@ import { connect } from 'react-redux';
 import Footer from 'Components/Footer';
 import { Helmet } from 'react-helmet';
 import useTimer from 'Hooks/useTimer';
+import Home from 'Containers/Home';
 
-const Main = ({ handleToggleSidebar, isPrep, isRegistered, period }) => {
+const Main = ({
+  handleToggleSidebar,
+  isPrep,
+  isRegistered,
+  period,
+  address,
+}) => {
   const { isRemainingTimeZero } = useTimer();
 
   const prepRoute = component =>
@@ -23,8 +30,8 @@ const Main = ({ handleToggleSidebar, isPrep, isRegistered, period }) => {
   const userRoute = component =>
     !isPrep || !isRegistered ? component : <Redirect to='/' />;
 
-  const applicationPeriodRoute = component =>
-    period !== 'VOTING' ? component : <Redirect to='/' />;
+  const applicationPeriodRoute = (component) =>
+    period !== 'VOTING' ? component : <Redirect to="/" />;
   // component
 
   return (
@@ -39,7 +46,7 @@ const Main = ({ handleToggleSidebar, isPrep, isRegistered, period }) => {
         }}
       >
         <div style={{ paddingLeft: '25px', paddingRight: '25px' }}>
-          <div className='btn-toggle' onClick={() => handleToggleSidebar(true)}>
+          <div className="btn-toggle" onClick={() => handleToggleSidebar(true)}>
             <FaBars />
           </div>
 
@@ -51,13 +58,36 @@ const Main = ({ handleToggleSidebar, isPrep, isRegistered, period }) => {
                   <title>CPS - Dashboard</title>
                 </Helmet>
               </Route>
+              <Route path={process.env.PUBLIC_URL + '/proposals/:id'}>
+                {address ? (
+                  <Proposals />
+                ) : (
+                  <>
+                    <Home />
+                    <Footer />
+
+                    <Helmet>
+                      <title>CPS</title>
+                    </Helmet>
+                  </>
+                )}
+                <Helmet>
+                  <title>CPS - Proposals</title>
+                </Helmet>
+              </Route>
               <Route path={process.env.PUBLIC_URL + '/proposals'}>
                 {<Proposals />}
                 <Helmet>
                   <title>CPS - Proposals</title>
                 </Helmet>
               </Route>
-              <Route path='/progress-reports'>
+              <Route path="/progress-reports/:id">
+                {<ProgressReports />}
+                <Helmet>
+                  <title>CPS - Progress Reports</title>
+                </Helmet>
+              </Route>
+              <Route path="/progress-reports">
                 {<ProgressReports />}
                 <Helmet>
                   <title>CPS - Progress Reports</title>
@@ -115,6 +145,7 @@ const mapStateToProps = state => ({
   isPrep: state.account.isPrep,
   isRegistered: state.account.isRegistered,
   period: state.period.period,
+  address: state.account.address,
 });
 
 export default connect(mapStateToProps)(Main);

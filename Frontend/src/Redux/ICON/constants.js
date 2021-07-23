@@ -11,4 +11,5 @@ export default {
   pay_prep_penalty: 32009,
   approve_sponsor: 32010,
   claim_reward: 32011,
+  claim_sponsor_bond: 32012,
 };

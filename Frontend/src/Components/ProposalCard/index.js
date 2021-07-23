@@ -7,13 +7,16 @@ import { connect } from 'react-redux';
 import {
   fetchProposalListRequest,
   fetchDraftsRequest,
+  fetchProposalByIpfsRequest,
+  emptyProposalDetailRequest,
 } from 'Redux/Reducers/proposalSlice';
 import Pagination from 'Components/Card/Pagination';
 import proposalStates from './proposalStates';
 // import { select } from 'redux-saga/effects';
 import wallet from 'Redux/ICON/FrontEndWallet';
 import DetailsModal from 'Components/Card/DetailsModal';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useLocation, useParams } from 'react-router-dom';
+import useQuery from 'Hooks/useQuery';
 
 const ProposalCard = ({
   proposalList,
@@ -25,6 +28,9 @@ const ProposalCard = ({
   fetchDraftsRequest,
   history,
   minHeight,
+  fetchProposalByIpfsRequest,
+  selectedProposalByIpfs,
+  emptyProposalDetailRequest,
 }) => {
   const [selectedTab, setSelectedTab] = useState(initialState);
   const [filteredProposalList, setFilteredProposalList] = useState(
@@ -34,10 +40,14 @@ const ProposalCard = ({
   const [pageNumber, setPageNumber] = useState();
   const [modalShow, setModalShow] = React.useState(false);
   const [selectedProposal, setSelectedProposal] = React.useState();
-
+  const proposalIpfsKey = useParams().id;
+  const location = useLocation();
   const onClickProposal = proposal => {
     setModalShow(true);
     setSelectedProposal(proposal);
+    if (location.pathname !== '/') {
+      history.push(`/proposals/${proposal.ipfsHash}`);
+    }
   };
 
   const onClickProposalDraft = proposal => {
@@ -83,6 +93,22 @@ const ProposalCard = ({
   }, []);
 
   useEffect(() => {
+    if (proposalIpfsKey) {
+      fetchProposalByIpfsRequest({
+        ipfs_key: proposalIpfsKey,
+      });
+    }
+  }, []);
+  useEffect(() => {
+    if (selectedProposalByIpfs?.ipfsHash) {
+      setSelectedProposal(selectedProposalByIpfs);
+      setTimeout(() => {
+        setModalShow(true);
+      }, 300);
+    }
+  }, [selectedProposalByIpfs]);
+
+  useEffect(() => {
     // const filteredProposals = (selectedTab !== 'All') ? proposalList.filter(
     //     (proposal) => proposal._status === proposalStatusBySelectedTab[selectedTab]
     // ) : proposalList;
@@ -90,7 +116,11 @@ const ProposalCard = ({
     if (selectedTab !== 'Draft') {
       filteredProposals = (
         proposalList[selectedTab][pageNumber?.[selectedTab] - 1 || 0] || []
-      ).filter(proposal => proposal._proposal_title.includes(searchText));
+      ).filter(proposal =>
+        proposal._proposal_title
+          ?.toLowerCase()
+          .includes(searchText?.toLowerCase()),
+      );
     } else {
       filteredProposals = proposalList[selectedTab].map((proposal, index) => ({
         ...proposal,
@@ -141,7 +171,13 @@ const ProposalCard = ({
               {modalShow && (
                 <DetailsModal
                   show={modalShow}
-                  onHide={() => setModalShow(false)}
+                  onHide={() => {
+                    setModalShow(false);
+                    emptyProposalDetailRequest();
+                    if (location.pathname !== '/') {
+                      history.push(`/proposals`);
+                    }
+                  }}
                   proposal={selectedProposal}
                   status={selectedTab}
                 />
@@ -154,16 +190,23 @@ const ProposalCard = ({
   );
 };
 
-const mapStateToProps = state => ({
-  proposalList: state.proposals.proposalList,
-  walletAddress: state.account.address,
-  totalPages: state.proposals.totalPages,
-});
+const mapStateToProps = state => {
+  console.log(state);
+  return {
+    proposalList: state.proposals.proposalList,
+    walletAddress: state.account.address,
+    totalPages: state.proposals.totalPages,
+    selectedProposalByIpfs: state.proposals.selectedProposal,
+  };
+};
 
 const mapDispatchToProps = dispatch => ({
   fetchProposalListRequest: payload =>
     dispatch(fetchProposalListRequest(payload)),
   fetchDraftsRequest: payload => dispatch(fetchDraftsRequest(payload)),
+  fetchProposalByIpfsRequest: payload =>
+    dispatch(fetchProposalByIpfsRequest(payload)),
+  emptyProposalDetailRequest: payload => dispatch(emptyProposalDetailRequest()),
 });
 
 export default withRouter(

@@ -6,7 +6,7 @@ import ProgressReportList from 'Components/Card/ProgressReportList';
 import progressReportStates from '../progressReportStates';
 import wallet from 'Redux/ICON/FrontEndWallet';
 import Pagination from 'Components/Card/Pagination';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useParams } from 'react-router-dom';
 import DetailsModal from 'Components/Card/DetailsModalProgressReport';
 
 const ProgressReportCard = ({
@@ -18,6 +18,9 @@ const ProgressReportCard = ({
   fetchDraftsRequest,
   fetchProposalByAddressRequest,
   proposalByAddress,
+  fetchProgressReportByIpfsRequest,
+  selectedProgressReportByIpfs,
+  emptyProgressReportDetailRequest,
 }) => {
   const [selectedTab, setSelectedTab] = useState('Voting');
   const [filteredProgressReportList, setFilteredProgressReportList] = useState(
@@ -28,9 +31,12 @@ const ProgressReportCard = ({
   const [modalShow, setModalShow] = React.useState(false);
   const [selectedProgressReport, setSelectedProgressReport] = React.useState();
 
+  const progressReportIpfsKey = useParams()?.id;
+
   const onClickProgressReport = porgressReport => {
     setModalShow(true);
     setSelectedProgressReport(porgressReport);
+    history.push(`/progress-reports/${porgressReport.ipfsHash}`);
   };
 
   const onClickProgressReportDraft = progressReport => {
@@ -82,7 +88,11 @@ const ProgressReportCard = ({
       filteredProgressReports = (
         progressReportList[selectedTab][pageNumber?.[selectedTab] - 1 || 0] ||
         []
-      ).filter(proposal => proposal.progressReportTitle.includes(searchText));
+      ).filter(proposal =>
+        proposal.progressReportTitle
+          ?.toLowerCase()
+          .includes(searchText?.toLowerCase()),
+      );
     } else {
       filteredProgressReports = progressReportList[selectedTab].map(
         (progressReport, index) => ({
@@ -93,6 +103,23 @@ const ProgressReportCard = ({
 
     setFilteredProgressReportList(filteredProgressReports);
   }, [selectedTab, progressReportList, searchText]);
+
+  useEffect(() => {
+    if (progressReportIpfsKey) {
+      fetchProgressReportByIpfsRequest({
+        ipfs_key: progressReportIpfsKey,
+      });
+    }
+  }, []);
+  useEffect(() => {
+    console.log('***', selectedProgressReportByIpfs);
+    if (selectedProgressReportByIpfs?.ipfsHash) {
+      setSelectedProgressReport(selectedProgressReportByIpfs);
+      setTimeout(() => {
+        setModalShow(true);
+      }, 300);
+    }
+  }, [selectedProgressReportByIpfs]);
 
   return (
     <Row className={styles.proposalCard}>
@@ -128,12 +155,18 @@ const ProgressReportCard = ({
               totalPages={totalPages?.[selectedTab]}
             />
 
-            <DetailsModal
-              show={modalShow}
-              onHide={() => setModalShow(false)}
-              progressReport={selectedProgressReport}
-              status={selectedTab}
-            />
+            {modalShow && (
+              <DetailsModal
+                show={modalShow}
+                onHide={() => {
+                  setModalShow(false);
+                  emptyProgressReportDetailRequest();
+                  history.push('/progress-reports');
+                }}
+                progressReport={selectedProgressReport}
+                status={selectedTab}
+              />
+            )}
           </Card.Body>
         </Card>
       </Col>
