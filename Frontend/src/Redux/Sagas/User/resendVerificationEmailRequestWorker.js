@@ -1,15 +1,19 @@
-import { call, put, select} from 'redux-saga/effects';
+import { call, put, select } from "redux-saga/effects";
 // import {
 //   getCourseInfo,
 // } from '../services/api';
-import {resendVerificationEmailSuccess, resendVerificationEmailFailure, fetchUserDataRequest} from '../../Reducers/userSlice';
-import {RESEND_EMAIL_VERIFICATION} from '../../Constants';
-import {request} from '../helpers';
-import {NotificationManager} from 'react-notifications';
+import {
+  resendVerificationEmailSuccess,
+  resendVerificationEmailFailure,
+  fetchUserDataRequest,
+} from "../../Reducers/userSlice";
+import { RESEND_EMAIL_VERIFICATION } from "../../Constants";
+import { request } from "../helpers";
+import { NotificationManager } from "react-notifications";
 
-export const getAddress = (state) => state.account.address
+export const getAddress = (state) => state.account.address;
 
-function* resendVerificationEmailRequestWorker({payload}) {
+function* resendVerificationEmailRequestWorker({ payload }) {
   try {
     const address = yield select(getAddress);
     const response = yield call(request, {
@@ -17,10 +21,9 @@ function* resendVerificationEmailRequestWorker({payload}) {
         address,
       },
       url: RESEND_EMAIL_VERIFICATION,
-      requireSigning: true
+      requireSigning: true,
     });
-    yield put(resendVerificationEmailSuccess(
-    ));
+    yield put(resendVerificationEmailSuccess());
     NotificationManager.success("Verification Email Re-sent");
 
     // try {
@@ -29,12 +32,14 @@ function* resendVerificationEmailRequestWorker({payload}) {
     //   console.log(error);
     // }
   } catch (error) {
-    if(error.message === "-1") {
+    if (error.message === "-1") {
       return;
     }
-    NotificationManager.error(error.message, "Verification Email Re-sent Failed");
+    NotificationManager.error(
+      error.message,
+      "Verification Email Re-sent Failed"
+    );
     yield put(resendVerificationEmailFailure());
-
   }
 }
 

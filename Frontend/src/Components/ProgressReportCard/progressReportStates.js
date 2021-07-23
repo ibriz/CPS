@@ -1,1 +1,1 @@
-export default ['Voting', 'Approved', 'Rejected', 'Draft'];
+export default ["Voting", "Approved", "Rejected", "Draft"];

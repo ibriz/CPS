@@ -1,232 +1,232 @@
-import React, { useState, useEffect } from 'react';
-import { Row, Card, Col } from 'react-bootstrap';
-import styles from './ProposalCard.module.scss';
-import TabBar from 'Components/Card/TabBar';
-import ProposalList from 'Components/Card/ProposalList';
-import { connect } from 'react-redux';
-import { fetchProposalListRequest,setModalShowVoting, fetchRemainingVotesRequest } from 'Redux/Reducers/proposalSlice';
-import Pagination from 'Components/Card/Pagination';
-import proposalStates from './proposalStates';
+import React, { useState, useEffect } from "react";
+import { Row, Card, Col } from "react-bootstrap";
+import styles from "./ProposalCard.module.scss";
+import TabBar from "Components/Card/TabBar";
+import ProposalList from "Components/Card/ProposalList";
+import { connect } from "react-redux";
+import {
+  fetchProposalListRequest,
+  setModalShowVoting,
+  fetchRemainingVotesRequest,
+} from "Redux/Reducers/proposalSlice";
+import Pagination from "Components/Card/Pagination";
+import proposalStates from "./proposalStates";
 // import { select } from 'redux-saga/effects';
-import wallet from 'Redux/ICON/FrontEndWallet'
-import DetailsModal from 'Components/Card/DetailsModal';
-import ProgressReportList from 'Components/Card/ProgressReportList';
-import {fetchProgressReportListRequest, setModalShowVotingPR} from 'Redux/Reducers/progressReportSlice';
-import DetailsModalProgressReport from 'Components/Card/DetailsModalProgressReport';
+import wallet from "Redux/ICON/FrontEndWallet";
+import DetailsModal from "Components/Card/DetailsModal";
+import ProgressReportList from "Components/Card/ProgressReportList";
+import {
+  fetchProgressReportListRequest,
+  setModalShowVotingPR,
+} from "Redux/Reducers/progressReportSlice";
+import DetailsModalProgressReport from "Components/Card/DetailsModalProgressReport";
 
+const VotingCard = ({
+  proposalList,
+  fetchProposalListRequest,
+  walletAddress,
+  totalPages,
+  proposalStatesList,
+  initialState,
+  fetchProgressReport,
+  progressReportList,
+  modalShow,
+  setModalShow,
+  modalShowPR,
+  setModalShowPR,
+  fetchRemainingVotesRequest,
+  remainingVotesProposal,
+  remainingVotesPR,
+}) => {
+  const [selectedTab, setSelectedTab] = useState(initialState);
+  const [filteredProposalList, setFilteredProposalList] = useState(
+    proposalList
+  );
+  let [searchText, setSearchText] = useState("");
+  const [pageNumber, setPageNumber] = useState();
+  // const [modalShow, setModalShow] = React.useState(false);
+  // const [modalShowPR, setModalShowPR] = React.useState(false);
 
-const VotingCard = ({ proposalList, fetchProposalListRequest, walletAddress, totalPages, proposalStatesList, initialState, fetchProgressReport, progressReportList,modalShow, setModalShow, modalShowPR, setModalShowPR, fetchRemainingVotesRequest, remainingVotesProposal, remainingVotesPR }) => {
+  const [selectedProposal, setSelectedProposal] = React.useState();
+  const status = "Voting";
+  const [filteredProgressReportList, setFilteredProgressReportList] = useState(
+    progressReportList
+  );
+  const [selectedProgressReport, setSelectedProgressReport] = React.useState();
 
-    const [selectedTab, setSelectedTab] = useState(initialState);
-    const [filteredProposalList, setFilteredProposalList] = useState(proposalList);
-    let [searchText, setSearchText] = useState('');
-    const [pageNumber, setPageNumber] = useState();
-    // const [modalShow, setModalShow] = React.useState(false);
-    // const [modalShowPR, setModalShowPR] = React.useState(false);
+  const onClickProposal = (proposal) => {
+    setModalShow(true);
+    setSelectedProposal(proposal);
+  };
 
-    const [selectedProposal, setSelectedProposal] = React.useState();
-    const status = "Voting";
-    const [filteredProgressReportList, setFilteredProgressReportList] = useState(progressReportList);
-    const [selectedProgressReport, setSelectedProgressReport] = React.useState();
+  const onClickProposalDraft = (proposal) => {};
 
-    const onClickProposal = (proposal) => {
-        setModalShow(true);
-        setSelectedProposal(proposal);
-    }
+  const onClickProgressReport = (progressReport) => {
+    setModalShowPR(true);
+    setSelectedProgressReport(progressReport);
+  };
 
-    const onClickProposalDraft = (proposal) => {
+  useEffect(() => {
+    // fetchProgressReport(
+    //     {
+    //         status: status,
+    //         walletAddress: walletAddress || wallet.getAddress(),
+    //         pageNumber: pageNumber?.[selectedTab] ?? 1
+    //     }
+    // );
+    fetchRemainingVotesRequest({
+      type: "progress_report",
+    });
+  }, [selectedTab, pageNumber, fetchRemainingVotesRequest]);
 
-    }
+  useEffect(() => {
+    // const filteredProgressReports = (progressReportList[status][(pageNumber?.[selectedTab] - 1) || 0] || []).filter(
+    //     (proposal) => proposal.progressReportTitle.includes(searchText)
+    // );
 
-    const onClickProgressReport = (progressReport) => {
-        setModalShowPR(true);
-        setSelectedProgressReport(progressReport);
-    }
+    const filteredProgressReports = remainingVotesPR.filter((proposal) =>
+      proposal.progressReportTitle?.includes(searchText)
+    );
 
-    useEffect (() => {
-        // fetchProgressReport(
-        //     {
-        //         status: status,
-        //         walletAddress: walletAddress || wallet.getAddress(),
-        //         pageNumber: pageNumber?.[selectedTab] ?? 1
-        //     }        
-        // );
-        fetchRemainingVotesRequest(
-            {
-                type: "progress_report"
-            }        
-        );
-    }, [selectedTab, pageNumber, fetchRemainingVotesRequest])
+    // const filteredProgressReports = [];
 
-    useEffect(() => {
+    setFilteredProgressReportList(filteredProgressReports);
+  }, [selectedTab, remainingVotesPR, searchText, pageNumber]);
 
+  useEffect(() => {
+    // fetchProposalListRequest(
+    //     {
+    //         status: status,
+    //         walletAddress: walletAddress || wallet.getAddress(),
+    //         pageNumber: pageNumber?.[selectedTab] ?? 1
+    //     }
+    // );
 
-        // const filteredProgressReports = (progressReportList[status][(pageNumber?.[selectedTab] - 1) || 0] || []).filter(
-        //     (proposal) => proposal.progressReportTitle.includes(searchText)
-        // );
+    fetchRemainingVotesRequest({
+      type: "proposal",
+    });
+  }, [selectedTab, pageNumber, fetchRemainingVotesRequest]);
 
-        const filteredProgressReports = remainingVotesPR.filter(
-            (proposal) => proposal.progressReportTitle?.includes(searchText)
-        );
+  const setCurrentPages = (status, pageNumber) => {
+    setPageNumber((prevState) => ({
+      ...prevState,
+      [status]: pageNumber,
+    }));
+  };
 
-        // const filteredProgressReports = [];
+  useEffect(() => {
+    proposalStates.map((proposalState) => {
+      setCurrentPages(proposalState, 1);
+    });
+  }, []);
 
+  useEffect(() => {
+    // const filteredProposals = (selectedTab !== 'All') ? proposalList.filter(
+    //     (proposal) => proposal._status === proposalStatusBySelectedTab[selectedTab]
+    // ) : proposalList;
 
-        setFilteredProgressReportList(filteredProgressReports);
-    }, [selectedTab, remainingVotesPR, searchText, pageNumber]);
+    // const filteredProposals = (proposalList[status][(pageNumber?.[selectedTab] - 1) || 0] || []).filter(
+    //     (proposal) => proposal._proposal_title.includes(searchText)
+    // );
 
-    useEffect(() => {
-        // fetchProposalListRequest(
-        //     {
-        //         status: status,
-        //         walletAddress: walletAddress || wallet.getAddress(),
-        //         pageNumber: pageNumber?.[selectedTab] ?? 1
-        //     }
-        // );
+    const filteredProposals = remainingVotesProposal.filter((proposal) =>
+      proposal._proposal_title.includes(searchText)
+    );
 
-        fetchRemainingVotesRequest(
-            {
-                type: "proposal"
-            }        
-        );
-    }, [selectedTab, pageNumber, fetchRemainingVotesRequest])
+    setFilteredProposalList(filteredProposals);
+  }, [selectedTab, remainingVotesProposal, searchText, pageNumber]);
 
-    const setCurrentPages = (status, pageNumber) => {
-        setPageNumber(prevState => (
-            {
-                ...prevState,
-                [status]: pageNumber
-            }
-        ))
-    }
+  return (
+    <>
+      <Row className={styles.proposalCard}>
+        <Col>
+          <Card>
+            <Card.Body>
+              <TabBar
+                selectedTab={selectedTab}
+                setSelectedTab={setSelectedTab}
+                searchText={searchText}
+                setSearchText={setSearchText}
+                tabs={proposalStatesList}
+                placeholder="Search Proposal"
+              />
+              <hr style={{ marginTop: "-9px" }} />
+              {selectedTab === "Proposals" ? (
+                <ProposalList
+                  proposals={filteredProposalList}
+                  selectedTab={status}
+                  searchText={searchText}
+                  modalShow={modalShow}
+                  setModalShow={setModalShow}
+                  selectedProposal={selectedProposal}
+                  setSelectedProposal={setSelectedProposal}
+                  onClickProposal={
+                    selectedTab === "Draft"
+                      ? onClickProposalDraft
+                      : onClickProposal
+                  }
+                />
+              ) : (
+                <ProgressReportList
+                  projectReports={filteredProgressReportList}
+                  selectedTab={status}
+                  onClickProgressReport={onClickProgressReport}
+                />
+              )}
 
-    useEffect(() => {
-        proposalStates.map(proposalState => {
-            setCurrentPages(proposalState, 1)
-        })
-    }, [])
-
-
-    useEffect(() => {
-
-
-
-        // const filteredProposals = (selectedTab !== 'All') ? proposalList.filter(
-        //     (proposal) => proposal._status === proposalStatusBySelectedTab[selectedTab]
-        // ) : proposalList;
-
-        // const filteredProposals = (proposalList[status][(pageNumber?.[selectedTab] - 1) || 0] || []).filter(
-        //     (proposal) => proposal._proposal_title.includes(searchText)
-        // );
-
-        const filteredProposals = remainingVotesProposal.filter(
-            (proposal) => proposal._proposal_title.includes(searchText)
-        );
-
-        setFilteredProposalList(filteredProposals);
-    }, [selectedTab, remainingVotesProposal, searchText, pageNumber]);
-
-    return (
-        <>
-            <Row className={styles.proposalCard}>
-                <Col>
-                    <Card>
-                        <Card.Body>
-                            <TabBar
-                                selectedTab={selectedTab}
-                                setSelectedTab={setSelectedTab}
-                                searchText={searchText}
-                                setSearchText={setSearchText}
-                                tabs={proposalStatesList}
-                                placeholder="Search Proposal"
-
-                            />
-                            <hr style={{ marginTop: '-9px' }} />
-                            {
-                                (selectedTab === 'Proposals' ? 
-                                <ProposalList
-                                proposals={filteredProposalList}
-                                selectedTab={status}
-                                searchText={searchText}
-                                modalShow={modalShow}
-                                setModalShow={setModalShow}
-                                selectedProposal={selectedProposal}
-                                setSelectedProposal={setSelectedProposal}
-                                onClickProposal={(selectedTab === 'Draft') ? onClickProposalDraft : onClickProposal}
-
-                            /> :
-                            <ProgressReportList
-                            projectReports = {filteredProgressReportList}
-                            selectedTab = {status}
-                            onClickProgressReport = {onClickProgressReport}
-
-                             />
-                            )
-                            }
-
-
-                            {/* <Pagination
+              {/* <Pagination
                                 currentPage={pageNumber?.[selectedTab]}
                                 setCurrentPage={(pageNumber) => setCurrentPages(selectedTab, pageNumber)}
                                 totalPages={totalPages[status]} /> */}
-                            {
-                                modalShow && <DetailsModal
-                                show={modalShow}
-                                onHide={() => setModalShow(false)}
-                                proposal={selectedProposal}
-                                status={status}
-                                voting = {true}
-                            />
-                            }
+              {modalShow && (
+                <DetailsModal
+                  show={modalShow}
+                  onHide={() => setModalShow(false)}
+                  proposal={selectedProposal}
+                  status={status}
+                  voting={true}
+                />
+              )}
 
-                            {
-                                modalShowPR && <DetailsModalProgressReport
-                                show={modalShowPR}
-                                onHide={() => setModalShowPR(false)}
-                                progressReport={selectedProgressReport}
-                                status={status}
-                                voting = {true}
+              {modalShowPR && (
+                <DetailsModalProgressReport
+                  show={modalShowPR}
+                  onHide={() => setModalShowPR(false)}
+                  progressReport={selectedProgressReport}
+                  status={status}
+                  voting={true}
+                />
+              )}
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </>
+  );
+};
 
-                            /> 
-                            }
-   
+const mapStateToProps = (state) => ({
+  proposalList: state.proposals.proposalList,
+  walletAddress: state.account.address,
+  totalPages: state.proposals.totalPages,
+  progressReportList: state.progressReport.progressReportList,
+  totalPagesProgressReport: state.progressReport.totalPages,
+  modalShow: state.proposals.modalShowVoting,
+  modalShowPR: state.progressReport.modalShowVotingPR,
 
-                        </Card.Body>
-                    </Card>
-                </Col>
-            </Row>
+  remainingVotesProposal: state.proposals.remainingVotes,
+  remainingVotesPR: state.progressReport.remainingVotes,
+});
 
-        </>
-    )
-}
-
-const mapStateToProps = state => (
-    {
-        proposalList: state.proposals.proposalList,
-        walletAddress: state.account.address,
-        totalPages: state.proposals.totalPages,
-        progressReportList: state.progressReport.progressReportList,
-        totalPagesProgressReport: state.progressReport.totalPages,
-        modalShow: state.proposals.modalShowVoting,
-        modalShowPR: state.progressReport.modalShowVotingPR,
-
-        remainingVotesProposal: state.proposals.remainingVotes,
-        remainingVotesPR: state.progressReport.remainingVotes,
-
-
-
-    }
-)
-
-const mapDispatchToProps = dispatch => (
-    {
-        fetchProposalListRequest: (payload) => dispatch(fetchProposalListRequest(payload)),
-        fetchProgressReport: (payload) => dispatch(fetchProgressReportListRequest(payload)),
-        setModalShow: (payload) => dispatch(setModalShowVoting(payload)),
-        setModalShowPR: payload => dispatch(setModalShowVotingPR(payload)),
-        fetchRemainingVotesRequest: payload => dispatch(fetchRemainingVotesRequest(payload))
-        
-    }
-)
+const mapDispatchToProps = (dispatch) => ({
+  fetchProposalListRequest: (payload) =>
+    dispatch(fetchProposalListRequest(payload)),
+  fetchProgressReport: (payload) =>
+    dispatch(fetchProgressReportListRequest(payload)),
+  setModalShow: (payload) => dispatch(setModalShowVoting(payload)),
+  setModalShowPR: (payload) => dispatch(setModalShowVotingPR(payload)),
+  fetchRemainingVotesRequest: (payload) =>
+    dispatch(fetchRemainingVotesRequest(payload)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(VotingCard);

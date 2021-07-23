@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import Sidebar from '../../Components/Sidebar';
-import Main from '../Main';
+import React, { useState } from "react";
+import Sidebar from "../../Components/Sidebar";
+import Main from "../Main";
 
 function Layout({ setLocale }) {
   const [collapsed, setCollapsed] = useState(false);
@@ -15,11 +15,11 @@ function Layout({ setLocale }) {
   };
 
   return (
-    <div className={`app ${toggled ? 'toggled' : ''}`}>
+    <div className={`app ${toggled ? "toggled" : ""}`}>
       <Sidebar
         collapsed={collapsed}
         toggled={toggled}
-        setToggled = {setToggled}
+        setToggled={setToggled}
         handleToggleSidebar={handleToggleSidebar}
         handleCollapsedChange={handleCollapsedChange}
       />

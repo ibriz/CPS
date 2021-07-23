@@ -1,9 +1,12 @@
-import { put, call} from 'redux-saga/effects';
-import {callKeyStoreWallet} from '../../ICON/utils';
+import { put, call } from "redux-saga/effects";
+import { callKeyStoreWallet } from "../../ICON/utils";
 // import {
 //   getCourseInfo,
 // } from '../services/api';
-import {fetchVoteResultSuccess, fetchVoteResultFailure} from '../../Reducers/proposalSlice';
+import {
+  fetchVoteResultSuccess,
+  fetchVoteResultFailure,
+} from "../../Reducers/proposalSlice";
 
 // const proposalListStatusMapping = {
 //   'Active': '_active',
@@ -16,15 +19,14 @@ import {fetchVoteResultSuccess, fetchVoteResultFailure} from '../../Reducers/pro
 //   'Rejected': '_rejected'
 // }
 
-function* fetchProposalVoteResultRequestWorker({payload}) {
+function* fetchProposalVoteResultRequestWorker({ payload }) {
   try {
     const response = yield call(callKeyStoreWallet, {
-      method: 'get_vote_result',
+      method: "get_vote_result",
       params: {
-      _ipfs_key: payload.proposalKey,
-    
-    }
-});
+        _ipfs_key: payload.proposalKey,
+      },
+    });
 
     // const response = {
     //   data: Array(10).fill(0).map((_, index) => (  {
@@ -40,13 +42,13 @@ function* fetchProposalVoteResultRequestWorker({payload}) {
     //     }
     //     )),
     //     count: 143
-      
+
     // }
-    yield put(fetchVoteResultSuccess(
-      {
+    yield put(
+      fetchVoteResultSuccess({
         response,
-      }
-    ));
+      })
+    );
   } catch (error) {
     yield put(fetchVoteResultFailure());
   }

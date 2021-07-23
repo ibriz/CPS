@@ -1,32 +1,35 @@
-import { put, call} from 'redux-saga/effects';
-import {callKeyStoreWallet} from '../../ICON/utils';
+import { put, call } from "redux-saga/effects";
+import { callKeyStoreWallet } from "../../ICON/utils";
 // import {
 //   getCourseInfo,
 // } from '../services/api';
-import {fetchProposalListSuccess, fetchProposalListFailure} from '../../Reducers/proposalSlice';
+import {
+  fetchProposalListSuccess,
+  fetchProposalListFailure,
+} from "../../Reducers/proposalSlice";
 
 const proposalListStatusMapping = {
-  'Active': '_active',
-  'Voting': '_pending',
-  'Pending': '_sponsor_pending',
+  Active: "_active",
+  Voting: "_pending",
+  Pending: "_sponsor_pending",
 
-  'Completed': '_completed',
-  'Disqualified': '_disqualified',
-  'Paused': '_paused',
-  'Rejected': '_rejected'
-}
+  Completed: "_completed",
+  Disqualified: "_disqualified",
+  Paused: "_paused",
+  Rejected: "_rejected",
+};
 
-function* fetchProposalListWorker({payload}) {
+function* fetchProposalListWorker({ payload }) {
   try {
     const response = yield call(callKeyStoreWallet, {
-      method: 'get_proposal_details',
-      params: {_status: proposalListStatusMapping[payload.status],
+      method: "get_proposal_details",
+      params: {
+        _status: proposalListStatusMapping[payload.status],
         _wallet_address: payload.walletAddress,
-        _end_index: `${(payload.pageNumber * 10)}`,
-      _start_index: `${(payload.pageNumber * 10) - 10}`,
-    
-    }
-});
+        _end_index: `${payload.pageNumber * 10}`,
+        _start_index: `${payload.pageNumber * 10 - 10}`,
+      },
+    });
 
     // const response = {
     //   data: Array(10).fill(0).map((_, index) => (  {
@@ -43,15 +46,15 @@ function* fetchProposalListWorker({payload}) {
     //     }
     //     )),
     //     count: 143
-      
+
     // }
-    yield put(fetchProposalListSuccess(
-      {
+    yield put(
+      fetchProposalListSuccess({
         response,
         status: payload.status,
-        pageNumber: payload.pageNumber
-      }
-    ));
+        pageNumber: payload.pageNumber,
+      })
+    );
   } catch (error) {
     yield put(fetchProposalListFailure());
   }

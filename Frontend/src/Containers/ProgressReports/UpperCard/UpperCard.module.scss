@@ -1,52 +1,51 @@
 .proposalTitle {
-    color: #262626;
-    font-style: normal;
-    font-size: 0.95rem;
+  color: #262626;
+  font-style: normal;
+  font-size: 0.95rem;
 }
 
 .upperCardRow {
-    justify-content: space-between;
-    align-items: center;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .proposalNumber {
-    font-style: normal;
-    font-weight: normal;
-    font-size: 0.95rem;
-    color: #262626;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 0.95rem;
+  color: #262626;
 }
 
 .createProposalButton {
-    font-size: 0.95rem !important;
-    padding: 5px !important;
+  font-size: 0.95rem !important;
+  padding: 5px !important;
 }
 
 .upperCard {
-    margin-top: 20px;
+  margin-top: 20px;
 
-    div[class^="col"] {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
+  div[class^="col"] {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
 }
 
 @media screen and (min-width: 992px) {
-    .upperCard > div {
-        padding-left: 2.2rem;
-        padding-right: 2.2rem;
-    }
-
+  .upperCard > div {
+    padding-left: 2.2rem;
+    padding-right: 2.2rem;
+  }
 }
 
 @media screen and (max-width: 1199px) {
-    .desktopContainer {
-        display: none;
-    }
+  .desktopContainer {
+    display: none;
+  }
 }
 
 @media screen and (min-width: 1200px) {
-    .mobileContainer {
-        display: none !important;
-    }
+  .mobileContainer {
+    display: none !important;
+  }
 }

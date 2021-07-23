@@ -1,13 +1,12 @@
 .card {
-    height: auto;
-    min-height: 100%;
-
+  height: auto;
+  min-height: 100%;
 }
 
-.cardBody{
-    display: flex;
-    justify-content: space-between;
-    flex-direction: column;
-    padding-left: 0.2rem !important;
-    padding-right: 0.2rem !important;
+.cardBody {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  padding-left: 0.2rem !important;
+  padding-right: 0.2rem !important;
 }

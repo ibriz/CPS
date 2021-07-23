@@ -1,28 +1,31 @@
-import { put, call} from 'redux-saga/effects';
-import {callKeyStoreWallet} from '../../ICON/utils';
+import { put, call } from "redux-saga/effects";
+import { callKeyStoreWallet } from "../../ICON/utils";
 // import {
 //   getCourseInfo,
 // } from '../services/api';
-import {fetchSponsorRequestsListSuccess, fetchSponsorRequestsListFailure} from '../../Reducers/proposalSlice';
+import {
+  fetchSponsorRequestsListSuccess,
+  fetchSponsorRequestsListFailure,
+} from "../../Reducers/proposalSlice";
 
 const proposalListStatusMapping = {
-  'Pending': '_sponsor_pending',
-  'Approved': '_approved',
-  'Rejected': '_rejected',
-  'Disqualified': '_disqualified'
-}
+  Pending: "_sponsor_pending",
+  Approved: "_approved",
+  Rejected: "_rejected",
+  Disqualified: "_disqualified",
+};
 
-function* fetchSponsorRequestsListWorker({payload}) {
+function* fetchSponsorRequestsListWorker({ payload }) {
   try {
     const response = yield call(callKeyStoreWallet, {
-      method: 'get_sponsors_requests',
-      params: {_status: proposalListStatusMapping[payload.status],
+      method: "get_sponsors_requests",
+      params: {
+        _status: proposalListStatusMapping[payload.status],
         _sponsor_address: payload.walletAddress,
-      // _end_index: `${(payload.pageNumber * 10)}`,
-      // _start_index: `${(payload.pageNumber * 10) - 10}`,
-    
-    }
-});
+        // _end_index: `${(payload.pageNumber * 10)}`,
+        // _start_index: `${(payload.pageNumber * 10) - 10}`,
+      },
+    });
 
     // const response = {
     //   data: Array(10).fill(0).map((_, index) => (  {
@@ -36,15 +39,15 @@ function* fetchSponsorRequestsListWorker({payload}) {
     //     }
     //     )),
     //     _total_items: 143
-      
+
     // }
-    yield put(fetchSponsorRequestsListSuccess(
-      {
+    yield put(
+      fetchSponsorRequestsListSuccess({
         response,
         status: payload.status,
-        pageNumber: payload.pageNumber
-      }
-    ));
+        pageNumber: payload.pageNumber,
+      })
+    );
   } catch (error) {
     yield put(fetchSponsorRequestsListFailure());
   }
