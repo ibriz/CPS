@@ -1,9 +1,9 @@
-import React from "react";
-import PaginationComponent from "react-responsive-pagination";
+import React from 'react';
+import PaginationComponent from 'react-responsive-pagination';
 
 const Pagination = ({ currentPage, setCurrentPage, totalPages }) => {
   return (
-    <div className="commentBox">
+    <div className='commentBox'>
       <PaginationComponent
         current={currentPage ?? 1}
         total={totalPages}

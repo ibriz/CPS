@@ -3,15 +3,15 @@ import {
   logout,
   loginPrepRequest,
   signTransaction,
-} from "../Reducers/accountSlice";
-import { takeEvery } from "redux-saga/effects";
+} from '../Reducers/accountSlice';
+import { takeEvery } from 'redux-saga/effects';
 
 import {
   loginWorker,
   logoutWorker,
   loginPrepWorker,
   signTransactionWorker,
-} from "./Account";
+} from './Account';
 
 import {
   submitProposalToIPFSWorker,
@@ -31,7 +31,7 @@ import {
   fetchProjectAmountsWorker,
   fetchRemainingVotesRequestWorker,
   fetchSponsorMessageRequestWorker,
-} from "./Proposal";
+} from './Proposal';
 
 import {
   submitProgressReportToIPFSWorker,
@@ -44,7 +44,7 @@ import {
   fetchProgressReportVoteResultRequestWorker,
   fetchProgressReportByProposalRequestWorker,
   fetchVoteResultBudgetChangeRequestWorker,
-} from "./ProgressReport";
+} from './ProgressReport';
 
 import {
   fetchCPFScoreAddressWorker,
@@ -52,19 +52,19 @@ import {
   fetchExpectedGrantRequestWorker,
   fetchCPSTreasuryScoreAddressWorker,
   claimRewardWorker,
-} from "./Fund";
+} from './Fund';
 
 import {
   fetchPrepWorker,
   unregisterPrepWorker,
   registerPrepWorker,
   payPenaltyWorker,
-} from "./PRep";
+} from './PRep';
 import {
   fetchPeriodDetailsRequestWorker,
   updatePeriodWorker,
   updatePeriodFrontendWalletWorker,
-} from "./Period";
+} from './Period';
 
 import {
   fetchUserDataRequestWorker,
@@ -72,7 +72,7 @@ import {
   resendVerificationEmailRequestWorker,
   fetchUserPromptRequestWorker,
   disableUserPromptRequestWorker,
-} from "./User";
+} from './User';
 
 import {
   submitProposalRequest,
@@ -92,7 +92,7 @@ import {
   fetchProjectAmountsRequest,
   fetchRemainingVotesRequest,
   fetchSponsorMessageRequest,
-} from "../Reducers/proposalSlice";
+} from '../Reducers/proposalSlice';
 import {
   submitProgressReportRequest,
   submitProgressReportSuccess,
@@ -104,33 +104,33 @@ import {
   fetchVoteResultRequest as fetchProgressReportVoteResultRequest,
   fetchProgressReportByProposalRequest,
   fetchVoteResultBudgetChangeRequest,
-} from "../Reducers/progressReportSlice";
+} from '../Reducers/progressReportSlice';
 import {
   fetchPeriodDetailsRequest,
   updatePeriod,
   updatePeriodFrontendWallet,
-} from "../Reducers/periodSlice";
+} from '../Reducers/periodSlice';
 import {
   fetchPrepsRequest,
   unregisterPrep,
   registerPrep,
   payPenalty,
-} from "../Reducers/prepsSlice";
+} from '../Reducers/prepsSlice';
 import {
   fetchCPFScoreAddressRequest,
   fetchCPFRemainingFundRequest,
   fetchExpectedGrantRequest,
   fetchCPSTreasuryScoreAddressRequest,
   claimReward,
-} from "../Reducers/fundSlice";
+} from '../Reducers/fundSlice';
 import {
   fetchUserDataRequest,
   submitUserDataRequest,
   resendVerificationEmailRequest,
   fetchUserPromptRequest,
   disableUserPromptRequest,
-} from "../Reducers/userSlice";
-import { FiPrinter } from "react-icons/fi";
+} from '../Reducers/userSlice';
+import { FiPrinter } from 'react-icons/fi';
 
 function* rootSaga() {
   yield takeEvery(login.type, loginWorker);
@@ -147,16 +147,16 @@ function* rootSaga() {
 
   yield takeEvery(
     submitProgressReportRequest.type,
-    submitProgressReportToIPFSWorker
+    submitProgressReportToIPFSWorker,
   );
   yield takeEvery(
     submitProgressReportSuccess.type,
-    submitProgressReportToScoreWorker
+    submitProgressReportToScoreWorker,
   );
 
   yield takeEvery(
     fetchProgressReportListRequest.type,
-    fetchProgressReportListWorker
+    fetchProgressReportListWorker,
   );
 
   yield takeEvery(updateProposalStatus.type, updateProposalStatusWorker);
@@ -166,12 +166,12 @@ function* rootSaga() {
   yield takeEvery(fetchProposalDetailRequest.type, fetchProposalDetailWorker);
   yield takeEvery(
     fetchProgressReportDetailRequest.type,
-    fetchProgressReportDetailWorker
+    fetchProgressReportDetailWorker,
   );
 
   yield takeEvery(
     fetchSponsorRequestsListRequest.type,
-    fetchSponsorRequestsListWorker
+    fetchSponsorRequestsListWorker,
   );
 
   yield takeEvery(approveSponserRequest.type, approveSponserRequestWorker);
@@ -180,47 +180,47 @@ function* rootSaga() {
   yield takeEvery(saveDraftRequest.type, saveDraftRequestWorker);
   yield takeEvery(
     saveDraftRequestProgressReport.type,
-    saveDraftRequestProgressReportWorker
+    saveDraftRequestProgressReportWorker,
   );
 
   yield takeEvery(fetchDraftsRequest.type, fetchDraftRequestWorker);
 
   yield takeEvery(
     fetchDraftsRequestProgressReport.type,
-    fetchDraftRequestProgressReportWorker
+    fetchDraftRequestProgressReportWorker,
   );
 
   yield takeEvery(voteProposal.type, voteProposalWorker);
 
   yield takeEvery(
     fetchProposalByAddressRequest.type,
-    fetchProposalByAddressWorker
+    fetchProposalByAddressWorker,
   );
 
   yield takeEvery(voteProgressReport.type, voteProgressReportWorker);
 
   yield takeEvery(
     fetchProposalVoteResultRequest.type,
-    fetchProposalVoteResultRequestWorker
+    fetchProposalVoteResultRequestWorker,
   );
   yield takeEvery(
     fetchProgressReportVoteResultRequest.type,
-    fetchProgressReportVoteResultRequestWorker
+    fetchProgressReportVoteResultRequestWorker,
   );
 
   yield takeEvery(
     fetchProgressReportByProposalRequest.type,
-    fetchProgressReportByProposalRequestWorker
+    fetchProgressReportByProposalRequestWorker,
   );
   yield takeEvery(
     fetchPeriodDetailsRequest.type,
-    fetchPeriodDetailsRequestWorker
+    fetchPeriodDetailsRequestWorker,
   );
 
   yield takeEvery(updatePeriod.type, updatePeriodWorker);
   yield takeEvery(
     updatePeriodFrontendWallet.type,
-    updatePeriodFrontendWalletWorker
+    updatePeriodFrontendWalletWorker,
   );
 
   yield takeEvery(unregisterPrep.type, unregisterPrepWorker);
@@ -230,12 +230,12 @@ function* rootSaga() {
   yield takeEvery(fetchCPFScoreAddressRequest.type, fetchCPFScoreAddressWorker);
   yield takeEvery(
     fetchCPSTreasuryScoreAddressRequest.type,
-    fetchCPSTreasuryScoreAddressWorker
+    fetchCPSTreasuryScoreAddressWorker,
   );
 
   yield takeEvery(
     fetchCPFRemainingFundRequest.type,
-    fetchCPFRemainingFundWorker
+    fetchCPFRemainingFundWorker,
   );
 
   yield takeEvery(fetchProjectAmountsRequest.type, fetchProjectAmountsWorker);
@@ -247,35 +247,35 @@ function* rootSaga() {
 
   yield takeEvery(
     fetchExpectedGrantRequest.type,
-    fetchExpectedGrantRequestWorker
+    fetchExpectedGrantRequestWorker,
   );
 
   yield takeEvery(
     fetchRemainingVotesRequest.type,
-    fetchRemainingVotesRequestWorker
+    fetchRemainingVotesRequestWorker,
   );
 
   yield takeEvery(
     fetchVoteResultBudgetChangeRequest.type,
-    fetchVoteResultBudgetChangeRequestWorker
+    fetchVoteResultBudgetChangeRequestWorker,
   );
 
   yield takeEvery(claimReward.type, claimRewardWorker);
 
   yield takeEvery(
     resendVerificationEmailRequest.type,
-    resendVerificationEmailRequestWorker
+    resendVerificationEmailRequestWorker,
   );
 
   yield takeEvery(
     fetchSponsorMessageRequest.type,
-    fetchSponsorMessageRequestWorker
+    fetchSponsorMessageRequestWorker,
   );
 
   yield takeEvery(fetchUserPromptRequest.type, fetchUserPromptRequestWorker);
   yield takeEvery(
     disableUserPromptRequest.type,
-    disableUserPromptRequestWorker
+    disableUserPromptRequestWorker,
   );
 }
 

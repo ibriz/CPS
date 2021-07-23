@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Row,
   Card,
@@ -8,50 +8,50 @@ import {
   FormControl,
   Button,
   Alert,
-} from "react-bootstrap";
-import styles from "./ProposalCreationPage.module.css";
+} from 'react-bootstrap';
+import styles from './ProposalCreationPage.module.css';
 import {
   fetchCPFScoreAddressRequest,
   fetchCPFRemainingFundRequest,
-} from "Redux/Reducers/fundSlice";
+} from 'Redux/Reducers/fundSlice';
 
 import {
   submitProgressReportRequest,
   saveDraftRequest,
-} from "../../Redux/Reducers/progressReportSlice";
-import { connect } from "react-redux";
-import { withRouter } from "react-router";
+} from '../../Redux/Reducers/progressReportSlice';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 // import SimpleUploadAdapter from '@ckeditor/ckeditor5-upload/src/adapters/simpleuploadadapter';
-import AppFormLabel from "Components/UI/AppFormLabel";
+import AppFormLabel from 'Components/UI/AppFormLabel';
 
-import RichTextEditor from "Components/RichTextEditor";
+import RichTextEditor from 'Components/RichTextEditor';
 
-import LoaderModal from "../../Components/UI/LoaderModal";
+import LoaderModal from '../../Components/UI/LoaderModal';
 // import {getCurrentUserActiveProposals} from 'Selectors';
 import {
   fetchProposalListRequest,
   fetchProposalByAddressRequest,
-} from "Redux/Reducers/proposalSlice";
-import { updateProposalStatus } from "Redux/Reducers/proposalSlice";
-import { NotificationManager } from "react-notifications";
-import ConfirmationModal from "Components/UI/ConfirmationModal";
-import Header from "Components/Header";
-import { requestIPFS } from "Redux/Sagas/helpers";
-import InfoIcon from "Components/InfoIcon";
-import Popup from "Components/Popup";
-import useTimer from "Hooks/useTimer";
-import { specialCharacterMessage } from "Constants";
+} from 'Redux/Reducers/proposalSlice';
+import { updateProposalStatus } from 'Redux/Reducers/proposalSlice';
+import { NotificationManager } from 'react-notifications';
+import ConfirmationModal from 'Components/UI/ConfirmationModal';
+import Header from 'Components/Header';
+import { requestIPFS } from 'Redux/Sagas/helpers';
+import InfoIcon from 'Components/InfoIcon';
+import Popup from 'Components/Popup';
+import useTimer from 'Hooks/useTimer';
+import { specialCharacterMessage } from 'Constants';
 
 const signingInfoMessage = (
-  <div className="text-information">
+  <div className='text-information'>
     <div>Note:</div>
-    <div className="intendation">
+    <div className='intendation'>
       You need to sign the transaction two times-
-      <div className="intendation">
+      <div className='intendation'>
         i) First time: to verify the user identity while submitting the progress
         report data to the Backend (IPFS).
       </div>
-      <div className="intendation">
+      <div className='intendation'>
         ii) Second time: to verify the user identity while saving the ipfs hash
         to the blockchain.
       </div>
@@ -100,7 +100,7 @@ const ProgressReportCreationPage = ({
     progressReport.percentageCompleted &&
     progressReport.percentageCompleted != 100;
   const isLastReport = currentUserActiveProposals.find(
-    (proposal) => proposal.ipfsKey === progressReport.projectName
+    proposal => proposal.ipfsKey === progressReport.projectName,
   )?.lastProgressReport;
 
   const [descriptionWords, setDescriptionWords] = React.useState(0);
@@ -125,48 +125,48 @@ const ProgressReportCreationPage = ({
   ]);
 
   useEffect(() => {
-    setProposal((prevState) => ({
+    setProposal(prevState => ({
       ...prevState,
       isLastProgressReport: isLastReport,
     }));
   }, [currentUserActiveProposals, progressReport.projectName]);
 
   useEffect(() => {
-    if (document.getElementById("additionalBudget")) {
+    if (document.getElementById('additionalBudget')) {
       if (progressReport.additionalBudget == null) {
         document
-          .getElementById("additionalBudget")
+          .getElementById('additionalBudget')
           .setCustomValidity(
-            `Enter Additional Budget between 0 and remaining CPF Fund (currently ${cpfRemainingFunds} ICX)`
+            `Enter Additional Budget between 0 and remaining CPF Fund (currently ${cpfRemainingFunds} ICX)`,
           );
       } else if (
         progressReport.additionalBudget < 0 ||
         progressReport.additionalBudget > parseInt(cpfRemainingFunds)
       ) {
         document
-          .getElementById("additionalBudget")
+          .getElementById('additionalBudget')
           .setCustomValidity(
-            `Total Additional should be between 0 and CPF remaining Fund (currently  ${cpfRemainingFunds} ICX)`
+            `Total Additional should be between 0 and CPF remaining Fund (currently  ${cpfRemainingFunds} ICX)`,
           );
       } else {
-        document.getElementById("additionalBudget").setCustomValidity("");
+        document.getElementById('additionalBudget').setCustomValidity('');
       }
     }
   }, [progressReport.additionalBudget]);
 
   const onClickSaveDraft = () => {
     let allGood = true;
-    Object.keys(progressReport).map((key) => {
+    Object.keys(progressReport).map(key => {
       if (
         document.getElementById(key) &&
-        key !== "description" &&
-        key !== "revisionDescription"
+        key !== 'description' &&
+        key !== 'revisionDescription'
       ) {
         console.log(
-          "keyProposal",
+          'keyProposal',
           key,
           progressReport[key],
-          document.getElementById(key).checkValidity()
+          document.getElementById(key).checkValidity(),
         );
         if (
           (!Array.isArray(progressReport[key]) && progressReport[key]) ||
@@ -178,7 +178,7 @@ const ProgressReportCreationPage = ({
           }
         }
       } else {
-        console.log("keyProposalNot", key);
+        console.log('keyProposalNot', key);
       }
     });
     if (!allGood) {
@@ -202,7 +202,7 @@ const ProgressReportCreationPage = ({
   }
 
   useEffect(() => {
-    setProposal((proposal) => ({
+    setProposal(proposal => ({
       ...progressReport,
       projectName: ipfsKey,
     }));
@@ -228,7 +228,7 @@ const ProgressReportCreationPage = ({
 
   useEffect(() => {
     if (isDraft) {
-      setProposal((prevState) => ({
+      setProposal(prevState => ({
         ...progressReport,
         ...draftProgressReport,
         ...progressReportIPFS,
@@ -249,10 +249,10 @@ const ProgressReportCreationPage = ({
         proposalKey: progressReport.proposalKey,
         reportKey: progressReport.reportKey,
         proposalName: currentUserActiveProposals.find(
-          (proposal) => proposal.ipfsKey === progressReport.projectName
+          proposal => proposal.ipfsKey === progressReport.projectName,
         )?._proposal_title,
         callBackAfterSigning: () => {
-          history.push("/progress-reports");
+          history.push('/progress-reports');
         },
       });
     } else {
@@ -261,16 +261,16 @@ const ProgressReportCreationPage = ({
         address: walletAddress,
         proposalKey: progressReport.projectName,
         proposalName: currentUserActiveProposals.find(
-          (proposal) => proposal.ipfsKey === progressReport.projectName
+          proposal => proposal.ipfsKey === progressReport.projectName,
         )?._proposal_title,
         callBackAfterSigning: () => {
-          history.push("/progress-reports");
+          history.push('/progress-reports');
         },
       });
     }
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = event => {
     event.preventDefault();
     setSubmissionConfirmationShow(true);
   };
@@ -288,11 +288,11 @@ const ProgressReportCreationPage = ({
   //         });
   // }, [])
 
-  const handleChange = (event) => {
+  const handleChange = event => {
     let name = event.target.name;
     let value = event.target.value;
 
-    setProposal((prevState) => ({
+    setProposal(prevState => ({
       ...prevState,
       [name]: value,
     }));
@@ -301,11 +301,11 @@ const ProgressReportCreationPage = ({
       document.getElementById(name).reportValidity();
   };
 
-  const handleCheckedChange = (event) => {
+  const handleCheckedChange = event => {
     let name = event.target.name;
     let value = event.target.checked;
 
-    setProposal((prevState) => ({
+    setProposal(prevState => ({
       ...prevState,
       [name]: value,
     }));
@@ -316,18 +316,18 @@ const ProgressReportCreationPage = ({
 
     if (!progressReport.description) {
       document
-        .getElementById("description")
+        .getElementById('description')
         .setCustomValidity(
-          `Please write a description of minimum ${minimumNumberOfWords} words.`
+          `Please write a description of minimum ${minimumNumberOfWords} words.`,
         );
     } else if (descriptionWords < minimumNumberOfWords) {
       document
-        .getElementById("description")
+        .getElementById('description')
         .setCustomValidity(
-          `Description should be a minimum of ${minimumNumberOfWords} words`
+          `Description should be a minimum of ${minimumNumberOfWords} words`,
         );
     } else {
-      document.getElementById("description").setCustomValidity(``);
+      document.getElementById('description').setCustomValidity(``);
     }
   }, [progressReport.description, descriptionWords]);
 
@@ -337,18 +337,18 @@ const ProgressReportCreationPage = ({
     if (progressReport.projectTermRevision) {
       if (!progressReport.revisionDescription) {
         document
-          .getElementById("revisionDescription")
+          .getElementById('revisionDescription')
           .setCustomValidity(
-            `Please write a revision description of minimum ${minimumNumberOfWords} words.`
+            `Please write a revision description of minimum ${minimumNumberOfWords} words.`,
           );
       } else if (revisionDescriptionWords < minimumNumberOfWords) {
         document
-          .getElementById("revisionDescription")
+          .getElementById('revisionDescription')
           .setCustomValidity(
-            `Revision Description should be a minimum of ${minimumNumberOfWords} words`
+            `Revision Description should be a minimum of ${minimumNumberOfWords} words`,
           );
       } else {
-        document.getElementById("revisionDescription").setCustomValidity(``);
+        document.getElementById('revisionDescription').setCustomValidity(``);
       }
     }
   }, [
@@ -359,37 +359,37 @@ const ProgressReportCreationPage = ({
 
   return (
     <div className={styles.proposalCreationPage}>
-      <Header title="Create New Progress Report" />
+      <Header title='Create New Progress Report' />
 
       <Row className={styles.cardContainer}>
         <Card className={styles.card}>
           <Form onSubmit={handleSubmit}>
             <Form.Group
               as={Row}
-              controlId="formPlaintextEmail"
+              controlId='formPlaintextEmail'
               className={styles.maxWidthLabel}
             >
-              <AppFormLabel column lg="3">
+              <AppFormLabel column lg='3'>
                 Project Name
                 <span className={styles.required}></span>
                 {/* <InfoIcon description = "The project for which the progress report is being submitted"/>    */}
               </AppFormLabel>
-              <Col lg="9" className={styles.inputSameLine}>
+              <Col lg='9' className={styles.inputSameLine}>
                 <Form.Control
-                  size="md"
-                  as="select"
+                  size='md'
+                  as='select'
                   value={progressReport.projectName}
-                  name="projectName"
-                  id="projectName"
+                  name='projectName'
+                  id='projectName'
                   onChange={handleChange}
                   required
                 >
-                  <option selected disabled value="">
+                  <option selected disabled value=''>
                     Select Project
                   </option>
                   {/* <option value="dasd">New Project</option> */}
 
-                  {currentUserActiveProposals.map((proposal) => (
+                  {currentUserActiveProposals.map(proposal => (
                     <option
                       value={proposal.ipfsKey}
                       disabled={!proposal.newProgressReport}
@@ -397,29 +397,29 @@ const ProgressReportCreationPage = ({
                       {proposal._proposal_title}
                     </option>
                   ))}
-                </Form.Control>{" "}
+                </Form.Control>{' '}
               </Col>
             </Form.Group>
 
             <Form.Group
               as={Row}
-              controlId="formPlaintextEmail"
+              controlId='formPlaintextEmail'
               className={styles.maxWidthLabel}
             >
-              <AppFormLabel column lg="3">
+              <AppFormLabel column lg='3'>
                 Progress Report Name
                 <span className={styles.required}></span>
                 <InfoIcon
-                  description={specialCharacterMessage("progress report name")}
+                  description={specialCharacterMessage('progress report name')}
                 />
               </AppFormLabel>
-              <Col lg="9" className={styles.inputSameLine}>
+              <Col lg='9' className={styles.inputSameLine}>
                 <Form.Control
-                  placeholder="Progress Report Name"
-                  size="md"
+                  placeholder='Progress Report Name'
+                  size='md'
                   value={progressReport.progressReportTitle}
-                  name="progressReportTitle"
-                  id="progressReportTitle"
+                  name='progressReportTitle'
+                  id='progressReportTitle'
                   onChange={handleChange}
                   required
                 />
@@ -427,24 +427,24 @@ const ProgressReportCreationPage = ({
             </Form.Group>
             <Form.Group
               as={Row}
-              controlId="formPlaintextEmail"
+              controlId='formPlaintextEmail'
               className={styles.maxWidthLabel}
             >
-              <AppFormLabel column lg="3">
+              <AppFormLabel column lg='3'>
                 Percentage Completed
                 <span className={styles.required}></span>
                 {/* <InfoIcon description = "The completed percentage of the project"/>   */}
               </AppFormLabel>
-              <Col lg="" className="col-lg-2" className={styles.inputSameLine}>
-                <InputGroup size="md">
+              <Col lg='' className='col-lg-2' className={styles.inputSameLine}>
+                <InputGroup size='md'>
                   <FormControl
-                    placeholder="Percentage Completed"
-                    type="number"
+                    placeholder='Percentage Completed'
+                    type='number'
                     min={0}
                     max={100}
                     value={progressReport.percentageCompleted}
-                    name="percentageCompleted"
-                    id="percentageCompleted"
+                    name='percentageCompleted'
+                    id='percentageCompleted'
                     onChange={handleChange}
                     required
                   />
@@ -453,19 +453,19 @@ const ProgressReportCreationPage = ({
                   </InputGroup.Append>
                 </InputGroup>
               </Col>
-              <AppFormLabel column lg="3" className={styles.labelSameLine}>
+              <AppFormLabel column lg='3' className={styles.labelSameLine}>
                 Time Remaining to Completion
                 <span className={styles.required}></span>
                 {/* <InfoIcon description = "The estimated remaining time for the project"/>   */}
               </AppFormLabel>
-              <Col lg="3" className={styles.inputSameLine}>
-                <InputGroup size="md">
+              <Col lg='3' className={styles.inputSameLine}>
+                <InputGroup size='md'>
                   <FormControl
-                    placeholder="Time Remaining"
-                    type="number"
+                    placeholder='Time Remaining'
+                    type='number'
                     value={progressReport.timeRemainingToCompletion}
-                    name="timeRemainingToCompletion"
-                    id="timeRemainingToCompletion"
+                    name='timeRemainingToCompletion'
+                    id='timeRemainingToCompletion'
                     onChange={handleChange}
                     min={0}
                     max={6}
@@ -478,18 +478,18 @@ const ProgressReportCreationPage = ({
               </Col>
             </Form.Group>
 
-            <Form.Group as={Row} controlId="formPlaintextPassword">
-              <AppFormLabel column lg="12">
+            <Form.Group as={Row} controlId='formPlaintextPassword'>
+              <AppFormLabel column lg='12'>
                 Description
-                <InfoIcon description="A detailed description for the progress report (minimum 10 words)" />
+                <InfoIcon description='A detailed description for the progress report (minimum 10 words)' />
                 <span className={styles.required}></span>
               </AppFormLabel>
-              <Col lg="12">
+              <Col lg='12'>
                 <RichTextEditor
                   required
                   initialData={progressReport.description ?? null}
-                  onChange={(data) =>
-                    setProposal((prevState) => ({
+                  onChange={data =>
+                    setProposal(prevState => ({
                       ...prevState,
                       description: data,
                     }))
@@ -497,14 +497,14 @@ const ProgressReportCreationPage = ({
                   setWords={setDescriptionWords}
                   setCharacters={setDescriptionCharacters}
                   onBlur={() => {
-                    document.getElementById("description").reportValidity();
+                    document.getElementById('description').reportValidity();
                   }}
                   minimumNumberOfWords={10}
                 />
                 <input
                   className={styles.fakeInput}
-                  style={{ left: "15px" }}
-                  id="description"
+                  style={{ left: '15px' }}
+                  id='description'
                 />
               </Col>
             </Form.Group>
@@ -523,47 +523,47 @@ const ProgressReportCreationPage = ({
 
             <Form.Group
               as={Row}
-              controlId="formPlaintextPassword"
+              controlId='formPlaintextPassword'
               className={styles.maxWidthLabelPTR}
             >
-              <AppFormLabel column lg="3">
+              <AppFormLabel column lg='3'>
                 Project Terms Revision
                 <span className={styles.required}></span>
-                <InfoIcon description="Whether the project requires additional budget or additional time for completion" />
+                <InfoIcon description='Whether the project requires additional budget or additional time for completion' />
               </AppFormLabel>
-              <Col lg="4" className={styles.inputSameLine}>
+              <Col lg='4' className={styles.inputSameLine}>
                 <Form.Check
                   checked={progressReport.projectTermRevision}
                   onChange={handleCheckedChange}
-                  name="projectTermRevision"
-                  id="projectTermRevision"
-                  type="switch"
-                  id="custom-switch"
-                  label=""
-                  size="lg"
+                  name='projectTermRevision'
+                  id='projectTermRevision'
+                  type='switch'
+                  id='custom-switch'
+                  label=''
+                  size='lg'
                 />
               </Col>
             </Form.Group>
 
             {progressReport.projectTermRevision && (
               <>
-                <Form.Group as={Row} controlId="formPlaintextPassword">
-                  <AppFormLabel column lg="2">
+                <Form.Group as={Row} controlId='formPlaintextPassword'>
+                  <AppFormLabel column lg='2'>
                     Additional Budget
                     <span className={styles.required}></span>
                     {/* <InfoIcon description = "Additional budget required (in ICX) for completion"/>   */}
                   </AppFormLabel>
-                  <Col lg="4" className={styles.inputSameLine}>
-                    <InputGroup size="md">
+                  <Col lg='4' className={styles.inputSameLine}>
+                    <InputGroup size='md'>
                       <FormControl
-                        placeholder="Additional Budget"
-                        type="number"
+                        placeholder='Additional Budget'
+                        type='number'
                         value={progressReport.additionalBudget}
-                        name="additionalBudget"
+                        name='additionalBudget'
                         onChange={handleChange}
                         min={0}
                         required
-                        id="additionalBudget"
+                        id='additionalBudget'
                       />
                       <InputGroup.Append>
                         <InputGroup.Text>ICX</InputGroup.Text>
@@ -571,19 +571,19 @@ const ProgressReportCreationPage = ({
                     </InputGroup>
                   </Col>
 
-                  <AppFormLabel column lg="2" className={styles.labelSameLine}>
+                  <AppFormLabel column lg='2' className={styles.labelSameLine}>
                     Additional Time
                     <span className={styles.required}></span>
                     {/* <InfoIcon description = "Additional time required (in months) for completion"/>   */}
                   </AppFormLabel>
-                  <Col lg="4" className={styles.inputSameLine}>
-                    <InputGroup size="md">
+                  <Col lg='4' className={styles.inputSameLine}>
+                    <InputGroup size='md'>
                       <FormControl
-                        placeholder="Additional Time"
-                        type="number"
+                        placeholder='Additional Time'
+                        type='number'
                         value={progressReport.additionalTime}
-                        name="additionalTime"
-                        id="additionalTime"
+                        name='additionalTime'
+                        id='additionalTime'
                         onChange={handleChange}
                         min={0}
                         max={6}
@@ -596,18 +596,18 @@ const ProgressReportCreationPage = ({
                   </Col>
                 </Form.Group>
 
-                <Form.Group as={Row} controlId="formPlaintextPassword">
-                  <AppFormLabel column lg="12">
+                <Form.Group as={Row} controlId='formPlaintextPassword'>
+                  <AppFormLabel column lg='12'>
                     Revision Description
                     <span className={styles.required}></span>
-                    <InfoIcon description="Reason for requiring additional time and additional budget (minimum 10 words)" />
+                    <InfoIcon description='Reason for requiring additional time and additional budget (minimum 10 words)' />
                   </AppFormLabel>
-                  <Col lg="12">
+                  <Col lg='12'>
                     <RichTextEditor
                       required
                       initialData={progressReport.revisionDescription ?? null}
-                      onChange={(data) =>
-                        setProposal((prevState) => ({
+                      onChange={data =>
+                        setProposal(prevState => ({
                           ...prevState,
                           revisionDescription: data,
                         }))
@@ -616,25 +616,25 @@ const ProgressReportCreationPage = ({
                       setCharacters={setRevisionDescriptionCharacters}
                       onBlur={() => {
                         document
-                          .getElementById("revisionDescription")
+                          .getElementById('revisionDescription')
                           .reportValidity();
                       }}
                       minimumNumberOfWords={10}
                     />
                     <input
                       className={styles.fakeInput}
-                      style={{ left: "15px" }}
-                      id="revisionDescription"
+                      style={{ left: '15px' }}
+                      id='revisionDescription'
                     />
                   </Col>
                 </Form.Group>
               </>
             )}
 
-            <Alert variant={"info"}>{signingInfoMessage}</Alert>
+            <Alert variant={'info'}>{signingInfoMessage}</Alert>
 
             {isLastReport && (
-              <Alert variant={"info"}>
+              <Alert variant={'info'}>
                 Note: This is the last progress report.
               </Alert>
             )}
@@ -642,20 +642,20 @@ const ProgressReportCreationPage = ({
             {isLastReport &&
               (isTimeRemainingNotZero || isTaskRemaining) &&
               !progressReport.projectTermRevision && (
-                <Alert variant={"warning"}>
+                <Alert variant={'warning'}>
                   <span>Warning: This is the last progress report</span>
 
                   {isTaskRemaining && (
                     <span>
-                      {" "}
-                      and the completed percentage is{" "}
+                      {' '}
+                      and the completed percentage is{' '}
                       {progressReport.percentageCompleted}%
                     </span>
                   )}
                   {isTimeRemainingNotZero && (
                     <span>
-                      {" "}
-                      and the time remaining to completion is{" "}
+                      {' '}
+                      and the time remaining to completion is{' '}
                       {progressReport.timeRemainingToCompletion} months
                     </span>
                   )}
@@ -669,46 +669,46 @@ const ProgressReportCreationPage = ({
               progressReport.projectTermRevision &&
               progressReport.timeRemainingToCompletion !==
                 progressReport.additionalTime && (
-                <Alert variant="primary">
-                  Note: Recommended additional time:{" "}
+                <Alert variant='primary'>
+                  Note: Recommended additional time:{' '}
                   {progressReport.timeRemainingToCompletion} month (The time
                   remaining to completion).
                 </Alert>
               )}
 
-            <Form.Group as={Row} controlId="formPlaintextPassword">
+            <Form.Group as={Row} controlId='formPlaintextPassword'>
               <Col className={styles.draftButton}>
                 <Popup
                   component={
-                    <Button variant="outline-info" onClick={onClickSaveDraft}>
+                    <Button variant='outline-info' onClick={onClickSaveDraft}>
                       SAVE AS DRAFT
                     </Button>
                   }
-                  popOverText="Save changes and continue later."
-                  placement="right"
+                  popOverText='Save changes and continue later.'
+                  placement='right'
                 />
               </Col>
               <Col className={styles.saveButton}>
-                {period !== "VOTING" ? (
-                  <Button variant="info" type="submit">
+                {period !== 'VOTING' ? (
+                  <Button variant='info' type='submit'>
                     SUBMIT
                   </Button>
                 ) : (
                   <Popup
                     component={
-                      <span className="d-inline-block">
+                      <span className='d-inline-block'>
                         <Button
-                          variant="info"
-                          type="submit"
+                          variant='info'
+                          type='submit'
                           disabled
-                          style={{ pointerEvents: "none" }}
+                          style={{ pointerEvents: 'none' }}
                         >
                           SUBMIT
                         </Button>
                       </span>
                     }
-                    popOverText="You can submit in the next application period."
-                    placement="left"
+                    popOverText='You can submit in the next application period.'
+                    placement='left'
                   />
                 )}
               </Col>
@@ -722,8 +722,8 @@ const ProgressReportCreationPage = ({
       <ConfirmationModal
         show={submissionConfirmationShow}
         onHide={() => setSubmissionConfirmationShow(false)}
-        heading={"Progress Report Submission Confirmation"}
-        size="mdxl"
+        heading={'Progress Report Submission Confirmation'}
+        size='mdxl'
         onConfirm={() => {
           submitProgressReport({
             progressReport,
@@ -741,7 +741,7 @@ const ProgressReportCreationPage = ({
       <ConfirmationModal
         show={draftConfirmationShow}
         onHide={() => setDraftConfirmationShow(false)}
-        heading={"Draft Submission Confirmation"}
+        heading={'Draft Submission Confirmation'}
         onConfirm={() => {
           saveChanges();
         }}
@@ -756,23 +756,23 @@ const ProgressReportCreationPage = ({
   );
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  submitProgressReport: (payload) =>
+const mapDispatchToProps = dispatch => ({
+  submitProgressReport: payload =>
     dispatch(submitProgressReportRequest(payload)),
-  fetchProposalListRequest: (payload) =>
+  fetchProposalListRequest: payload =>
     dispatch(fetchProposalListRequest(payload)),
-  updateProposalStatus: (payload) => dispatch(updateProposalStatus(payload)),
-  saveDraftRequest: (payload) => dispatch(saveDraftRequest(payload)),
-  fetchProposalByAddressRequest: (payload) =>
+  updateProposalStatus: payload => dispatch(updateProposalStatus(payload)),
+  saveDraftRequest: payload => dispatch(saveDraftRequest(payload)),
+  fetchProposalByAddressRequest: payload =>
     dispatch(fetchProposalByAddressRequest(payload)),
 
-  fetchCPFScoreAddressRequest: (payload) =>
+  fetchCPFScoreAddressRequest: payload =>
     dispatch(fetchCPFScoreAddressRequest(payload)),
-  fetchCPFRemainingFundRequest: (payload) =>
+  fetchCPFRemainingFundRequest: payload =>
     dispatch(fetchCPFRemainingFundRequest(payload)),
 });
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   submittingProgressReport: state.progressReport.submittingProgressReport,
   // currentUserActiveProposals: [...state.proposals.proposalByAddress, {
   //     ipfsKey: 'adas',
@@ -788,5 +788,5 @@ const mapStateToProps = (state) => ({
 });
 
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(ProgressReportCreationPage)
+  connect(mapStateToProps, mapDispatchToProps)(ProgressReportCreationPage),
 );

@@ -1,69 +1,69 @@
-import React from "react";
-import { FaBars } from "react-icons/fa";
-import { Switch, Route, Redirect } from "react-router-dom";
-import Dashboard from "../Dashboard";
-import ProgressReports from "../ProgressReports";
-import Proposals from "../Proposals";
-import ProposalCreationPage from "../ProposalCreationPage";
-import ProgressReportCreationPage from "../ProgressReportCreationPage";
-import SponsorRequests from "../SponsorRequests";
-import Voting from "../Voting";
-import BackedProjects from "../BackedProjects";
-import { connect } from "react-redux";
-import Footer from "Components/Footer";
-import { Helmet } from "react-helmet";
-import useTimer from "Hooks/useTimer";
+import React from 'react';
+import { FaBars } from 'react-icons/fa';
+import { Switch, Route, Redirect } from 'react-router-dom';
+import Dashboard from '../Dashboard';
+import ProgressReports from '../ProgressReports';
+import Proposals from '../Proposals';
+import ProposalCreationPage from '../ProposalCreationPage';
+import ProgressReportCreationPage from '../ProgressReportCreationPage';
+import SponsorRequests from '../SponsorRequests';
+import Voting from '../Voting';
+import BackedProjects from '../BackedProjects';
+import { connect } from 'react-redux';
+import Footer from 'Components/Footer';
+import { Helmet } from 'react-helmet';
+import useTimer from 'Hooks/useTimer';
 
 const Main = ({ handleToggleSidebar, isPrep, isRegistered, period }) => {
   const { isRemainingTimeZero } = useTimer();
 
-  const prepRoute = (component) =>
-    isPrep && isRegistered ? component : <Redirect to="/" />;
+  const prepRoute = component =>
+    isPrep && isRegistered ? component : <Redirect to='/' />;
 
-  const userRoute = (component) =>
-    !isPrep || !isRegistered ? component : <Redirect to="/" />;
+  const userRoute = component =>
+    !isPrep || !isRegistered ? component : <Redirect to='/' />;
 
-  const applicationPeriodRoute = (component) =>
-    period !== "VOTING" ? component : <Redirect to="/" />;
-    // component
+  const applicationPeriodRoute = component =>
+    period !== 'VOTING' ? component : <Redirect to='/' />;
+  // component
 
   return (
     <>
       <main
         style={{
-          display: "flex",
-          justifyContent: "space-between",
+          display: 'flex',
+          justifyContent: 'space-between',
           paddingBottom: 0,
           paddingLeft: 0,
           paddingRight: 0,
         }}
       >
-        <div style={{ paddingLeft: "25px", paddingRight: "25px" }}>
-          <div className="btn-toggle" onClick={() => handleToggleSidebar(true)}>
+        <div style={{ paddingLeft: '25px', paddingRight: '25px' }}>
+          <div className='btn-toggle' onClick={() => handleToggleSidebar(true)}>
             <FaBars />
           </div>
 
-          <div className="block ">
+          <div className='block '>
             <Switch>
-              <Route path="/dashboard">
+              <Route path='/dashboard'>
                 <Dashboard />
                 <Helmet>
                   <title>CPS - Dashboard</title>
                 </Helmet>
               </Route>
-              <Route path={process.env.PUBLIC_URL + "/proposals"}>
+              <Route path={process.env.PUBLIC_URL + '/proposals'}>
                 {<Proposals />}
                 <Helmet>
                   <title>CPS - Proposals</title>
                 </Helmet>
               </Route>
-              <Route path="/progress-reports">
+              <Route path='/progress-reports'>
                 {<ProgressReports />}
                 <Helmet>
                   <title>CPS - Progress Reports</title>
                 </Helmet>
               </Route>
-              <Route path="/newProposal">
+              <Route path='/newProposal'>
                 <>
                   {<ProposalCreationPage />}
                   <Helmet>
@@ -72,7 +72,7 @@ const Main = ({ handleToggleSidebar, isPrep, isRegistered, period }) => {
                 </>
                 }
               </Route>
-              <Route path="/newProgressReport">
+              <Route path='/newProgressReport'>
                 {
                   <>
                     {<ProgressReportCreationPage />}
@@ -92,7 +92,7 @@ const Main = ({ handleToggleSidebar, isPrep, isRegistered, period }) => {
               {/* <Route path="/backed-projects">
             {prepRoute(<BackedProjects />)}
           </Route> */}
-              <Route path="/">
+              <Route path='/'>
                 <Dashboard />
                 <Helmet>
                   <title>CPS - Dashboard</title>
@@ -111,7 +111,7 @@ const Main = ({ handleToggleSidebar, isPrep, isRegistered, period }) => {
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   isPrep: state.account.isPrep,
   isRegistered: state.account.isRegistered,
   period: state.period.period,

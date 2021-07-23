@@ -1,24 +1,24 @@
-import { put, call } from "redux-saga/effects";
-import { callKeyStoreWallet } from "../../ICON/utils";
+import { put, call } from 'redux-saga/effects';
+import { callKeyStoreWallet } from '../../ICON/utils';
 // import {
 //   getCourseInfo,
 // } from '../services/api';
 import {
   fetchSponsorRequestsListSuccess,
   fetchSponsorRequestsListFailure,
-} from "../../Reducers/proposalSlice";
+} from '../../Reducers/proposalSlice';
 
 const proposalListStatusMapping = {
-  Pending: "_sponsor_pending",
-  Approved: "_approved",
-  Rejected: "_rejected",
-  Disqualified: "_disqualified",
+  Pending: '_sponsor_pending',
+  Approved: '_approved',
+  Rejected: '_rejected',
+  Disqualified: '_disqualified',
 };
 
 function* fetchSponsorRequestsListWorker({ payload }) {
   try {
     const response = yield call(callKeyStoreWallet, {
-      method: "get_sponsors_requests",
+      method: 'get_sponsors_requests',
       params: {
         _status: proposalListStatusMapping[payload.status],
         _sponsor_address: payload.walletAddress,
@@ -46,7 +46,7 @@ function* fetchSponsorRequestsListWorker({ payload }) {
         response,
         status: payload.status,
         pageNumber: payload.pageNumber,
-      })
+      }),
     );
   } catch (error) {
     yield put(fetchSponsorRequestsListFailure());

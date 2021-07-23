@@ -1,8 +1,8 @@
-import store from "../../Store";
-import { sendTransaction } from "../../ICON/utils";
+import store from '../../Store';
+import { sendTransaction } from '../../ICON/utils';
 
 function* submitProposalToScoreWorker({ payload }) {
-  console.log("submitProposalToScoreWorker");
+  console.log('submitProposalToScoreWorker');
   console.log(payload);
 
   // const params = {
@@ -25,7 +25,7 @@ function* submitProposalToScoreWorker({ payload }) {
   };
 
   sendTransaction({
-    method: "submit_proposal",
+    method: 'submit_proposal',
     params,
     icxAmount: 50,
   });

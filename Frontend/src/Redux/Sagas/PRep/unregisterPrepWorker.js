@@ -1,8 +1,8 @@
-import { sendTransaction } from "Redux/ICON/utils";
+import { sendTransaction } from 'Redux/ICON/utils';
 
 function* unregisterPrepWorker({ payload }) {
   sendTransaction({
-    method: "unregister_prep",
+    method: 'unregister_prep',
   });
 }
 

@@ -1,14 +1,14 @@
-import { put, call } from "redux-saga/effects";
+import { put, call } from 'redux-saga/effects';
 import {
   fetchCPSTreasuryScoreAddressSuccess,
   fetchCPSTreasuryScoreAddressFailure,
-} from "../../Reducers/fundSlice";
-import { callKeyStoreWallet } from "../../ICON/utils";
+} from '../../Reducers/fundSlice';
+import { callKeyStoreWallet } from '../../ICON/utils';
 
 function* fetchCPSTreasuryScoreAddressWorker({ payload }) {
   try {
     const response = yield call(callKeyStoreWallet, {
-      method: "get_cps_treasury_score",
+      method: 'get_cps_treasury_score',
     });
 
     // const response = {
@@ -21,7 +21,7 @@ function* fetchCPSTreasuryScoreAddressWorker({ payload }) {
     yield put(
       fetchCPSTreasuryScoreAddressSuccess({
         response,
-      })
+      }),
     );
   } catch (error) {
     yield put(fetchCPSTreasuryScoreAddressFailure(error));

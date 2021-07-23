@@ -1,28 +1,28 @@
-import { put, call } from "redux-saga/effects";
-import { callKeyStoreWallet } from "../../ICON/utils";
+import { put, call } from 'redux-saga/effects';
+import { callKeyStoreWallet } from '../../ICON/utils';
 // import {
 //   getCourseInfo,
 // } from '../services/api';
 import {
   fetchMyProposalListSuccess,
   fetchMyProposalListFailure,
-} from "../../Reducers/proposalSlice";
+} from '../../Reducers/proposalSlice';
 
 const proposalListStatusMapping = {
-  Active: "_active",
-  Voting: "_pending",
-  Pending: "_sponsor_pending",
+  Active: '_active',
+  Voting: '_pending',
+  Pending: '_sponsor_pending',
 
-  Completed: "_completed",
-  Disqualified: "_rejected",
-  Paused: "_paused",
-  Rejected: "_rejected",
+  Completed: '_completed',
+  Disqualified: '_rejected',
+  Paused: '_paused',
+  Rejected: '_rejected',
 };
 
 function* fetchMyProposalListWorker({ payload }) {
   try {
     const response = yield call(callKeyStoreWallet, {
-      method: "get_proposal_detail_by_wallet",
+      method: 'get_proposal_detail_by_wallet',
       params: {
         _wallet_address: payload.walletAddress,
       },
@@ -111,7 +111,7 @@ function* fetchMyProposalListWorker({ payload }) {
     yield put(
       fetchMyProposalListSuccess({
         response,
-      })
+      }),
     );
   } catch (error) {
     yield put(fetchMyProposalListFailure());

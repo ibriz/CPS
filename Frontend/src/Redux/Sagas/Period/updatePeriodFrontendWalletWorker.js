@@ -1,13 +1,13 @@
-import { sendTransactionFrontendWallet } from "Redux/ICON/utils";
+import { sendTransactionFrontendWallet } from 'Redux/ICON/utils';
 
 function* updatePeriodFrontendWalletWorker({ payload }) {
   try {
     sendTransactionFrontendWallet({
-      method: "update_period",
+      method: 'update_period',
     });
-    console.log("success");
+    console.log('success');
   } catch {
-    console.log("failure");
+    console.log('failure');
   }
 }
 

@@ -1,7 +1,7 @@
-import React from "react";
-import styles from "./ProposalList.module.scss";
-import { Container } from "react-bootstrap";
-import ProgressReport from "./ProgressReport";
+import React from 'react';
+import styles from './ProposalList.module.scss';
+import { Container } from 'react-bootstrap';
+import ProgressReport from './ProgressReport';
 
 const ProjectReportList = ({
   projectReports,
@@ -12,7 +12,7 @@ const ProjectReportList = ({
   return (
     <Container fluid>
       {projectReports.length ? (
-        projectReports.map((progressReport) => (
+        projectReports.map(progressReport => (
           <ProgressReport
             // key = {progressReport.reportKey}
             progressReport={progressReport}

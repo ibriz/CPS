@@ -1,34 +1,34 @@
-import React from "react";
-import { Row, Col, Badge, Button } from "react-bootstrap";
-import styles from "./Proposal.module.scss";
+import React from 'react';
+import { Row, Col, Badge, Button } from 'react-bootstrap';
+import styles from './Proposal.module.scss';
 
-import ProgressText from "../../../UI/ProgressText";
-import ProgressBar from "../../../UI/ProgressBar";
-import LowerCardTitle from "../../../UI/LowerCardList/LowerCardTitle";
-import LowerCardInfo from "../../../UI/LowerCardList/LowerCardInfo";
-import Budget from "../../../UI/LowerCardList/Budget";
-import { icxFormat } from "Helpers";
-import { proposalStatusMapping } from "Constants";
-import ClassNames from "classnames";
-import { Link } from "react-router-dom";
-import { connect } from "react-redux";
-import useTimer from "Hooks/useTimer";
-import ProgressBarCombined from "Components/Card/ProgressBarCombined";
-import InfoIcon from "Components/InfoIcon";
-import VoteProgressBar from "Components/VoteProgressBar";
+import ProgressText from '../../../UI/ProgressText';
+import ProgressBar from '../../../UI/ProgressBar';
+import LowerCardTitle from '../../../UI/LowerCardList/LowerCardTitle';
+import LowerCardInfo from '../../../UI/LowerCardList/LowerCardInfo';
+import Budget from '../../../UI/LowerCardList/Budget';
+import { icxFormat } from 'Helpers';
+import { proposalStatusMapping } from 'Constants';
+import ClassNames from 'classnames';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import useTimer from 'Hooks/useTimer';
+import ProgressBarCombined from 'Components/Card/ProgressBarCombined';
+import InfoIcon from 'Components/InfoIcon';
+import VoteProgressBar from 'Components/VoteProgressBar';
 
 const badgeColor = {
-  Voting: "warning",
-  Pending: "warning",
+  Voting: 'warning',
+  Pending: 'warning',
 
-  Active: "primary",
-  Completed: "success",
-  Draft: "info",
-  Disqualified: "danger",
-  Paused: "secondary",
+  Active: 'primary',
+  Completed: 'success',
+  Draft: 'info',
+  Disqualified: 'danger',
+  Paused: 'secondary',
 
-  Approved: "success",
-  Rejected: "danger",
+  Approved: 'success',
+  Rejected: 'danger',
 };
 
 const Proposal = ({
@@ -43,39 +43,39 @@ const Proposal = ({
   return (
     <>
       <Row className={styles.proposalContainer} onClick={onClick}>
-        <Col sm={proposalPendingPR ? "8" : "9"} className={styles.infos}>
-          <Row style={{ alignItems: "center" }} className={styles.firstRow}>
+        <Col sm={proposalPendingPR ? '8' : '9'} className={styles.infos}>
+          <Row style={{ alignItems: 'center' }} className={styles.firstRow}>
             <Badge
-              size="xs"
+              size='xs'
               variant={
                 proposalStatusMapping.find(
-                  (mapping) => mapping.status === proposal._status
+                  mapping => mapping.status === proposal._status,
                 ).badgeColor
               }
               className={styles.badge}
             >
               {
                 proposalStatusMapping.find(
-                  (mapping) => mapping.status === proposal._status
+                  mapping => mapping.status === proposal._status,
                 ).name
               }
-            </Badge>{" "}
+            </Badge>{' '}
             <LowerCardTitle>{proposal._proposal_title}</LowerCardTitle>
           </Row>
           <Row className={styles.secondRow}>
             <LowerCardInfo>{`${proposal._contributor_address.slice(
               0,
-              4
+              4,
             )}...${proposal._contributor_address.slice(
-              proposal._contributor_address.length - 3
+              proposal._contributor_address.length - 3,
             )}`}</LowerCardInfo>
 
             {proposalStatusMapping.find(
-              (mapping) => mapping.status === proposal._status
-            ).name !== "Draft" && (
+              mapping => mapping.status === proposal._status,
+            ).name !== 'Draft' && (
               <>
-                <LowerCardInfo className={"proposalInfo2"}>
-                  Submitted on:{" "}
+                <LowerCardInfo className={'proposalInfo2'}>
+                  Submitted on:{' '}
                   {new Date(proposal._timestamp / 1000).toLocaleDateString()}
                 </LowerCardInfo>
 
@@ -83,25 +83,25 @@ const Proposal = ({
               </>
             )}
 
-            {["Active", "Paused"].includes(
+            {['Active', 'Paused'].includes(
               proposalStatusMapping.find(
-                (mapping) => mapping.status === proposal._status
-              ).name
+                mapping => mapping.status === proposal._status,
+              ).name,
             ) &&
               proposalPendingPRSameList &&
-              period !== "VOTING" &&
+              period !== 'VOTING' &&
               !isRemainingTimeZero && (
                 <>
                   <Link
                     to={{
-                      pathname: "/newProgressReport",
+                      pathname: '/newProgressReport',
                       // search: "?sort=name",
                       // hash: "#the-hash",
                       ipfsKey: proposal.ipfsKey,
                     }}
                   >
                     <Button
-                      variant="info"
+                      variant='info'
                       className={styles.createProposalButton}
                     >
                       Create Progress Report
@@ -113,14 +113,14 @@ const Proposal = ({
         </Col>
         {!proposalPendingPR && (
           <Col
-            md={proposalPendingPR ? "4" : "3"}
-            xs="12"
+            md={proposalPendingPR ? '4' : '3'}
+            xs='12'
             className={styles.progressBar}
           >
-            {["Voting"].includes(
+            {['Voting'].includes(
               proposalStatusMapping.find(
-                (mapping) => mapping.status === proposal._status
-              ).name
+                mapping => mapping.status === proposal._status,
+              ).name,
             ) && (
               <>
                 {/* <ProgressText>{proposal.approvedPercentage ? `${proposal.approvedPercentage.toFixed()}` : 0}% Stake Approved</ProgressText>
@@ -158,10 +158,10 @@ const Proposal = ({
               </>
             )}
 
-            {["Active", "Paused"].includes(
+            {['Active', 'Paused'].includes(
               proposalStatusMapping.find(
-                (mapping) => mapping.status === proposal._status
-              ).name
+                mapping => mapping.status === proposal._status,
+              ).name,
             ) &&
               !proposalPendingPR && (
                 <>
@@ -179,30 +179,30 @@ const Proposal = ({
 
         {proposalPendingPR && (
           <Col
-            lg="4"
-            xs="12"
+            lg='4'
+            xs='12'
             className={ClassNames(
               styles.progressBar,
-              styles.createProgressReportButtonContainer
+              styles.createProgressReportButtonContainer,
             )}
           >
-            {["Active", "Paused"].includes(
+            {['Active', 'Paused'].includes(
               proposalStatusMapping.find(
-                (mapping) => mapping.status === proposal._status
-              ).name
+                mapping => mapping.status === proposal._status,
+              ).name,
             ) &&
               proposalPendingPR && (
                 <>
                   <Link
                     to={{
-                      pathname: "/newProgressReport",
+                      pathname: '/newProgressReport',
                       // search: "?sort=name",
                       // hash: "#the-hash",
                       ipfsKey: proposal.ipfsKey,
                     }}
                   >
                     <Button
-                      variant="info"
+                      variant='info'
                       className={styles.createProposalButton}
                     >
                       CREATE NEW PROGRESS REPORT
@@ -219,7 +219,7 @@ const Proposal = ({
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   period: state.period.period,
 });
 

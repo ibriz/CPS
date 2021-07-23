@@ -1,8 +1,8 @@
-import React from "react";
-import { Table } from "react-bootstrap";
-import styled from "styled-components";
+import React from 'react';
+import { Table } from 'react-bootstrap';
+import styled from 'styled-components';
 
-const MilestoneTable = ({ milestones, title = "Milestones" }) => {
+const MilestoneTable = ({ milestones, title = 'Milestones' }) => {
   const TableHeader = styled.th`
     background: #1aaaba !important;
     font-style: normal;
@@ -41,8 +41,8 @@ const MilestoneTable = ({ milestones, title = "Milestones" }) => {
         {milestones?.map((milestone, index) => (
           <tr key={index}>
             <TableData>
-              <Key>{milestone.name || "N/A"}</Key>
-              <Value>`{milestone.duration || "N/A"} months`</Value>
+              <Key>{milestone.name || 'N/A'}</Key>
+              <Value>`{milestone.duration || 'N/A'} months`</Value>
             </TableData>
           </tr>
         ))}

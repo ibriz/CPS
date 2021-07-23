@@ -1,20 +1,20 @@
-import { createSelector } from "reselect";
-import { proposalStatusMapping } from "Constants";
+import { createSelector } from 'reselect';
+import { proposalStatusMapping } from 'Constants';
 
-const getProposalList = (state) => state.proposals.proposalList;
-const getWalletAddress = (state) => state.account.address;
+const getProposalList = state => state.proposals.proposalList;
+const getWalletAddress = state => state.account.address;
 
 export const getCurrentUserActiveProposals = createSelector(
   [getProposalList, getWalletAddress],
   (proposalList, walletAddress) => {
     return proposalList.Active.filter(
-      (proposal) => proposal._contributor_address === walletAddress
+      proposal => proposal._contributor_address === walletAddress,
     );
-  }
+  },
 );
 
-const getApprovedVotes = (state) => state.proposals.approvedVotes;
-const getTotalVotes = (state) => state.proposals.totalVotes;
+const getApprovedVotes = state => state.proposals.approvedVotes;
+const getTotalVotes = state => state.proposals.totalVotes;
 
 export const getProposalApprovedPercentage = createSelector(
   [getApprovedVotes, getTotalVotes],
@@ -23,11 +23,11 @@ export const getProposalApprovedPercentage = createSelector(
       return 0;
     }
     return (approvedVotes / totalVotes) * 100;
-  }
+  },
 );
 
-const getApprovedVoters = (state) => state.proposals.approvedVoters;
-const getTotalVoters = (state) => state.proposals.totalVoters;
+const getApprovedVoters = state => state.proposals.approvedVoters;
+const getTotalVoters = state => state.proposals.totalVoters;
 
 export const getProposalApprovedVotersPercentage = createSelector(
   [getApprovedVoters, getTotalVoters],
@@ -36,10 +36,10 @@ export const getProposalApprovedVotersPercentage = createSelector(
       return 0;
     }
     return (approvedVoters / totalVoters) * 100;
-  }
+  },
 );
 
-const getRejectedVotes = (state) => state.proposals.rejectedVotes;
+const getRejectedVotes = state => state.proposals.rejectedVotes;
 
 export const getProposalRejectedPercentage = createSelector(
   [getRejectedVotes, getTotalVotes],
@@ -48,10 +48,10 @@ export const getProposalRejectedPercentage = createSelector(
       return 0;
     }
     return (approvedVotes / totalVotes) * 100;
-  }
+  },
 );
 
-const getRejectedVoters = (state) => state.proposals.rejectedVoters;
+const getRejectedVoters = state => state.proposals.rejectedVoters;
 
 export const getProposalRejectedVotersPercentage = createSelector(
   [getRejectedVoters, getTotalVoters],
@@ -60,11 +60,11 @@ export const getProposalRejectedVotersPercentage = createSelector(
       return 0;
     }
     return (approvedVoters / totalVoters) * 100;
-  }
+  },
 );
 
-const getApprovedVotesPR = (state) => state.progressReport.approvedVotes;
-const getTotalVotesPR = (state) => state.progressReport.totalVotes;
+const getApprovedVotesPR = state => state.progressReport.approvedVotes;
+const getTotalVotesPR = state => state.progressReport.totalVotes;
 
 export const getProgressReportApprovedPercentage = createSelector(
   [getApprovedVotesPR, getTotalVotesPR],
@@ -73,11 +73,11 @@ export const getProgressReportApprovedPercentage = createSelector(
       return 0;
     }
     return (approvedVotes / totalVotes) * 100;
-  }
+  },
 );
 
-const getApprovedVotersPR = (state) => state.progressReport.approvedVoters;
-const getTotalVotersPR = (state) => state.progressReport.totalVoters;
+const getApprovedVotersPR = state => state.progressReport.approvedVoters;
+const getTotalVotersPR = state => state.progressReport.totalVoters;
 
 export const getProgressReportApprovedVotersPercentage = createSelector(
   [getApprovedVotersPR, getTotalVotersPR],
@@ -86,10 +86,10 @@ export const getProgressReportApprovedVotersPercentage = createSelector(
       return 0;
     }
     return (approvedVoters / totalVoters) * 100;
-  }
+  },
 );
 
-const getRejectedVotesPR = (state) => state.progressReport.rejectedVotes;
+const getRejectedVotesPR = state => state.progressReport.rejectedVotes;
 
 export const getProgressReportRejectedPercentage = createSelector(
   [getRejectedVotesPR, getTotalVotesPR],
@@ -98,10 +98,10 @@ export const getProgressReportRejectedPercentage = createSelector(
       return 0;
     }
     return (approvedVotes / totalVotes) * 100;
-  }
+  },
 );
 
-const getRejectedVotersPR = (state) => state.progressReport.rejectedVoters;
+const getRejectedVotersPR = state => state.progressReport.rejectedVoters;
 
 export const getProgressReportRejectedVotersPercentage = createSelector(
   [getRejectedVotersPR, getTotalVotersPR],
@@ -110,12 +110,12 @@ export const getProgressReportRejectedVotersPercentage = createSelector(
       return 0;
     }
     return (approvedVoters / totalVoters) * 100;
-  }
+  },
 );
 
-const getApprovedVotesBudgetAdjustment = (state) =>
+const getApprovedVotesBudgetAdjustment = state =>
   state.progressReport.approvedVotesBudgetChange;
-const getTotalVotesBudgetAdjustment = (state) =>
+const getTotalVotesBudgetAdjustment = state =>
   state.progressReport.totalVotesBudgetChange;
 
 export const getBudgetAdjustmentApprovedPercentage = createSelector(
@@ -125,12 +125,12 @@ export const getBudgetAdjustmentApprovedPercentage = createSelector(
       return 0;
     }
     return (approvedVotes / totalVotes) * 100;
-  }
+  },
 );
 
-const getApprovedVotersBudgetAdjustment = (state) =>
+const getApprovedVotersBudgetAdjustment = state =>
   state.progressReport.approvedVotersBudgetChange;
-const getTotalVotersBudgetAdjustment = (state) =>
+const getTotalVotersBudgetAdjustment = state =>
   state.progressReport.totalVotersBudgetChange;
 
 export const getBudgetAdjustmentApprovedVotersPercentage = createSelector(
@@ -140,10 +140,10 @@ export const getBudgetAdjustmentApprovedVotersPercentage = createSelector(
       return 0;
     }
     return (approvedVoters / totalVoters) * 100;
-  }
+  },
 );
 
-const getRejectedVotesBudgetAdjustment = (state) =>
+const getRejectedVotesBudgetAdjustment = state =>
   state.progressReport.rejectedVotesBudgetChange;
 
 export const getBudgetAdjustmentRejectedPercentage = createSelector(
@@ -153,10 +153,10 @@ export const getBudgetAdjustmentRejectedPercentage = createSelector(
       return 0;
     }
     return (approvedVotes / totalVotes) * 100;
-  }
+  },
 );
 
-const getRejectedVotersBudgetAdjustment = (state) =>
+const getRejectedVotersBudgetAdjustment = state =>
   state.progressReport.rejectedVotersBudgetChange;
 
 export const getBudgetAdjustmentRejectedVotersPercentage = createSelector(
@@ -166,16 +166,16 @@ export const getBudgetAdjustmentRejectedVotersPercentage = createSelector(
       return 0;
     }
     return (approvedVoters / totalVoters) * 100;
-  }
+  },
 );
 
-const getProposalByAddress = (state) => state.proposals.proposalByAddress;
+const getProposalByAddress = state => state.proposals.proposalByAddress;
 
 export const getNewProgressReportInfo = createSelector(
   [getProposalByAddress],
-  (proposalByAddress) => {
+  proposalByAddress => {
     const canCreateNewProgressReportCount = proposalByAddress.filter(
-      (proposal) => proposal.newProgressReport
+      proposal => proposal.newProgressReport,
     ).length;
     const totalProgressReportCount = proposalByAddress.length;
     return {
@@ -183,26 +183,26 @@ export const getNewProgressReportInfo = createSelector(
       totalProgressReportCount,
       canCreateNewProgressReport: canCreateNewProgressReportCount > 0,
     };
-  }
+  },
 );
 
-const getMyProposals = (state) => state.proposals.myProposalList;
+const getMyProposals = state => state.proposals.myProposalList;
 
 export const getProposalPendingProgressReport = createSelector(
   [getProposalByAddress, getMyProposals],
   (proposalByAddress, myProposals) => {
     const pendingProposalIPFSList = [];
 
-    const activePausedProposals = myProposals.filter((proposal) => {
+    const activePausedProposals = myProposals.filter(proposal => {
       const status = proposalStatusMapping.find(
-        (mapping) => mapping.status === proposal._status
+        mapping => mapping.status === proposal._status,
       ).name;
-      return status === "Active" || status === "Paused";
+      return status === 'Active' || status === 'Paused';
     });
     const proposalPendingProgressReport = activePausedProposals
-      .filter((proposal) => {
+      .filter(proposal => {
         const flag =
-          proposalByAddress.find((item) => item.ipfsKey === proposal.ipfsKey)
+          proposalByAddress.find(item => item.ipfsKey === proposal.ipfsKey)
             ?.newProgressReport === true;
 
         if (flag) {
@@ -211,14 +211,14 @@ export const getProposalPendingProgressReport = createSelector(
 
         return flag;
       })
-      .map((proposal) => ({
+      .map(proposal => ({
         ...proposal,
         pendingPR: true,
       }));
 
     const proposalNotPendingProgressReport = myProposals
-      .filter((proposal) => !pendingProposalIPFSList.includes(proposal.ipfsKey))
-      .map((proposal) => ({
+      .filter(proposal => !pendingProposalIPFSList.includes(proposal.ipfsKey))
+      .map(proposal => ({
         ...proposal,
         pendingPR: false,
       }));
@@ -229,5 +229,5 @@ export const getProposalPendingProgressReport = createSelector(
       ],
       proposalNotPendingProgressReport,
     };
-  }
+  },
 );

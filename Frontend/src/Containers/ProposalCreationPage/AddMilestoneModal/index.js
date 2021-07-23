@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
 import {
   Modal,
@@ -8,10 +8,10 @@ import {
   Col,
   InputGroup,
   FormControl,
-} from "react-bootstrap";
-import styles from "./AddMilestoneModal.module.css";
-import RichTextEditor from "../../../Components/RichTextEditor";
-import AppFormLabel from "../../../Components/UI/AppFormLabel";
+} from 'react-bootstrap';
+import styles from './AddMilestoneModal.module.css';
+import RichTextEditor from '../../../Components/RichTextEditor';
+import AppFormLabel from '../../../Components/UI/AppFormLabel';
 
 function AddMilestoneModal(props) {
   const [milestone, setMilestone] = useState({
@@ -30,17 +30,17 @@ function AddMilestoneModal(props) {
     });
   }, [props.show]);
 
-  const handleChange = (event) => {
+  const handleChange = event => {
     let name = event.target.name;
     let value = event.target.value;
 
-    setMilestone((prevState) => ({
+    setMilestone(prevState => ({
       ...prevState,
       [name]: value,
     }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = event => {
     event.preventDefault();
 
     props.onAddMilestone(milestone);
@@ -55,39 +55,39 @@ function AddMilestoneModal(props) {
   return (
     <Modal
       {...props}
-      size="lg"
-      aria-labelledby="contained-modal-title-vcenter"
+      size='lg'
+      aria-labelledby='contained-modal-title-vcenter'
       centered
     >
       <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">Milestone</Modal.Title>
+        <Modal.Title id='contained-modal-title-vcenter'>Milestone</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmit} className={styles.form}>
-          <Form.Group as={Row} controlId="formPlaintextEmail">
-            <AppFormLabel sm="2">Milestone Name</AppFormLabel>
-            <Col sm="10" className={styles.inputSameLine}>
+          <Form.Group as={Row} controlId='formPlaintextEmail'>
+            <AppFormLabel sm='2'>Milestone Name</AppFormLabel>
+            <Col sm='10' className={styles.inputSameLine}>
               <Form.Control
-                placeholder="Enter Milestone Name"
-                size="md"
+                placeholder='Enter Milestone Name'
+                size='md'
                 value={milestone.name}
-                name="name"
+                name='name'
                 onChange={handleChange}
                 required
               />
             </Col>
           </Form.Group>
-          <Form.Group as={Row} controlId="formPlaintextEmail">
-            <AppFormLabel column sm="2" className={styles.labelSameLine}>
+          <Form.Group as={Row} controlId='formPlaintextEmail'>
+            <AppFormLabel column sm='2' className={styles.labelSameLine}>
               Duration
             </AppFormLabel>
-            <Col sm="4" className={styles.inputSameLine}>
-              <InputGroup size="md">
+            <Col sm='4' className={styles.inputSameLine}>
+              <InputGroup size='md'>
                 <FormControl
-                  placeholder="Duration"
-                  type="number"
+                  placeholder='Duration'
+                  type='number'
                   value={milestone.duration}
-                  name="duration"
+                  name='duration'
                   min={0}
                   max={6}
                   onChange={handleChange}
@@ -130,9 +130,9 @@ function AddMilestoneModal(props) {
                             </Col>
                     </Form.Group> */}
 
-          <Form.Group as={Row} controlId="formPlaintextPassword">
+          <Form.Group as={Row} controlId='formPlaintextPassword'>
             <Col className={styles.saveButton}>
-              <Button variant="info" type="submit">
+              <Button variant='info' type='submit'>
                 ADD MILESTONE
               </Button>
             </Col>

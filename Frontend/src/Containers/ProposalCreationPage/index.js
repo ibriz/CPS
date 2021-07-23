@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Row,
   Card,
@@ -12,65 +12,65 @@ import {
   Tooltip,
   OverlayTrigger,
   Popover,
-} from "react-bootstrap";
-import styles from "./ProposalCreationPage.module.css";
+} from 'react-bootstrap';
+import styles from './ProposalCreationPage.module.css';
 import {
   fetchCPFScoreAddressRequest,
   fetchCPFRemainingFundRequest,
-} from "Redux/Reducers/fundSlice";
+} from 'Redux/Reducers/fundSlice';
 
 import {
   submitProposalRequest,
   saveDraftRequest,
-} from "Redux/Reducers/proposalSlice";
-import { fetchPrepsRequest } from "../../Redux/Reducers/prepsSlice";
-import { connect } from "react-redux";
-import { withRouter } from "react-router";
+} from 'Redux/Reducers/proposalSlice';
+import { fetchPrepsRequest } from '../../Redux/Reducers/prepsSlice';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 // import SimpleUploadAdapter from '@ckeditor/ckeditor5-upload/src/adapters/simpleuploadadapter';
-import AddMilestoneModal from "./AddMilestoneModal";
-import EditMileStoneModal from "./EditMilestoneModal";
-import ClassNames from "classnames";
+import AddMilestoneModal from './AddMilestoneModal';
+import EditMileStoneModal from './EditMilestoneModal';
+import ClassNames from 'classnames';
 
-import { AiFillDelete, AiFillInfoCircle } from "react-icons/ai";
-import InfoIcon from "Components/InfoIcon";
-import { FiEdit2 } from "react-icons/fi";
-import Header from "Components/Header";
+import { AiFillDelete, AiFillInfoCircle } from 'react-icons/ai';
+import InfoIcon from 'Components/InfoIcon';
+import { FiEdit2 } from 'react-icons/fi';
+import Header from 'Components/Header';
 
-import RichTextEditor from "../../Components/RichTextEditor";
+import RichTextEditor from '../../Components/RichTextEditor';
 
-import LoaderModal from "../../Components/UI/LoaderModal";
-import ConfirmationModal from "Components/UI/ConfirmationModal";
-import { requestIPFS } from "Redux/Sagas/helpers";
-import useTimer from "Hooks/useTimer";
-import Popup from "Components/Popup";
-import { specialCharacterMessage } from "Constants";
+import LoaderModal from '../../Components/UI/LoaderModal';
+import ConfirmationModal from 'Components/UI/ConfirmationModal';
+import { requestIPFS } from 'Redux/Sagas/helpers';
+import useTimer from 'Hooks/useTimer';
+import Popup from 'Components/Popup';
+import { specialCharacterMessage } from 'Constants';
 
 const signingInfoMessage = (
-  <div className="text-information">
+  <div className='text-information'>
     <div>Note:</div>
-    <div className="intendation">
+    <div className='intendation'>
       1) Make sure you communicate with the Sponsor P-Rep in advance to ensure
       that they will accept your sponsorship request. You can communicate with
-      P-Reps by posting about your proposal on{" "}
+      P-Reps by posting about your proposal on{' '}
       <a
-        style={{ color: "inherit", textDecoration: "underline" }}
-        href="https://forum.icon.community/c/contribution-proposals/45"
-        target="_blank"
+        style={{ color: 'inherit', textDecoration: 'underline' }}
+        href='https://forum.icon.community/c/contribution-proposals/45'
+        target='_blank'
       >
         ICON Forum
-      </a>{" "}
+      </a>{' '}
       before creating a proposal on the CPS platform.
     </div>
-    <div className="intendation">
+    <div className='intendation'>
       2) You need to transfer 50 ICX to submit a proposal.
     </div>
-    <div className="intendation">
+    <div className='intendation'>
       3) You need to sign the transaction two times-
-      <div className="intendation">
+      <div className='intendation'>
         i) First time: to verify the user identity while submitting the proposal
         data to the Backend (IPFS).
       </div>
-      <div className="intendation">
+      <div className='intendation'>
         ii) Second time: to verify the user identity while saving the ipfs hash
         and to submit 50 ICX fee to the blockchain.
       </div>
@@ -142,32 +142,31 @@ const ProposalCreationPage = ({
   });
 
   useEffect(() => {
-    setProposal((proposal) => ({
+    setProposal(proposal => ({
       ...proposal,
-      sponserPrepName: preps.find(
-        (prep) => prep.address == proposal.sponserPrep
-      )?.name,
+      sponserPrepName: preps.find(prep => prep.address == proposal.sponserPrep)
+        ?.name,
     }));
   }, [proposal.sponserPrep]);
 
   useEffect(() => {
     if (proposal.totalBudget == null) {
       document
-        .getElementById("totalBudget")
+        .getElementById('totalBudget')
         .setCustomValidity(
-          `Enter Total Budget between 0 and remaining CPF Fund (currently ${cpfRemainingFunds} ICX)`
+          `Enter Total Budget between 0 and remaining CPF Fund (currently ${cpfRemainingFunds} ICX)`,
         );
     } else if (
       proposal.totalBudget < 0 ||
       proposal.totalBudget > parseInt(cpfRemainingFunds)
     ) {
       document
-        .getElementById("totalBudget")
+        .getElementById('totalBudget')
         .setCustomValidity(
-          `Total Budget should be between 0 and CPF remaining Fund (currently  ${cpfRemainingFunds} ICX)`
+          `Total Budget should be between 0 and CPF remaining Fund (currently  ${cpfRemainingFunds} ICX)`,
         );
     } else {
-      document.getElementById("totalBudget").setCustomValidity("");
+      document.getElementById('totalBudget').setCustomValidity('');
     }
   }, [proposal.totalBudget]);
 
@@ -176,30 +175,30 @@ const ProposalCreationPage = ({
     // const maximumNumberOfMilestones = 6;
     const totalMonths = proposal.milestones.reduce(
       (sum, milestone) => sum + parseInt(milestone.duration),
-      0
+      0,
     );
     setTotalNumberOfMonthsInMilestone(totalMonths);
 
-    console.log("proposal.projectDuration", proposal.projectDuration);
+    console.log('proposal.projectDuration', proposal.projectDuration);
     if (proposal.milestones.length < 1) {
       document
-        .getElementById("milestones")
+        .getElementById('milestones')
         .setCustomValidity(`Please add milestones`);
     } else if (parseInt(totalMonths) != parseInt(proposal.projectDuration)) {
       console.log(
-        "mielstone",
+        'mielstone',
         parseInt(totalMonths),
-        parseInt(proposal.projectDuration)
+        parseInt(proposal.projectDuration),
       );
       document
-        .getElementById("milestones")
+        .getElementById('milestones')
         .setCustomValidity(
           `The total duration in milestones should equal to the project duration (currently ${
             proposal.projectDuration || 0
-          } months)`
+          } months)`,
         );
     } else {
-      document.getElementById("milestones").setCustomValidity(``);
+      document.getElementById('milestones').setCustomValidity(``);
     }
   }, [proposal.milestones, proposal.projectDuration]);
 
@@ -207,18 +206,18 @@ const ProposalCreationPage = ({
     const minimumNumberOfWords = 10;
     if (!proposal.description) {
       document
-        .getElementById("description")
+        .getElementById('description')
         .setCustomValidity(
-          `Please write a description of minimum ${minimumNumberOfWords} words.`
+          `Please write a description of minimum ${minimumNumberOfWords} words.`,
         );
     } else if (descriptionWords < minimumNumberOfWords) {
       document
-        .getElementById("description")
+        .getElementById('description')
         .setCustomValidity(
-          `Description should be a minimum of ${minimumNumberOfWords} words`
+          `Description should be a minimum of ${minimumNumberOfWords} words`,
         );
     } else {
-      document.getElementById("description").setCustomValidity(``);
+      document.getElementById('description').setCustomValidity(``);
     }
   }, [proposal.description, descriptionWords]);
 
@@ -232,10 +231,10 @@ const ProposalCreationPage = ({
   }
 
   useEffect(() => {
-    document.getElementById("teamEmail").onfocus = () => {
-      document.getElementById("teamEmail").onblur = () => {
-        document.getElementById("teamEmail").reportValidity();
-        document.getElementById("teamEmail").onblur = () => {};
+    document.getElementById('teamEmail').onfocus = () => {
+      document.getElementById('teamEmail').onblur = () => {
+        document.getElementById('teamEmail').reportValidity();
+        document.getElementById('teamEmail').onblur = () => {};
       };
     };
 
@@ -245,7 +244,7 @@ const ProposalCreationPage = ({
 
   useEffect(() => {
     if (isDraft) {
-      setProposal((prevState) => ({
+      setProposal(prevState => ({
         ...proposal,
         ...proposalIPFS,
         ...draftProposal,
@@ -275,24 +274,24 @@ const ProposalCreationPage = ({
   //     }
   // );
 
-  const handleSubmit = (event) => {
+  const handleSubmit = event => {
     event.preventDefault();
     setSubmissionConfirmationShow(true);
   };
 
   const onClickSaveDraft = () => {
     let allGood = true;
-    Object.keys(proposal).map((key) => {
+    Object.keys(proposal).map(key => {
       if (
         document.getElementById(key) &&
-        key !== "description" &&
-        key !== "milestones"
+        key !== 'description' &&
+        key !== 'milestones'
       ) {
         console.log(
-          "keyProposal",
+          'keyProposal',
           key,
           proposal[key],
-          document.getElementById(key).checkValidity()
+          document.getElementById(key).checkValidity(),
         );
         if (
           (!Array.isArray(proposal[key]) && proposal[key]) ||
@@ -304,7 +303,7 @@ const ProposalCreationPage = ({
           }
         }
       } else {
-        console.log("keyProposalNot", key);
+        console.log('keyProposalNot', key);
       }
     });
     if (!allGood) {
@@ -320,7 +319,7 @@ const ProposalCreationPage = ({
         address: walletAddress,
         proposalKey: proposal.ipfsKey,
         callBackAfterSigning: () => {
-          history.push("/proposals");
+          history.push('/proposals');
         },
       });
     } else {
@@ -328,7 +327,7 @@ const ProposalCreationPage = ({
         ...proposal,
         address: walletAddress,
         callBackAfterSigning: () => {
-          history.push("/proposals");
+          history.push('/proposals');
         },
       });
     }
@@ -348,15 +347,15 @@ const ProposalCreationPage = ({
   //         });
   // }, [])
 
-  const handleChange = (event) => {
+  const handleChange = event => {
     let name = event.target.name;
     let value = event.target.value;
 
-    setProposal((prevState) => ({
+    setProposal(prevState => ({
       ...prevState,
       [name]: value,
     }));
-    if (name === "teamEmail") {
+    if (name === 'teamEmail') {
       return;
     }
     document.getElementById(name) &&
@@ -364,55 +363,55 @@ const ProposalCreationPage = ({
   };
   return (
     <div className={styles.proposalCreationPage}>
-      <Header title="Create New Proposal" />
+      <Header title='Create New Proposal' />
 
       {/* <Row className={styles.newProposal}>
                 Create New Proposal
             </Row> */}
       <Row className={styles.cardContainer}>
         <Card className={styles.card}>
-          <Form onSubmit={handleSubmit} id="form">
+          <Form onSubmit={handleSubmit} id='form'>
             <Form.Group as={Row}>
-              <Form.Label column sm="2">
+              <Form.Label column sm='2'>
                 Project Name
                 <span className={styles.required}></span>
                 <InfoIcon
-                  description={specialCharacterMessage("project name")}
+                  description={specialCharacterMessage('project name')}
                 />
               </Form.Label>
 
-              <Col sm="10" className={styles.inputSameLine}>
+              <Col sm='10' className={styles.inputSameLine}>
                 <Form.Control
-                  placeholder="Project Name"
-                  size="md"
+                  placeholder='Project Name'
+                  size='md'
                   value={proposal.projectName}
-                  name="projectName"
-                  id="projectName"
+                  name='projectName'
+                  id='projectName'
                   onChange={handleChange}
                   required
                 />
               </Col>
             </Form.Group>
             <Form.Group as={Row}>
-              <Form.Label column sm="2">
+              <Form.Label column sm='2'>
                 Category
                 <span className={styles.required}></span>
                 {/* <InfoIcon description="The category the project falls into" /> */}
               </Form.Label>
               <Col
-                sm="4"
-                className={ClassNames("col-sm-2", [styles.inputSameLine])}
+                sm='4'
+                className={ClassNames('col-sm-2', [styles.inputSameLine])}
               >
                 <Form.Control
-                  size="md"
-                  as="select"
+                  size='md'
+                  as='select'
                   value={proposal.category}
-                  name="category"
-                  id="category"
+                  name='category'
+                  id='category'
                   onChange={handleChange}
                   required
                 >
-                  <option selected disabled value="">
+                  <option selected disabled value=''>
                     Select a category
                   </option>
 
@@ -422,19 +421,19 @@ const ProposalCreationPage = ({
                   <option>Others</option>
                 </Form.Control>
               </Col>
-              <Form.Label column sm="2" className={styles.labelSameLine}>
+              <Form.Label column sm='2' className={styles.labelSameLine}>
                 Project Duration
                 <span className={styles.required}></span>
                 {/* <InfoIcon description="The expected time (in months) to complete the project (can be upto 6 months)" /> */}
               </Form.Label>
-              <Col sm="4" className={styles.inputSameLine}>
-                <InputGroup size="md">
+              <Col sm='4' className={styles.inputSameLine}>
+                <InputGroup size='md'>
                   <FormControl
-                    placeholder="Project Duration"
-                    type="number"
+                    placeholder='Project Duration'
+                    type='number'
                     value={proposal.projectDuration}
-                    name="projectDuration"
-                    id="projectDuration"
+                    name='projectDuration'
+                    id='projectDuration'
                     onChange={handleChange}
                     min={0}
                     max={6}
@@ -448,23 +447,23 @@ const ProposalCreationPage = ({
             </Form.Group>
 
             <Form.Group as={Row}>
-              <Form.Label column sm="2">
+              <Form.Label column sm='2'>
                 Total Budget
                 <span className={styles.required}></span>
                 {/* <InfoIcon description="The expected budget for the project." /> */}
               </Form.Label>
-              <Col sm="4" className={styles.inputSameLine}>
-                <InputGroup size="md">
+              <Col sm='4' className={styles.inputSameLine}>
+                <InputGroup size='md'>
                   <FormControl
-                    placeholder="Total Budget"
+                    placeholder='Total Budget'
                     min={0}
                     max={parseInt(cpfRemainingFunds)}
-                    type="number"
+                    type='number'
                     value={proposal.totalBudget}
-                    name="totalBudget"
-                    id="totalBudget"
+                    name='totalBudget'
+                    id='totalBudget'
                     onChange={handleChange}
-                    id="totalBudget"
+                    id='totalBudget'
                     required
                   />
                   <InputGroup.Append>
@@ -473,18 +472,18 @@ const ProposalCreationPage = ({
                 </InputGroup>
               </Col>
 
-              <Form.Label column sm="2" className={styles.labelSameLine}>
+              <Form.Label column sm='2' className={styles.labelSameLine}>
                 Sponsor PRep
                 <span className={styles.required}></span>
                 <InfoIcon
                   description={
                     <span>
                       The Prep Sponsor for the project. Sponsor P-Rep will stake
-                      collateral for your proposal.{" "}
+                      collateral for your proposal.{' '}
                       <b>
                         You should communicate with the Sponsor P-Rep in advance
                         to ensure they will accept sponsorship.
-                      </b>{" "}
+                      </b>{' '}
                       You can choose a sponsor by first posting about your
                       proposal in the ICON Forum where P-Reps can show interest
                       in sponsoring your proposal.
@@ -492,25 +491,25 @@ const ProposalCreationPage = ({
                   }
                 />
               </Form.Label>
-              <Col sm="4" className={styles.inputSameLine}>
+              <Col sm='4' className={styles.inputSameLine}>
                 <Form.Control
-                  size="md"
-                  as="select"
+                  size='md'
+                  as='select'
                   value={proposal.sponserPrep}
-                  name="sponserPrep"
-                  id="sponserPrep"
+                  name='sponserPrep'
+                  id='sponserPrep'
                   onChange={handleChange}
                   required
                 >
-                  <option disabled selected value="">
+                  <option disabled selected value=''>
                     Select PREP
                   </option>
-                  {prepList?.map((prep) => {
+                  {prepList?.map(prep => {
                     return (
                       <option value={prep?.address} key={prep?.address}>{`${
                         prep?.name
                       } (${prep?.address?.slice(0, 4)}...${prep?.address?.slice(
-                        prep.address.length - 2
+                        prep.address.length - 2,
                       )})`}</option>
                     );
                   })}
@@ -519,17 +518,17 @@ const ProposalCreationPage = ({
             </Form.Group>
 
             <Form.Group as={Row}>
-              <Form.Label column sm="12">
+              <Form.Label column sm='12'>
                 Description
                 <span className={styles.required}></span>
-                <InfoIcon description="A detailed description for the project (minimum 10 words)" />
+                <InfoIcon description='A detailed description for the project (minimum 10 words)' />
               </Form.Label>
-              <Col sm="12" style={{ position: "relative" }}>
+              <Col sm='12' style={{ position: 'relative' }}>
                 <RichTextEditor
                   required
                   initialData={proposal.description ?? null}
-                  onChange={(data) =>
-                    setProposal((prevState) => ({
+                  onChange={data =>
+                    setProposal(prevState => ({
                       ...prevState,
                       description: data,
                     }))
@@ -537,34 +536,34 @@ const ProposalCreationPage = ({
                   setWords={setDescriptionWords}
                   setCharacters={setDescriptionCharacters}
                   onBlur={() => {
-                    document.getElementById("description").reportValidity();
+                    document.getElementById('description').reportValidity();
                   }}
                   minimumNumberOfWords={10}
                 ></RichTextEditor>
                 <input
                   className={styles.milestoneFakeInput}
-                  style={{ left: "15px" }}
-                  id="description"
+                  style={{ left: '15px' }}
+                  id='description'
                 />
               </Col>
             </Form.Group>
 
             <Form.Group as={Row}>
-              <Form.Label column sm="12">
+              <Form.Label column sm='12'>
                 Milestones
                 <span className={styles.required}></span>
                 {/* <InfoIcon description="Milestone for the project" /> */}
               </Form.Label>
-              <Col sm="12">
+              <Col sm='12'>
                 <Button
-                  variant="light"
+                  variant='light'
                   onClick={() => setModalShow(true)}
-                  style={{ position: "relative" }}
+                  style={{ position: 'relative' }}
                 >
-                  Add Milestone{" "}
+                  Add Milestone{' '}
                   <input
                     className={styles.milestoneFakeInput}
-                    id="milestones"
+                    id='milestones'
                   />
                 </Button>
               </Col>
@@ -586,16 +585,16 @@ const ProposalCreationPage = ({
                         <td>{milestone.name}</td>
                         <td>
                           {milestone.duration} month
-                          {milestone.duration > 1 && "s"}
+                          {milestone.duration > 1 && 's'}
                         </td>
                         <td
-                          style={{ display: "flex", justifyContent: "center" }}
+                          style={{ display: 'flex', justifyContent: 'center' }}
                         >
-                          {" "}
+                          {' '}
                           <AiFillDelete
-                            style={{ cursor: "pointer" }}
+                            style={{ cursor: 'pointer' }}
                             onClick={() => {
-                              setProposal((prevState) => {
+                              setProposal(prevState => {
                                 const newMilestone = [...prevState.milestones];
                                 newMilestone.splice(index, 1);
                                 return {
@@ -606,7 +605,7 @@ const ProposalCreationPage = ({
                             }}
                           />
                           <FiEdit2
-                            style={{ marginLeft: "10px", cursor: "pointer" }}
+                            style={{ marginLeft: '10px', cursor: 'pointer' }}
                             onClick={() => {
                               setEditModalShow(true);
                               setEditModalIndex(index);
@@ -629,76 +628,76 @@ const ProposalCreationPage = ({
             )}
 
             <Form.Group as={Row}>
-              <Form.Label column sm="2">
+              <Form.Label column sm='2'>
                 Team Name
                 <span className={styles.required}></span>
                 {/* <InfoIcon description="Project Team Name" /> */}
               </Form.Label>
 
-              <Col sm="3" className={styles.inputSameLine}>
+              <Col sm='3' className={styles.inputSameLine}>
                 <Form.Control
-                  placeholder={"Team Name"}
-                  size={"md"}
+                  placeholder={'Team Name'}
+                  size={'md'}
                   value={proposal.teamName}
-                  name="teamName"
-                  id="teamName"
+                  name='teamName'
+                  id='teamName'
                   onChange={handleChange}
                   required
                 />
               </Col>
-              <Form.Label column sm="2" className={styles.labelSameLine}>
+              <Form.Label column sm='2' className={styles.labelSameLine}>
                 Team Email
                 <span className={styles.required}></span>
                 {/* <InfoIcon description="Email of the Team" /> */}
               </Form.Label>
 
-              <Col sm="2" className={styles.inputSameLine}>
+              <Col sm='2' className={styles.inputSameLine}>
                 <Form.Control
-                  placeholder={"Team Email"}
-                  type="email"
-                  size={"md"}
+                  placeholder={'Team Email'}
+                  type='email'
+                  size={'md'}
                   value={proposal.teamEmail}
-                  name="teamEmail"
-                  id="teamEmail"
+                  name='teamEmail'
+                  id='teamEmail'
                   onChange={handleChange}
                   required
                 />
               </Col>
-              <Form.Label column sm="1" className={styles.labelSameLine}>
+              <Form.Label column sm='1' className={styles.labelSameLine}>
                 Team Size
                 {/* <InfoIcon description="Size of the Team" /> */}
               </Form.Label>
-              <Col sm="2" className={styles.inputSameLine}>
+              <Col sm='2' className={styles.inputSameLine}>
                 <Form.Control
-                  placeholder={"Team Size"}
-                  size={"md"}
-                  type="number"
+                  placeholder={'Team Size'}
+                  size={'md'}
+                  type='number'
                   value={proposal.teamSize}
-                  name="teamSize"
+                  name='teamSize'
                   min={0}
-                  id="teamSize"
+                  id='teamSize'
                   onChange={handleChange}
                 />
               </Col>
             </Form.Group>
 
-            <Alert variant={"info"}>{signingInfoMessage}</Alert>
+            <Alert variant={'info'}>{signingInfoMessage}</Alert>
 
             <Form.Group as={Row}>
               <Col className={styles.draftButton}>
                 <Popup
                   component={
-                    <Button variant="outline-info" onClick={onClickSaveDraft}>
+                    <Button variant='outline-info' onClick={onClickSaveDraft}>
                       SAVE AS DRAFT
                     </Button>
                   }
-                  popOverText="Save changes and continue later."
-                  placement="right"
+                  popOverText='Save changes and continue later.'
+                  placement='right'
                 />
               </Col>
               <Col className={styles.saveButton}>
-                {period !== "VOTING" ? (
-                  <Button variant="info" type="submit">
+                {period !== 'VOTING' ? (
+                  <Button variant='info' type='submit'>
                     SUBMIT
                   </Button>
                 ) : (
@@ -723,19 +722,19 @@ const ProposalCreationPage = ({
 
                   <Popup
                     component={
-                      <span className="d-inline-block">
+                      <span className='d-inline-block'>
                         <Button
-                          variant="info"
-                          type="submit"
+                          variant='info'
+                          type='submit'
                           disabled
-                          style={{ pointerEvents: "none" }}
+                          style={{ pointerEvents: 'none' }}
                         >
                           SUBMIT
                         </Button>
                       </span>
                     }
-                    popOverText="You can submit in the next application period."
-                    placement="left"
+                    popOverText='You can submit in the next application period.'
+                    placement='left'
                   />
                 )}
               </Col>
@@ -747,8 +746,8 @@ const ProposalCreationPage = ({
       <AddMilestoneModal
         show={modalShow}
         onHide={() => setModalShow(false)}
-        onAddMilestone={(milestone) => {
-          setProposal((prevState) => ({
+        onAddMilestone={milestone => {
+          setProposal(prevState => ({
             ...prevState,
             milestones: [...prevState.milestones, milestone],
           }));
@@ -759,9 +758,9 @@ const ProposalCreationPage = ({
         show={editModalShow}
         onHide={() => setEditModalShow(false)}
         milestone={proposal.milestones[editModalIndex]}
-        onAddMilestone={(milestone) => {
-          console.log("start");
-          setProposal((prevState) => ({
+        onAddMilestone={milestone => {
+          console.log('start');
+          setProposal(prevState => ({
             ...prevState,
             milestones: prevState.milestones.map((item, index) => {
               if (index === editModalIndex) {
@@ -771,7 +770,7 @@ const ProposalCreationPage = ({
               }
             }),
           }));
-          console.log("end");
+          console.log('end');
         }}
       />
 
@@ -780,8 +779,8 @@ const ProposalCreationPage = ({
       <ConfirmationModal
         show={submissionConfirmationShow}
         onHide={() => setSubmissionConfirmationShow(false)}
-        heading={"Proposal Submission Confirmation"}
-        size="mdxl"
+        heading={'Proposal Submission Confirmation'}
+        size='mdxl'
         onConfirm={() => {
           submitProposal({
             proposal,
@@ -799,7 +798,7 @@ const ProposalCreationPage = ({
       <ConfirmationModal
         show={draftConfirmationShow}
         onHide={() => setDraftConfirmationShow(false)}
-        heading={"Draft Submission Confirmation"}
+        heading={'Draft Submission Confirmation'}
         onConfirm={() => {
           saveChanges();
         }}
@@ -814,18 +813,18 @@ const ProposalCreationPage = ({
   );
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  submitProposal: (payload) => dispatch(submitProposalRequest(payload)),
-  fetchPrepsRequest: (payload) => dispatch(fetchPrepsRequest(payload)),
-  saveDraftRequest: (payload) => dispatch(saveDraftRequest(payload)),
+const mapDispatchToProps = dispatch => ({
+  submitProposal: payload => dispatch(submitProposalRequest(payload)),
+  fetchPrepsRequest: payload => dispatch(fetchPrepsRequest(payload)),
+  saveDraftRequest: payload => dispatch(saveDraftRequest(payload)),
 
-  fetchCPFScoreAddressRequest: (payload) =>
+  fetchCPFScoreAddressRequest: payload =>
     dispatch(fetchCPFScoreAddressRequest(payload)),
-  fetchCPFRemainingFundRequest: (payload) =>
+  fetchCPFRemainingFundRequest: payload =>
     dispatch(fetchCPFRemainingFundRequest(payload)),
 });
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   submittingProposal: state.proposals.submittingProposal,
   preps: state.preps.preps,
   walletAddress: state.account.address,
@@ -834,5 +833,5 @@ const mapStateToProps = (state) => ({
 });
 
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(ProposalCreationPage)
+  connect(mapStateToProps, mapDispatchToProps)(ProposalCreationPage),
 );

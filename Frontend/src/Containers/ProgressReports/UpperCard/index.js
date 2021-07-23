@@ -1,14 +1,14 @@
-import React, { useEffect } from "react";
-import styles from "./UpperCard.module.scss";
-import { Row, Col, Card, Button, Container } from "react-bootstrap";
-import { connect } from "react-redux";
-import { Link } from "react-router-dom";
-import useTimer from "Hooks/useTimer";
-import { updatePeriod } from "Redux/Reducers/periodSlice";
-import ConfirmationModal from "Components/UI/ConfirmationModal";
-import { getNewProgressReportInfo } from "Selectors";
-import { fetchProposalByAddressRequest } from "Redux/Reducers/proposalSlice";
-import { FaDraft2Digital } from "react-icons/fa";
+import React, { useEffect } from 'react';
+import styles from './UpperCard.module.scss';
+import { Row, Col, Card, Button, Container } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import useTimer from 'Hooks/useTimer';
+import { updatePeriod } from 'Redux/Reducers/periodSlice';
+import ConfirmationModal from 'Components/UI/ConfirmationModal';
+import { getNewProgressReportInfo } from 'Selectors';
+import { fetchProposalByAddressRequest } from 'Redux/Reducers/proposalSlice';
+import { FaDraft2Digital } from 'react-icons/fa';
 
 const UpperCard = ({
   numberOfSubmittedProposals,
@@ -23,7 +23,7 @@ const UpperCard = ({
 }) => {
   const { period, remainingTime, remainingTimeSecond } = useTimer();
   let [periodConfirmationShow, setPeriodConfirmationShow] = React.useState(
-    false
+    false,
   );
 
   let button;
@@ -57,15 +57,15 @@ const UpperCard = ({
       );
       button = (
         <span className={styles.proposalNumber}>
-          You need to have active or paused proposal to{" "}
-          {period !== "VOTING"
-            ? "create new progress report"
-            : "create progress report draft"}
+          You need to have active or paused proposal to{' '}
+          {period !== 'VOTING'
+            ? 'create new progress report'
+            : 'create progress report draft'}
         </span>
       );
     } else if (
       newProgressReportInfo.canCreateNewProgressReportCount === 0 &&
-      period !== "VOTING"
+      period !== 'VOTING'
     ) {
       text = (
         <span className={styles.proposalNumber}>
@@ -76,31 +76,31 @@ const UpperCard = ({
       button = null;
     } else {
       button = (
-        <Link to="/newProgressReport">
-          <Button variant="info" className={styles.createProposalButton}>
-            {period !== "VOTING"
-              ? "CREATE NEW PROGRESS REPORT"
-              : "CREATE PROGRESS REPORT DRAFT"}
+        <Link to='/newProgressReport'>
+          <Button variant='info' className={styles.createProposalButton}>
+            {period !== 'VOTING'
+              ? 'CREATE NEW PROGRESS REPORT'
+              : 'CREATE PROGRESS REPORT DRAFT'}
           </Button>
         </Link>
       );
-      if (period !== "VOTING") {
+      if (period !== 'VOTING') {
         text = (
           <span className={styles.proposalNumber}>
-            You have created progress report for{" "}
+            You have created progress report for{' '}
             <b>
               {newProgressReportInfo.totalProgressReportCount -
                 newProgressReportInfo.canCreateNewProgressReportCount}
-            </b>{" "}
-            out of <b>{newProgressReportInfo.totalProgressReportCount}</b>{" "}
-            active proposals.{" "}
+            </b>{' '}
+            out of <b>{newProgressReportInfo.totalProgressReportCount}</b>{' '}
+            active proposals.{' '}
           </span>
         );
       } else {
         text = (
           <span className={styles.proposalNumber}>
-            {" "}
-            This is voting period. You can still create progress report draft.{" "}
+            {' '}
+            This is voting period. You can still create progress report draft.{' '}
           </span>
         );
       }
@@ -115,16 +115,16 @@ const UpperCard = ({
   const remainingTimeText = (
     <span className={styles.proposalTitle}>
       <b>
-        {period === "VOTING"
-          ? "PROGRESS REPORT SUBMISSION OPENS IN"
-          : "PROGRESS REPORT SUBMISSION DEADLINE IN"}
+        {period === 'VOTING'
+          ? 'PROGRESS REPORT SUBMISSION OPENS IN'
+          : 'PROGRESS REPORT SUBMISSION DEADLINE IN'}
       </b>
     </span>
   );
   const remainingTimeValue = (
     <span className={styles.proposalTitle}>
-      <b>{remainingTime.day}</b> DAYS <b>{remainingTime.hour}</b> HOURS{" "}
-      <b>{remainingTime.minute}</b> MINUTES <b>{remainingTime.second}</b>{" "}
+      <b>{remainingTime.day}</b> DAYS <b>{remainingTime.hour}</b> HOURS{' '}
+      <b>{remainingTime.minute}</b> MINUTES <b>{remainingTime.second}</b>{' '}
       SECONDS
     </span>
   );
@@ -147,9 +147,9 @@ const UpperCard = ({
             <Container className={styles.desktopContainer}>
               <Row
                 style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
                 }}
               >
                 {remainingTimeText}
@@ -158,9 +158,9 @@ const UpperCard = ({
 
               <Row
                 style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
                 }}
               >
                 {remainingTimeValue}
@@ -169,14 +169,14 @@ const UpperCard = ({
             </Container>
 
             <Row className={styles.mobileContainer}>
-              <Col xl="6" style={{ alignItems: "flex-start" }}>
+              <Col xl='6' style={{ alignItems: 'flex-start' }}>
                 {remainingTimeText}
                 {remainingTimeValue}
               </Col>
 
               <Col
-                xl="6"
-                style={{ alignItems: "flex-start", marginTop: "10px" }}
+                xl='6'
+                style={{ alignItems: 'flex-start', marginTop: '10px' }}
               >
                 {text}
                 {button}
@@ -189,7 +189,7 @@ const UpperCard = ({
       <ConfirmationModal
         show={periodConfirmationShow}
         onHide={() => setPeriodConfirmationShow(false)}
-        heading={"Period Update Confirmation"}
+        heading={'Period Update Confirmation'}
         onConfirm={() => {
           updatePeriod();
         }}
@@ -204,7 +204,7 @@ const UpperCard = ({
   );
 };
 
-const mapStateToProps = () => (state) => {
+const mapStateToProps = () => state => {
   return {
     numberOfSubmittedProposals: state.proposals.numberOfSubmittedProposals,
     isPrep: state.account.isPrep,
@@ -214,9 +214,9 @@ const mapStateToProps = () => (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  updatePeriod: (payload) => dispatch(updatePeriod(payload)),
-  fetchProposalByAddressRequest: (payload) =>
+const mapDispatchToProps = dispatch => ({
+  updatePeriod: payload => dispatch(updatePeriod(payload)),
+  fetchProposalByAddressRequest: payload =>
     dispatch(fetchProposalByAddressRequest(payload)),
 });
 

@@ -13,7 +13,7 @@
 }
 
 .slanted::before {
-  content: "";
+  content: '';
 
   background-repeat: no-repeat;
   background-position: bottom right;
@@ -45,7 +45,7 @@
     background-size: auto 350px;
     background-position: top right; */
 
-  background-image: url("../../../Assets/Images/Intersect8.png");
+  background-image: url('../../../Assets/Images/Intersect8.png');
   background-size: 1400px 382px;
   background-position: top right;
 }

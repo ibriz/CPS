@@ -1,6 +1,6 @@
-import React from "react";
-import { Table } from "react-bootstrap";
-import styles from "./DetailsTable.module.css";
+import React from 'react';
+import { Table } from 'react-bootstrap';
+import styles from './DetailsTable.module.css';
 
 const DetailsTable = ({ title, data }) => {
   return (

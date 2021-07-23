@@ -1,32 +1,32 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { IconConverter } from "icon-sdk-js";
-import { proposalStatusMapping } from "Constants";
-import { voteProgressReport } from "./progressReportSlice";
-import { calculatePercentage } from "Helpers";
+import { createSlice } from '@reduxjs/toolkit';
+import { IconConverter } from 'icon-sdk-js';
+import { proposalStatusMapping } from 'Constants';
+import { voteProgressReport } from './progressReportSlice';
+import { calculatePercentage } from 'Helpers';
 
 const PARAMS = {
-  status: "status",
-  proposalTitle: "project_title",
-  contributorAddress: "contributor_address",
-  totalBudget: "total_budget",
-  timestamp: "timestamp",
-  proposalHash: "ipfs_hash",
+  status: 'status',
+  proposalTitle: 'project_title',
+  contributorAddress: 'contributor_address',
+  totalBudget: 'total_budget',
+  timestamp: 'timestamp',
+  proposalHash: 'ipfs_hash',
 
-  approvedVotes: "approved_votes",
-  totalVotes: "total_votes",
-  rejectedVotes: "rejected_votes",
+  approvedVotes: 'approved_votes',
+  totalVotes: 'total_votes',
+  rejectedVotes: 'rejected_votes',
 
-  approvedVoters: "approve_voters",
-  totalVoters: "total_voters",
-  rejectedVoters: "reject_voters",
+  approvedVoters: 'approve_voters',
+  totalVoters: 'total_voters',
+  rejectedVoters: 'reject_voters',
 
-  percentageCompleted: "percentage_completed",
+  percentageCompleted: 'percentage_completed',
 
-  newProgressReport: "new_progress_report",
-  lastProgressReport: "last_progress_report",
+  newProgressReport: 'new_progress_report',
+  lastProgressReport: 'last_progress_report',
 
-  sponsorVoteReason: "sponsor_vote_reason",
-  projectDuration: "project_duration",
+  sponsorVoteReason: 'sponsor_vote_reason',
+  projectDuration: 'project_duration',
 };
 
 const initialState = {
@@ -135,13 +135,13 @@ const initialState = {
 
   remainingVotes: [],
   sponsorMessage: [],
-  sponsorRequestIPFSKey: "",
-  sponsorRequestProposalTitle: "",
+  sponsorRequestIPFSKey: '',
+  sponsorRequestProposalTitle: '',
   sponsorRequestProposal: null,
 };
 
 const proposalSlice = createSlice({
-  name: "proposal",
+  name: 'proposal',
   initialState,
   reducers: {
     submitProposalRequest(state) {},
@@ -166,23 +166,23 @@ const proposalSlice = createSlice({
       state.proposalList[action.payload.status][
         action.payload.pageNumber - 1
       ] = action.payload.response.data
-        .map((proposal) => ({
+        .map(proposal => ({
           _status: proposal[PARAMS.status],
           _proposal_title: proposal[PARAMS.proposalTitle],
           _contributor_address: proposal[PARAMS.contributorAddress],
           // budget: parseInt(proposal[PARAMS.totalBudget]),
           budget: IconConverter.toBigNumber(
-            proposal[PARAMS.totalBudget]
+            proposal[PARAMS.totalBudget],
           ).dividedBy(10 ** 18),
           _timestamp: proposal[PARAMS.timestamp],
           ipfsHash: proposal[PARAMS.proposalHash],
           ipfsKey: proposal[PARAMS.proposalHash],
           approvedVotes: IconConverter.toBigNumber(
-            proposal[PARAMS.approvedVotes]
+            proposal[PARAMS.approvedVotes],
           ),
           totalVotes: IconConverter.toBigNumber(proposal[PARAMS.totalVotes]),
           projectDuration: IconConverter.toBigNumber(
-            proposal[PARAMS.projectDuration]
+            proposal[PARAMS.projectDuration],
           ),
 
           sponsorVoteReason: proposal[PARAMS.sponsorVoteReason],
@@ -207,7 +207,7 @@ const proposalSlice = createSlice({
           }),
 
           completedPercentage: parseInt(
-            IconConverter.toBigNumber(proposal[PARAMS.percentageCompleted])
+            IconConverter.toBigNumber(proposal[PARAMS.percentageCompleted]),
           ),
           // if(parseInt(totalVoters) === 0) {
           //     return 0;
@@ -220,10 +220,10 @@ const proposalSlice = createSlice({
       console.log(action.payload.status);
       // state.totalPages[action.payload.status] = Math.ceil(IconConverter.toNumber(action.payload.response[0].count) / 10)
       state.totalPages[action.payload.status] = Math.ceil(
-        IconConverter.toNumber(action.payload.response.count) / 10
+        IconConverter.toNumber(action.payload.response.count) / 10,
       );
       state.totalCount[action.payload.status] = IconConverter.toNumber(
-        action.payload.response.count
+        action.payload.response.count,
       );
 
       return;
@@ -274,24 +274,24 @@ const proposalSlice = createSlice({
       state.sponsorRequestsList[action.payload.status][
         action.payload.pageNumber - 1
       ] = action.payload.response.data
-        .map((proposal) => ({
+        .map(proposal => ({
           _status: proposal[PARAMS.status],
           _proposal_title: proposal[PARAMS.proposalTitle],
           _contributor_address: proposal[PARAMS.contributorAddress],
           // budget: parseInt(proposal[PARAMS.totalBudget]),
           budget: IconConverter.toBigNumber(
-            proposal[PARAMS.totalBudget]
+            proposal[PARAMS.totalBudget],
           ).dividedBy(10 ** 18),
 
           _timestamp: proposal[PARAMS.timestamp],
           ipfsHash: proposal[PARAMS.proposalHash],
           ipfsKey: proposal[PARAMS.proposalHash],
           projectDuration: IconConverter.toBigNumber(
-            proposal[PARAMS.projectDuration]
+            proposal[PARAMS.projectDuration],
           ),
 
           approvedVotes: IconConverter.toBigNumber(
-            proposal[PARAMS.approvedVotes]
+            proposal[PARAMS.approvedVotes],
           ),
           totalVotes: IconConverter.toBigNumber(proposal[PARAMS.totalVotes]),
           sponsorVoteReason: proposal[PARAMS.sponsorVoteReason],
@@ -316,12 +316,12 @@ const proposalSlice = createSlice({
           }),
 
           completedPercentage: parseInt(
-            IconConverter.toBigNumber(proposal[PARAMS.percentageCompleted])
+            IconConverter.toBigNumber(proposal[PARAMS.percentageCompleted]),
           ),
         }))
         .sort((a, b) => b._timestamp - a._timestamp);
       state.totalPagesSponsorRequests[action.payload.status] = Math.ceil(
-        IconConverter.toNumber(action.payload.response.count) / 10
+        IconConverter.toNumber(action.payload.response.count) / 10,
       );
       state.totalCountSponsorRequests[
         action.payload.status
@@ -358,14 +358,14 @@ const proposalSlice = createSlice({
       return;
     },
     fetchDraftsSuccess(state, action) {
-      state.proposalList["Draft"] = action.payload.response.map(
+      state.proposalList['Draft'] = action.payload.response.map(
         (proposal, index) => ({
           // projectName: proposal.proposalName,
           // ipfsHash: proposal.ipfsHash,
           // _status: 'draft',||
 
-          _status: "draft",
-          _proposal_title: proposal.proposalName || "Untitled Proposal",
+          _status: 'draft',
+          _proposal_title: proposal.proposalName || 'Untitled Proposal',
           ipfsHash: proposal.ipfsHash,
           ipfsUrl: proposal.ipfsUrl,
           ipfsKey: proposal.ipfsKey,
@@ -379,7 +379,7 @@ const proposalSlice = createSlice({
           // totalVotes: IconConverter.toBigNumber(proposal[PARAMS.totalVotes]),
           // approvedPercentage: (!proposal[PARAMS.totalVotes] || parseInt(proposal[PARAMS.totalVotes]) === 0) ? 0 : ((proposal[PARAMS.approvedVotes] / proposal[PARAMS.totalVotes]) * 100),
           // completedPercentage: parseInt(IconConverter.toBigNumber(proposal[PARAMS.percentageCompleted])),
-        })
+        }),
       );
     },
     fetchDraftsFailure(state) {
@@ -391,10 +391,10 @@ const proposalSlice = createSlice({
     },
 
     fetchProposalByAddressSuccess(state, action) {
-      console.group("fetchProposalByAddressSuccess");
-      console.log("fetchProposalByAddressSuccess");
+      console.group('fetchProposalByAddressSuccess');
+      console.log('fetchProposalByAddressSuccess');
       console.groupEnd();
-      state.proposalByAddress = action.payload.response.map((proposal) => ({
+      state.proposalByAddress = action.payload.response.map(proposal => ({
         _proposal_title: proposal[PARAMS.proposalTitle],
         ipfsKey: proposal[PARAMS.proposalHash],
         newProgressReport: !parseInt(proposal[PARAMS.newProgressReport]),
@@ -417,37 +417,35 @@ const proposalSlice = createSlice({
       return;
     },
     fetchVoteResultSuccess(state, action) {
-      state.votesByProposal = action.payload.response.data.map((vote) => ({
+      state.votesByProposal = action.payload.response.data.map(vote => ({
         sponsorAddress: vote.address,
         status: proposalStatusMapping.find(
-          (mapping) => mapping.status === vote.vote
+          mapping => mapping.status === vote.vote,
         )?.name,
         timestamp: vote._timestamp,
         prepName: vote.prep_name,
         reason: vote.vote_reason,
       }));
-      state.votesByProposal = state.votesByProposal.filter(
-        (vote) => vote.status
-      );
+      state.votesByProposal = state.votesByProposal.filter(vote => vote.status);
 
       state.approvedVotes = IconConverter.toBigNumber(
-        action.payload.response.approved_votes
+        action.payload.response.approved_votes,
       );
       state.totalVotes = IconConverter.toBigNumber(
-        action.payload.response.total_votes
+        action.payload.response.total_votes,
       );
       state.rejectedVotes = IconConverter.toBigNumber(
-        action.payload.response.rejected_votes
+        action.payload.response.rejected_votes,
       );
 
       state.approvedVoters = IconConverter.toBigNumber(
-        action.payload.response.approve_voters
+        action.payload.response.approve_voters,
       );
       state.rejectedVoters = IconConverter.toBigNumber(
-        action.payload.response.reject_voters
+        action.payload.response.reject_voters,
       );
       state.totalVoters = IconConverter.toBigNumber(
-        action.payload.response.total_voters
+        action.payload.response.total_voters,
       );
 
       return;
@@ -466,13 +464,13 @@ const proposalSlice = createSlice({
         state.projectAmounts[proposalStatus.name] = {
           amount: parseFloat(
             IconConverter.toBigNumber(
-              action.payload[proposalStatus.status]?._total_amount ?? 0
-            ).dividedBy(10 ** 18)
+              action.payload[proposalStatus.status]?._total_amount ?? 0,
+            ).dividedBy(10 ** 18),
           ),
           count: parseInt(
             IconConverter.toBigNumber(
-              action.payload[proposalStatus.status]?._count ?? 0
-            )
+              action.payload[proposalStatus.status]?._count ?? 0,
+            ),
           ),
         };
       }
@@ -490,24 +488,24 @@ const proposalSlice = createSlice({
       // state.proposalList.
 
       state.myProposalList = action.payload.response.data
-        .map((proposal) => ({
+        .map(proposal => ({
           _status: proposal[PARAMS.status],
           _proposal_title: proposal[PARAMS.proposalTitle],
           _contributor_address: proposal[PARAMS.contributorAddress],
           // budget: parseInt(proposal[PARAMS.totalBudget]),
           budget: IconConverter.toBigNumber(
-            proposal[PARAMS.totalBudget]
+            proposal[PARAMS.totalBudget],
           ).dividedBy(10 ** 18),
 
           _timestamp: proposal[PARAMS.timestamp],
           ipfsHash: proposal[PARAMS.proposalHash],
           ipfsKey: proposal[PARAMS.proposalHash],
           approvedVotes: IconConverter.toBigNumber(
-            proposal[PARAMS.approvedVotes]
+            proposal[PARAMS.approvedVotes],
           ),
           totalVotes: IconConverter.toBigNumber(proposal[PARAMS.totalVotes]),
           projectDuration: IconConverter.toBigNumber(
-            proposal[PARAMS.projectDuration]
+            proposal[PARAMS.projectDuration],
           ),
 
           sponsorVoteReason: proposal[PARAMS.sponsorVoteReason],
@@ -533,7 +531,7 @@ const proposalSlice = createSlice({
           }),
 
           completedPercentage: parseInt(
-            IconConverter.toBigNumber(proposal[PARAMS.percentageCompleted])
+            IconConverter.toBigNumber(proposal[PARAMS.percentageCompleted]),
           ),
           // if(parseInt(totalVoters) === 0) {
           //     return 0;
@@ -546,10 +544,10 @@ const proposalSlice = createSlice({
       console.log(action.payload.status);
       // state.totalPages[action.payload.status] = Math.ceil(IconConverter.toNumber(action.payload.response[0].count) / 10)
       state.totalPages[action.payload.status] = Math.ceil(
-        IconConverter.toNumber(action.payload.response.count) / 10
+        IconConverter.toNumber(action.payload.response.count) / 10,
       );
       state.totalCount[action.payload.status] = IconConverter.toNumber(
-        action.payload.response.count
+        action.payload.response.count,
       );
 
       return;
@@ -566,24 +564,24 @@ const proposalSlice = createSlice({
       // state.proposalList.
 
       state.remainingVotes = action.payload.response
-        .map((proposal) => ({
+        .map(proposal => ({
           _status: proposal[PARAMS.status],
           _proposal_title: proposal[PARAMS.proposalTitle],
           _contributor_address: proposal[PARAMS.contributorAddress],
           // budget: parseInt(proposal[PARAMS.totalBudget]),
           budget: IconConverter.toBigNumber(
-            proposal[PARAMS.totalBudget]
+            proposal[PARAMS.totalBudget],
           ).dividedBy(10 ** 18),
           _timestamp: proposal[PARAMS.timestamp],
           ipfsHash: proposal[PARAMS.proposalHash],
           ipfsKey: proposal[PARAMS.proposalHash],
           approvedVotes: IconConverter.toBigNumber(
-            proposal[PARAMS.approvedVotes]
+            proposal[PARAMS.approvedVotes],
           ),
           totalVotes: IconConverter.toBigNumber(proposal[PARAMS.totalVotes]),
           sponsorVoteReason: proposal[PARAMS.sponsorVoteReason],
           projectDuration: IconConverter.toBigNumber(
-            proposal[PARAMS.projectDuration]
+            proposal[PARAMS.projectDuration],
           ),
 
           // approvedPercentage: (!proposal[PARAMS.totalVotes] || parseInt(proposal[PARAMS.totalVotes]) === 0) ? 0 : ((proposal[PARAMS.approvedVotes] / proposal[PARAMS.totalVotes]) * 100),
@@ -607,7 +605,7 @@ const proposalSlice = createSlice({
           }),
 
           completedPercentage: parseInt(
-            IconConverter.toBigNumber(proposal[PARAMS.percentageCompleted])
+            IconConverter.toBigNumber(proposal[PARAMS.percentageCompleted]),
           ),
           // if(parseInt(totalVoters) === 0) {
           //     return 0;
@@ -649,7 +647,7 @@ const proposalSlice = createSlice({
   },
 
   extraReducers: {
-    "account/logout": (state, action) => {
+    'account/logout': (state, action) => {
       state.myProposalList = [];
     },
   },

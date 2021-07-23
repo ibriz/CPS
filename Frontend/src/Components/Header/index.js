@@ -1,14 +1,14 @@
-import React, { useState } from "react";
-import { Row } from "react-bootstrap";
-import styles from "./Header.module.css";
-import { Button } from "react-bootstrap";
-import { connect } from "react-redux";
-import { logout } from "../../Redux/Reducers/accountSlice";
-import { unregisterPrep, registerPrep } from "Redux/Reducers/prepsSlice";
-import ConfirmationModal from "Components/UI/ConfirmationModal";
-import UserInfoFormModal from "./UserInfoFormModal";
-import useTimer from "Hooks/useTimer";
-import HeaderComponents from "./HeaderComponents";
+import React, { useState } from 'react';
+import { Row } from 'react-bootstrap';
+import styles from './Header.module.css';
+import { Button } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { logout } from '../../Redux/Reducers/accountSlice';
+import { unregisterPrep, registerPrep } from 'Redux/Reducers/prepsSlice';
+import ConfirmationModal from 'Components/UI/ConfirmationModal';
+import UserInfoFormModal from './UserInfoFormModal';
+import useTimer from 'Hooks/useTimer';
+import HeaderComponents from './HeaderComponents';
 
 const Header = ({
   address,
@@ -26,9 +26,9 @@ const Header = ({
 }) => {
   return (
     <>
-      <Row className={styles.headerContainer} style={{ marginTop: "15px" }}>
+      <Row className={styles.headerContainer} style={{ marginTop: '15px' }}>
         {window.innerWidth <= 1200 && (
-          <span className={styles.heading} style={{ marginTop: "0px" }}>
+          <span className={styles.heading} style={{ marginTop: '0px' }}>
             {title}
           </span>
         )}
@@ -42,10 +42,10 @@ const Header = ({
       </Row>
 
       {window.innerWidth > 1200 && (
-        <Row style={{ justifyContent: "center", marginTop: "2px" }}>
+        <Row style={{ justifyContent: 'center', marginTop: '2px' }}>
           <span
             className={styles.heading}
-            style={{ marginTop: "0px", textAlign: "center" }}
+            style={{ marginTop: '0px', textAlign: 'center' }}
           >
             {title}
           </span>
@@ -60,7 +60,7 @@ const Header = ({
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   address: state.account.address,
   isPrep: state.account.isPrep,
   isRegistered: state.account.isRegistered,
@@ -72,7 +72,7 @@ const mapStateToProps = (state) => ({
   lastName: state.user.lastName,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   logout: () => dispatch(logout()),
   unregisterPrep: () => dispatch(unregisterPrep()),
   registerPrep: () => dispatch(registerPrep()),

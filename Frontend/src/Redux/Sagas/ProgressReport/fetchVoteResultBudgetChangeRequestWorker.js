@@ -1,14 +1,14 @@
-import { put, call } from "redux-saga/effects";
-import { callKeyStoreWallet } from "../../ICON/utils";
+import { put, call } from 'redux-saga/effects';
+import { callKeyStoreWallet } from '../../ICON/utils';
 import {
   fetchVoteResultBudgetChangeSuccess,
   fetchVoteResultBudgetChangeFailure,
-} from "../../Reducers/progressReportSlice";
+} from '../../Reducers/progressReportSlice';
 
 function* fetchVoteResultBudgetChangeRequestWorker({ payload }) {
   try {
     const response = yield call(callKeyStoreWallet, {
-      method: "get_budget_adjustment_vote_result",
+      method: 'get_budget_adjustment_vote_result',
       params: {
         _report_key: payload.reportKey,
       },
@@ -17,7 +17,7 @@ function* fetchVoteResultBudgetChangeRequestWorker({ payload }) {
     yield put(
       fetchVoteResultBudgetChangeSuccess({
         response,
-      })
+      }),
     );
   } catch (error) {
     yield put(fetchVoteResultBudgetChangeFailure());

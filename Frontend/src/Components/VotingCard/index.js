@@ -1,25 +1,25 @@
-import React, { useState, useEffect } from "react";
-import { Row, Card, Col } from "react-bootstrap";
-import styles from "./ProposalCard.module.scss";
-import TabBar from "Components/Card/TabBar";
-import ProposalList from "Components/Card/ProposalList";
-import { connect } from "react-redux";
+import React, { useState, useEffect } from 'react';
+import { Row, Card, Col } from 'react-bootstrap';
+import styles from './ProposalCard.module.scss';
+import TabBar from 'Components/Card/TabBar';
+import ProposalList from 'Components/Card/ProposalList';
+import { connect } from 'react-redux';
 import {
   fetchProposalListRequest,
   setModalShowVoting,
   fetchRemainingVotesRequest,
-} from "Redux/Reducers/proposalSlice";
-import Pagination from "Components/Card/Pagination";
-import proposalStates from "./proposalStates";
+} from 'Redux/Reducers/proposalSlice';
+import Pagination from 'Components/Card/Pagination';
+import proposalStates from './proposalStates';
 // import { select } from 'redux-saga/effects';
-import wallet from "Redux/ICON/FrontEndWallet";
-import DetailsModal from "Components/Card/DetailsModal";
-import ProgressReportList from "Components/Card/ProgressReportList";
+import wallet from 'Redux/ICON/FrontEndWallet';
+import DetailsModal from 'Components/Card/DetailsModal';
+import ProgressReportList from 'Components/Card/ProgressReportList';
 import {
   fetchProgressReportListRequest,
   setModalShowVotingPR,
-} from "Redux/Reducers/progressReportSlice";
-import DetailsModalProgressReport from "Components/Card/DetailsModalProgressReport";
+} from 'Redux/Reducers/progressReportSlice';
+import DetailsModalProgressReport from 'Components/Card/DetailsModalProgressReport';
 
 const VotingCard = ({
   proposalList,
@@ -40,28 +40,28 @@ const VotingCard = ({
 }) => {
   const [selectedTab, setSelectedTab] = useState(initialState);
   const [filteredProposalList, setFilteredProposalList] = useState(
-    proposalList
+    proposalList,
   );
-  let [searchText, setSearchText] = useState("");
+  let [searchText, setSearchText] = useState('');
   const [pageNumber, setPageNumber] = useState();
   // const [modalShow, setModalShow] = React.useState(false);
   // const [modalShowPR, setModalShowPR] = React.useState(false);
 
   const [selectedProposal, setSelectedProposal] = React.useState();
-  const status = "Voting";
+  const status = 'Voting';
   const [filteredProgressReportList, setFilteredProgressReportList] = useState(
-    progressReportList
+    progressReportList,
   );
   const [selectedProgressReport, setSelectedProgressReport] = React.useState();
 
-  const onClickProposal = (proposal) => {
+  const onClickProposal = proposal => {
     setModalShow(true);
     setSelectedProposal(proposal);
   };
 
-  const onClickProposalDraft = (proposal) => {};
+  const onClickProposalDraft = proposal => {};
 
-  const onClickProgressReport = (progressReport) => {
+  const onClickProgressReport = progressReport => {
     setModalShowPR(true);
     setSelectedProgressReport(progressReport);
   };
@@ -75,7 +75,7 @@ const VotingCard = ({
     //     }
     // );
     fetchRemainingVotesRequest({
-      type: "progress_report",
+      type: 'progress_report',
     });
   }, [selectedTab, pageNumber, fetchRemainingVotesRequest]);
 
@@ -84,8 +84,8 @@ const VotingCard = ({
     //     (proposal) => proposal.progressReportTitle.includes(searchText)
     // );
 
-    const filteredProgressReports = remainingVotesPR.filter((proposal) =>
-      proposal.progressReportTitle?.includes(searchText)
+    const filteredProgressReports = remainingVotesPR.filter(proposal =>
+      proposal.progressReportTitle?.includes(searchText),
     );
 
     // const filteredProgressReports = [];
@@ -103,19 +103,19 @@ const VotingCard = ({
     // );
 
     fetchRemainingVotesRequest({
-      type: "proposal",
+      type: 'proposal',
     });
   }, [selectedTab, pageNumber, fetchRemainingVotesRequest]);
 
   const setCurrentPages = (status, pageNumber) => {
-    setPageNumber((prevState) => ({
+    setPageNumber(prevState => ({
       ...prevState,
       [status]: pageNumber,
     }));
   };
 
   useEffect(() => {
-    proposalStates.map((proposalState) => {
+    proposalStates.map(proposalState => {
       setCurrentPages(proposalState, 1);
     });
   }, []);
@@ -129,8 +129,8 @@ const VotingCard = ({
     //     (proposal) => proposal._proposal_title.includes(searchText)
     // );
 
-    const filteredProposals = remainingVotesProposal.filter((proposal) =>
-      proposal._proposal_title.includes(searchText)
+    const filteredProposals = remainingVotesProposal.filter(proposal =>
+      proposal._proposal_title.includes(searchText),
     );
 
     setFilteredProposalList(filteredProposals);
@@ -148,10 +148,10 @@ const VotingCard = ({
                 searchText={searchText}
                 setSearchText={setSearchText}
                 tabs={proposalStatesList}
-                placeholder="Search Proposal"
+                placeholder='Search Proposal'
               />
-              <hr style={{ marginTop: "-9px" }} />
-              {selectedTab === "Proposals" ? (
+              <hr style={{ marginTop: '-9px' }} />
+              {selectedTab === 'Proposals' ? (
                 <ProposalList
                   proposals={filteredProposalList}
                   selectedTab={status}
@@ -161,7 +161,7 @@ const VotingCard = ({
                   selectedProposal={selectedProposal}
                   setSelectedProposal={setSelectedProposal}
                   onClickProposal={
-                    selectedTab === "Draft"
+                    selectedTab === 'Draft'
                       ? onClickProposalDraft
                       : onClickProposal
                   }
@@ -205,7 +205,7 @@ const VotingCard = ({
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   proposalList: state.proposals.proposalList,
   walletAddress: state.account.address,
   totalPages: state.proposals.totalPages,
@@ -218,14 +218,14 @@ const mapStateToProps = (state) => ({
   remainingVotesPR: state.progressReport.remainingVotes,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  fetchProposalListRequest: (payload) =>
+const mapDispatchToProps = dispatch => ({
+  fetchProposalListRequest: payload =>
     dispatch(fetchProposalListRequest(payload)),
-  fetchProgressReport: (payload) =>
+  fetchProgressReport: payload =>
     dispatch(fetchProgressReportListRequest(payload)),
-  setModalShow: (payload) => dispatch(setModalShowVoting(payload)),
-  setModalShowPR: (payload) => dispatch(setModalShowVotingPR(payload)),
-  fetchRemainingVotesRequest: (payload) =>
+  setModalShow: payload => dispatch(setModalShowVoting(payload)),
+  setModalShowPR: payload => dispatch(setModalShowVotingPR(payload)),
+  fetchRemainingVotesRequest: payload =>
     dispatch(fetchRemainingVotesRequest(payload)),
 });
 

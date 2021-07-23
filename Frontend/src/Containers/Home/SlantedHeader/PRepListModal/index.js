@@ -1,7 +1,7 @@
-import React from "react";
-import { Modal, Row, Col } from "react-bootstrap";
-import styles from "./PRepListModal.module.css";
-import { trackerURL } from "Redux/ICON/utils";
+import React from 'react';
+import { Modal, Row, Col } from 'react-bootstrap';
+import styles from './PRepListModal.module.css';
+import { trackerURL } from 'Redux/ICON/utils';
 
 function PRepListModal({ preps, ...props }) {
   let [prepList, setPrepList] = React.useState([]);
@@ -19,29 +19,29 @@ function PRepListModal({ preps, ...props }) {
   return (
     <Modal
       {...props}
-      size="lg"
-      aria-labelledby="contained-modal-title-vcenter"
+      size='lg'
+      aria-labelledby='contained-modal-title-vcenter'
       centered
     >
       <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">
+        <Modal.Title id='contained-modal-title-vcenter'>
           List of P-Reps
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {prepList?.map((prep) => (
+        {prepList?.map(prep => (
           <>
             <a
               href={`${trackerURL}/${prep.address}`}
-              target="_blank"
-              style={{ color: "#262626" }}
+              target='_blank'
+              style={{ color: '#262626' }}
               className={styles.link}
             >
               <Row>
-                <Col lg="5" className={styles.name}>
-                  {prep?.name ?? <span style={{ textAlign: "center" }}>-</span>}
+                <Col lg='5' className={styles.name}>
+                  {prep?.name ?? <span style={{ textAlign: 'center' }}>-</span>}
                 </Col>
-                <Col lg="7" className={styles.address}>
+                <Col lg='7' className={styles.address}>
                   {prep?.address}
                 </Col>
               </Row>

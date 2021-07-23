@@ -1,15 +1,15 @@
-import { put, call } from "redux-saga/effects";
+import { put, call } from 'redux-saga/effects';
 import {
   fetchProgressReportByProposalSuccess,
   fetchProgressReportByProposalFailure,
-} from "../../Reducers/progressReportSlice";
-import { callKeyStoreWallet } from "../../ICON/utils";
-import { progressReportStatusMapping } from "Constants";
+} from '../../Reducers/progressReportSlice';
+import { callKeyStoreWallet } from '../../ICON/utils';
+import { progressReportStatusMapping } from 'Constants';
 
 function* submitProgressReportWorker({ payload }) {
   try {
     const response = yield call(callKeyStoreWallet, {
-      method: "get_progress_reports_by_proposal",
+      method: 'get_progress_reports_by_proposal',
       params: {
         _ipfs_key: payload.proposalKey,
       },
@@ -33,7 +33,7 @@ function* submitProgressReportWorker({ payload }) {
     yield put(
       fetchProgressReportByProposalSuccess({
         response,
-      })
+      }),
     );
   } catch (error) {
     yield put(fetchProgressReportByProposalFailure(error));

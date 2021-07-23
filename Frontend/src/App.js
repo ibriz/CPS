@@ -1,17 +1,17 @@
-import React, { useEffect } from "react";
-import Layout from "./Containers/Layout";
-import Home from "./Containers/Home";
-import { Switch, Route, Redirect } from "react-router-dom";
-import { connect } from "react-redux";
-import { NotificationContainer } from "react-notifications";
+import React, { useEffect } from 'react';
+import Layout from './Containers/Layout';
+import Home from './Containers/Home';
+import { Switch, Route, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { NotificationContainer } from 'react-notifications';
 import {
   fetchUserDataRequest,
   fetchUserPromptRequest,
-} from "Redux/Reducers/userSlice";
-import Footer from "Components/Footer";
-import { Helmet } from "react-helmet";
-import UnsubscribePage from "Containers/UnsubscribePage";
-import VerifiedPage from "Containers/VerifiedPage";
+} from 'Redux/Reducers/userSlice';
+import Footer from 'Components/Footer';
+import { Helmet } from 'react-helmet';
+import UnsubscribePage from 'Containers/UnsubscribePage';
+import VerifiedPage from 'Containers/VerifiedPage';
 
 function App({ address, fetchUserDataRequest, fetchUserPromptRequest }) {
   useEffect(() => {
@@ -22,7 +22,7 @@ function App({ address, fetchUserDataRequest, fetchUserPromptRequest }) {
   return (
     <>
       <Switch>
-        <Route exact path={process.env.PUBLIC_URL + "/"}>
+        <Route exact path={process.env.PUBLIC_URL + '/'}>
           <>
             {
               <>
@@ -37,22 +37,22 @@ function App({ address, fetchUserDataRequest, fetchUserPromptRequest }) {
           </>
         </Route>
 
-        <Route exact path={"/unsubscribe"}>
+        <Route exact path={'/unsubscribe'}>
           <UnsubscribePage />
           <Helmet>
             <title>CPS - Unsubscribe</title>
           </Helmet>
         </Route>
 
-        <Route exact path={"/email-verified"}>
+        <Route exact path={'/email-verified'}>
           <VerifiedPage />
           <Helmet>
             <title>CPS - Email Verified</title>
           </Helmet>
         </Route>
 
-        <Route path={process.env.PUBLIC_URL + "/"}>
-          <>{address ? <Layout /> : <Redirect to="/"></Redirect>}</>
+        <Route path={process.env.PUBLIC_URL + '/'}>
+          <>{address ? <Layout /> : <Redirect to='/'></Redirect>}</>
         </Route>
       </Switch>
       <NotificationContainer />
@@ -60,7 +60,7 @@ function App({ address, fetchUserDataRequest, fetchUserPromptRequest }) {
   );
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     address: state.account.address,
   };

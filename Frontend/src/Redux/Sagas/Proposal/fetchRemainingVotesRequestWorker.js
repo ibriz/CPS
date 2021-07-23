@@ -1,21 +1,21 @@
-import { put, call, select } from "redux-saga/effects";
-import { callKeyStoreWallet } from "../../ICON/utils";
+import { put, call, select } from 'redux-saga/effects';
+import { callKeyStoreWallet } from '../../ICON/utils';
 // import {
 //   getCourseInfo,
 // } from '../services/api';
 import {
   fetchRemainingVotesProposalSuccess,
   fetchRemainingVotesFailure,
-} from "../../Reducers/proposalSlice";
-import { fetchRemainingVotesPRSuccess } from "../../Reducers/progressReportSlice";
+} from '../../Reducers/proposalSlice';
+import { fetchRemainingVotesPRSuccess } from '../../Reducers/progressReportSlice';
 
 function* fetchRemainingVotesRequestWorker({ payload }) {
   try {
-    const getAddress = (state) => state.account.address;
+    const getAddress = state => state.account.address;
     const walletAddress = yield select(getAddress);
 
     const response = yield call(callKeyStoreWallet, {
-      method: "get_remaining_project",
+      method: 'get_remaining_project',
       params: {
         _wallet_address: walletAddress,
         _project_type: payload.type,
@@ -142,17 +142,17 @@ function* fetchRemainingVotesRequestWorker({ payload }) {
     //     ];
     // }
 
-    if (payload.type === "proposal") {
+    if (payload.type === 'proposal') {
       yield put(
         fetchRemainingVotesProposalSuccess({
           response,
-        })
+        }),
       );
     } else {
       yield put(
         fetchRemainingVotesPRSuccess({
           response,
-        })
+        }),
       );
     }
   } catch (error) {

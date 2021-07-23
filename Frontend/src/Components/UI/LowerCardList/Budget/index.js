@@ -1,6 +1,6 @@
-import React from "react";
-import styles from "./Budget.module.scss";
-import ClassNames from "classnames";
+import React from 'react';
+import styles from './Budget.module.scss';
+import ClassNames from 'classnames';
 
 const Budget = ({ children, marginLeft = true }) => {
   return (
@@ -8,7 +8,7 @@ const Budget = ({ children, marginLeft = true }) => {
       className={ClassNames(
         styles.budget,
         { [styles.proposalInfo2]: marginLeft },
-        styles.budget
+        styles.budget,
       )}
     >
       {children}

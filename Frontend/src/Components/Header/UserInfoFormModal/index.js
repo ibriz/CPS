@@ -6,20 +6,20 @@ import {
   Col,
   InputGroup,
   FormControl,
-} from "react-bootstrap";
-import React, { useState, useEffect } from "react";
-import ClassNames from "classnames";
-import { FiEdit2 } from "react-icons/fi";
-import styles from "./UserInfoFormModal.module.scss";
-import { connect } from "react-redux";
-import { AiFillCheckCircle } from "react-icons/ai";
+} from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import ClassNames from 'classnames';
+import { FiEdit2 } from 'react-icons/fi';
+import styles from './UserInfoFormModal.module.scss';
+import { connect } from 'react-redux';
+import { AiFillCheckCircle } from 'react-icons/ai';
 import {
   resendVerificationEmailRequest,
   disableUserPromptRequest,
-} from "Redux/Reducers/userSlice";
+} from 'Redux/Reducers/userSlice';
 
-import { submitUserDataRequest } from "Redux/Reducers/userSlice";
-import ConfirmationModal from "Components/UI/ConfirmationModal";
+import { submitUserDataRequest } from 'Redux/Reducers/userSlice';
+import ConfirmationModal from 'Components/UI/ConfirmationModal';
 
 const UserInfoFormModal = ({
   user,
@@ -51,7 +51,7 @@ const UserInfoFormModal = ({
         email: user.email,
         enableEmailNotifications: user.enableEmailNotifications,
       }),
-    [user]
+    [user],
   );
 
   let [
@@ -59,26 +59,26 @@ const UserInfoFormModal = ({
     setSubmissionConfirmationShow,
   ] = React.useState(false);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = event => {
     event.preventDefault();
     setSubmissionConfirmationShow(true);
   };
 
-  const handleChange = (event) => {
+  const handleChange = event => {
     let name = event.target.name;
     let value = event.target.value;
 
-    setUserData((prevState) => ({
+    setUserData(prevState => ({
       ...prevState,
       [name]: value,
     }));
   };
 
-  const handleCheckedChange = (event) => {
+  const handleCheckedChange = event => {
     let name = event.target.name;
     let value = event.target.checked;
 
-    setUserData((prevState) => ({
+    setUserData(prevState => ({
       ...prevState,
       [name]: value,
     }));
@@ -87,108 +87,108 @@ const UserInfoFormModal = ({
   return (
     <Modal
       {...props}
-      size="lg"
-      aria-labelledby="contained-modal-title-vcenter"
+      size='lg'
+      aria-labelledby='contained-modal-title-vcenter'
       centered
     >
       <Modal.Header closeButton>
         <Modal.Title
-          id="contained-modal-title-vcenter"
-          style={{ color: "#262626" }}
+          id='contained-modal-title-vcenter'
+          style={{ color: '#262626' }}
         >
           User Registration
         </Modal.Title>
       </Modal.Header>
       <Modal.Body className={styles.modalBody}>
         <Form onSubmit={handleSubmit}>
-          <Form.Group as={Row} controlId="formPlaintextEmail">
-            <Form.Label column sm="2">
+          <Form.Group as={Row} controlId='formPlaintextEmail'>
+            <Form.Label column sm='2'>
               First Name
             </Form.Label>
-            <Col sm="4" className={styles.inputSameLine}>
+            <Col sm='4' className={styles.inputSameLine}>
               <Form.Control
-                placeholder="Enter First Name"
-                size="md"
+                placeholder='Enter First Name'
+                size='md'
                 value={userData.firstName}
-                name="firstName"
+                name='firstName'
                 onChange={handleChange}
                 required
               />
             </Col>
 
-            <Form.Label column sm="2">
+            <Form.Label column sm='2'>
               Last Name
             </Form.Label>
-            <Col sm="4" className={styles.inputSameLine}>
+            <Col sm='4' className={styles.inputSameLine}>
               <Form.Control
-                placeholder="Enter Last Name"
-                size="md"
+                placeholder='Enter Last Name'
+                size='md'
                 value={userData.lastName}
-                name="lastName"
+                name='lastName'
                 onChange={handleChange}
               />
             </Col>
           </Form.Group>
 
-          <Form.Group as={Row} controlId="formPlaintextEmail">
-            <Form.Label column sm="2">
+          <Form.Group as={Row} controlId='formPlaintextEmail'>
+            <Form.Label column sm='2'>
               Email
             </Form.Label>
-            <Col sm="10" className={styles.inputSameLine}>
+            <Col sm='10' className={styles.inputSameLine}>
               <Form.Control
-                placeholder="Enter Email Address"
-                size="md"
-                type="email"
+                placeholder='Enter Email Address'
+                size='md'
+                type='email'
                 value={userData.email}
-                name="email"
+                name='email'
                 onChange={handleChange}
                 required
               />
             </Col>
           </Form.Group>
 
-          <Form.Group as={Row} controlId="formPlaintextEmail">
-            <Form.Label column sm="2">
+          <Form.Group as={Row} controlId='formPlaintextEmail'>
+            <Form.Label column sm='2'>
               Wallet Address
             </Form.Label>
             <Col
-              sm="10"
+              sm='10'
               className={ClassNames(
                 styles.inputSameLine,
-                styles.addressContainer
+                styles.addressContainer,
               )}
             >
               <span className={styles.address}>{address}</span>
             </Col>
           </Form.Group>
 
-          <Form.Group as={Row} controlId="formPlaintextEmail">
-            <Col sm="12">
+          <Form.Group as={Row} controlId='formPlaintextEmail'>
+            <Col sm='12'>
               <Form.Check
-                type="checkbox"
-                label="Enable email notifications"
+                type='checkbox'
+                label='Enable email notifications'
                 checked={userData.enableEmailNotifications}
                 onChange={handleCheckedChange}
-                name="enableEmailNotifications"
+                name='enableEmailNotifications'
               />
             </Col>
           </Form.Group>
 
           {firstName &&
             (verified ? (
-              <span style={{ display: "flex", alignItems: "center" }}>
+              <span style={{ display: 'flex', alignItems: 'center' }}>
                 <AiFillCheckCircle
-                  className="text-success"
-                  style={{ fontSize: "18px", marginRight: "2px" }}
-                />{" "}
+                  className='text-success'
+                  style={{ fontSize: '18px', marginRight: '2px' }}
+                />{' '}
                 <span>Your email has been verified</span>
               </span>
             ) : (
               <>
                 Your email has not been verified yet.
-                <br /> Didn't receive email or the email link expired?{" "}
+                <br /> Didn't receive email or the email link expired?{' '}
                 <span
-                  style={{ textDecoration: "underline", cursor: "pointer" }}
+                  style={{ textDecoration: 'underline', cursor: 'pointer' }}
                   onClick={() => setConfirmationShow(true)}
                 >
                   Resend email confirmation
@@ -198,22 +198,22 @@ const UserInfoFormModal = ({
 
           {initialPrompt && (
             <Row>
-              <Col sm="12">
+              <Col sm='12'>
                 <Form.Check
-                  type="checkbox"
+                  type='checkbox'
                   label="Don't show again."
                   checked={dontShowAgain}
-                  onChange={(event) => setDontShowAgain(event.target.checked)}
-                  name="enableEmailNotifications"
+                  onChange={event => setDontShowAgain(event.target.checked)}
+                  name='enableEmailNotifications'
                 />
               </Col>
             </Row>
           )}
 
-          <Form.Group as={Row} controlId="formPlaintextPassword">
+          <Form.Group as={Row} controlId='formPlaintextPassword'>
             <Col>
               <Button
-                variant="outline-info"
+                variant='outline-info'
                 onClick={() => {
                   if (initialPrompt) {
                     disableUserPromptRequest();
@@ -225,7 +225,7 @@ const UserInfoFormModal = ({
               </Button>
             </Col>
             <Col className={styles.saveButton}>
-              <Button variant="info" type="submit">
+              <Button variant='info' type='submit'>
                 SUBMIT
               </Button>
             </Col>
@@ -236,7 +236,7 @@ const UserInfoFormModal = ({
       <ConfirmationModal
         show={confirmationShow}
         onHide={() => setConfirmationShow(false)}
-        heading={"Resend Email Verification Confirmation"}
+        heading={'Resend Email Verification Confirmation'}
         onConfirm={() => {
           resendVerificationEmailRequest();
           setModalShow(false);
@@ -252,7 +252,7 @@ const UserInfoFormModal = ({
       <ConfirmationModal
         show={submissionConfirmationShow}
         onHide={() => setSubmissionConfirmationShow(false)}
-        heading={"User Data Submit Confirmation"}
+        heading={'User Data Submit Confirmation'}
         onConfirm={() => {
           submitUserDataRequest({
             userData,
@@ -274,7 +274,7 @@ const UserInfoFormModal = ({
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   user: state.user,
   address: state.account.address,
   verified: state.user.verified,

@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   previousEmail: null,
@@ -12,7 +12,7 @@ const initialState = {
 };
 
 const userSlice = createSlice({
-  name: "user",
+  name: 'user',
   initialState,
   reducers: {
     fetchUserDataRequest(state) {
@@ -55,8 +55,8 @@ const userSlice = createSlice({
     fetchUserPromptRequest(state, action) {},
     fetchUserPromptSuccess(state, action) {
       console.log(
-        "fetchUserPromptSuccess",
-        action.payload.response.intialprompt
+        'fetchUserPromptSuccess',
+        action.payload.response.intialprompt,
       );
       state.initialPrompt = action.payload.response.intialprompt ?? true;
     },
@@ -69,7 +69,7 @@ const userSlice = createSlice({
     disableUserPromptFailure(state, action) {},
   },
   extraReducers: {
-    "account/logout": (state, action) => {
+    'account/logout': (state, action) => {
       state.email = null;
       state.firstName = null;
       state.lastName = null;

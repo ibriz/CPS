@@ -1,5 +1,5 @@
-import React from "react";
-import styles from "./LowerCardTitle.module.scss";
+import React from 'react';
+import styles from './LowerCardTitle.module.scss';
 
 const LowerCardTitle = ({ children, style }) => {
   return (

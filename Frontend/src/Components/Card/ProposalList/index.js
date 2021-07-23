@@ -1,7 +1,7 @@
-import React from "react";
-import styles from "./ProposalList.module.scss";
-import { Container } from "react-bootstrap";
-import Proposal from "./Proposal";
+import React from 'react';
+import styles from './ProposalList.module.scss';
+import { Container } from 'react-bootstrap';
+import Proposal from './Proposal';
 
 const ProposalList = ({
   proposals,
@@ -10,7 +10,7 @@ const ProposalList = ({
   emptyListMessage,
   proposalPendingPR = false,
   proposalPendingPRSameList = false,
-  minHeight = "100px",
+  minHeight = '100px',
 }) => {
   return (
     <Container
@@ -20,14 +20,14 @@ const ProposalList = ({
           ? {}
           : {
               minHeight: minHeight,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
             }
       }
     >
       {proposals.length ? (
-        proposals.map((proposal) => (
+        proposals.map(proposal => (
           <Proposal
             proposal={proposal}
             selectedTab={selectedTab}

@@ -1,10 +1,10 @@
-import { call, put } from "redux-saga/effects";
+import { call, put } from 'redux-saga/effects';
 import {
   fetchProgressReportDetailSuccess,
   fetchProgressReportDetailFailure,
-} from "../../Reducers/progressReportSlice";
-import { PROPOSAL_ADD_URL } from "../../Constants";
-import { requestIPFS } from "../helpers";
+} from '../../Reducers/progressReportSlice';
+import { PROPOSAL_ADD_URL } from '../../Constants';
+import { requestIPFS } from '../helpers';
 
 function* fetchProgressReportDetailWorker({ payload }) {
   try {
@@ -15,7 +15,7 @@ function* fetchProgressReportDetailWorker({ payload }) {
     yield put(
       fetchProgressReportDetailSuccess({
         response,
-      })
+      }),
     );
   } catch (error) {
     yield put(fetchProgressReportDetailFailure(error));

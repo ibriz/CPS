@@ -1,14 +1,14 @@
-import React from "react";
-import { AiFillDelete, AiFillQuestionCircle } from "react-icons/ai";
-import { OverlayTrigger, Tooltip, Popover } from "react-bootstrap";
+import React from 'react';
+import { AiFillDelete, AiFillQuestionCircle } from 'react-icons/ai';
+import { OverlayTrigger, Tooltip, Popover } from 'react-bootstrap';
 
-const InfoIcon = ({ description, placement = "right" }) => {
+const InfoIcon = ({ description, placement = 'right' }) => {
   return (
     <OverlayTrigger
-      trigger="hover"
+      trigger='hover'
       placement={placement}
       overlay={
-        <Popover id="popover-basic">
+        <Popover id='popover-basic'>
           <Popover.Content>
             <span cl>{description}</span>
           </Popover.Content>
@@ -17,12 +17,12 @@ const InfoIcon = ({ description, placement = "right" }) => {
     >
       <AiFillQuestionCircle
         style={{
-          marginLeft: "1px",
-          cursor: "help",
-          fontSize: "1.1rem",
-          color: "#1AAABA",
+          marginLeft: '1px',
+          cursor: 'help',
+          fontSize: '1.1rem',
+          color: '#1AAABA',
         }}
-        variant="info"
+        variant='info'
       />
     </OverlayTrigger>
   );

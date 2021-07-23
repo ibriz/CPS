@@ -1,110 +1,110 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
-import { IconConverter } from "icon-sdk-js";
-import { progressReportStatusMapping as progressReportMapping } from "Constants";
-import { calculatePercentage } from "Helpers";
+import { IconConverter } from 'icon-sdk-js';
+import { progressReportStatusMapping as progressReportMapping } from 'Constants';
+import { calculatePercentage } from 'Helpers';
 
 const PARAMS = {
-  status: "status",
-  progressReportTitle: "progress_report_title",
-  proposalTitle: "project_title",
-  contributorAddress: "contributor_address",
-  totalBudget: "total_budget",
-  timestamp: "timestamp",
-  proposalHash: "ipfs_hash",
-  reportHash: "report_hash",
+  status: 'status',
+  progressReportTitle: 'progress_report_title',
+  proposalTitle: 'project_title',
+  contributorAddress: 'contributor_address',
+  totalBudget: 'total_budget',
+  timestamp: 'timestamp',
+  proposalHash: 'ipfs_hash',
+  reportHash: 'report_hash',
 
-  approvedVotes: "approved_votes",
-  totalVotes: "total_votes",
-  rejectedVotes: "rejected_votes",
+  approvedVotes: 'approved_votes',
+  totalVotes: 'total_votes',
+  rejectedVotes: 'rejected_votes',
 
-  approvedVoters: "approve_voters",
-  totalVoters: "total_voters",
-  rejectedVoters: "reject_voters",
+  approvedVoters: 'approve_voters',
+  totalVoters: 'total_voters',
+  rejectedVoters: 'reject_voters',
 
-  percentageCompleted: "percentage_completed",
+  percentageCompleted: 'percentage_completed',
 
-  newProgressReport: "new_progress_report",
+  newProgressReport: 'new_progress_report',
 };
 
 const progressReportList = [
   {
-    _title: "Approved 0 Progress Report",
-    _project_title: "Contribute from Ecosystem Fund to Gitcoin Grants Round 7",
+    _title: 'Approved 0 Progress Report',
+    _project_title: 'Contribute from Ecosystem Fund to Gitcoin Grants Round 7',
     _timestamp: 1600872145290985,
-    _status: "_approved",
-    _ifps_hash: "abcd",
+    _status: '_approved',
+    _ifps_hash: 'abcd',
   },
 
   {
-    _title: "Approved 1 Progress Report",
-    _project_title: "Contribute from Ecosystem Fund to Gitcoin Grants Round 7",
+    _title: 'Approved 1 Progress Report',
+    _project_title: 'Contribute from Ecosystem Fund to Gitcoin Grants Round 7',
     _timestamp: 1600872145290985,
-    _status: "_approved",
-    _ifps_hash: "abcd",
+    _status: '_approved',
+    _ifps_hash: 'abcd',
   },
 
   {
-    _title: "Approved 2 Progress Report",
-    _project_title: "Contribute from Ecosystem Fund to Gitcoin Grants Round 7",
+    _title: 'Approved 2 Progress Report',
+    _project_title: 'Contribute from Ecosystem Fund to Gitcoin Grants Round 7',
     _timestamp: 1600872145290985,
-    _status: "_approved",
-    _ifps_hash: "abcd",
+    _status: '_approved',
+    _ifps_hash: 'abcd',
   },
 
   {
-    _title: "Rejected 3 Progress Report",
-    _project_title: "Contribute from Ecosystem Fund to Gitcoin Grants Round 7",
+    _title: 'Rejected 3 Progress Report',
+    _project_title: 'Contribute from Ecosystem Fund to Gitcoin Grants Round 7',
     _timestamp: 1600872145290985,
-    _status: "_rejected",
-    _ifps_hash: "abcd",
+    _status: '_rejected',
+    _ifps_hash: 'abcd',
   },
 
   {
-    _title: "Rejected 4 Progress Report",
-    _project_title: "Contribute from Ecosystem Fund to Gitcoin Grants Round 7",
+    _title: 'Rejected 4 Progress Report',
+    _project_title: 'Contribute from Ecosystem Fund to Gitcoin Grants Round 7',
     _timestamp: 1600872145290985,
-    _status: "_rejected",
-    _ifps_hash: "abcd",
+    _status: '_rejected',
+    _ifps_hash: 'abcd',
   },
 
   {
-    _title: "Approved 5 Progress Report",
-    _project_title: "Contribute from Ecosystem Fund to Gitcoin Grants Round 7",
+    _title: 'Approved 5 Progress Report',
+    _project_title: 'Contribute from Ecosystem Fund to Gitcoin Grants Round 7',
     _timestamp: 1600872145290985,
-    _status: "_approved",
-    _ifps_hash: "abcd",
+    _status: '_approved',
+    _ifps_hash: 'abcd',
   },
 
   {
-    _title: "Voting 1 Progress Report",
-    _project_title: "Contribute from Ecosystem Fund to Gitcoin Grants Round 7",
+    _title: 'Voting 1 Progress Report',
+    _project_title: 'Contribute from Ecosystem Fund to Gitcoin Grants Round 7',
     _timestamp: 1600872145290985,
-    _status: "_voting",
-    _ifps_hash: "abcd",
+    _status: '_voting',
+    _ifps_hash: 'abcd',
   },
 
   {
-    _title: "Voting 1 Report",
-    _project_title: "Contribute from Ecosystem Fund to Gitcoin Grants Round 7",
+    _title: 'Voting 1 Report',
+    _project_title: 'Contribute from Ecosystem Fund to Gitcoin Grants Round 7',
     _timestamp: 1600872145290985,
-    _status: "_voting",
-    _ifps_hash: "abcd",
+    _status: '_voting',
+    _ifps_hash: 'abcd',
   },
 
   {
-    _title: "Voting 2 Progress Report",
-    _project_title: "Contribute from Ecosystem Fund to Gitcoin Grants Round 7",
+    _title: 'Voting 2 Progress Report',
+    _project_title: 'Contribute from Ecosystem Fund to Gitcoin Grants Round 7',
     _timestamp: 1600872145290985,
-    _status: "_voting",
-    _ifps_hash: "abcd",
+    _status: '_voting',
+    _ifps_hash: 'abcd',
   },
 ];
 
 const progressReportStatusMapping = {
-  _rejected: "Rejected",
-  _approved: "Approved",
-  _waiting: "Voting",
+  _rejected: 'Rejected',
+  _approved: 'Approved',
+  _waiting: 'Voting',
 };
 
 const initialState = {
@@ -142,7 +142,7 @@ const initialState = {
 };
 
 const proposalSlice = createSlice({
-  name: "progressReport",
+  name: 'progressReport',
   initialState,
   reducers: {
     submitProgressReportRequest(state) {
@@ -169,7 +169,7 @@ const proposalSlice = createSlice({
       state.progressReportList[action.payload.status][
         action.payload.pageNumber - 1
       ] = action.payload.response.data
-        .map((progressReport) => ({
+        .map(progressReport => ({
           status: progressReport[PARAMS.status],
           progressReportTitle: progressReport[PARAMS.progressReportTitle],
           projectTitle: progressReport[PARAMS.proposalTitle],
@@ -179,10 +179,10 @@ const proposalSlice = createSlice({
           reportKey: progressReport[PARAMS.reportHash],
           proposalKey: progressReport[PARAMS.proposalHash],
           approvedVotes: IconConverter.toBigNumber(
-            progressReport[PARAMS.approvedVotes]
+            progressReport[PARAMS.approvedVotes],
           ),
           totalVotes: IconConverter.toBigNumber(
-            progressReport[PARAMS.totalVotes]
+            progressReport[PARAMS.totalVotes],
           ),
           approvedPercentage: calculatePercentage({
             total: progressReport[PARAMS.totalVotes],
@@ -204,7 +204,7 @@ const proposalSlice = createSlice({
         }))
         .sort((a, b) => b.timestamp - a.timestamp);
       state.totalPages[action.payload.status] = Math.ceil(
-        IconConverter.toNumber(action.payload.response.count) / 10
+        IconConverter.toNumber(action.payload.response.count) / 10,
       );
     },
     fetchProgressReportListFailure(state, action) {
@@ -237,12 +237,12 @@ const proposalSlice = createSlice({
       return;
     },
     fetchDraftsSuccess(state, payload) {
-      state.progressReportList["Draft"] = payload.payload.response.map(
+      state.progressReportList['Draft'] = payload.payload.response.map(
         (progressReport, index) => ({
-          status: "draft",
+          status: 'draft',
           progressReportTitle:
-            progressReport.progressReportName || "Untitled Progress Report",
-          projectTitle: progressReport.proposalName || "Untitled Proposal",
+            progressReport.progressReportName || 'Untitled Progress Report',
+          projectTitle: progressReport.proposalName || 'Untitled Proposal',
           contributorAddress: payload.payload.contributorAddress,
           index: index,
           // ipfsHash: progressReport[PARAMS.reportHash],
@@ -255,7 +255,7 @@ const proposalSlice = createSlice({
           // approvedVotes: IconConverter.toBigNumber(progressReport[PARAMS.approvedVotes]),
           // totalVotes: IconConverter.toBigNumber(progressReport[PARAMS.totalVotes]),
           // approvedPercentage: (!progressReport[PARAMS.totalVotes] || parseInt(progressReport[PARAMS.totalVotes]) === 0) ? 0 : ((progressReport[PARAMS.approvedVotes] / progressReport[PARAMS.totalVotes]) * 100)
-        })
+        }),
       );
     },
     fetchDraftsFailure(state) {
@@ -274,38 +274,36 @@ const proposalSlice = createSlice({
     },
 
     fetchVoteResultSuccess(state, action) {
-      state.votesByProgressReport = action.payload.response.data.map(
-        (vote) => ({
-          sponsorAddress: vote.address,
-          status: progressReportMapping.find(
-            (mapping) => mapping.status === vote.vote
-          )?.name,
-          timestamp: vote._timestamp,
-          prepName: vote.prep_name,
-          reason: vote.vote_reason,
-        })
-      );
+      state.votesByProgressReport = action.payload.response.data.map(vote => ({
+        sponsorAddress: vote.address,
+        status: progressReportMapping.find(
+          mapping => mapping.status === vote.vote,
+        )?.name,
+        timestamp: vote._timestamp,
+        prepName: vote.prep_name,
+        reason: vote.vote_reason,
+      }));
       state.votesByProgressReport = state.votesByProgressReport.filter(
-        (vote) => vote.status
+        vote => vote.status,
       );
       state.approvedVotes = IconConverter.toBigNumber(
-        action.payload.response.approved_votes
+        action.payload.response.approved_votes,
       );
       state.totalVotes = IconConverter.toBigNumber(
-        action.payload.response.total_votes
+        action.payload.response.total_votes,
       );
       state.rejectedVotes = IconConverter.toBigNumber(
-        action.payload.response.rejected_votes
+        action.payload.response.rejected_votes,
       );
 
       state.approvedVoters = IconConverter.toBigNumber(
-        action.payload.response.approve_voters
+        action.payload.response.approve_voters,
       );
       state.rejectedVoters = IconConverter.toBigNumber(
-        action.payload.response.reject_voters
+        action.payload.response.reject_voters,
       );
       state.totalVoters = IconConverter.toBigNumber(
-        action.payload.response.total_voters
+        action.payload.response.total_voters,
       );
 
       return;
@@ -319,38 +317,38 @@ const proposalSlice = createSlice({
     },
 
     fetchVoteResultBudgetChangeSuccess(state, action) {
-      console.log("budgetChangeRequest", action.payload.response.data);
+      console.log('budgetChangeRequest', action.payload.response.data);
       state.votesBudgetChangeByProgressReport = action.payload.response.data.map(
-        (vote) => ({
+        vote => ({
           sponsorAddress: vote.address,
           status: progressReportMapping.find(
-            (mapping) => mapping.status === vote.vote
+            mapping => mapping.status === vote.vote,
           )?.name,
           timestamp: vote._timestamp,
           prepName: vote.prep_name,
-        })
+        }),
       );
       state.votesBudgetChangeByProgressReport = state.votesBudgetChangeByProgressReport.filter(
-        (vote) => vote.status
+        vote => vote.status,
       );
       state.approvedVotesBudgetChange = IconConverter.toBigNumber(
-        action.payload.response.approved_votes
+        action.payload.response.approved_votes,
       );
       state.totalVotesBudgetChange = IconConverter.toBigNumber(
-        action.payload.response.total_votes
+        action.payload.response.total_votes,
       );
       state.rejectedVotesBudgetChange = IconConverter.toBigNumber(
-        action.payload.response.rejected_votes
+        action.payload.response.rejected_votes,
       );
 
       state.approvedVotersBudgetChange = IconConverter.toBigNumber(
-        action.payload.response.approve_voters
+        action.payload.response.approve_voters,
       );
       state.rejectedVotersBudgetChange = IconConverter.toBigNumber(
-        action.payload.response.reject_voters
+        action.payload.response.reject_voters,
       );
       state.totalVotersBudgetChange = IconConverter.toBigNumber(
-        action.payload.response.total_voters
+        action.payload.response.total_voters,
       );
 
       return;
@@ -364,7 +362,7 @@ const proposalSlice = createSlice({
     },
     fetchProgressReportByProposalSuccess(state, action) {
       state.progressReportByProposal = action.payload.response.data
-        .map((progressReport) => ({
+        .map(progressReport => ({
           status: progressReport[PARAMS.status],
           progressReportTitle: progressReport[PARAMS.progressReportTitle],
           projectTitle: progressReport[PARAMS.proposalTitle],
@@ -374,10 +372,10 @@ const proposalSlice = createSlice({
           reportKey: progressReport[PARAMS.reportHash],
           proposalKey: progressReport[PARAMS.proposalHash],
           approvedVotes: IconConverter.toBigNumber(
-            progressReport[PARAMS.approvedVotes]
+            progressReport[PARAMS.approvedVotes],
           ),
           totalVotes: IconConverter.toBigNumber(
-            progressReport[PARAMS.totalVotes]
+            progressReport[PARAMS.totalVotes],
           ),
 
           approvedPercentage: calculatePercentage({
@@ -399,7 +397,7 @@ const proposalSlice = createSlice({
         }))
         .sort((a, b) => b.timestamp - a.timestamp);
       state.progressReportByProposal = state.progressReportByProposal.filter(
-        (progressReport) => progressReport.progressReportTitle !== ""
+        progressReport => progressReport.progressReportTitle !== '',
       );
       return;
     },
@@ -412,7 +410,7 @@ const proposalSlice = createSlice({
       // state.progressReportList = progressReportList.map(progressReport);
 
       state.remainingVotes = action.payload.response
-        .map((progressReport) => ({
+        .map(progressReport => ({
           status: progressReport[PARAMS.status],
           progressReportTitle: progressReport[PARAMS.progressReportTitle],
           projectTitle: progressReport[PARAMS.proposalTitle],
@@ -422,10 +420,10 @@ const proposalSlice = createSlice({
           reportKey: progressReport[PARAMS.reportHash],
           proposalKey: progressReport[PARAMS.proposalHash],
           approvedVotes: IconConverter.toBigNumber(
-            progressReport[PARAMS.approvedVotes]
+            progressReport[PARAMS.approvedVotes],
           ),
           totalVotes: IconConverter.toBigNumber(
-            progressReport[PARAMS.totalVotes]
+            progressReport[PARAMS.totalVotes],
           ),
           // approvedPercentage: (!progressReport[PARAMS.totalVotes] || parseInt(progressReport[PARAMS.totalVotes]) === 0) ? 0 : ((progressReport[PARAMS.approvedVotes] / progressReport[PARAMS.totalVotes]) * 100)
           approvedPercentage: calculatePercentage({

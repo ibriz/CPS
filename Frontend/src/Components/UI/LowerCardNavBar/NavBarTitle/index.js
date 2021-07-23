@@ -1,7 +1,7 @@
-import React from "react";
-import styles from "./NavBarTitle.module.scss";
-import classNames from "classnames";
-import { Nav } from "react-bootstrap";
+import React from 'react';
+import styles from './NavBarTitle.module.scss';
+import classNames from 'classnames';
+import { Nav } from 'react-bootstrap';
 
 const NavBarTitle = ({ children, onClick, activeCondition }) => {
   return (
@@ -12,7 +12,7 @@ const NavBarTitle = ({ children, onClick, activeCondition }) => {
     <Nav.Link
       className={classNames(
         { [styles.navTitle]: true },
-        { [styles.selectedNav]: activeCondition }
+        { [styles.selectedNav]: activeCondition },
       )}
       onClick={onClick}
     >

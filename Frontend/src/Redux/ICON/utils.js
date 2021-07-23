@@ -1,21 +1,21 @@
-import { IconBuilder, HttpProvider, SignedTransaction } from "icon-sdk-js";
-import IconService from "icon-sdk-js";
-import ids from "./constants.js";
-import store from "../Store";
-import { customRequestRPC } from "./CustomEvents";
-import constants from "./constants";
-import { signTransaction as signTransactionRequest } from "Redux/Reducers/accountSlice";
-import frontEndWallet from "./FrontEndWallet";
+import { IconBuilder, HttpProvider, SignedTransaction } from 'icon-sdk-js';
+import IconService from 'icon-sdk-js';
+import ids from './constants.js';
+import store from '../Store';
+import { customRequestRPC } from './CustomEvents';
+import constants from './constants';
+import { signTransaction as signTransactionRequest } from 'Redux/Reducers/accountSlice';
+import frontEndWallet from './FrontEndWallet';
 
 // var CPSScore = 'cx724a3cf07c91a12dd7fd4987be130f383168b631';
 // var CPSScore = 'cxdf3c1ea6ba87e21957c63b21a54151a38a6ecb80';
 // var CPSScore = 'cx00c1e2d9b009fca69002c53c1ce3ed377708381e';
 // var CPSScore = 'cx6bb0e6683dd326165d42289c12b6bd0eaa596cc9';
-var CPSScore = "cx9f4ab72f854d3ccdc59aa6f2c3e2215dd62e879f";
+var CPSScore = 'cx9f4ab72f854d3ccdc59aa6f2c3e2215dd62e879f';
 var nid = 1;
-export const provider = new HttpProvider("https://ctz.solidwallet.io/api/v3");
+export const provider = new HttpProvider('https://ctz.solidwallet.io/api/v3');
 export const iconService = new IconService(provider);
-export const trackerURL = "https://tracker.icon.foundation/address";
+export const trackerURL = 'https://tracker.icon.foundation/address';
 
 // var testNet = "https://bicon.tracker.solidwallet.io/v3/address/info?address="
 // var mainNet = "https://tracker.icon.foundation/v3/address/info?address="
@@ -27,8 +27,8 @@ export function call({ scoreAddress = CPSScore, method, params = {}, id }) {
   let call = callBuilder.to(scoreAddress).method(method).params(params).build();
 
   let jsonRpc = JSON.stringify({
-    jsonrpc: "2.0",
-    method: "icx_call",
+    jsonrpc: '2.0',
+    method: 'icx_call',
     params: call,
     id: ids.method,
   });
@@ -77,19 +77,19 @@ export function sendTransaction({
     .build();
 
   const txnPayload = {
-    jsonrpc: "2.0",
-    method: "icx_sendTransaction",
+    jsonrpc: '2.0',
+    method: 'icx_sendTransaction',
     params: IconConverter.toRawTransaction(txnData),
     id: id ? constants[id] : constants[method],
   };
   console.log(txnPayload);
   window.parent.dispatchEvent(
-    new CustomEvent("ICONEX_RELAY_REQUEST", {
+    new CustomEvent('ICONEX_RELAY_REQUEST', {
       detail: {
-        type: "REQUEST_JSON-RPC",
+        type: 'REQUEST_JSON-RPC',
         payload: txnPayload,
       },
-    })
+    }),
   );
 }
 
@@ -137,7 +137,7 @@ export function signTransaction(walletAddress) {
       const signature = store.getState().account.signature;
       if (signature) {
         clearInterval(interFunction);
-        if (signature === "-1") {
+        if (signature === '-1') {
           resolve({
             signature: -1,
             payload: -1,
@@ -158,20 +158,20 @@ export function signTransaction(walletAddress) {
 function getRanHex(size) {
   return [...Array(size)]
     .map(() => Math.floor(Math.random() * 16).toString(16))
-    .join("");
+    .join('');
 }
 
 export function signTransactionFromICONEX(hash, walletAddress) {
   window.parent.dispatchEvent(
-    new CustomEvent("ICONEX_RELAY_REQUEST", {
+    new CustomEvent('ICONEX_RELAY_REQUEST', {
       detail: {
-        type: "REQUEST_SIGNING",
+        type: 'REQUEST_SIGNING',
         payload: {
           from: walletAddress,
           // hash: "9babe5d2911e8e42dfad72a589202767f95c6fab49523cdc1621607529890125", //64 characters
           hash: hash,
         },
       },
-    })
+    }),
   );
 }

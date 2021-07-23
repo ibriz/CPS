@@ -1,8 +1,8 @@
-import { sendTransaction } from "Redux/ICON/utils";
+import { sendTransaction } from 'Redux/ICON/utils';
 
 function* updatePeriodWorker({ payload }) {
   sendTransaction({
-    method: "update_period",
+    method: 'update_period',
   });
 }
 

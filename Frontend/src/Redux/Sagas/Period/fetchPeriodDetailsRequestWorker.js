@@ -1,17 +1,17 @@
-import { put, call } from "redux-saga/effects";
+import { put, call } from 'redux-saga/effects';
 import {
   fetchPeriodDetailsSuccess,
   fetchPeriodDetailsFailure,
-} from "../../Reducers/periodSlice";
-import { callKeyStoreWallet } from "../../ICON/utils";
-import { progressReportStatusMapping } from "Constants";
+} from '../../Reducers/periodSlice';
+import { callKeyStoreWallet } from '../../ICON/utils';
+import { progressReportStatusMapping } from 'Constants';
 
 function* fetchPeriodDetailsRequestWorker({ payload }) {
   try {
     // console.log("fetchPeriodDetailsRequestWorker");
 
     const response = yield call(callKeyStoreWallet, {
-      method: "get_period_status",
+      method: 'get_period_status',
     });
 
     // const response = {
@@ -26,7 +26,7 @@ function* fetchPeriodDetailsRequestWorker({ payload }) {
     yield put(
       fetchPeriodDetailsSuccess({
         response,
-      })
+      }),
     );
   } catch (error) {
     yield put(fetchPeriodDetailsFailure(error));

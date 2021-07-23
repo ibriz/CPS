@@ -1,4 +1,4 @@
-import { BASE_URL, IMAGE_UPLOAD_URL } from "../Redux/Constants";
+import { BASE_URL, IMAGE_UPLOAD_URL } from '../Redux/Constants';
 
 class UploadAdapter {
   constructor(loader) {
@@ -7,12 +7,12 @@ class UploadAdapter {
 
   upload() {
     return this.loader.file.then(
-      (file) =>
+      file =>
         new Promise((resolve, reject) => {
           this._initRequest();
           this._initListeners(resolve, reject, file);
           this._sendRequest(file);
-        })
+        }),
     );
   }
 
@@ -24,8 +24,8 @@ class UploadAdapter {
 
   _initRequest() {
     const xhr = (this.xhr = new XMLHttpRequest());
-    xhr.open("POST", `${BASE_URL}/${IMAGE_UPLOAD_URL}`, true);
-    xhr.responseType = "json";
+    xhr.open('POST', `${BASE_URL}/${IMAGE_UPLOAD_URL}`, true);
+    xhr.responseType = 'json';
   }
 
   _initListeners(resolve, reject, file) {
@@ -33,14 +33,16 @@ class UploadAdapter {
     const loader = this.loader;
     const genericErrorText = `Couldn't upload file: ${file.name}.`;
 
-    xhr.addEventListener("error", () => reject(genericErrorText));
-    xhr.addEventListener("abort", () => reject());
-    xhr.addEventListener("load", () => {
+    xhr.addEventListener('error', () => reject(genericErrorText));
+    xhr.addEventListener('abort', () => reject());
+    xhr.addEventListener('load', () => {
       const response = xhr.response;
 
       if (!response || response.error) {
         return reject(
-          response && response.error ? response.error.message : genericErrorText
+          response && response.error
+            ? response.error.message
+            : genericErrorText,
         );
       }
 
@@ -50,7 +52,7 @@ class UploadAdapter {
     });
 
     if (xhr.upload) {
-      xhr.upload.addEventListener("progress", (evt) => {
+      xhr.upload.addEventListener('progress', evt => {
         if (evt.lengthComputable) {
           loader.uploadTotal = evt.total;
           loader.uploaded = evt.loaded;
@@ -62,7 +64,7 @@ class UploadAdapter {
   _sendRequest(file) {
     const data = new FormData();
 
-    data.append("file", file);
+    data.append('file', file);
 
     this.xhr.send(data);
   }
@@ -71,7 +73,7 @@ class UploadAdapter {
 // ...
 
 function ImageUploadAdapter(editor) {
-  editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
+  editor.plugins.get('FileRepository').createUploadAdapter = loader => {
     return new UploadAdapter(loader);
   };
 }

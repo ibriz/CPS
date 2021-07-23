@@ -1,5 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { IconConverter } from "icon-sdk-js";
+import { createSlice } from '@reduxjs/toolkit';
+import { IconConverter } from 'icon-sdk-js';
 
 const initialState = {
   cpfRemainingFunds: 0,
@@ -16,7 +16,7 @@ const initialState = {
 };
 
 const fundSlice = createSlice({
-  name: "fund",
+  name: 'fund',
   initialState,
   reducers: {
     fetchCPFScoreAddressRequest() {
@@ -48,7 +48,7 @@ const fundSlice = createSlice({
     },
     fetchCPFRemainingFundSuccess(state, action) {
       state.cpfRemainingFunds = IconConverter.toBigNumber(
-        action.payload.response
+        action.payload.response,
       ).dividedBy(10 ** 18);
       // state.cpfScoreAddress = action.payload.response;
 
@@ -62,33 +62,33 @@ const fundSlice = createSlice({
       return;
     },
     fetchExpectedGrantSuccess(state, action) {
-      if (action.payload.response.type === "proposalGrant") {
+      if (action.payload.response.type === 'proposalGrant') {
         state.expectedGrant = action.payload.response.total_amount
           ? IconConverter.toBigNumber(
-              action.payload.response.total_amount
+              action.payload.response.total_amount,
             ).dividedBy(10 ** 18)
           : 0;
         state.withDrawAmountProposalGrant = action.payload.response
           .withdraw_amount
           ? IconConverter.toBigNumber(
-              action.payload.response.withdraw_amount
+              action.payload.response.withdraw_amount,
             ).dividedBy(10 ** 18)
           : 0;
       } else {
         state.sponsorReward = action.payload.response.total_amount
           ? IconConverter.toBigNumber(
-              action.payload.response.total_amount
+              action.payload.response.total_amount,
             ).dividedBy(10 ** 18)
           : 0;
         state.sponsorBond = action.payload.response.total_sponsor_bond
           ? IconConverter.toBigNumber(
-              action.payload.response.total_sponsor_bond
+              action.payload.response.total_sponsor_bond,
             ).dividedBy(10 ** 18)
           : 0;
         state.withDrawAmountSponsorReward = action.payload.response
           .withdraw_amount
           ? IconConverter.toBigNumber(
-              action.payload.response.withdraw_amount
+              action.payload.response.withdraw_amount,
             ).dividedBy(10 ** 18)
           : 0;
       }
@@ -106,7 +106,7 @@ const fundSlice = createSlice({
   },
 
   extraReducers: {
-    "account/logout": (state, action) => {
+    'account/logout': (state, action) => {
       state.expectedGrant = 0;
       state.sponsorBond = 0;
     },

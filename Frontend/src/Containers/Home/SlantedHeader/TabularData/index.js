@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from "react";
-import styles from "./TabularData.module.css";
-import { connect } from "react-redux";
+import React, { useEffect, useState } from 'react';
+import styles from './TabularData.module.css';
+import { connect } from 'react-redux';
 import {
   fetchProposalListRequest,
   fetchProjectAmountsRequest,
-} from "Redux/Reducers/proposalSlice";
-import wallet from "Redux/ICON/FrontEndWallet";
+} from 'Redux/Reducers/proposalSlice';
+import wallet from 'Redux/ICON/FrontEndWallet';
 import {
   fetchCPFScoreAddressRequest,
   fetchCPFRemainingFundRequest,
-} from "Redux/Reducers/fundSlice";
-import { icxFormat } from "Helpers";
-import useTimer from "Hooks/useTimer";
-import { fetchPrepsRequest } from "Redux/Reducers/prepsSlice";
-import PRepListModal from "../PRepListModal";
+} from 'Redux/Reducers/fundSlice';
+import { icxFormat } from 'Helpers';
+import useTimer from 'Hooks/useTimer';
+import { fetchPrepsRequest } from 'Redux/Reducers/prepsSlice';
+import PRepListModal from '../PRepListModal';
 
 const TabularData = ({
   numberOfPendingProposals,
@@ -53,43 +53,43 @@ const TabularData = ({
 
   const tabularData = [
     {
-      key: "Period",
-      value: period !== "VOTING" ? "Application Period" : "Voting Period",
+      key: 'Period',
+      value: period !== 'VOTING' ? 'Application Period' : 'Voting Period',
     },
     {
-      key: "No. of Registered P-Reps",
+      key: 'No. of Registered P-Reps',
       value: (
         <span
           onClick={() => setPrepListModalShow(true)}
-          style={{ textDecoration: "underline", cursor: "pointer" }}
+          style={{ textDecoration: 'underline', cursor: 'pointer' }}
         >
           {preps.length}
         </span>
       ),
     },
     {
-      key: "Voting Proposals",
+      key: 'Voting Proposals',
       value: `${projectAmounts.Voting.count} (${icxFormat(
-        projectAmounts.Voting.amount
+        projectAmounts.Voting.amount,
       )} ICX)`,
     },
     {
-      key: "Approved Proposals",
+      key: 'Approved Proposals',
       value: `${
         projectAmounts.Active.count + projectAmounts.Paused.count
       } (${icxFormat(
-        projectAmounts.Active.amount + projectAmounts.Paused.amount
+        projectAmounts.Active.amount + projectAmounts.Paused.amount,
       )} ICX)`,
     },
     {
-      key: "CPF Remaining Funds",
+      key: 'CPF Remaining Funds',
       value: `${icxFormat(cpfRemainingFunds, true)} ICX`,
     },
   ];
 
   useEffect(() => {
     fetchProposalListRequest({
-      status: "Voting",
+      status: 'Voting',
       walletAddress: walletAddress || wallet.getAddress(),
       pageNumber: 1,
     });
@@ -117,7 +117,7 @@ const TabularData = ({
   );
 };
 
-const mapStateToProps = () => (state) => {
+const mapStateToProps = () => state => {
   return {
     numberOfSubmittedProposals: state.proposals.numberOfSubmittedProposals,
     totalSubmittedProposalBudget: state.proposals.totalSubmittedProposalBudget,
@@ -139,16 +139,16 @@ const mapStateToProps = () => (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  fetchProposalListRequest: (payload) =>
+const mapDispatchToProps = dispatch => ({
+  fetchProposalListRequest: payload =>
     dispatch(fetchProposalListRequest(payload)),
-  fetchCPFScoreAddressRequest: (payload) =>
+  fetchCPFScoreAddressRequest: payload =>
     dispatch(fetchCPFScoreAddressRequest(payload)),
-  fetchCPFRemainingFundRequest: (payload) =>
+  fetchCPFRemainingFundRequest: payload =>
     dispatch(fetchCPFRemainingFundRequest(payload)),
-  fetchProjectAmountsRequest: (payload) =>
+  fetchProjectAmountsRequest: payload =>
     dispatch(fetchProjectAmountsRequest(payload)),
-  fetchPrepsRequest: (payload) => dispatch(fetchPrepsRequest(payload)),
+  fetchPrepsRequest: payload => dispatch(fetchPrepsRequest(payload)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TabularData);

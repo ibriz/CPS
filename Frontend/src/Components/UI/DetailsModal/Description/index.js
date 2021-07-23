@@ -1,5 +1,5 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 
 const Description1 = styled.div`
   color: #262626;
@@ -15,7 +15,7 @@ const DescriptionTitle = styled.div`
   margin-bottom: 5px;
 `;
 
-const Description = ({ description, title = "DESCRIPTION" }) => {
+const Description = ({ description, title = 'DESCRIPTION' }) => {
   return (
     <>
       <DescriptionTitle>{title}</DescriptionTitle>

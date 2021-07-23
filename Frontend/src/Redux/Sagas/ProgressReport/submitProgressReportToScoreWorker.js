@@ -1,7 +1,7 @@
-import { sendTransaction } from "../../ICON/utils";
+import { sendTransaction } from '../../ICON/utils';
 
 function* submitProgressReportToScoreWorker({ payload }) {
-  console.log("submitProgressReportToScoreWorker");
+  console.log('submitProgressReportToScoreWorker');
   console.log(payload);
 
   const params = {
@@ -12,10 +12,10 @@ function* submitProgressReportToScoreWorker({ payload }) {
       ipfs_hash: payload.progressReport.projectName,
       progress_report_title: payload.progressReport.progressReportTitle,
       budget_adjustment: `${Number(
-        payload.progressReport.projectTermRevision
+        payload.progressReport.projectTermRevision,
       )}`,
       additional_budget: Number(
-        payload.progressReport.additionalBudget
+        payload.progressReport.additionalBudget,
       ).toFixed(),
       ipfs_link: `https://gateway.ipfs.io/ipfs/${payload.response.hash}`,
       percentage_completed: `${
@@ -26,7 +26,7 @@ function* submitProgressReportToScoreWorker({ payload }) {
   };
 
   sendTransaction({
-    method: "submit_progress_report",
+    method: 'submit_progress_report',
     params,
     icxAmount: 0,
   });

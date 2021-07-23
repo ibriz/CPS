@@ -1,9 +1,9 @@
-import React from "react";
-import styles from "./ProposalNavBar.module.scss";
-import progressReportStates from "../progressReportStates";
-import NavBarTitle from "../../UI/LowerCardNavBar/NavBarTitle";
-import NavBarInputGroup from "../../UI/LowerCardNavBar/NavBarInputGroup";
-import { Nav } from "react-bootstrap";
+import React from 'react';
+import styles from './ProposalNavBar.module.scss';
+import progressReportStates from '../progressReportStates';
+import NavBarTitle from '../../UI/LowerCardNavBar/NavBarTitle';
+import NavBarInputGroup from '../../UI/LowerCardNavBar/NavBarInputGroup';
+import { Nav } from 'react-bootstrap';
 
 const ProgressReportNavBar = ({
   selectedTab,
@@ -30,16 +30,16 @@ const ProgressReportNavBar = ({
 
                         <NavBarInputGroup /> */}
       <Nav
-        activeKey="/home"
-        onSelect={(selectedKey) => alert(`selected ${selectedKey}`)}
+        activeKey='/home'
+        onSelect={selectedKey => alert(`selected ${selectedKey}`)}
         style={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: "5px",
-          width: "100%",
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '5px',
+          width: '100%',
         }}
       >
-        {progressReportStates.map((proposalState) => (
+        {progressReportStates.map(proposalState => (
           <Nav.Item>
             <NavBarTitle
               onClick={() => setSelectedTab(proposalState)}
@@ -50,7 +50,7 @@ const ProgressReportNavBar = ({
           </Nav.Item>
         ))}
         <NavBarInputGroup
-          placeholder="Search Progress Report"
+          placeholder='Search Progress Report'
           value={searchText}
           setValue={setSearchText}
         />

@@ -1,32 +1,32 @@
-import store from "../../Store";
-import { login, signTransaction } from "../../Reducers/accountSlice";
-import history from "../../../Router/history";
-import { NotificationManager } from "react-notifications";
-import constants from "../constants";
-import IconService from "icon-sdk-js";
-import { HttpProvider } from "icon-sdk-js";
+import store from '../../Store';
+import { login, signTransaction } from '../../Reducers/accountSlice';
+import history from '../../../Router/history';
+import { NotificationManager } from 'react-notifications';
+import constants from '../constants';
+import IconService from 'icon-sdk-js';
+import { HttpProvider } from 'icon-sdk-js';
 import {
   setModalShowSponsorRequests,
   setModalShowVoting,
   fetchProposalByAddressRequest,
-} from "Redux/Reducers/proposalSlice";
-import { setModalShowVotingPR } from "Redux/Reducers/progressReportSlice";
+} from 'Redux/Reducers/proposalSlice';
+import { setModalShowVotingPR } from 'Redux/Reducers/progressReportSlice';
 // import { fetchPeriodDetailsRequest } from 'Redux/Reducers/periodSlice';
-import { loginPrepRequest, setHasAddress } from "Redux/Reducers/accountSlice";
+import { loginPrepRequest, setHasAddress } from 'Redux/Reducers/accountSlice';
 import {
   fetchSponsorRequestsListRequest,
   fetchProposalListRequest,
-} from "Redux/Reducers/proposalSlice";
-import { fetchRemainingVotesRequest } from "Redux/Reducers/proposalSlice";
-import { fetchProgressReportListRequest } from "Redux/Reducers/progressReportSlice";
-import { fetchPeriodDetailsRequest } from "Redux/Reducers/periodSlice";
+} from 'Redux/Reducers/proposalSlice';
+import { fetchRemainingVotesRequest } from 'Redux/Reducers/proposalSlice';
+import { fetchProgressReportListRequest } from 'Redux/Reducers/progressReportSlice';
+import { fetchPeriodDetailsRequest } from 'Redux/Reducers/periodSlice';
 import {
   fetchExpectedGrantRequest,
   fetchCPSTreasuryScoreAddressRequest,
-} from "Redux/Reducers/fundSlice";
-import { provider } from "../utils";
-import { request } from "Redux/Sagas/helpers";
-import { TRIGGER_SPONSOR_APPROVAL_EMAIL_NOTIFICATION } from "Redux/Constants";
+} from 'Redux/Reducers/fundSlice';
+import { provider } from '../utils';
+import { request } from 'Redux/Sagas/helpers';
+import { TRIGGER_SPONSOR_APPROVAL_EMAIL_NOTIFICATION } from 'Redux/Constants';
 
 // import { loginSuccess } from 'Redux/Reducers/accountSlice';
 
@@ -60,15 +60,15 @@ async function getResult({ txHash, successMessage, failureMessage }, callBack) {
     if (result.status === 0) {
       NotificationManager.error(result.failure.message, failureMessage);
     } else if (result.status === 1) {
-      console.log("callback", typeof callBack);
+      console.log('callback', typeof callBack);
 
-      if (typeof callBack === "function") {
-        console.log("callback10");
+      if (typeof callBack === 'function') {
+        console.log('callback10');
 
         try {
           callBack();
         } catch {
-          console.log("CallbackError");
+          console.log('CallbackError');
         } finally {
           NotificationManager.success(successMessage);
         }
@@ -78,156 +78,156 @@ async function getResult({ txHash, successMessage, failureMessage }, callBack) {
     // console.log("callBack");
     // callBack();
   } catch {
-    console.log("Catch");
+    console.log('Catch');
     getResult(
       {
         txHash,
         failureMessage,
         successMessage,
       },
-      callBack
+      callBack,
     );
   }
 
   return;
 }
 
-export default (event) => {
+export default event => {
   const { type, payload } = event.detail;
 
   switch (type) {
-    case "RESPONSE_ADDRESS":
-      console.log("login", payload);
+    case 'RESPONSE_ADDRESS':
+      console.log('login', payload);
       store.dispatch(login({ address: payload }));
       break;
 
-    case "RESPONSE_HAS_ADDRESS":
-      console.log("RESPONSE_HAS_ADDRESS", payload);
+    case 'RESPONSE_HAS_ADDRESS':
+      console.log('RESPONSE_HAS_ADDRESS', payload);
       store.dispatch(setHasAddress({ hasAddress: payload.hasAddress }));
       break;
 
-    case "RESPONSE_SIGNING":
-      console.log("RESPONSE_SIGNING", JSON.stringify(payload));
+    case 'RESPONSE_SIGNING':
+      console.log('RESPONSE_SIGNING', JSON.stringify(payload));
       console.log(JSON.stringify(payload));
       // console.log("getRaw", payload.getProperties());
       store.dispatch(signTransaction({ signature: payload }));
 
       break;
 
-    case "CANCEL_SIGNING":
-      console.log("CANCEL_SIGNING", JSON.stringify(payload));
-      store.dispatch(signTransaction({ signature: "-1" }));
+    case 'CANCEL_SIGNING':
+      console.log('CANCEL_SIGNING', JSON.stringify(payload));
+      store.dispatch(signTransaction({ signature: '-1' }));
 
       break;
 
-    case "RESPONSE_JSON-RPC":
+    case 'RESPONSE_JSON-RPC':
       console.log(payload);
 
       if (payload.code) {
-        NotificationManager.error(payload.message, "Transaction Failed");
+        NotificationManager.error(payload.message, 'Transaction Failed');
         return;
       }
 
       switch (payload.id) {
         case submit_proposal:
-          console.log("history");
-          history.push("/proposals");
-          history.push("/proposals");
+          console.log('history');
+          history.push('/proposals');
+          history.push('/proposals');
           history.goBack();
           history.goForward();
 
           // window.location.reload();
-          NotificationManager.info("Proposal Creation Request Sent");
+          NotificationManager.info('Proposal Creation Request Sent');
 
           getResult(
             {
               txHash: payload.result,
-              failureMessage: "Proposal Creation Failed",
-              successMessage: "Proposal Created Successfully",
+              failureMessage: 'Proposal Creation Failed',
+              successMessage: 'Proposal Created Successfully',
             },
             function () {
               store.dispatch(
                 fetchProposalListRequest({
-                  status: "Pending",
+                  status: 'Pending',
                   walletAddress: store.getState().account.address,
                   pageNumber: 1,
-                })
+                }),
               );
               return true;
-            }
+            },
           );
 
           break;
 
         case submit_progress_report:
-          console.log("history");
-          history.push("/progress-reports");
-          history.push("/progress-reports");
+          console.log('history');
+          history.push('/progress-reports');
+          history.push('/progress-reports');
           history.goBack();
           history.goForward();
           getResult(
             {
               txHash: payload.result,
-              failureMessage: "Progress Report Creation Failed",
-              successMessage: "Progress Report Created Successfully",
+              failureMessage: 'Progress Report Creation Failed',
+              successMessage: 'Progress Report Created Successfully',
             },
             function () {
               store.dispatch(
                 fetchProposalByAddressRequest({
                   walletAddress: store.getstate().account.address,
-                })
+                }),
               );
               store.dispatch(
                 fetchProgressReportListRequest({
-                  status: "Voting",
+                  status: 'Voting',
                   walletAddress: store.getState().account.address,
                   pageNumber: 1,
-                })
+                }),
               );
 
               return true;
-            }
+            },
           );
 
           // window.location.reload();
-          NotificationManager.info("Progress Report Creation Request Sent");
+          NotificationManager.info('Progress Report Creation Request Sent');
           break;
 
         case sponsor_vote:
-          console.log("history");
-          history.push("/");
-          NotificationManager.info("Sponsor Vote Request Sent");
+          console.log('history');
+          history.push('/');
+          NotificationManager.info('Sponsor Vote Request Sent');
 
           getResult(
             {
               txHash: payload.result,
-              failureMessage: "Sponsor Voting Failed",
-              successMessage: "Sponsor Voted Successfully",
+              failureMessage: 'Sponsor Voting Failed',
+              successMessage: 'Sponsor Voted Successfully',
             },
             function () {
               store.dispatch(
                 fetchSponsorRequestsListRequest({
-                  status: "Pending",
+                  status: 'Pending',
                   walletAddress: store.getState().account.address,
                   pageNumber: 1,
-                })
+                }),
               );
               store.dispatch(
                 fetchSponsorRequestsListRequest({
-                  status: "Approved",
+                  status: 'Approved',
                   walletAddress: store.getState().account.address,
                   pageNumber: 1,
-                })
+                }),
               );
               store.dispatch(
                 fetchSponsorRequestsListRequest({
-                  status: "Rejected",
+                  status: 'Rejected',
                   walletAddress: store.getState().account.address,
                   pageNumber: 1,
-                })
+                }),
               );
               return true;
-            }
+            },
           );
           store.dispatch(setModalShowSponsorRequests(false));
 
@@ -235,15 +235,15 @@ export default (event) => {
           break;
 
         case approve_sponsor:
-          console.log("history");
-          history.push("/");
-          NotificationManager.info("Sponsor request approval request sent");
+          console.log('history');
+          history.push('/');
+          NotificationManager.info('Sponsor request approval request sent');
 
           getResult(
             {
               txHash: payload.result,
-              failureMessage: "Error accepting Sponsor Request",
-              successMessage: "Sponsor request accepted successfully",
+              failureMessage: 'Error accepting Sponsor Request',
+              successMessage: 'Sponsor request accepted successfully',
             },
             function () {
               request({
@@ -257,27 +257,27 @@ export default (event) => {
               });
               store.dispatch(
                 fetchSponsorRequestsListRequest({
-                  status: "Pending",
+                  status: 'Pending',
                   walletAddress: store.getState().account.address,
                   pageNumber: 1,
-                })
+                }),
               );
               store.dispatch(
                 fetchSponsorRequestsListRequest({
-                  status: "Approved",
+                  status: 'Approved',
                   walletAddress: store.getState().account.address,
                   pageNumber: 1,
-                })
+                }),
               );
               store.dispatch(
                 fetchSponsorRequestsListRequest({
-                  status: "Rejected",
+                  status: 'Rejected',
                   walletAddress: store.getState().account.address,
                   pageNumber: 1,
-                })
+                }),
               );
               return true;
-            }
+            },
           );
           store.dispatch(setModalShowSponsorRequests(false));
 
@@ -285,40 +285,40 @@ export default (event) => {
           break;
 
         case reject_sponsor:
-          console.log("history");
-          history.push("/");
-          NotificationManager.info("Sponsor request rejection request sent");
+          console.log('history');
+          history.push('/');
+          NotificationManager.info('Sponsor request rejection request sent');
 
           getResult(
             {
               txHash: payload.result,
-              failureMessage: "Error denying Sponsor Request",
-              successMessage: "Sponsor request denied successfully",
+              failureMessage: 'Error denying Sponsor Request',
+              successMessage: 'Sponsor request denied successfully',
             },
             function () {
               store.dispatch(
                 fetchSponsorRequestsListRequest({
-                  status: "Pending",
+                  status: 'Pending',
                   walletAddress: store.getState().account.address,
                   pageNumber: 1,
-                })
+                }),
               );
               store.dispatch(
                 fetchSponsorRequestsListRequest({
-                  status: "Approved",
+                  status: 'Approved',
                   walletAddress: store.getState().account.address,
                   pageNumber: 1,
-                })
+                }),
               );
               store.dispatch(
                 fetchSponsorRequestsListRequest({
-                  status: "Rejected",
+                  status: 'Rejected',
                   walletAddress: store.getState().account.address,
                   pageNumber: 1,
-                })
+                }),
               );
               return true;
-            }
+            },
           );
           store.dispatch(setModalShowSponsorRequests(false));
 
@@ -326,24 +326,24 @@ export default (event) => {
           break;
 
         case vote_proposal:
-          console.group("vote_proposal");
+          console.group('vote_proposal');
           console.log(payload);
 
           console.groupEnd();
           getResult(
             {
               txHash: payload.result,
-              failureMessage: "Vote Proposal Failed",
-              successMessage: "Proposal Vote Succeded",
+              failureMessage: 'Vote Proposal Failed',
+              successMessage: 'Proposal Vote Succeded',
             },
             function () {
               store.dispatch(
                 fetchRemainingVotesRequest({
-                  type: "proposal",
-                })
+                  type: 'proposal',
+                }),
               );
               return true;
-            }
+            },
           );
           store.dispatch(setModalShowVoting(false));
 
@@ -353,17 +353,17 @@ export default (event) => {
           getResult(
             {
               txHash: payload.result,
-              failureMessage: "Vote Progress Report Failed",
-              successMessage: "Progress Report Vote Succeded",
+              failureMessage: 'Vote Progress Report Failed',
+              successMessage: 'Progress Report Vote Succeded',
             },
             function () {
               store.dispatch(
                 fetchRemainingVotesRequest({
-                  type: "progress_report",
-                })
+                  type: 'progress_report',
+                }),
               );
               return true;
-            }
+            },
           );
           store.dispatch(setModalShowVotingPR(false));
 
@@ -374,88 +374,88 @@ export default (event) => {
           getResult(
             {
               txHash: payload.result,
-              failureMessage: "Period Update Failed",
-              successMessage: "Period Updated Successfully",
+              failureMessage: 'Period Update Failed',
+              successMessage: 'Period Updated Successfully',
             },
             function () {
               store.dispatch(fetchPeriodDetailsRequest());
-            }
+            },
           );
 
           // window.location.reload();
-          NotificationManager.info("Period Update Request Sent");
+          NotificationManager.info('Period Update Request Sent');
           break;
 
         case unregister_prep:
           getResult(
             {
               txHash: payload.result,
-              failureMessage: "Prep Unregistration Failed",
-              successMessage: "Prep Unregistered Successfully",
+              failureMessage: 'Prep Unregistration Failed',
+              successMessage: 'Prep Unregistered Successfully',
             },
             function () {
-              console.log("loginPrepRequestreq");
+              console.log('loginPrepRequestreq');
 
               store.dispatch(loginPrepRequest());
-              console.log("loginPrepRequestsuccess");
+              console.log('loginPrepRequestsuccess');
               return true;
-            }
+            },
           );
 
           // window.location.reload();
-          NotificationManager.info("Prep Unregistration Request Sent");
+          NotificationManager.info('Prep Unregistration Request Sent');
           break;
 
         case register_prep:
           getResult(
             {
               txHash: payload.result,
-              failureMessage: "Prep Registration Failed",
-              successMessage: "Prep Registered Successfully",
+              failureMessage: 'Prep Registration Failed',
+              successMessage: 'Prep Registered Successfully',
             },
             function () {
-              console.log("loginPrepRequestreq");
+              console.log('loginPrepRequestreq');
 
               store.dispatch(loginPrepRequest());
-              console.log("loginPrepRequestsuccess");
+              console.log('loginPrepRequestsuccess');
               return true;
-            }
+            },
           );
 
           // window.location.reload();
-          NotificationManager.info("Prep Registration Request Sent");
+          NotificationManager.info('Prep Registration Request Sent');
           break;
 
         case pay_prep_penalty:
           getResult(
             {
               txHash: payload.result,
-              failureMessage: "Prep Penalty Pay Failed",
-              successMessage: "Penalty Paid Successfully",
+              failureMessage: 'Prep Penalty Pay Failed',
+              successMessage: 'Penalty Paid Successfully',
             },
             function () {
               store.dispatch(loginPrepRequest());
               return true;
-            }
+            },
           );
 
           // window.location.reload();
-          NotificationManager.info("Prep Penalty Sent");
+          NotificationManager.info('Prep Penalty Sent');
           break;
 
         case claim_reward:
           getResult(
             {
               txHash: payload.result,
-              failureMessage: "Reward Claim Failed",
-              successMessage: "Reward Claimed Successfully",
+              failureMessage: 'Reward Claim Failed',
+              successMessage: 'Reward Claimed Successfully',
             },
             function () {
               store.dispatch(fetchCPSTreasuryScoreAddressRequest());
               store.dispatch(
                 fetchExpectedGrantRequest({
-                  type: "proposalGrant",
-                })
+                  type: 'proposalGrant',
+                }),
               );
 
               if (
@@ -464,16 +464,16 @@ export default (event) => {
               ) {
                 store.dispatch(
                   fetchExpectedGrantRequest({
-                    type: "sponsorReward",
-                  })
+                    type: 'sponsorReward',
+                  }),
                 );
               }
               return true;
-            }
+            },
           );
 
           // window.location.reload();
-          NotificationManager.info("Reward Claim Request Sent");
+          NotificationManager.info('Reward Claim Request Sent');
           break;
         default:
           break;

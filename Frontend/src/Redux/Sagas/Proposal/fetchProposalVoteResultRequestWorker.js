@@ -1,12 +1,12 @@
-import { put, call } from "redux-saga/effects";
-import { callKeyStoreWallet } from "../../ICON/utils";
+import { put, call } from 'redux-saga/effects';
+import { callKeyStoreWallet } from '../../ICON/utils';
 // import {
 //   getCourseInfo,
 // } from '../services/api';
 import {
   fetchVoteResultSuccess,
   fetchVoteResultFailure,
-} from "../../Reducers/proposalSlice";
+} from '../../Reducers/proposalSlice';
 
 // const proposalListStatusMapping = {
 //   'Active': '_active',
@@ -22,7 +22,7 @@ import {
 function* fetchProposalVoteResultRequestWorker({ payload }) {
   try {
     const response = yield call(callKeyStoreWallet, {
-      method: "get_vote_result",
+      method: 'get_vote_result',
       params: {
         _ipfs_key: payload.proposalKey,
       },
@@ -47,7 +47,7 @@ function* fetchProposalVoteResultRequestWorker({ payload }) {
     yield put(
       fetchVoteResultSuccess({
         response,
-      })
+      }),
     );
   } catch (error) {
     yield put(fetchVoteResultFailure());

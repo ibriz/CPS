@@ -16,7 +16,7 @@
 }
 
 .required:after {
-  content: "*";
+  content: '*';
   color: red;
   margin-left: 2px;
 }

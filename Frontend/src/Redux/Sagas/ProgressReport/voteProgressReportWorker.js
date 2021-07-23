@@ -1,9 +1,9 @@
-import { sendTransaction } from "Redux/ICON/utils";
+import { sendTransaction } from 'Redux/ICON/utils';
 
 const voteStatusMapping = {
-  Abstain: "_abstain",
-  Reject: "_reject",
-  Approve: "_approve",
+  Abstain: '_abstain',
+  Reject: '_reject',
+  Approve: '_approve',
 };
 
 function* voteProgressReportWorker({ payload }) {
@@ -16,7 +16,7 @@ function* voteProgressReportWorker({ payload }) {
   };
 
   sendTransaction({
-    method: "vote_progress_report",
+    method: 'vote_progress_report',
     params,
   });
 

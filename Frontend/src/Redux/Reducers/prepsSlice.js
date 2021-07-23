@@ -1,19 +1,19 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   preps: [],
 };
 
 const prepsSlice = createSlice({
-  name: "preps",
+  name: 'preps',
   initialState,
   reducers: {
     fetchPrepsRequest(state) {
       return;
     },
     fetchPrepsSuccess(state, action) {
-      state.preps = action.payload.map((prep) => {
-        if (typeof prep === "string")
+      state.preps = action.payload.map(prep => {
+        if (typeof prep === 'string')
           return {
             address: prep,
             name: prep,

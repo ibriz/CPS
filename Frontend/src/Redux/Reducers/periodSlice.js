@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   currentBlock: null,
@@ -10,12 +10,12 @@ const initialState = {
 };
 
 const periodMapping = {
-  "Application Period": "APPLICATION",
-  "Voting Period": "VOTING",
+  'Application Period': 'APPLICATION',
+  'Voting Period': 'VOTING',
 };
 
 const periodSlice = createSlice({
-  name: "period",
+  name: 'period',
   initialState,
   reducers: {
     fetchPeriodDetailsRequest() {

@@ -1,28 +1,28 @@
-import React from "react";
-import Header from "../../Components/Header";
-import { Container, Button } from "react-bootstrap";
-import useQuery from "Hooks/useQuery";
-import styles from "./unsubscribePage.module.scss";
-import Footer from "Components/Footer";
-import ConfirmationModal from "Components/UI/ConfirmationModal";
-import { connect } from "react-redux";
-import store from "Redux/Store";
-import { NotificationManager } from "react-notifications";
-import { request } from "Redux/Sagas/helpers";
-import { withRouter } from "react-router-dom";
+import React from 'react';
+import Header from '../../Components/Header';
+import { Container, Button } from 'react-bootstrap';
+import useQuery from 'Hooks/useQuery';
+import styles from './unsubscribePage.module.scss';
+import Footer from 'Components/Footer';
+import ConfirmationModal from 'Components/UI/ConfirmationModal';
+import { connect } from 'react-redux';
+import store from 'Redux/Store';
+import { NotificationManager } from 'react-notifications';
+import { request } from 'Redux/Sagas/helpers';
+import { withRouter } from 'react-router-dom';
 
 const UnsubscribePage = ({ hasAddress, history }) => {
   let query = useQuery();
-  let walletAddress = query.get("address");
+  let walletAddress = query.get('address');
 
   let [
     unsubscribeConfirmationShow,
     setUnsubscribeConfirmationShow,
   ] = React.useState(false);
 
-  const customEvent = new CustomEvent("ICONEX_RELAY_REQUEST", {
+  const customEvent = new CustomEvent('ICONEX_RELAY_REQUEST', {
     detail: {
-      type: "REQUEST_HAS_ADDRESS",
+      type: 'REQUEST_HAS_ADDRESS',
       payload: `${walletAddress}`,
     },
   });
@@ -47,14 +47,14 @@ const UnsubscribePage = ({ hasAddress, history }) => {
   const onClickOptOut = async () => {
     window.dispatchEvent(customEvent);
     const hasAddress = await checkHasAddressPromise();
-    console.log("hasAddress", hasAddress);
+    console.log('hasAddress', hasAddress);
     if (hasAddress.hasAddress) {
       setUnsubscribeConfirmationShow(true);
     } else {
       NotificationManager.error(
         `The address ${`${walletAddress.slice(0, 8)}...${walletAddress.slice(
-          walletAddress.length - 4
-        )}`} not found in the ICONEX`
+          walletAddress.length - 4,
+        )}`} not found in the ICONEX`,
       );
     }
   };
@@ -62,21 +62,21 @@ const UnsubscribePage = ({ hasAddress, history }) => {
   return (
     <div
       style={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        height: "100%",
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        height: '100%',
       }}
     >
-      <Container style={{ color: "#262626" }}>
+      <Container style={{ color: '#262626' }}>
         <div className={styles.title}>Email Notification Opt Out</div>
         <div className={styles.confirmationMessage}>
           Are you sure you want to opt out of the email list for the wallet
-          address <span style={{ fontWeight: "600" }}>{walletAddress}</span>
+          address <span style={{ fontWeight: '600' }}>{walletAddress}</span>
         </div>
         <div className={styles.optOutButtonContainer}>
           <Button
-            variant="primary"
+            variant='primary'
             className={styles.optOutButton}
             onClick={onClickOptOut}
           >
@@ -89,29 +89,29 @@ const UnsubscribePage = ({ hasAddress, history }) => {
       <ConfirmationModal
         show={unsubscribeConfirmationShow}
         onHide={() => setUnsubscribeConfirmationShow(false)}
-        heading={"Email Notification Opt Out Confirmation"}
-        size="md"
+        heading={'Email Notification Opt Out Confirmation'}
+        size='md'
         onConfirm={() => {
           request({
             body: {
               address: walletAddress,
             },
-            url: "user/",
+            url: 'user/',
             requireSigning: true,
             walletAddress,
-            method: "PUT",
+            method: 'PUT',
             callBackAfterSigning: () => {
-              NotificationManager.info("Unsubscription Request Sent");
-              history.push("/");
+              NotificationManager.info('Unsubscription Request Sent');
+              history.push('/');
             },
             successCallback: () => {
-              NotificationManager.success("Unsubscription Success");
+              NotificationManager.success('Unsubscription Success');
             },
-            failureCallback: (error) => {
-              if (error === "-1") {
+            failureCallback: error => {
+              if (error === '-1') {
                 return;
               }
-              NotificationManager.error(error, "Unsubscription failed");
+              NotificationManager.error(error, 'Unsubscription failed');
             },
           });
           // NotificationManager.success("Unsubscribed Successfully")
@@ -127,7 +127,7 @@ const UnsubscribePage = ({ hasAddress, history }) => {
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   hasAddress: state.account.hasAddress,
 });
 

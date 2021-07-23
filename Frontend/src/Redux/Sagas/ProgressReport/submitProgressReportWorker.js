@@ -1,4 +1,4 @@
-import { call, put, select } from "redux-saga/effects";
+import { call, put, select } from 'redux-saga/effects';
 // import {
 //   getCourseInfo,
 // } from '../services/api';
@@ -6,13 +6,13 @@ import {
   submitProgressReportSuccess,
   submitProgressReportFailure,
   setSubmittingProgressReport,
-} from "../../Reducers/progressReportSlice";
-import { PROGRESS_REPORT_ADD_URL } from "../../Constants";
-import { request } from "../helpers";
-import store from "Redux/Store";
-import { NotificationManager } from "react-notifications";
+} from '../../Reducers/progressReportSlice';
+import { PROGRESS_REPORT_ADD_URL } from '../../Constants';
+import { request } from '../helpers';
+import store from 'Redux/Store';
+import { NotificationManager } from 'react-notifications';
 
-export const getAddress = (state) => state.account.address;
+export const getAddress = state => state.account.address;
 
 function* submitProgressReportWorker({ payload }) {
   try {
@@ -30,7 +30,7 @@ function* submitProgressReportWorker({ payload }) {
       body: {
         ...payload.progressReport,
         address,
-        type: "report",
+        type: 'report',
       },
       url: PROGRESS_REPORT_ADD_URL,
       requireSigning: true,
@@ -41,13 +41,13 @@ function* submitProgressReportWorker({ payload }) {
       submitProgressReportSuccess({
         response,
         progressReport: payload.progressReport,
-      })
+      }),
     );
   } catch (error) {
-    if (error.message === "-1") {
+    if (error.message === '-1') {
       return;
     }
-    NotificationManager.error(error.message, "Submit Progress Report Failed");
+    NotificationManager.error(error.message, 'Submit Progress Report Failed');
     yield put(submitProgressReportFailure());
   }
 }

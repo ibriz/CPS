@@ -1,19 +1,19 @@
-import { call, put, select } from "redux-saga/effects";
+import { call, put, select } from 'redux-saga/effects';
 // import {
 //   getCourseInfo,
 // } from '../services/api';
 import {
   fetchDraftsSuccess,
   fetchDraftsFailure,
-} from "../../Reducers/progressReportSlice";
-import { PROPOSAL_ADD_URL } from "../../Constants";
-import { getRequest } from "../helpers";
+} from '../../Reducers/progressReportSlice';
+import { PROPOSAL_ADD_URL } from '../../Constants';
+import { getRequest } from '../helpers';
 
 function* fetchDraftRequestWorker({ payload }) {
-  console.log("fetchDraftRequestWorker");
+  console.log('fetchDraftRequestWorker');
 
   try {
-    const getAddress = (state) => state.account.address;
+    const getAddress = state => state.account.address;
     const walletAddress = yield select(getAddress);
 
     // const response = [
@@ -28,13 +28,13 @@ function* fetchDraftRequestWorker({ payload }) {
 
     const response = yield call(getRequest, {
       url: `draft?address=${payload.walletAddress}&type=ProgressReport`,
-      meathod: "GET",
+      meathod: 'GET',
     });
     yield put(
       fetchDraftsSuccess({
         response,
         contributorAddress: walletAddress,
-      })
+      }),
     );
   } catch (error) {
     yield put(fetchDraftsFailure());

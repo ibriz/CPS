@@ -1,17 +1,17 @@
-import { call, put, select } from "redux-saga/effects";
-import { getRequest } from "../helpers";
+import { call, put, select } from 'redux-saga/effects';
+import { getRequest } from '../helpers';
 import {
   fetchUserDataSuccess,
   fetchUserDataFailure,
-} from "Redux/Reducers/userSlice";
+} from 'Redux/Reducers/userSlice';
 
 function* fetchUserDataRequestWorker({ payload }) {
   try {
-    const getAddress = (state) => state.account.address;
+    const getAddress = state => state.account.address;
     const address = yield select(getAddress);
     const response = yield call(getRequest, {
       url: `user?address=${address}`,
-      method: "GET",
+      method: 'GET',
     });
 
     // response.verified = false;
@@ -26,7 +26,7 @@ function* fetchUserDataRequestWorker({ payload }) {
     yield put(
       fetchUserDataSuccess({
         response,
-      })
+      }),
     );
   } catch (error) {
     yield put(fetchUserDataFailure());

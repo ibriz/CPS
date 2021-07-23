@@ -1,9 +1,9 @@
 export default [
-  "Active",
-  "Voting",
-  "Pending",
-  "Completed",
-  "Disqualified",
-  "Paused",
-  "Draft",
+  'Active',
+  'Voting',
+  'Pending',
+  'Completed',
+  'Disqualified',
+  'Paused',
+  'Draft',
 ];

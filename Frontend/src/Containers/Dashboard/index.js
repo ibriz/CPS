@@ -1,29 +1,29 @@
-import React, { useState, useEffect } from "react";
-import Header from "../../Components/Header";
-import { Container, Row, Col, Button, Alert } from "react-bootstrap";
-import ConfirmationModal from "Components/UI/ConfirmationModal";
-import { payPenalty } from "Redux/Reducers/prepsSlice";
-import { payPenaltyAmount } from "Constants";
-import { connect } from "react-redux";
-import useTimer from "Hooks/useTimer";
-import InfoCard from "./InfoCard";
-import { icxFormat } from "Helpers";
+import React, { useState, useEffect } from 'react';
+import Header from '../../Components/Header';
+import { Container, Row, Col, Button, Alert } from 'react-bootstrap';
+import ConfirmationModal from 'Components/UI/ConfirmationModal';
+import { payPenalty } from 'Redux/Reducers/prepsSlice';
+import { payPenaltyAmount } from 'Constants';
+import { connect } from 'react-redux';
+import useTimer from 'Hooks/useTimer';
+import InfoCard from './InfoCard';
+import { icxFormat } from 'Helpers';
 import {
   fetchCPFScoreAddressRequest,
   fetchCPFRemainingFundRequest,
   claimReward,
-} from "Redux/Reducers/fundSlice";
-import { fetchProjectAmountsRequest } from "Redux/Reducers/proposalSlice";
-import styles from "./Dashboard.module.scss";
-import MyProposalCard from "Components/MyProposalCard";
-import ProposalPendingPRCard from "Components/ProposalPendingPRCard";
-import SponsorRequestsCard from "Components/SponsorRequestsCard";
-import VotingCard from "Components/VotingCard";
+} from 'Redux/Reducers/fundSlice';
+import { fetchProjectAmountsRequest } from 'Redux/Reducers/proposalSlice';
+import styles from './Dashboard.module.scss';
+import MyProposalCard from 'Components/MyProposalCard';
+import ProposalPendingPRCard from 'Components/ProposalPendingPRCard';
+import SponsorRequestsCard from 'Components/SponsorRequestsCard';
+import VotingCard from 'Components/VotingCard';
 import {
   fetchExpectedGrantRequest,
   fetchCPSTreasuryScoreAddressRequest,
-} from "Redux/Reducers/fundSlice";
-import { setLoginButtonClicked } from "Redux/Reducers/accountSlice";
+} from 'Redux/Reducers/fundSlice';
+import { setLoginButtonClicked } from 'Redux/Reducers/accountSlice';
 
 const Dashboard = ({
   payPenaltyRequest,
@@ -74,32 +74,32 @@ const Dashboard = ({
   if (!isPrep || !isRegistered) {
     cardInfo = [
       {
-        color: "#1AAABA",
-        title: "My Voting Proposals",
+        color: '#1AAABA',
+        title: 'My Voting Proposals',
         // value={`${projectAmounts.Voting.count} (${icxFormat(projectAmounts.Voting.amount)} ICX)`}
         value: myProposalList.filter(
-          (proposal) => proposal._status === "_pending"
+          proposal => proposal._status === '_pending',
         ).length,
       },
       {
-        color: "#1AAABA",
-        title: "My Approved Proposals",
+        color: '#1AAABA',
+        title: 'My Approved Proposals',
         // value={`${projectAmounts.Active.count + projectAmounts.Paused.count} (${icxFormat(projectAmounts.Active.amount + projectAmounts.Paused.amount)} ICX)`} />
-        value: myProposalList.filter((proposal) =>
-          ["_active", "_paused"].includes(proposal._status)
+        value: myProposalList.filter(proposal =>
+          ['_active', '_paused'].includes(proposal._status),
         ).length,
       },
       {
-        color: "#1AAABA",
+        color: '#1AAABA',
         title: `Next Disbursement in ${highestSignificantTimeForGrant.value} ${highestSignificantTimeForGrant.text}`,
         // value={`${icxFormat(cpfRemainingFunds, true)} ICX`}
         value: `${icxFormat(expectedGrant, true)} ICX`,
       },
       {
         title: `Remaining Time in ${
-          period !== "VOTING" ? "Application Period" : "Voting Period"
+          period !== 'VOTING' ? 'Application Period' : 'Voting Period'
         }`,
-        color: "#1AAABA",
+        color: '#1AAABA',
         // value={period === "APPLICATION" ? 'Application Period' : 'Voting Period'} />
         value: `${highestSignificantTime.value} ${highestSignificantTime.text}`,
       },
@@ -107,55 +107,55 @@ const Dashboard = ({
   } else {
     cardInfo = [
       {
-        color: "#1AAABA",
-        title: "My Voting Proposals",
+        color: '#1AAABA',
+        title: 'My Voting Proposals',
         // value={`${projectAmounts.Voting.count} (${icxFormat(projectAmounts.Voting.amount)} ICX)`}
         value: myProposalList.filter(
-          (proposal) => proposal._status === "_pending"
+          proposal => proposal._status === '_pending',
         ).length,
       },
       {
-        color: "#1AAABA",
-        title: "My Approved Proposals",
+        color: '#1AAABA',
+        title: 'My Approved Proposals',
         // value={`${projectAmounts.Active.count + projectAmounts.Paused.count} (${icxFormat(projectAmounts.Active.amount + projectAmounts.Paused.amount)} ICX)`} />
-        value: myProposalList.filter((proposal) =>
-          ["_active", "_paused"].includes(proposal._status)
+        value: myProposalList.filter(proposal =>
+          ['_active', '_paused'].includes(proposal._status),
         ).length,
       },
       {
-        color: "#1AAABA",
+        color: '#1AAABA',
         title:
-          period === "APPLICATION"
-            ? "Remaining Sponsor Requests"
-            : "Outstanding Votes",
+          period === 'APPLICATION'
+            ? 'Remaining Sponsor Requests'
+            : 'Outstanding Votes',
         // value={`${projectAmounts.Voting.count} (${icxFormat(projectAmounts.Voting.amount)} ICX)`}
         value:
-          period === "APPLICATION"
+          period === 'APPLICATION'
             ? totalCountSponsorRequests.Pending
             : remainingVotesProposal.length + remainingVotesPR.length,
       },
       {
         title: `Remaining Time in ${
-          period !== "VOTING" ? "Application Period" : "Voting Period"
+          period !== 'VOTING' ? 'Application Period' : 'Voting Period'
         }`,
-        color: "#1AAABA",
+        color: '#1AAABA',
         // value={period === "APPLICATION" ? 'Application Period' : 'Voting Period'} />
         value: ` ${highestSignificantTime.value} ${highestSignificantTime.text}`,
       },
       {
-        color: "#1AAABA",
-        title: "My Sponsor Bond",
+        color: '#1AAABA',
+        title: 'My Sponsor Bond',
         // value={`${projectAmounts.Active.count + projectAmounts.Paused.count} (${icxFormat(projectAmounts.Active.amount + projectAmounts.Paused.amount)} ICX)`} />
         value: `${icxFormat(sponsorBond, true)} ICX`,
       },
       {
-        color: "#1AAABA",
+        color: '#1AAABA',
         title: `Next Sponsor Reward in  ${highestSignificantTimeForGrant.value} ${highestSignificantTimeForGrant.text}`,
         // value={`${icxFormat(cpfRemainingFunds, true)} ICX`}
         value: `${icxFormat(sponsorReward, true)} ICX`,
       },
       {
-        color: "#1AAABA",
+        color: '#1AAABA',
         title: `Next Disbursement in ${highestSignificantTimeForGrant.value} ${highestSignificantTimeForGrant.text}`,
         // value={`${icxFormat(cpfRemainingFunds, true)} ICX`}
         value: `${icxFormat(expectedGrant, true)} ICX`,
@@ -183,12 +183,12 @@ const Dashboard = ({
   useEffect(() => {
     if (cpsTreasuryScoreAddress) {
       fetchExpectedGrantRequest({
-        type: "proposalGrant",
+        type: 'proposalGrant',
       });
 
       if (isPrep && isRegistered) {
         fetchExpectedGrantRequest({
-          type: "sponsorReward",
+          type: 'sponsorReward',
         });
       }
     }
@@ -205,26 +205,26 @@ const Dashboard = ({
 
   return (
     <Container>
-      <Header title="Dashboard" />
+      <Header title='Dashboard' />
 
-      <Row style={{ marginTop: "30px" }}>
-        <Col xs="12">
+      <Row style={{ marginTop: '30px' }}>
+        <Col xs='12'>
           <div className={styles.period}>
-            Period:{" "}
-            {period !== "VOTING" ? "Application Period" : "Voting Period"}
+            Period:{' '}
+            {period !== 'VOTING' ? 'Application Period' : 'Voting Period'}
           </div>
         </Col>
       </Row>
 
-      {period === "APPLICATION" && previousPeriod === "APPLICATION" && (
-        <Row style={{ marginTop: "15px" }}>
-          <Col xs="12">
-            <Alert variant="info">
+      {period === 'APPLICATION' && previousPeriod === 'APPLICATION' && (
+        <Row style={{ marginTop: '15px' }}>
+          <Col xs='12'>
+            <Alert variant='info'>
               <span>
-                Note: The period switched back to application period because{" "}
+                Note: The period switched back to application period because{' '}
                 {preps.length < 7
-                  ? "there were less than 7 P-Reps"
-                  : "there were no voting proposals or progress reports."}
+                  ? 'there were less than 7 P-Reps'
+                  : 'there were no voting proposals or progress reports.'}
               </span>
             </Alert>
           </Col>
@@ -233,28 +233,28 @@ const Dashboard = ({
 
       {(parseFloat(withDrawAmountSponsorReward) > 0 ||
         parseFloat(withDrawAmountProposalGrant) > 0) && (
-        <Row style={{ marginTop: "15px" }}>
-          <Col xs="12">
-            <Alert variant="success">
+        <Row style={{ marginTop: '15px' }}>
+          <Col xs='12'>
+            <Alert variant='success'>
               {isPrep
                 ? `Congratulations! You can claim a total reward of ${icxFormat(
                     parseFloat(
                       Number(withDrawAmountSponsorReward)
                         ? withDrawAmountSponsorReward
-                        : withDrawAmountProposalGrant
+                        : withDrawAmountProposalGrant,
                     ),
-                    true
+                    true,
                   )} ICX.`
                 : `Congratulations! You can claim proposal grant of ${icxFormat(
                     parseFloat(withDrawAmountProposalGrant),
-                    true
+                    true,
                   )} ICX.`}
 
               {
                 <>
                   <br />
                   <Button
-                    variant="info"
+                    variant='info'
                     onClick={setShowClaimRewardConfirmationModal}
                   >
                     Claim Reward
@@ -265,7 +265,7 @@ const Dashboard = ({
               <ConfirmationModal
                 show={showClaimRewardConfirmationModal}
                 onHide={() => setShowClaimRewardConfirmationModal(false)}
-                heading={"Reward Claim Confirmation"}
+                heading={'Reward Claim Confirmation'}
                 onConfirm={claimReward}
               >
                 <div>Are you sure you want to claim the reward?</div>
@@ -276,18 +276,18 @@ const Dashboard = ({
       )}
 
       {payPenalty && (
-        <Row style={{ marginTop: "15px" }}>
-          <Col xs="12">
-            <Alert variant="danger">
-              {period === "APPLICATION" && !isRemainingTimeZero
+        <Row style={{ marginTop: '15px' }}>
+          <Col xs='12'>
+            <Alert variant='danger'>
+              {period === 'APPLICATION' && !isRemainingTimeZero
                 ? `You missed voting on some of the proposals or progress reports in the voting period. Please pay the penalty amount of ${payPenaltyAmount} ICX to re-register.`
                 : `You missed voting on some of the proposals or progress reports in the voting period. Please pay the penalty amount of ${payPenaltyAmount} ICX in the next Application period to re-register.`}
 
-              {period === "APPLICATION" && !isRemainingTimeZero && (
+              {period === 'APPLICATION' && !isRemainingTimeZero && (
                 <>
                   <br />
                   <Button
-                    variant="info"
+                    variant='info'
                     onClick={setShowPayPenaltyConfirmationModal}
                   >
                     Pay Penalty
@@ -298,11 +298,11 @@ const Dashboard = ({
               <ConfirmationModal
                 show={showPayPenaltyConfirmationModal}
                 onHide={() => setShowPayPenaltyConfirmationModal(false)}
-                heading={"Vote Confirmation"}
+                heading={'Vote Confirmation'}
                 onConfirm={payPenaltyRequest}
               >
                 <div>Are you sure you pay the penalty?</div>
-                <div style={{ color: "red" }}>
+                <div style={{ color: 'red' }}>
                   You will need to transfer {`${payPenaltyAmount}`} ICX
                 </div>
               </ConfirmationModal>
@@ -310,15 +310,15 @@ const Dashboard = ({
           </Col>
         </Row>
       )}
-      <Row style={{ justifyContent: "center" }}>
-        {cardInfo.map((info) => (
+      <Row style={{ justifyContent: 'center' }}>
+        {cardInfo.map(info => (
           <Col
-            lg="3"
-            style={{ marginTop: "10px" }}
+            lg='3'
+            style={{ marginTop: '10px' }}
             className={styles.infoCardContainer}
           >
             <InfoCard
-              bg="light"
+              bg='light'
               color={info.color}
               title={info.title}
               // value={`${projectAmounts.Voting.count} (${icxFormat(projectAmounts.Voting.amount)} ICX)`}
@@ -351,12 +351,12 @@ const Dashboard = ({
 
           <SponsorRequestsCard
             proposalStatesList={[
-              "Pending",
-              "Approved",
-              "Rejected",
-              "Disqualified",
+              'Pending',
+              'Approved',
+              'Rejected',
+              'Disqualified',
             ]}
-            initialState={"Pending"}
+            initialState={'Pending'}
           />
         </>
       )}
@@ -366,8 +366,8 @@ const Dashboard = ({
           <div className={styles.myProposalHeading}>Pending Votes</div>
 
           <VotingCard
-            proposalStatesList={["Proposals", "Progress Reports"]}
-            initialState={"Proposals"}
+            proposalStatesList={['Proposals', 'Progress Reports']}
+            initialState={'Proposals'}
           />
         </>
       )}
@@ -375,7 +375,7 @@ const Dashboard = ({
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   payPenalty: state.account.payPenalty,
   period: state.period.period,
   previousPeriod: state.period.previousPeriod,

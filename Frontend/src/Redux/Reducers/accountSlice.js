@@ -1,5 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
-import IconService from "icon-sdk-js";
+import { createSlice } from '@reduxjs/toolkit';
+import IconService from 'icon-sdk-js';
 
 const { IconConverter } = IconService;
 
@@ -8,7 +8,7 @@ const initialState = {
   isPrep: null,
   isRegistered: false,
   payPenalty: false,
-  loginType: "",
+  loginType: '',
   penaltyAmount: 15,
   walletBalance: 0,
   signature: null,
@@ -17,7 +17,7 @@ const initialState = {
 };
 
 const accountSlice = createSlice({
-  name: "account",
+  name: 'account',
   initialState,
   reducers: {
     login(state, action) {
@@ -37,11 +37,11 @@ const accountSlice = createSlice({
       state.isRegistered = action.payload.isRegistered;
       state.payPenalty = action.payload.payPenalty;
       state.penaltyAmount = IconConverter.toBigNumber(
-        action.payload.penaltyAmount
+        action.payload.penaltyAmount,
       ).dividedBy(10 ** 18);
 
       state.walletBalance = IconConverter.toBigNumber(
-        action.payload.walletBalance
+        action.payload.walletBalance,
       ).dividedBy(10 ** 18);
     },
 

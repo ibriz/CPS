@@ -1,8 +1,8 @@
-import React from "react";
-import styles from "./ProposalNavBar.module.scss";
-import NavBarTitle from "../../UI/LowerCardNavBar/NavBarTitle";
-import NavBarInputGroup from "../../UI/LowerCardNavBar/NavBarInputGroup";
-import { Nav } from "react-bootstrap";
+import React from 'react';
+import styles from './ProposalNavBar.module.scss';
+import NavBarTitle from '../../UI/LowerCardNavBar/NavBarTitle';
+import NavBarInputGroup from '../../UI/LowerCardNavBar/NavBarInputGroup';
+import { Nav } from 'react-bootstrap';
 
 const TabBar = ({
   selectedTab,
@@ -28,14 +28,14 @@ const TabBar = ({
 
             } */}
       <Nav
-        activeKey="/home"
-        onSelect={(selectedKey) => alert(`selected ${selectedKey}`)}
+        activeKey='/home'
+        onSelect={selectedKey => alert(`selected ${selectedKey}`)}
         style={{
-          display: "inline-flex",
-          flexWrap: "wrap",
-          alignItems: "center",
-          gap: "5px",
-          width: "100%",
+          display: 'inline-flex',
+          flexWrap: 'wrap',
+          alignItems: 'center',
+          gap: '5px',
+          width: '100%',
         }}
       >
         {tabs.map((tab, index) => (

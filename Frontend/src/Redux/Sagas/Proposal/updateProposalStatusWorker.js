@@ -1,8 +1,8 @@
-import store from "../../Store";
-import { sendTransaction } from "../../ICON/utils";
+import store from '../../Store';
+import { sendTransaction } from '../../ICON/utils';
 
 function* updateProposalStatusWorker({ payload }) {
-  console.log("updateProposalStatusWorker");
+  console.log('updateProposalStatusWorker');
   console.log(payload);
 
   const params = {
@@ -11,7 +11,7 @@ function* updateProposalStatusWorker({ payload }) {
   };
 
   sendTransaction({
-    method: "update_proposal_status",
+    method: 'update_proposal_status',
     params,
     icxAmount: 0,
   });

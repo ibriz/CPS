@@ -1,14 +1,14 @@
-import { put, call } from "redux-saga/effects";
+import { put, call } from 'redux-saga/effects';
 import {
   fetchCPFScoreAddressSuccess,
   fetchCPFScoreAddressFailure,
-} from "../../Reducers/fundSlice";
-import { callKeyStoreWallet } from "../../ICON/utils";
+} from '../../Reducers/fundSlice';
+import { callKeyStoreWallet } from '../../ICON/utils';
 
 function* fetchCPFScoreAddressWorker({ payload }) {
   try {
     const response = yield call(callKeyStoreWallet, {
-      method: "get_cpf_score",
+      method: 'get_cpf_score',
     });
 
     // const response = {
@@ -21,7 +21,7 @@ function* fetchCPFScoreAddressWorker({ payload }) {
     yield put(
       fetchCPFScoreAddressSuccess({
         response,
-      })
+      }),
     );
   } catch (error) {
     yield put(fetchCPFScoreAddressFailure(error));

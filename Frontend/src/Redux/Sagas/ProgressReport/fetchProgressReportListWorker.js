@@ -1,18 +1,18 @@
-import { put, call } from "redux-saga/effects";
+import { put, call } from 'redux-saga/effects';
 import {
   fetchProgressReportListSuccess,
   fetchProgressReportListFailure,
-} from "../../Reducers/progressReportSlice";
-import { callKeyStoreWallet } from "../../ICON/utils";
-import { progressReportStatusMapping } from "Constants";
+} from '../../Reducers/progressReportSlice';
+import { callKeyStoreWallet } from '../../ICON/utils';
+import { progressReportStatusMapping } from 'Constants';
 
 function* submitProgressReportWorker({ payload }) {
   try {
     const response = yield call(callKeyStoreWallet, {
-      method: "get_progress_reports",
+      method: 'get_progress_reports',
       params: {
         _status: progressReportStatusMapping.find(
-          (mapping) => mapping.name === payload.status
+          mapping => mapping.name === payload.status,
         ).status,
         // _address: payload.walletAddress,
         _end_index: `${payload.pageNumber * 10}`,
@@ -42,7 +42,7 @@ function* submitProgressReportWorker({ payload }) {
         response,
         status: payload.status,
         pageNumber: payload.pageNumber,
-      })
+      }),
     );
   } catch (error) {
     yield put(fetchProgressReportListFailure(error));

@@ -1,16 +1,16 @@
 // import { setCookie } from '../../../helpers/cookie';
-import { callKeyStoreWallet } from "../../ICON/utils";
-import { put, call, select } from "redux-saga/effects";
-import { loginSuccess } from "Redux/Reducers/accountSlice";
-import { IconConverter } from "icon-sdk-js";
-import { iconService } from "Redux/ICON/utils";
+import { callKeyStoreWallet } from '../../ICON/utils';
+import { put, call, select } from 'redux-saga/effects';
+import { loginSuccess } from 'Redux/Reducers/accountSlice';
+import { IconConverter } from 'icon-sdk-js';
+import { iconService } from 'Redux/ICON/utils';
 
 export default function* loginPrepWorker() {
   try {
-    const getAddress = (state) => state.account.address;
+    const getAddress = state => state.account.address;
     const walletAddress = yield select(getAddress);
     let response = yield call(callKeyStoreWallet, {
-      method: "login_prep",
+      method: 'login_prep',
       params: {
         _address: walletAddress,
       },
@@ -21,10 +21,10 @@ export default function* loginPrepWorker() {
     // }
     const isPrep = !!parseInt(IconConverter.toBigNumber(response.isPRep));
     const isRegistered = !!parseInt(
-      IconConverter.toBigNumber(response.isRegistered)
+      IconConverter.toBigNumber(response.isRegistered),
     );
     const payPenalty = !!parseInt(
-      IconConverter.toBigNumber(response.payPenalty)
+      IconConverter.toBigNumber(response.payPenalty),
     );
     const penaltyAmount = parseInt(response.penaltyAmount);
     const walletBalance = yield iconService.getBalance(walletAddress).execute();
@@ -36,10 +36,10 @@ export default function* loginPrepWorker() {
         payPenalty,
         penaltyAmount,
         walletBalance,
-      })
+      }),
     );
   } catch (error) {
-    console.log("error");
+    console.log('error');
     // yield put(courseActions.getCourseInfoFailure());
   }
 }

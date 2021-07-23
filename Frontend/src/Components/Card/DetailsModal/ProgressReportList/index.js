@@ -1,10 +1,10 @@
-import { connect } from "react-redux";
-import React from "react";
-import { Container } from "react-bootstrap";
+import { connect } from 'react-redux';
+import React from 'react';
+import { Container } from 'react-bootstrap';
 // import { fetchProgressReportListRequest } from '../../Redux/Reducers/progressReportSlice';
-import ProgressReport from "../../ProgressReportList/ProgressReport";
-import styles from "./ProgressReportList.module.css";
-import { progressReportStatusMapping } from "../../../../Constants";
+import ProgressReport from '../../ProgressReportList/ProgressReport';
+import styles from './ProgressReportList.module.css';
+import { progressReportStatusMapping } from '../../../../Constants';
 
 const ProgressReportList = ({ projectReports }) => {
   return (
@@ -15,7 +15,7 @@ const ProgressReportList = ({ projectReports }) => {
             key={index}
             progressReport={progressReport}
             selectedTab={
-              progressReportStatusMapping.find((mapping) => {
+              progressReportStatusMapping.find(mapping => {
                 return mapping.status === progressReport.status;
               })?.name
             }
@@ -31,11 +31,11 @@ const ProgressReportList = ({ projectReports }) => {
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   // projectReports: []
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   // fetchProgressReport: () => dispatch(fetchProgressReportListRequest())
 });
 

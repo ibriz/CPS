@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css?family=Roboto&display=swap");
+@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
 
 @media screen and (min-width: 650px) {
   .modal-mdxl {
@@ -7,9 +7,9 @@
 }
 
 $theme-colors: (
-  "info": #1aaaba,
-  "information": #17a2b8,
-  "completed": #0f626b,
+  'info': #1aaaba,
+  'information': #17a2b8,
+  'completed': #0f626b,
 );
 
 .input-group-text {
@@ -18,7 +18,7 @@ $theme-colors: (
   padding-top: 0rem !important;
 }
 
-@import "~bootstrap/scss/bootstrap";
+@import '~bootstrap/scss/bootstrap';
 
 $sidebar-bg-color: #1aaaba;
 $submenu-bg-color: rgba(255, 255, 255, 0.05);
@@ -28,12 +28,12 @@ $highlight-color: #d8d8d8;
 $icon-bg-color: rgba(255, 255, 255, 0.05);
 $icon-size: 35px;
 
-@import "~react-pro-sidebar/dist/scss/styles.scss";
+@import '~react-pro-sidebar/dist/scss/styles.scss';
 body {
   margin: 0;
   height: 100vh;
   color: #353535;
-  font-family: "Montserrat", sans-serif;
+  font-family: 'Montserrat', sans-serif;
   background: linear-gradient(
       0deg,
       rgba(38, 38, 38, 0.05),
@@ -273,7 +273,7 @@ $col-1half: $col-base-size * 1.5;
 }
 
 * {
-  font-family: "Montserrat", sans-serif;
+  font-family: 'Montserrat', sans-serif;
 }
 
 a.sidebarHeader {

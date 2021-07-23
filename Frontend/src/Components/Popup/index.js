@@ -1,20 +1,20 @@
-import React from "react";
-import { OverlayTrigger, Popover } from "react-bootstrap";
+import React from 'react';
+import { OverlayTrigger, Popover } from 'react-bootstrap';
 
-const Popup = ({ component, popOverText, placement = "right" }) => {
+const Popup = ({ component, popOverText, placement = 'right' }) => {
   return (
     <OverlayTrigger
-      trigger="hover"
+      trigger='hover'
       placement={placement}
       overlay={
-        <Popover id="popover-basic">
+        <Popover id='popover-basic'>
           <Popover.Content>
-            <span style={{ textAlign: "center" }}>{popOverText}</span>
+            <span style={{ textAlign: 'center' }}>{popOverText}</span>
           </Popover.Content>
         </Popover>
       }
     >
-      <span className="d-inline-block">{component}</span>
+      <span className='d-inline-block'>{component}</span>
     </OverlayTrigger>
   );
 };

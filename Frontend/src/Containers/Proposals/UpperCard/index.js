@@ -1,11 +1,11 @@
-import React from "react";
-import styles from "./UpperCard.module.scss";
-import { Row, Col, Card, Button, Container } from "react-bootstrap";
-import { connect } from "react-redux";
-import { Link } from "react-router-dom";
-import useTimer from "Hooks/useTimer";
-import { updatePeriod } from "Redux/Reducers/periodSlice";
-import ConfirmationModal from "Components/UI/ConfirmationModal";
+import React from 'react';
+import styles from './UpperCard.module.scss';
+import { Row, Col, Card, Button, Container } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import useTimer from 'Hooks/useTimer';
+import { updatePeriod } from 'Redux/Reducers/periodSlice';
+import ConfirmationModal from 'Components/UI/ConfirmationModal';
 
 const UpperCard = ({
   numberOfSubmittedProposals,
@@ -19,7 +19,7 @@ const UpperCard = ({
 }) => {
   const { period, remainingTime, remainingTimeSecond } = useTimer();
   let [periodConfirmationShow, setPeriodConfirmationShow] = React.useState(
-    false
+    false,
   );
 
   let button;
@@ -39,11 +39,11 @@ const UpperCard = ({
     button = null;
   } else {
     button = (
-      <Link to="/newProposal">
-        <Button variant="info" className={styles.createProposalButton}>
-          {period !== "VOTING"
-            ? "CREATE NEW PROPOSAL"
-            : "CREATE PROPOSAL DRAFT"}
+      <Link to='/newProposal'>
+        <Button variant='info' className={styles.createProposalButton}>
+          {period !== 'VOTING'
+            ? 'CREATE NEW PROPOSAL'
+            : 'CREATE PROPOSAL DRAFT'}
         </Button>
       </Link>
     );
@@ -52,9 +52,9 @@ const UpperCard = ({
 
     text = (
       <span className={styles.proposalNumber}>
-        {period !== "VOTING"
-          ? "Create a New Proposal"
-          : "This is voting period. You can still create a proposal draft"}
+        {period !== 'VOTING'
+          ? 'Create a New Proposal'
+          : 'This is voting period. You can still create a proposal draft'}
       </span>
     );
   }
@@ -69,9 +69,9 @@ const UpperCard = ({
       {!voting && !sponsorRequest && !homePage && (
         <span className={styles.proposalTitle}>
           <b>
-            {period === "VOTING"
-              ? "PROPOSAL SUBMISSIONS OPENS IN"
-              : "PROPOSAL SUBMISSION DEADLINE IN"}
+            {period === 'VOTING'
+              ? 'PROPOSAL SUBMISSIONS OPENS IN'
+              : 'PROPOSAL SUBMISSION DEADLINE IN'}
           </b>
         </span>
       )}
@@ -79,9 +79,9 @@ const UpperCard = ({
       {(sponsorRequest || homePage) && (
         <span className={styles.proposalTitle}>
           <b>
-            {period === "VOTING"
-              ? "VOTING PERIOD ENDS IN"
-              : "APPLICATION PERIOD ENDS IN"}
+            {period === 'VOTING'
+              ? 'VOTING PERIOD ENDS IN'
+              : 'APPLICATION PERIOD ENDS IN'}
           </b>
         </span>
       )}
@@ -89,9 +89,9 @@ const UpperCard = ({
       {voting && (
         <span className={styles.proposalTitle}>
           <b>
-            {period === "VOTING"
-              ? "VOTING PERIOD ENDS IN"
-              : "VOTING PERIOD STARTS IN"}
+            {period === 'VOTING'
+              ? 'VOTING PERIOD ENDS IN'
+              : 'VOTING PERIOD STARTS IN'}
           </b>
         </span>
       )}
@@ -100,8 +100,8 @@ const UpperCard = ({
 
   const remainingTimeValue = (
     <span className={styles.proposalTitle}>
-      <b>{remainingTime.day}</b> DAYS <b>{remainingTime.hour}</b> HOURS{" "}
-      <b>{remainingTime.minute}</b> MINUTES <b>{remainingTime.second}</b>{" "}
+      <b>{remainingTime.day}</b> DAYS <b>{remainingTime.hour}</b> HOURS{' '}
+      <b>{remainingTime.minute}</b> MINUTES <b>{remainingTime.second}</b>{' '}
       SECONDS
     </span>
   );
@@ -114,9 +114,9 @@ const UpperCard = ({
             <Container className={styles.desktopContainer}>
               <Row
                 style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
                 }}
               >
                 {remainingTimeText}
@@ -125,9 +125,9 @@ const UpperCard = ({
 
               <Row
                 style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
                 }}
               >
                 {remainingTimeValue}
@@ -136,14 +136,14 @@ const UpperCard = ({
             </Container>
 
             <Row className={styles.mobileContainer}>
-              <Col xl="6" style={{ alignItems: "flex-start" }}>
+              <Col xl='6' style={{ alignItems: 'flex-start' }}>
                 {remainingTimeText}
                 {remainingTimeValue}
               </Col>
 
               <Col
-                xl="6"
-                style={{ alignItems: "flex-start", marginTop: "10px" }}
+                xl='6'
+                style={{ alignItems: 'flex-start', marginTop: '10px' }}
               >
                 {text}
                 {button}
@@ -185,7 +185,7 @@ const UpperCard = ({
       <ConfirmationModal
         show={periodConfirmationShow}
         onHide={() => setPeriodConfirmationShow(false)}
-        heading={"Period Update Confirmation"}
+        heading={'Period Update Confirmation'}
         onConfirm={() => {
           updatePeriod();
         }}
@@ -200,7 +200,7 @@ const UpperCard = ({
   );
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     numberOfSubmittedProposals: state.proposals.numberOfSubmittedProposals,
     isPrep: state.account.isPrep,
@@ -210,8 +210,8 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  updatePeriod: (payload) => dispatch(updatePeriod(payload)),
+const mapDispatchToProps = dispatch => ({
+  updatePeriod: payload => dispatch(updatePeriod(payload)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(UpperCard);

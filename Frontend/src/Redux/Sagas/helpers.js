@@ -1,12 +1,12 @@
-import { BASE_URL, IPFS_URL } from "../Constants";
-import { NotificationManager } from "react-notifications";
-import { signTransaction } from "Redux/ICON/utils";
-import store from "Redux/Store";
+import { BASE_URL, IPFS_URL } from '../Constants';
+import { NotificationManager } from 'react-notifications';
+import { signTransaction } from 'Redux/ICON/utils';
+import store from 'Redux/Store';
 
 async function request({
   url,
   body = {},
-  method = "POST",
+  method = 'POST',
   signature = null,
   ipfs = false,
   payload = null,
@@ -20,10 +20,10 @@ async function request({
   failureCallback,
 }) {
   const baseURL = ipfs ? IPFS_URL : BASE_URL;
-  console.log("request");
+  console.log('request');
 
   let headers = {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   };
 
   if (requireSigning) {
@@ -55,7 +55,7 @@ async function request({
     body: JSON.stringify(body),
   });
 
-  console.log("response");
+  console.log('response');
   console.log(response);
 
   const responseJSON = await response.json();
@@ -76,18 +76,18 @@ async function request({
   return responseJSON;
 }
 
-async function getRequest({ url, method = "GET", ipfs = false }) {
+async function getRequest({ url, method = 'GET', ipfs = false }) {
   const baseURL = ipfs ? IPFS_URL : BASE_URL;
-  console.log("request");
+  console.log('request');
 
   const response = await fetch(`${baseURL}/${url}`, {
     method: method,
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
   });
 
-  console.log("response");
+  console.log('response');
   console.log(response);
 
   const responseJSON = await response.json();
@@ -96,13 +96,13 @@ async function getRequest({ url, method = "GET", ipfs = false }) {
 
 async function requestIPFS({ hash }) {
   var requestOptions = {
-    method: "GET",
-    redirect: "follow",
+    method: 'GET',
+    redirect: 'follow',
   };
 
   const response = await fetch(
     `https://gateway.ipfs.io/ipfs/${hash}`,
-    requestOptions
+    requestOptions,
   );
   const responseText = await response.json();
   return responseText;
