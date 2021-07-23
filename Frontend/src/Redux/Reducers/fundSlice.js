@@ -13,6 +13,7 @@ const initialState = {
 
   withDrawAmountSponsorReward: 0,
   withDrawAmountProposalGrant: 0,
+  sponsorBondReward: 0,
 };
 
 const fundSlice = createSlice({
@@ -103,12 +104,28 @@ const fundSlice = createSlice({
     claimReward() {
       return;
     },
+    claimSponsorBondReward() {
+      return;
+    },
+    fetchSponsorBondRequest(state) {
+      return;
+    },
+    fetchSponsorBondSuccess(state, action) {
+      console.log('Sponsor', action);
+      state.sponsorBondReward = action.payload
+        ? IconConverter.toBigNumber(action.payload).dividedBy(10 ** 18)
+        : 0;
+    },
+    fetchSponsorBondFailure() {
+      return;
+    },
   },
 
   extraReducers: {
     'account/logout': (state, action) => {
       state.expectedGrant = 0;
       state.sponsorBond = 0;
+      state.sponsorBondReward = 0;
     },
   },
 });
@@ -127,5 +144,9 @@ export const {
   fetchCPSTreasuryScoreAddressSuccess,
   fetchCPSTreasuryScoreAddressFailure,
   claimReward,
+  claimSponsorBondReward,
+  fetchSponsorBondRequest,
+  fetchSponsorBondSuccess,
+  fetchSponsorBondFailure,
 } = fundSlice.actions;
 export default fundSlice.reducer;
