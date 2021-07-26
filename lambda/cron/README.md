@@ -8,7 +8,8 @@ Environment Variable:
 - BLOCKCHAIN_PROVIDER               https://bicon.net.solidwallet.io/api/v3
 - SCORE_ADDRESS                     cx...........
 - PRIVATE_KEY                       a............
-- USER_ADDRESS                      hx...........
+- USER_ADDRESS                      hx...........   (random address)
+- NID                               3
 - EMAIL_FROM                        icon@ibriz.ai
 - ICX_PENALTY                       1500
 
