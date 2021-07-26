@@ -641,7 +641,7 @@ function DetailsModal(props) {
                   <Row
                     style={{
                       justifyContent: 'center',
-                      flexDirection: 'column',
+                      flexDirection: 'row',
                     }}
                   >
                     <ButtonGroup aria-label='Basic example'>
@@ -659,7 +659,7 @@ function DetailsModal(props) {
                         </Button>
                       ))}
                     </ButtonGroup>
-                    <Col style={{ textAlign: 'center', color: 'red' }}>
+                    <Col xs={12} style={{ textAlign: 'center', color: 'red' }}>
                       {error}
                     </Col>
                   </Row>
@@ -724,7 +724,7 @@ function DetailsModal(props) {
                     <Row
                       style={{
                         justifyContent: 'center',
-                        flexDirection: 'column',
+                        flexDirection: 'row',
                       }}
                     >
                       <ButtonGroup aria-label='Basic example'>
@@ -738,7 +738,7 @@ function DetailsModal(props) {
                           </Button>
                         ))}
                       </ButtonGroup>
-                      <Col style={{ textAlign: 'center', color: 'red' }}>
+                      <Col xs={12} style={{ textAlign: 'center', color: 'red' }}>
                         {error}
                       </Col>
                     </Row>

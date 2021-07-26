@@ -246,16 +246,14 @@ const proposalSlice = createSlice({
     fetchProposalDetailFailure() {
       return;
     },
-    emptyProposalDetailRequest()
-    {
-      return
+    emptyProposalDetailRequest() {
+      return;
     },
-    emptyProposalDetailSuccess(state)
-    {
-      delete state.proposalDetail
+    emptyProposalDetailSuccess(state) {
+      delete state.proposalDetail;
+      state.selectedProposal = {};
     },
-    emptyProposalDetailFailure()
-    {
+    emptyProposalDetailFailure() {
       return;
     },
     fetchSponsorRequestsListRequest(state) {
@@ -771,6 +769,6 @@ export const {
   fetchProposalByIpfsRequest,
   emptyProposalDetailSuccess,
   emptyProposalDetailRequest,
-  emptyProposalDetailFailure
+  emptyProposalDetailFailure,
 } = proposalSlice.actions;
 export default proposalSlice.reducer;

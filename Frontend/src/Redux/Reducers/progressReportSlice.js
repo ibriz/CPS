@@ -228,6 +228,7 @@ const proposalSlice = createSlice({
     },
     emptyProgressReportDetailSuccess(state) {
       delete state.progressReportDetail;
+      state.selectedProgressReport = {};
     },
     emptyProposalReportDetailFailure() {
       return;

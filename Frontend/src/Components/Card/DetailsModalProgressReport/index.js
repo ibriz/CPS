@@ -155,6 +155,14 @@ function DetailsModal(props) {
   ]);
 
   const handleVoteSubmission = () => {
+    if (
+      progressDetail &&
+      progressDetail.projectTermRevision &&
+      !voteProjectTermRevision
+    ) {
+      setError('Please cast your vote');
+      return;
+    }
     if (!vote) {
       setError('Please cast your vote');
       return;
