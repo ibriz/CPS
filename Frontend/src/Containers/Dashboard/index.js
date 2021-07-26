@@ -291,7 +291,7 @@ const Dashboard = ({
           <Col xs='12'>
             <Alert variant='success'>
               {isPrep &&
-                `Congratulations! You can claim a total sponsor bond reward of ${icxFormat(
+                `Congratulations! You can claim a total sponsor bond of ${icxFormat(
                   parseFloat(sponsorBondReward),
                   true,
                 )} ICX.`}
