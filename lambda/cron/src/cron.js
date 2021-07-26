@@ -1,4 +1,6 @@
 const BigNumber = require('bignumber.js');
+const mail = require('./mail');
+const redis = require('./redis');
 const score = require('./score');
 const { PERIOD_MAPPINGS, PROPOSAL_STATUS, PROGRESS_REPORT_STATUS, EVENT_TYPES } = require('./constants');
 const { sleep, triggerWebhook, fetchFromIpfs } = require('./utils');
