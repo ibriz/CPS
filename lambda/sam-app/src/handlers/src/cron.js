@@ -195,6 +195,11 @@ async function execute() {
 			const periodEndingDate = new Date();
 			periodEndingDate.setDate(periodEndingDate.getDate() + 15);
 
+			if(present_period['period_name'] == present_period['previous_period_name']) {
+				console.log('Period could not be changed...');
+				return;
+			}
+
 			// ========================================CPS BOT TRIGGERS=========================================
 
 			if(present_period['period_name'] == PERIOD_MAPPINGS.APPLICATION_PERIOD) {

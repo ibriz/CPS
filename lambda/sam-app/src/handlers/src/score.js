@@ -22,8 +22,8 @@ const httpProvider = new HttpProvider(provider);
 const iconService = new IconService(httpProvider);
 
 // TODO: uncomment
-let wallet;
-// const wallet = IconWallet.loadPrivateKey(priv_key);
+// let wallet;
+const wallet = IconWallet.loadPrivateKey(priv_key);
 
 const timeout = instance => {
 	const seconds = instance === 1 ? 2000 : 1000;
