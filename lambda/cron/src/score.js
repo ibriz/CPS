@@ -21,6 +21,8 @@ const { CallTransactionBuilder, CallBuilder } = IconBuilder;
 const httpProvider = new HttpProvider(provider);
 const iconService = new IconService(httpProvider);
 
+// TODO: uncomment
+// let wallet;
 const wallet = IconWallet.loadPrivateKey(priv_key);
 
 const timeout = instance => {
@@ -57,10 +59,10 @@ function icon_call_builder(methodName, params = {}) {
 function icon_transaction_call_builder(methodName, params = {}) {
 	const callTransactionBuilder = new CallTransactionBuilder();
 	const call = callTransactionBuilder
-		.from(user_address)
+		.from(wallet.getAddress())
 		.to(score_address)
 		.stepLimit(IconConverter.toBigNumber('2000000'))
-		.nid(IconConverter.toBigNumber('1'))
+		.nid(IconConverter.toBigNumber(process.env.NID))
 		.nonce(IconConverter.toBigNumber('1'))
 		.version(IconConverter.toBigNumber('3'))
 		.timestamp((new Date()).getTime() * 1000)
@@ -70,31 +72,12 @@ function icon_transaction_call_builder(methodName, params = {}) {
 	return call;
 }
 
-async function paginated_score_call(func, params = {}, data = []) {
-	console.log(params);
-	if (Object.keys(params).length !== 0) {
-		if (!params._start_index) params._start_index = 0;
-		if (!params._end_index) params._end_index = params._start_index + 20;
-	}
-
-	const results = await iconService.call(icon_call_builder(func, params)).execute();
-
-	data = data.concat(results.data);
-
-	if (parseInt(results.count, 'hex') > results.data.length) {
-		params._start_index = params._end_index;
-		params._end_index = params._end_index + 20;
-		return await paginated_score_call(func, params, data)
-	} else {
-		return data;
-	}
-}
-
 
 async function recursive_score_call(func, params = {}, data = []) {
-	console.log(params);
+
 	if (Object.keys(params).length !== 0) {
 		if (!params._start_index) params._start_index = 0;
+		if (!params._end_index) params._end_index = '20';
 	}
 
 	const results = await iconService.call(icon_call_builder(func, params)).execute();
@@ -103,8 +86,10 @@ async function recursive_score_call(func, params = {}, data = []) {
 
 	data = data.concat(results.data);
 
-	if (parseInt(results.count, 'hex') > results.data.length) {
-		params._start_index = params._end_index + 20;
+	if (parseInt(results.count, 'hex') > data.length) {
+		const interval = parseInt(params._end_index) - parseInt(params._start_index);
+		params._start_index = (parseInt(params._start_index) + interval).toFixed(0);
+		params._end_index = (parseInt(params._end_index) + interval).toFixed(0);
 		return await recursive_score_call(func, params, data)
 	} else {
 		return data;
@@ -143,7 +128,7 @@ async function update_period() {
 
 		const updatePeriodTransaction = await icon_transaction_call_builder('update_period');
 
-		console.log(updatePeriodTransaction, wallet);
+		console.log(JSON.stringify(updatePeriodTransaction), JSON.stringify(wallet));
 
 		const signedTransaction = new SignedTransaction(updatePeriodTransaction, wallet);
 		const txHash = await iconService.sendTransaction(signedTransaction).execute();
@@ -164,14 +149,14 @@ async function recursivelyUpdatePeriod(retry = 0) {
 			await update_period();
 			await sleep(2000);	// sleep for 2 secs
 			// todo: move to recursive func, max 10 calls
-			if(retry < 10) {
+			if(retry < 8) {
 				await recursivelyUpdatePeriod(++retry);
 			} else {
 				throw new Error('Retry limit reached. Error transitioning from transition period to application period');
 			}
 		}
 	} catch(e) {
-		console.log("Error updating period recursively", e);
+		console.log("Error updating period recursively", JSON.stringify(e));
 		await recursivelyUpdatePeriod(++retry);
 	}
 }
@@ -181,28 +166,36 @@ async function get_active_proposals(address) {
 	const active_proposals = await recursive_score_call('get_active_proposals', { _wallet_address: address });
 	// const active_proposals = await iconService.call(icon_call_builder('get_active_proposals', { _wallet_address: address })).execute();
 
-	console.log('get_active_proposals: ' + JSON.stringify(active_proposals));
+	// console.log('get_active_proposals: ' + JSON.stringify(active_proposals));
 	return active_proposals;
 }
 
 function get_remaining_funds() {
 	console.log('RPC call for remaining funds');
-	return iconService.call(icon_call_builder('get_remaining_fund'));
+	return iconService.call(icon_call_builder('get_remaining_fund')).execute();
 }
 
 async function get_project_amounts_by_status(status) {
 	console.log('RPC call for project amounts');
-	const res = await iconService.call(icon_call_builder('get_project_amounts'));
+	const res = await iconService.call(icon_call_builder('get_project_amounts')).execute();
+	// console.log(JSON.stringify(res));
 	return res[status];
 }
 
-async function get_progress_reports_by_status(status = '_approved') {
-	console.log('RPC Call for Accepted Progress Reports');
-	const accepted_active_proposals = await recursive_score_call('get_progress_reports', { _status: status });
+async function get_progress_reports_by_status(status = '_approved', fromLastPeriodOnly=false) {
+	console.log(`RPC Call for ${status} Progress Reports`);
+	const progressReports = await recursive_score_call('get_progress_reports', { _status: status });
 	// const accepted_active_proposals = await iconService.call(icon_call_builder('get_progress_reports', { status: '_approved' }));
 
-	console.log('get_progress_reports_by_status: ' + JSON.stringify(accepted_active_proposals));
-	return accepted_active_proposals;
+	if(fromLastPeriodOnly) {
+		return progressReports.filter(progressReport => {
+			const timeDiff = new BigNumber(progressReport.timestamp).div(1000).minus(Date.now());	// micro to milli
+			return Math.abs(timeDiff.div(1000*24*60*60).toNumber()) < 1;
+		})
+	}
+
+	// console.log('get_progress_reports_by_status: ' + JSON.stringify(accepted_active_proposals));
+	return progressReports;
 }
 
 async function get_proposal_and_progress_report_count() {
@@ -222,7 +215,7 @@ async function get_remaining_projects(address) {
 	const project_list = await recursive_score_call('get_remaining_project', { _project_type: 'proposal', _wallet_address: address });
 	// const project_list = await iconService.call(icon_call_builder('get_remaining_project', { _wallet_address: address })).execute();
 
-	console.log('get_remaining_projects: ' + JSON.stringify(project_list));
+	// console.log('get_remaining_projects: ' + JSON.stringify(project_list));
 	return project_list;
 }
 
@@ -230,30 +223,31 @@ async function get_proposals_details(address) {
 	console.log('RPC Call for Proposal Details');
 	const proposal_details = await recursive_score_call('get_proposal_detail_by_wallet', { _wallet_address: address });
 
-	console.log('get_proposals_details: ' + JSON.stringify(proposal_details));
+	// console.log('get_proposals_details: ' + JSON.stringify(proposal_details));
 	return proposal_details;
 }
 
-async function getProposalDetailsByStatus(status, fromLastPeriodOnly) {
+async function getProposalDetailsByStatus(status, fromLastPeriodOnly=false) {
 	console.log('Recursive RPC Call for method get_proposal_details for status ', status);
 
 	// let proposalDetails = [];
-	const proposalDetails = await paginated_score_call(
+	const proposalDetails = await recursive_score_call(
 		'get_proposal_details', 
 		{
 			'_status': status,
-			'_wallet_address': user_address,
-			'_start_index': 0,
-			'_end_index': 20,
+			'_wallet_address': user_address
 		}
 	);
-	console.log('getProposalDetailsByStatus: ' + JSON.stringify(proposalDetails));
+	// console.log('getProposalDetailsByStatus: ' + JSON.stringify(proposalDetails));
 	
-	if(lastPeriodOnly) {
+	if(fromLastPeriodOnly) {
 		// retrun data from last period only (timestamp < 24hrs)
 		return proposalDetails.filter(proposal => {
-			const timeDiff = new BigNumber(proposal.timestamp).div(1000).minus(Date.now());
-			return timeDiff.div(1000*24*60*60).toNumber() < 1;
+			const timeDiff = new BigNumber(proposal.timestamp).div(1000).minus(Date.now());	// micro to milli
+			// TODO: remove console msgs
+			console.log(proposal.project_title);
+			console.log(Math.abs(timeDiff.div(1000*24*60*60).toNumber()));
+			return Math.abs(timeDiff.div(1000*24*60*60).toNumber()) < 1;
 		})
 	}
 

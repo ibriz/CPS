@@ -16,6 +16,7 @@ const PROPOSAL_STATUS = {
 const PROGRESS_REPORT_STATUS = {
   WAITING: '_waiting',
   APPROVED: '_approved',
+  REJECTED: '_progress_report_rejected',
 }
 
 const EVENT_TYPES = {
@@ -25,7 +26,7 @@ const EVENT_TYPES = {
   APPLICATION_PERIOD_STATS: 'applicationPeriodStats',
 }
 
-const IPFS_BASE_URL = 'https://gateway.ipfs.io/ipfs/';
+const IPFS_BASE_URL = ['https://gateway.ipfs.io/ipfs/', 'https://cloudflare-ipfs.com/ipfs/'];
 
 const SUBSCRIPTION_KEY = 'botSubscriber';
 

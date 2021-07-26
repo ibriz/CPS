@@ -1,12 +1,63 @@
 const BigNumber = require('bignumber.js');
-const axios = require('axios');
-const mail = require('./mail');
-const redis = require('./redis');
 const score = require('./score');
-const { PERIOD_MAPPINGS, PROPOSAL_STATUS, PROGRESS_REPORT_STATUS, EVENT_TYPES, IPFS_BASE_URL } = require('./constants');
-const { sleep, triggerWebhook } = require('./utils');
+const { PERIOD_MAPPINGS, PROPOSAL_STATUS, PROGRESS_REPORT_STATUS, EVENT_TYPES } = require('./constants');
+const { sleep, triggerWebhook, fetchFromIpfs } = require('./utils');
 
 const DAY = 24 * 60 * 60;
+
+
+async function formatPRsResponse(allPRs) {
+	const response = {
+		passedProgressReports: [],
+		rejectedProgressReports: [],
+	};
+
+	for(progressReport of allPRs) {
+		let progressReportDetails;
+		try {
+				progressReportDetails = await fetchFromIpfs(progressReport.ipfs_hash);
+		} catch (err) {
+				console.error("ERROR FETCHING PROGRESS REPORT DATA" + JSON.stringify(err));
+				throw { statusCode: 400, name: "IPFS url", message: "Invalid IPFS hash provided" };
+		}
+
+		const { projectName, projectDuration, totalBudget, sponserPrepName, teamName } = progressReportDetails;
+
+		const amtReleased = new BigNumber(totalBudget).div(projectDuration);
+
+		const progressReportRes = {
+			progressReportName: progressReport.progress_report_title,
+			projectName,
+			projectDuration,
+			totalBudget,
+			sponsorName: sponserPrepName,
+			teamName,
+		}
+
+		switch(progressReport.status) {
+			case PROGRESS_REPORT_STATUS.REJECTED: {
+				response.rejectedProgressReports.push(progressReportRes);
+				break;
+			}
+
+			case PROGRESS_REPORT_STATUS.APPROVED: {
+				const passedPRDetails = {
+					...progressReportRes,
+					amtReleasedToApplicant: amtReleased.toFixed(0),
+					amtReleasedToSponsor: amtReleased.times(0.02).toFixed(0),
+				};
+				response.passedProgressReports.push(passedPRDetails);
+				break;
+			}
+
+			default: {
+				break;
+			}
+		}
+	}
+
+	return response;
+}
 
 
 async function formatProposalDetailsResponse(allProposals) {
@@ -25,13 +76,13 @@ async function formatProposalDetailsResponse(allProposals) {
 		
 		let proposalDetails;
 		try {
-				proposalDetails = await axios.get(IPFS_BASE_URL + proposal.ipfs_hash);
+				proposalDetails = await fetchFromIpfs(proposal.ipfs_hash);
 		} catch (err) {
 				console.error("ERROR FETCHING PROPOSAL DATA" + JSON.stringify(err));
 				throw { statusCode: 400, name: "IPFS url", message: "Invalid IPFS hash provided" };
 		}
 
-		const {teamName, sponserPrepName } = proposalDetails.data;
+		const {teamName, sponserPrepName } = proposalDetails;
 
 		const proposalRes = {
 			proposalName: proposal.project_title,
@@ -89,19 +140,23 @@ async function formatProposalDetailsResponse(allProposals) {
 
 			case PROPOSAL_STATUS.PAUSED: {
 				response.pausedProposals.push(proposalRes);
+				break;
 			}
 			
 			case PROPOSAL_STATUS.DISQUALIFIED: {
 				response.disqualifiedProposals.push(proposalRes);
+				break;
 			}
 
 			case PROPOSAL_STATUS.COMPLETED: {
 				response.completedProposals.push(proposalRes);
+				break;
 			}
 		}
-
-		return response;
 	}
+
+	return response;
+
 }
 
 async function period_changed(preps_list, period) {
@@ -145,11 +200,12 @@ async function execute() {
 		// TODO: Remove this
 		console.log(present_period.remaining_time);
 		
-		if (parseInt(present_period.remaining_time, 'hex') === 0) {
+		if (parseInt(present_period.remaining_time, 'hex') == 0) {
 			// if current period is "Voting Period" -> update_period moves it to transition period
 			// wait for 20 secs, then again trigger the update_period if the current period is transition period
 			// then verify that the period is now application period
-			console.log('Period updated');
+			console.log('Updating period...');
+
 			await score.update_period();
 			period_triggered = true;
 			await sleep(2000);	// sleep for 2 secs
@@ -158,10 +214,17 @@ async function execute() {
 
 			if(present_period['period_name'] == PERIOD_MAPPINGS.TRANSITION_PERIOD) {
 				await score.recursivelyUpdatePeriod();
+				present_period = await score.period_check();
+				console.log('Changed period to: ' + present_period['period_name']);
 			}
 
 			const periodEndingDate = new Date();
 			periodEndingDate.setDate(periodEndingDate.getDate() + 15);
+
+			if(present_period['period_name'] == present_period['previous_period_name']) {
+				console.log('Period could not be changed...');
+				return;
+			}
 
 			// ========================================CPS BOT TRIGGERS=========================================
 
@@ -172,12 +235,12 @@ async function execute() {
 				const votingPeriodStats = {
 					remainingFunds: new BigNumber(remainingFunds).div(Math.pow(10,18)).toFixed(2),
 					periodEndsOn: periodEndingDate.getTime().toString(),
-					projectsCount: new BigNumber(activeProjectAmt['_count']).toFixed(),
-					totalProjectsBudget: new BigNumber(activeProjectAmt['_total_amount']).div(Math.pow(10, 18)).toFixed(2)
+					activeProjectsCount: new BigNumber(activeProjectAmt['_count']).toFixed(),
+					activeProjectsBudget: new BigNumber(activeProjectAmt['_total_amount']).div(Math.pow(10, 18)).toFixed(2)
 				};
 				await triggerWebhook(EVENT_TYPES.VOTING_PERIOD_STATS, votingPeriodStats);
 
-				// ------Send out details different proposals by category-----
+				// ------Send out details of different proposals by category-----
 
 				// get proposals by status
 				const allApprovedProposals = await score.getProposalDetailsByStatus(PROPOSAL_STATUS.ACTIVE);
@@ -187,25 +250,36 @@ async function execute() {
 				const disqualifiedProposals = await score.getProposalDetailsByStatus(PROPOSAL_STATUS.DISQUALIFIED, true);
 				const completedProposals = await score.getProposalDetailsByStatus(PROPOSAL_STATUS.COMPLETED, true);
 
-				const formattedProposalDetails = formatProposalDetailsResponse(approvedProposals.concat(rejectedProposals).concat(pausedProposals).concat(disqualifiedProposals).concat(completedProposals));
+				const formattedProposalDetails = await formatProposalDetailsResponse(approvedProposals.concat(rejectedProposals).concat(pausedProposals).concat(disqualifiedProposals).concat(completedProposals));
 
 				await triggerWebhook(EVENT_TYPES.PROPOSAL_STATS, formattedProposalDetails);
+
+				// Send out details of different progress reports by category
+
+				// get progress reports by status
+				const passedPRs = await score.get_progress_reports_by_status(PROGRESS_REPORT_STATUS.APPROVED, true);
+				const rejectedPRs = await score.get_progress_reports_by_status(PROGRESS_REPORT_STATUS.REJECTED, true);
+				
+				const formattedPRsDetails = await formatPRsResponse(passedPRs.concat(rejectedPRs));
+
+				await triggerWebhook(EVENT_TYPES.PROGRESS_REPORT_STATS, formattedPRsDetails);
 			}
 
 			// Send out last application period's stats
 			if(present_period['period_name'] == PERIOD_MAPPINGS.VOTING_PERIOD) {
 				const pendingProjectAmt = await score.get_project_amounts_by_status(PROPOSAL_STATUS.PENDING);
-				const waitingProgressReportCount = await score.get_progress_reports_by_status(PROGRESS_REPORT_STATUS.WAITING);
+				const waitingProgressReports = await score.get_progress_reports_by_status(PROGRESS_REPORT_STATUS.WAITING);
 				const applicationPeriodStats = {
 					votingProposalsCount: new BigNumber(pendingProjectAmt['_count']).toFixed(),
-					votingProposalsBudget: new BigNumber(activeProjectAmt['_total_amount']).toFixed(),
+					votingProposalsBudget: new BigNumber(pendingProjectAmt['_total_amount']).div(Math.pow(10,18)).toFixed(),
 					periodEndsOn: periodEndingDate.getTime().toString(),
-					votingPRsCount: new BigNumber(waitingProgressReportCount['count']).toFixed(),
+					votingPRsCount: new BigNumber(waitingProgressReports.length).toFixed(),
 				};
-				triggerWebhook(EVENT_TYPES.APPLICATION_PERIOD_STATS, applicationPeriodStats);
+				await triggerWebhook(EVENT_TYPES.APPLICATION_PERIOD_STATS, applicationPeriodStats);
 			}
 		}
 		// ===================================================================================================
+
 
 
 		const preps = await score.get_preps();

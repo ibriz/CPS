@@ -6,13 +6,13 @@ exports.handler = async (event) => {
 		if (event.hasOwnProperty('httpMethod') && event.httpMethod === 'GET') {
 			await cron.execute();
 			console.log('==============Invoke Successful==========');
-			Promise.resolve({
+			return {
 				statusCode: 200,
 				headers: {
 					'Access-Control-Allow-Origin': '*'
 				},
 				body: 'Successfully triggered notifications on proposal change'
-			});
+			};
 		}
 	} catch (err) {
 
