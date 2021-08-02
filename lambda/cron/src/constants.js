@@ -30,6 +30,11 @@ const IPFS_BASE_URL = ['https://gateway.ipfs.io/ipfs/', 'https://cloudflare-ipfs
 
 const SUBSCRIPTION_KEY = 'botSubscriber';
 
+const BRIDGE_EVENT_TYPES = {
+  reminders: 'reminders',
+  periodChangeNotifications: 'periodChangeNotifications'
+}
+
 module.exports = {
   PERIOD_MAPPINGS,
   PROPOSAL_STATUS,
@@ -37,4 +42,5 @@ module.exports = {
   EVENT_TYPES,
   IPFS_BASE_URL,
   SUBSCRIPTION_KEY,
+  BRIDGE_EVENT_TYPES
 }

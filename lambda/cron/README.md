@@ -13,4 +13,8 @@ Environment Variable:
 - EMAIL_FROM                        icon@ibriz.ai
 - ICX_PENALTY                       1500
 
-Triggered by AWS event bridge
+Triggered by AWS event bridge (Configure eventBridge to send Constant (JSON text))
+
+Supported BridgeEventType (sent as event.detail from AwsEventBridge): "periodChangeNotifications" and "reminders"
+
+https://stackoverflow.com/questions/66064163/using-an-eventbridge-event-pattern-string-in-a-lambda-function
