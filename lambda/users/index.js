@@ -223,8 +223,10 @@ exports.handler = async (event) => {
 				user = await getEmailVerificationLink(event);
 			else if (event.path === process.env.INTIAL_PROMPT_PATH)
 				user = await setUserIntialPrompt(event);
-			else
+			else {
+				// sample event.body: {"email":"abc@gmail.com","enableEmailNotifications":true,"firstName":"test","lastName":"user","address":"hx0dc852acca3aba28881963c665b557582de55356"}
 				user = await registerUser(event);
+			}
 		} else if (event.httpMethod === 'PUT') {
 			user = await unsubscribeUser(event);
 		} else if (event.httpMethod === 'GET') {
