@@ -29,7 +29,7 @@ exports.handler = async (event) => {
 				cron_actions = await cron.execute();
 				console.log(cron_actions);
 
-				response_msg = 'Successfully checked for period change and sent email/bot notifications accordings';
+				response_msg = 'Successfully checked for period change and sent email/bot notifications';
 
 			} else if(event.bridgeEventType == BRIDGE_EVENT_TYPES.reminders) {
 				console.log("Sending email reminders about CPS periods");

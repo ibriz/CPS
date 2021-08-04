@@ -117,7 +117,7 @@ exports.handler = async (event) => {
 
 		if (event.httpMethod === 'POST') {
 			if (event.path === process.env.PROPOSAL_PATH) {
-
+				//sample body: {"projectName":"testProj","category":"Development","projectDuration":"1","totalBudget":"100","sponserPrep":"hxd47ad924eba01ec91330e4e996cf7b8c658f4e4c","sponserPrepName":"CPS Test P-Rep3(DO NOT DELEGATE)","description":"<p>jaskldfjksld sdfksjd fksdjfk sdjfk sdjlfkjsadflk sjkldfj slkdj lksdjf lksdjlk sjkdl jsdlksdj dkf d df</p>","milestones":[{"name":"test-milestone","duration":"1","budget":null,"description":null}],"teamName":"test-team","teamEmail":"test-email@ibriz.com","teamSize":"10","address":"hx0dc852acca3aba28881963c665b557582de55356","type":"proposal"}
 				const body = JSON.parse(event.body);
 				if (!body.type) throw new Error('type of the proposal needs to be specified');
 
