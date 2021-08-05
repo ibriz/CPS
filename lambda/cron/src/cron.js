@@ -12,7 +12,7 @@ async function formatPRsResponse(allPRs) {
 		rejectedProgressReports: [],
 	};
 
-	for(progressReport of allPRs) {
+	for(let progressReport of allPRs) {
 		let progressReportDetails;
 		try {
 				progressReportDetails = await fetchFromIpfs(progressReport.ipfs_hash);
@@ -71,7 +71,7 @@ async function formatProposalDetailsResponse(allProposals) {
 		completedProposals: [],
 	}
 
-	for(proposal of allProposals) {
+	for(let proposal of allProposals) {
 		// fetch teamName and sponsorName
 		
 		let proposalDetails;
@@ -295,7 +295,10 @@ async function execute() {
 		console.log('Notification enabled user details ' + JSON.stringify(user_details_list));
 		console.log('Notification enabled preps details ' + JSON.stringify(preps_list));
 
-		if (period_triggered) await period_changed(preps_list, present_period.period_name);
+		if (period_triggered) {
+			console.log("Period is changed so now sending bulk emails");
+			await period_changed(preps_list, present_period.period_name);
+		}
 
 		console.log(present_period);
 
@@ -314,7 +317,10 @@ async function execute() {
 					} else {
 						console.log('No user to send notification: proposal_accepted_notification_async')
 					}
-				})
+				}).catch(e => { 
+          console.log("Error on proposal_accepted_notification");
+          console.error(e);
+        })
 
 				const budget_approved_notification_async = score.budget_approved_notification(user_details_list).then(async (contributor_notification_list) => {
 					if (contributor_notification_list !== undefined && contributor_notification_list.length > 0) {
@@ -327,7 +333,10 @@ async function execute() {
 					} else {
 						console.log('No user to send notification: budget_approved_notification_async')
 					}
-				})
+				}).catch(e => { 
+          console.log("Error on budget_approved_notification");
+          console.error(e);
+        })
 
 				const budget_rejected_notification_async = score.budget_rejected_notification(user_details_list).then(async (contributor_notification_list) => {
 					if (contributor_notification_list !== undefined && contributor_notification_list.length > 0) {
@@ -340,7 +349,10 @@ async function execute() {
 					} else {
 						console.log('No user to send notification: budget_rejected_notification_async')
 					}
-				})
+				}).catch(e => { 
+          console.log("Error on budget_rejected_notification");
+          console.error(e);
+        })
 
 				actions.push(proposal_accepted_notification_async, budget_approved_notification_async, budget_rejected_notification_async);
 			}

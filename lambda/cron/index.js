@@ -41,16 +41,16 @@ exports.handler = async (event) => {
 				throw new Error("Invalid bridgeEventType");
 			}
 
-			return Promise.all(cron_actions).then(() => {
-				console.log('==============Invoke Successful==========');
-				Promise.resolve({
-					statusCode: 200,
-					headers: {
-						'Access-Control-Allow-Origin': '*'
-					},
-					body: response_msg
-				});
-			});
+			await Promise.all(cron_actions);
+			
+			return {
+				statusCode: 200,
+				headers: {
+					'Access-Control-Allow-Origin': '*'
+				},
+				body: response_msg
+			}
+
 		} else {
 			throw new Error("Invalid lambda invocation method");
 		}
