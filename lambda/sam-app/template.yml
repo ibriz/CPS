@@ -45,7 +45,7 @@ Resources:
           # BLOCKCHAIN_PROVIDER: https://ctz.solidwallet.io/api/v3
           # USER_ADDRESS: hx74a3f20a3c0a4bb5ccbf6e103ed624cbe444ac1e #random address
           # testnet
-          REDIS_URL: redis://192.168.1.70:6379
+          REDIS_URL: redis://192.168.1.253:6379
           PROPOSAL_PATH: /submit_notification
           API_KEY: +p9sArqKr/itlUg+AllYbw==
           API_SECRET: wtwqYMafL5kgXYKJerg66qchF2uksqThzoqAGZEy3Hg=
