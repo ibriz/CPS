@@ -216,67 +216,111 @@ async function execute() {
 				present_period = await score.period_check();
 				console.log('Changed period to: ' + present_period['period_name']);
 			}
-			
-			period_triggered = true;
-
-			const periodEndingDate = new Date();
-			periodEndingDate.setDate(periodEndingDate.getDate() + 15);
 
 			if(present_period['period_name'] == present_period['previous_period_name']) {
 				console.log('Period could not be changed...');
 				return;
 			}
 
+			period_triggered = true;
+
+			const periodEndingDate = new Date();
+			periodEndingDate.setDate(periodEndingDate.getDate() + 15);
+
 			// ========================================CPS BOT TRIGGERS=========================================
 
 			if(present_period['period_name'] == PERIOD_MAPPINGS.APPLICATION_PERIOD) {
-				// Send out last voting period's stats
-				const remainingFunds = await score.get_remaining_funds();
-				const activeProjectAmt = await score.get_project_amounts_by_status(PROPOSAL_STATUS.ACTIVE);
-				const votingPeriodStats = {
-					remainingFunds: new BigNumber(remainingFunds).div(Math.pow(10,18)).toFixed(2),
-					periodEndsOn: periodEndingDate.getTime().toString(),
-					activeProjectsCount: new BigNumber(activeProjectAmt['_count']).toFixed(),
-					activeProjectsBudget: new BigNumber(activeProjectAmt['_total_amount']).div(Math.pow(10, 18)).toFixed(2)
-				};
-				await triggerWebhook(EVENT_TYPES.VOTING_PERIOD_STATS, votingPeriodStats);
+				const votingPeriodStatsForBot = new Promise(async (resolve, reject) => {
+					try {
+						// Send out last voting period's stats
+						const remainingFunds = await score.get_remaining_funds();
+						const activeProjectAmt = await score.get_project_amounts_by_status(PROPOSAL_STATUS.ACTIVE);
+						const votingPeriodStats = {
+							remainingFunds: new BigNumber(remainingFunds).div(Math.pow(10,18)).toFixed(2),
+							periodEndsOn: periodEndingDate.getTime().toString(),
+							activeProjectsCount: new BigNumber(activeProjectAmt['_count']).toFixed(),
+							activeProjectsBudget: new BigNumber(activeProjectAmt['_total_amount']).div(Math.pow(10, 18)).toFixed(2)
+						};
+						await triggerWebhook(EVENT_TYPES.VOTING_PERIOD_STATS, votingPeriodStats);
+						console.log("Successfully notified bot about last voting period stats");
+						resolve("Successfully notified bot about last voting period stats");
+					} catch (e) {
+						console.error(e);
+						reject(e);
+					}
+				});
 
-				// ------Send out details of different proposals by category-----
+				actions.push(votingPeriodStatsForBot);
 
-				// get proposals by status
-				const allApprovedProposals = await score.getProposalDetailsByStatus(PROPOSAL_STATUS.ACTIVE);
-				const approvedProposals = allApprovedProposals.filter(proposal => parseInt(proposal.percentage_completed, 16) == 0);
-				const rejectedProposals = await score.getProposalDetailsByStatus(PROPOSAL_STATUS.REJECTED, true);
-				const pausedProposals = await score.getProposalDetailsByStatus(PROPOSAL_STATUS.PAUSED, true);
-				const disqualifiedProposals = await score.getProposalDetailsByStatus(PROPOSAL_STATUS.DISQUALIFIED, true);
-				const completedProposals = await score.getProposalDetailsByStatus(PROPOSAL_STATUS.COMPLETED, true);
+				const proposalStatsForBot = new Promise(async (resolve, reject) => {
+					try {
+						// ------Send out details of different proposals by category-----
+						// get proposals by status
+						const allApprovedProposals = await score.getProposalDetailsByStatus(PROPOSAL_STATUS.ACTIVE);
+						const approvedProposals = allApprovedProposals.filter(proposal => parseInt(proposal.percentage_completed, 16) == 0);
+						const rejectedProposals = await score.getProposalDetailsByStatus(PROPOSAL_STATUS.REJECTED, true);
+						const pausedProposals = await score.getProposalDetailsByStatus(PROPOSAL_STATUS.PAUSED, true);
+						const disqualifiedProposals = await score.getProposalDetailsByStatus(PROPOSAL_STATUS.DISQUALIFIED, true);
+						const completedProposals = await score.getProposalDetailsByStatus(PROPOSAL_STATUS.COMPLETED, true);
 
-				const formattedProposalDetails = await formatProposalDetailsResponse(approvedProposals.concat(rejectedProposals).concat(pausedProposals).concat(disqualifiedProposals).concat(completedProposals));
+						const formattedProposalDetails = await formatProposalDetailsResponse(approvedProposals.concat(rejectedProposals).concat(pausedProposals).concat(disqualifiedProposals).concat(completedProposals));
 
-				await triggerWebhook(EVENT_TYPES.PROPOSAL_STATS, formattedProposalDetails);
+						await triggerWebhook(EVENT_TYPES.PROPOSAL_STATS, formattedProposalDetails);
+						console.log("Successfully notified bot about proposals status after period change to application period");
+						resolve("Successfully notified bot about proposals status after period change to application period");
+					} catch(e) {
+						console.error(e);
+						reject(e);
+					}
+				});
 
-				// Send out details of different progress reports by category
-
-				// get progress reports by status
-				const passedPRs = await score.get_progress_reports_by_status(PROGRESS_REPORT_STATUS.APPROVED, true);
-				const rejectedPRs = await score.get_progress_reports_by_status(PROGRESS_REPORT_STATUS.REJECTED, true);
+				actions.push(proposalStatsForBot);
 				
-				const formattedPRsDetails = await formatPRsResponse(passedPRs.concat(rejectedPRs));
+				const progressReportStatsForBot = new Promise(async (resolve, reject) => {
+					try {
+						// Send out details of different progress reports by category
 
-				await triggerWebhook(EVENT_TYPES.PROGRESS_REPORT_STATS, formattedPRsDetails);
+						// get progress reports by status
+						const passedPRs = await score.get_progress_reports_by_status(PROGRESS_REPORT_STATUS.APPROVED, true);
+						const rejectedPRs = await score.get_progress_reports_by_status(PROGRESS_REPORT_STATUS.REJECTED, true);
+
+						const formattedPRsDetails = await formatPRsResponse(passedPRs.concat(rejectedPRs));
+
+						await triggerWebhook(EVENT_TYPES.PROGRESS_REPORT_STATS, formattedPRsDetails);
+
+						console.log('Successfully notified bot about progress report status after period change to application period');
+						resolve('Successfully notified bot about progress report status after period change to application period');
+					} catch (e) {
+						console.error(e);
+						reject(e);
+					}
+				});
+
+				actions.push(progressReportStatsForBot);
 			}
-
 			// Send out last application period's stats
 			if(present_period['period_name'] == PERIOD_MAPPINGS.VOTING_PERIOD) {
-				const pendingProjectAmt = await score.get_project_amounts_by_status(PROPOSAL_STATUS.PENDING);
-				const waitingProgressReports = await score.get_progress_reports_by_status(PROGRESS_REPORT_STATUS.WAITING);
-				const applicationPeriodStats = {
-					votingProposalsCount: new BigNumber(pendingProjectAmt['_count']).toFixed(),
-					votingProposalsBudget: new BigNumber(pendingProjectAmt['_total_amount']).div(Math.pow(10,18)).toFixed(),
-					periodEndsOn: periodEndingDate.getTime().toString(),
-					votingPRsCount: new BigNumber(waitingProgressReports.length).toFixed(),
-				};
-				await triggerWebhook(EVENT_TYPES.APPLICATION_PERIOD_STATS, applicationPeriodStats);
+				const applicationPeriodStatsForBot = new Promise(async (resolve, reject) => {
+					try {
+						const pendingProjectAmt = await score.get_project_amounts_by_status(PROPOSAL_STATUS.PENDING);
+						const waitingProgressReports = await score.get_progress_reports_by_status(PROGRESS_REPORT_STATUS.WAITING);
+						const applicationPeriodStats = {
+							votingProposalsCount: new BigNumber(pendingProjectAmt['_count']).toFixed(),
+							votingProposalsBudget: new BigNumber(pendingProjectAmt['_total_amount']).div(Math.pow(10,18)).toFixed(),
+							periodEndsOn: periodEndingDate.getTime().toString(),
+							votingPRsCount: new BigNumber(waitingProgressReports.length).toFixed(),
+						};
+						await triggerWebhook(EVENT_TYPES.APPLICATION_PERIOD_STATS, applicationPeriodStats);
+						console.log('Successfully notified bot about last application period stats');
+						resolve('Successfully notified bot about last application period stats');
+
+					} catch(e) {
+						console.error(e);
+						reject(e);
+					}
+				});
+
+				actions.push(applicationPeriodStatsForBot);
 			}
 		}
 		// ===================================================================================================
