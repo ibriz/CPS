@@ -6,7 +6,12 @@ exports.handler = async (event) => {
 	try {
 
 		if (event.hasOwnProperty('httpMethod') && event.httpMethod === 'POST') {
-			await cron.proposal_notification(JSON.parse(event.body));
+			const body = JSON.parse(event.body);
+			if (!body || !body.token || body.token !== process.env.token) throw new Error('Unauthorized!');
+			// await cron.proposal_notification(JSON.parse(event.body));
+			await cron.execute();
+			
+			let response_msg = 'Successfully checked for period change and sent bot notifications';
 
 			const response = {
 				statusCode: 200,
@@ -15,7 +20,7 @@ exports.handler = async (event) => {
 					'Access-Control-Allow-Headers': '*'
 				},
 				body: JSON.stringify({
-					message: "Email sent"
+					message: response_msg
 				})
 			};
 
