@@ -162,9 +162,9 @@ async function recursivelyUpdatePeriod(retry = 0) {
 }
 
 async function get_active_proposals(address) {
-	console.log('RPC Call for Active Proposals');
-	const active_proposals = await recursive_score_call('get_active_proposals', { _wallet_address: address });
-	// const active_proposals = await iconService.call(icon_call_builder('get_active_proposals', { _wallet_address: address })).execute();
+	console.log('RPC Call for Active Proposals', address);
+	// const active_proposals = await recursive_score_call('get_active_proposals', { _wallet_address: address });
+	const active_proposals = await iconService.call(icon_call_builder('get_active_proposals', { _wallet_address: address })).execute();
 
 	// console.log('get_active_proposals: ' + JSON.stringify(active_proposals));
 	return active_proposals;
@@ -200,20 +200,20 @@ async function get_progress_reports_by_status(status = '_approved', fromLastPeri
 
 async function get_proposal_and_progress_report_count() {
 	console.log('RPC Call for Proposal and Progress Report Count');
-	const accepted_active_proposals = await iconService.call(icon_call_builder('get_proposals_keys_by_status', { status: '_pending' })).execute();
+	const accepted_active_proposals = await iconService.call(icon_call_builder('get_proposals_keys_by_status', { _status: '_pending' })).execute();
 
-	const accepted_active_progress_report = await iconService.call(icon_call_builder('get_progress_reports', { status: '_waiting' })).execute();
+	const accepted_active_progress_report = await recursive_score_call('get_progress_reports', { _status: '_waiting' });
 
 	return {
 		proposals_count: accepted_active_proposals.length,
-		progress_report_count: accepted_active_progress_report.count
+		progress_report_count: accepted_active_progress_report.length
 	};
 }
 
 async function get_remaining_projects(address) {
 	console.log('RPC Call for Remaining Project');
-	const project_list = await recursive_score_call('get_remaining_project', { _project_type: 'proposal', _wallet_address: address });
-	// const project_list = await iconService.call(icon_call_builder('get_remaining_project', { _wallet_address: address })).execute();
+	// const project_list = await recursive_score_call('get_remaining_project', { _project_type: 'proposal', _wallet_address: address });
+	const project_list = await iconService.call(icon_call_builder('get_remaining_project', { _project_type: 'proposal', _wallet_address: address })).execute();
 
 	// console.log('get_remaining_projects: ' + JSON.stringify(project_list));
 	return project_list;
@@ -221,7 +221,7 @@ async function get_remaining_projects(address) {
 
 async function get_proposals_details(address) {
 	console.log('RPC Call for Proposal Details');
-	const proposal_details = await recursive_score_call('get_proposal_detail_by_wallet', { _wallet_address: address });
+	const proposal_details = await iconService.call(icon_call_builder('get_proposal_detail_by_wallet', { _wallet_address: address })).execute();
 
 	// console.log('get_proposals_details: ' + JSON.stringify(proposal_details));
 	return proposal_details;
@@ -256,6 +256,7 @@ async function getProposalDetailsByStatus(status, fromLastPeriodOnly=false) {
 
 async function progress_report_reminder_before_one_day(user_details_list) {
 	let address_notification_list = [];
+	console.log("USER DETAIL LIST IS ", user_details_list);
 	try {
 		for (const user_detail of user_details_list) {
 			const user_active_proposals = await get_active_proposals(user_detail.address);

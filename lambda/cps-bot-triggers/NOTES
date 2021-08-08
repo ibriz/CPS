@@ -19,6 +19,7 @@ LAMBDA:
     have the route table in the NAT's subnet send all outbound traffic to an Internet Gateway
 
 REDIS:
+  Disable firewall when testing redis locally
   redis-cli:
     - starts interactive mode
   KEYS <pattern>:
