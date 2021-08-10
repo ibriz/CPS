@@ -18,7 +18,7 @@ const SES = new AWS.SES({
 const emailFrom = process.env.MAIL_FROM;
 const template = process.env.SPONSORSHIP_REQUEST_TEMPLATE;
 
-async function send_email(emailAddress, body) {
+async function send_email(firstName, emailAddress, body) {
 	try {
 		//build params for sending email
 		const params = {
@@ -27,6 +27,7 @@ async function send_email(emailAddress, body) {
 			},
 			Template: template,
 			TemplateData: `{\"proposalName\":\"${body.projectName}\",
+											\"firstName\":\"${firstName}\",
                         \"contributor_address\":\"${body.address}\",
                         \"subject\":\"${process.env.SUBJECT}\",
                         \"frontend_url":\"${process.env.FRONTEND_URL}\"}`,
@@ -129,7 +130,7 @@ exports.handler = async (event) => {
 					const sponsor = JSON.parse(sponsorData);
 					console.log(sponsor);
 
-					if (body.type === 'proposal' && sponsor.verified && sponsor.enableEmailNotifications) await send_email(sponsor.email, body);
+					if (body.type === 'proposal' && sponsor.verified && sponsor.enableEmailNotifications) await send_email(sponsor.firstName, sponsor.email, body);
 				}
 			} else {
 				proposal = await uploadFile(event);
