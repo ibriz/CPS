@@ -210,10 +210,12 @@ async function get_proposal_and_progress_report_count() {
 	};
 }
 
-async function get_remaining_projects(address) {
+// returns all the projects that this wallet address is yet to vote on
+async function get_remaining_projects(address, type) {
+	// type can be proposal or progress_report
 	console.log('RPC Call for Remaining Project');
 	// const project_list = await recursive_score_call('get_remaining_project', { _project_type: 'proposal', _wallet_address: address });
-	const project_list = await iconService.call(icon_call_builder('get_remaining_project', { _project_type: 'proposal', _wallet_address: address })).execute();
+	const project_list = await iconService.call(icon_call_builder('get_remaining_project', { _project_type: type, _wallet_address: address })).execute();
 
 	// console.log('get_remaining_projects: ' + JSON.stringify(project_list));
 	return project_list;
@@ -320,17 +322,14 @@ async function progress_report_reminder_before_one_week(user_details_list) {
 async function voting_reminder_before_one_day(user_details_list, type) {
 	let address_notification_list = [];
 	try {
-		type = (type === 'Proposal') ? 'Proposal' : 'Progress Report';
+		type = (type === 'Proposal') ? 'proposal' : 'progress_report';
 
 		for (const user_detail of user_details_list) {
-			const user_active_proposals = await get_remaining_projects(user_detail.address);
+			const user_active_proposals = await get_remaining_projects(user_detail.address, type);
 
 			if (user_active_proposals.length > 0) {
-				const new_user_active_proposals = user_active_proposals.filter(function (proposal) {
-					return proposal._project_type == type;
-				})
 
-				if (new_user_active_proposals.length != 0 && address_notification_list.indexOf(user_detail) === -1) {
+				if (address_notification_list.indexOf(user_detail) === -1) {
 					user_detail.replacementTemplateData = `{
                     \"firstName\": \"${user_detail.firstName}\",
                     \"address\": \"${user_detail.address}\"
@@ -352,17 +351,14 @@ async function voting_reminder_before_one_day(user_details_list, type) {
 async function voting_reminder_before_one_week(user_details_list, type) {
 	let address_notification_list = [];
 	try {
-		type = (type === 'Proposal') ? 'Proposal' : 'Progress Report';
+		type = (type === 'Proposal') ? 'proposal' : 'progress_report';
 
 		for (const user_detail of user_details_list) {
-			const user_active_proposals = await get_remaining_projects(user_detail.address);
+			const user_active_proposals = await get_remaining_projects(user_detail.address, type);
 
 			if (user_active_proposals.length > 0) {
-				const new_user_active_proposals = user_active_proposals.filter(function (proposal) {
-					return proposal._project_type == type;
-				})
 
-				if (new_user_active_proposals.length != 0 && address_notification_list.indexOf(user_detail) === -1) {
+				if (address_notification_list.indexOf(user_detail) === -1) {
 					user_detail.replacementTemplateData = `{
                     \"firstName\": \"${user_detail.firstName}\",
                     \"address\": \"${user_detail.address}\"
