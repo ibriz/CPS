@@ -29,7 +29,7 @@ async function send_email(firstName, emailAddress, body) {
 			Template: template,
 			TemplateData: `{\"proposalName\":\"${body.projectName}\",
 											\"firstName\":\"${firstName}\",
-                        \"contributor_address\":\"${body.address}\",
+                        \"contributor_address\":\"${body.sponserPrep}\",
                         \"subject\":\"${process.env.SUBJECT}\",
                         \"frontend_url":\"${process.env.FRONTEND_URL}\"}`,
 			Source: emailFrom
