@@ -110,7 +110,8 @@ async function uploadFile(payload) {
 	}
 }
 
-async function notifySponsorship (projectName, address, sponsorAddress) {
+async function notifySponsorship (projectName, address, sponsorAddress, sponsorAction) {
+	// sponsorAction: accepted or rejected
 	try {
 		// fetch contributor's email from redis
 		const rawUserDetails = await getAsync(`users:address:${address}`);
@@ -126,6 +127,7 @@ async function notifySponsorship (projectName, address, sponsorAddress) {
 				\"firstName\": \"${userDetails.firstName}\",
 				\"project_title\": \"${projectName}\",
 				\"sponsor_address\": \"${sponsorAddress}\",
+				\"sponsor_action\": \"${sponsorAction}\",
 				\"contributor_address\": \"${address}\",
 				\"frontend_url\": \"${process.env.FRONTEND_URL}\"
 			}`,
@@ -168,11 +170,11 @@ exports.handler = async (event) => {
 			} else if (event.path === process.env.SPONSOR_NOTIFY_PATH) {
 				// notify user about sponsorship being accepted using projectName and contributor's address
 				const body = JSON.parse(event.body);
-				if(!body || !body.projectName || !body.address || !body.sponsorAddress) {
-					throw new Error('projectName, address and sponsorAddress need to be specified');
+				if(!body || !body.projectName || !body.address || !body.sponsorAddress || !body.sponsorAction) {
+					throw new Error('projectName, address, sponsorAddress and sponsorAction need to be specified');
 				}
 				console.log(`Sending email to ${body.address} about sponsorship acceptance`);
-				proposal = await notifySponsorship(body.projectName, body.address, body.sponsorAddress);
+				proposal = await notifySponsorship(body.projectName, body.address, body.sponsorAddress, body.sponsorAction);
 			
 			} else {
 				proposal = await uploadFile(event);
