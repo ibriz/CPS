@@ -173,8 +173,13 @@ async function period_changed(preps_list, period) {
 				replacementTemplateData: `{\"address\":\"${e.address}\",
                                         \"firstName\":\"${e.firstName}\"}`
 			}
-		})
-		await mail.send_bulk_email('period-change',
+		});
+
+		const templateName = period == PERIOD_MAPPINGS.APPLICATION_PERIOD ? 
+			'period-change-to-application' :
+			'period-change-to-voting';
+
+		await mail.send_bulk_email(templateName,
 			period_changed_preps_list,
 			'Start of new period | ICON CPS',
 			`,\"period\": \"${period}\",
