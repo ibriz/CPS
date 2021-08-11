@@ -17,6 +17,7 @@ const SES = new AWS.SES({
 
 const emailFrom = process.env.MAIL_FROM;
 const template = process.env.SPONSORSHIP_REQUEST_TEMPLATE;
+const sponsorAcceptTemplate = process.env.SPONSORSHIP_ACCEPTED_TEMPLATE;
 
 async function send_email(firstName, emailAddress, body) {
 	try {
@@ -109,6 +110,37 @@ async function uploadFile(payload) {
 	}
 }
 
+async function notifySponsorship (projectName, address, sponsorAddress) {
+	try {
+		// fetch contributor's email from redis
+		const rawUserDetails = await getAsync(`users:address:${address}`);
+		const userDetails = JSON.parse(rawUserDetails);
+		if(!userDetails) throw new Error("User not found!");
+		//build params for sending email
+		const params = {
+			Destination: {
+				ToAddresses: [userDetails.email],
+			},
+			Template: sponsorAcceptTemplate,
+			TemplateData: `{
+				\"firstName\": \"${userDetails.firstName}\",
+				\"project_title\": \"${projectName}\",
+				\"sponsor_address\": \"${sponsorAddress}\",
+				\"contributor_address\": \"${address}\",
+				\"frontend_url\": \"${process.env.FRONTEND_URL}\"
+			}`,
+			Source: emailFrom
+		};
+		console.log(params);
+		const emailResponse = await SES.sendTemplatedEmail(params).promise();
+		console.log('Email Sent Successfully to ' + JSON.stringify(emailResponse));
+		return { message: `Successfully sent email to ${userDetails.email}`}
+	} catch (error) {
+		console.error('Email sending Failed! ' + error);
+		throw new Error('Email sending Failed! ' + error);
+	}
+}
+
 exports.handler = async (event) => {
 	try {
 		const responseCode = 200;
@@ -132,6 +164,16 @@ exports.handler = async (event) => {
 
 					if (body.type === 'proposal' && sponsor.verified && sponsor.enableEmailNotifications) await send_email(sponsor.firstName, sponsor.email, body);
 				}
+
+			} else if (event.path === process.env.SPONSOR_NOTIFY_PATH) {
+				// notify user about sponsorship being accepted using projectName and contributor's address
+				const body = JSON.parse(event.body);
+				if(!body || !body.projectName || !body.address || !body.sponsorAddress) {
+					throw new Error('projectName, address and sponsorAddress need to be specified');
+				}
+				console.log(`Sending email to ${body.address} about sponsorship acceptance`);
+				proposal = await notifySponsorship(body.projectName, body.address, body.sponsorAddress);
+			
 			} else {
 				proposal = await uploadFile(event);
 			}
