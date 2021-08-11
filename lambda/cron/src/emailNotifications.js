@@ -68,24 +68,6 @@ async function sendEmailNotifications() {
       } else {
         console.log('No reminders sent to users');
       }
-
-      const sponsorship_accepted_notification_async = score.sponsorship_accepted_notification(user_details_list).then(async (contributor_notification_list) => {
-        if (contributor_notification_list !== undefined && contributor_notification_list.length > 0) {
-          console.log('contributor_notification_list' + contributor_notification_list)
-          console.log('Sending emails to ' + contributor_notification_list.length + ' contributors');
-          await mail.send_bulk_email('sponsorship-accepted',
-            contributor_notification_list,
-            'Sponsorship Request Accepted | ICON CPS');
-        } else {
-          console.log('No user to send notification: sponsorship_accepted_notification_async')
-        }
-      }).catch(e => { 
-        console.log("Error on sponsorship_accepted_notification");
-        console.error(e);
-      })
-
-      actions.push(sponsorship_accepted_notification_async);
-
     }  else if (present_period.period_name === PERIOD_MAPPINGS.VOTING_PERIOD && preps_list.length > 0) {
       console.log('=====================Notifications for Voting Period=======================');
       if (parseInt(present_period.remaining_time, 16) <= DAY) {

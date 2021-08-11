@@ -377,37 +377,6 @@ async function voting_reminder_before_one_week(user_details_list, type) {
 	}
 }
 
-async function sponsorship_accepted_notification(user_details_list) {
-	let address_notification_list = [];
-	try {
-
-		for (const user_detail of user_details_list) {
-			const user_active_proposals = await get_proposals_details(user_detail.address);
-
-			if (user_active_proposals.length > 0) {
-				const new_user_active_proposals = user_active_proposals.filter(function (proposal) {
-					return proposal._status == '_pending';
-				})
-
-				for (const new_proposal of new_user_active_proposals) {
-					user_detail.replacementTemplateData = `{
-                    \"firstName\": \"${user_detail.firstName}\",
-                    \"project_title\": \"${new_proposal.project_title}\",
-                    \"contributor_address\": \"${new_proposal.contributor_address}\"
-                }`
-					address_notification_list.push(user_detail);
-				}
-			} else {
-				console.log('function: get_proposals_details in sponsorship_accepted_notification is empty');
-			}
-		}
-	} catch (error) {
-		console.error(error);
-		throw new Error(error);
-	} finally {
-		return address_notification_list;
-	}
-}
 
 async function proposal_accepted_notification(user_details_list) {
 	let address_notification_list = [];
@@ -507,7 +476,6 @@ module.exports = {
 	budget_rejected_notification,
 	budget_approved_notification,
 	proposal_accepted_notification,
-	sponsorship_accepted_notification,
 	voting_reminder_before_one_day,
 	voting_reminder_before_one_week,
 	progress_report_reminder_before_one_day,
