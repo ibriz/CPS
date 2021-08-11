@@ -265,7 +265,7 @@ async function progress_report_reminder_before_one_day(user_details_list) {
 
 			if (user_active_proposals.length > 0) {
 				const new_user_active_proposals = user_active_proposals.filter(function (proposal) {
-					return parseInt(proposal.new_progress_report) == 1;
+					return parseInt(proposal.new_progress_report) == 0;
 				})
 
 				for (const new_proposal of new_user_active_proposals) {
@@ -296,7 +296,7 @@ async function progress_report_reminder_before_one_week(user_details_list) {
 
 			if (user_active_proposals.length > 0) {
 				const new_user_active_proposals = user_active_proposals.filter(function (proposal) {
-					return parseInt(proposal.new_progress_report) == 1;
+					return parseInt(proposal.new_progress_report) == 0;
 				})
 
 				for (const new_proposal of new_user_active_proposals) {
