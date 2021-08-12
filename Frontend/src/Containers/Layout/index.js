@@ -6,11 +6,11 @@ function Layout({ setLocale }) {
   const [collapsed, setCollapsed] = useState(false);
   const [toggled, setToggled] = useState(false);
 
-  const handleCollapsedChange = (checked) => {
+  const handleCollapsedChange = checked => {
     setCollapsed(checked);
   };
 
-  const handleToggleSidebar = (value) => {
+  const handleToggleSidebar = value => {
     setToggled(value);
   };
 
@@ -19,7 +19,7 @@ function Layout({ setLocale }) {
       <Sidebar
         collapsed={collapsed}
         toggled={toggled}
-        setToggled = {setToggled}
+        setToggled={setToggled}
         handleToggleSidebar={handleToggleSidebar}
         handleCollapsedChange={handleCollapsedChange}
       />

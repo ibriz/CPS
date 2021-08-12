@@ -3,26 +3,29 @@ import { callKeyStoreWallet } from '../../ICON/utils';
 // import {
 //   getCourseInfo,
 // } from '../services/api';
-import { fetchMyProposalListSuccess, fetchMyProposalListFailure } from '../../Reducers/proposalSlice';
+import {
+  fetchMyProposalListSuccess,
+  fetchMyProposalListFailure,
+} from '../../Reducers/proposalSlice';
 
 const proposalListStatusMapping = {
-  'Active': '_active',
-  'Voting': '_pending',
-  'Pending': '_sponsor_pending',
+  Active: '_active',
+  Voting: '_pending',
+  Pending: '_sponsor_pending',
 
-  'Completed': '_completed',
-  'Disqualified': '_rejected',
-  'Paused': '_paused',
-  'Rejected': '_rejected'
-}
+  Completed: '_completed',
+  Disqualified: '_rejected',
+  Paused: '_paused',
+  Rejected: '_rejected',
+};
 
 function* fetchMyProposalListWorker({ payload }) {
   try {
     const response = yield call(callKeyStoreWallet, {
       method: 'get_proposal_detail_by_wallet',
       params: {
-        _wallet_address: payload.walletAddress
-      }
+        _wallet_address: payload.walletAddress,
+      },
     });
 
     // const response = {
@@ -46,7 +49,6 @@ function* fetchMyProposalListWorker({ payload }) {
     // const response = {
     //   data: [
 
-
     //     {
     //       status: "_active",
     //       project_title: "ICON Mobile Wallet",
@@ -56,7 +58,6 @@ function* fetchMyProposalListWorker({ payload }) {
     //     ipfs_hash: 'undefined46c3b07a-2f67-4caa-bc88-6290da31901e'
 
     //     },
-
 
     //     {
     //       status: "_sponsor_pending",
@@ -107,11 +108,11 @@ function* fetchMyProposalListWorker({ payload }) {
     //   ],
     //   count: 2
     // }
-    yield put(fetchMyProposalListSuccess(
-      {
+    yield put(
+      fetchMyProposalListSuccess({
         response,
-      }
-    ));
+      }),
+    );
   } catch (error) {
     yield put(fetchMyProposalListFailure());
   }

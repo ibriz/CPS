@@ -4,7 +4,10 @@ import styles from './ProposalCard.module.scss';
 import TabBar from 'Components/Card/TabBar';
 import ProposalList from 'Components/Card/ProposalList';
 import { connect } from 'react-redux';
-import { fetchSponsorRequestsListRequest, setModalShowSponsorRequests } from 'Redux/Reducers/proposalSlice';
+import {
+  fetchSponsorRequestsListRequest,
+  setModalShowSponsorRequests,
+} from 'Redux/Reducers/proposalSlice';
 import Pagination from 'Components/Card/Pagination';
 import proposalStates from './proposalStates';
 // import { select } from 'redux-saga/effects';
@@ -66,7 +69,7 @@ const SponsorRequestsCard = ({ proposalList, fetchProposalListRequest, walletAdd
         // ) : proposalList;
 
         const filteredProposals = (proposalList[selectedTab][(pageNumber?.[selectedTab] - 1) || 0] || []).filter(
-            (proposal) => proposal._proposal_title.includes(searchText)
+            (proposal) => proposal._proposal_title.toLowerCase().includes(searchText.toLowerCase())
         );
 
         setFilteredProposalList(filteredProposals);

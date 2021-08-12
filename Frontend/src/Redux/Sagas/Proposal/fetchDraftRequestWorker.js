@@ -1,19 +1,22 @@
-import { call, put, select} from 'redux-saga/effects';
+import { call, put, select } from 'redux-saga/effects';
 // import {
 //   getCourseInfo,
 // } from '../services/api';
-import {fetchDraftsSuccess, fetchDraftsFailure} from '../../Reducers/proposalSlice';
-import {PROPOSAL_ADD_URL} from '../../Constants';
-import {getRequest} from '../helpers';
+import {
+  fetchDraftsSuccess,
+  fetchDraftsFailure,
+} from '../../Reducers/proposalSlice';
+import { PROPOSAL_ADD_URL } from '../../Constants';
+import { getRequest } from '../helpers';
 
-function* fetchDraftRequestWorker({payload}) {
-  console.log("fetchDraftRequestWorker");
+function* fetchDraftRequestWorker({ payload }) {
+  console.log('fetchDraftRequestWorker');
   try {
     const response = yield call(getRequest, {
       url: `draft?address=${payload.walletAddress}&type=Proposal`,
-      method: 'GET'
+      method: 'GET',
     });
-    const getAddress = (state) => state.account.address
+    const getAddress = state => state.account.address;
     const walletAddress = yield select(getAddress);
 
     // const response = [
@@ -24,16 +27,15 @@ function* fetchDraftRequestWorker({payload}) {
     //     ipfsKey: "Proposalc27bb223-4c96-4783-a6e7-3916bc7dea2f"
     //   }
     // ]
-    yield put(fetchDraftsSuccess(
-      {
+    yield put(
+      fetchDraftsSuccess({
         response,
         contributorAddress: walletAddress,
-      }
-    ));
+      }),
+    );
   } catch (error) {
     yield put(fetchDraftsFailure());
   }
 }
-
 
 export default fetchDraftRequestWorker;

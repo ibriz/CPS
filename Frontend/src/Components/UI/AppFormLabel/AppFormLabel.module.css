@@ -1,12 +1,11 @@
 label {
-    font-style: normal;
-    font-weight: 560;
-    font-size: 16px;
-    line-height: 17px;
-    color: #262626;
+  font-style: normal;
+  font-weight: 560;
+  font-size: 16px;
+  line-height: 17px;
+  color: #262626;
 }
 
-
 .labelSameLine {
-    padding-left: 0px !important;
+  padding-left: 0px !important;
 }

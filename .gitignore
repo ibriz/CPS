@@ -1,4 +1,10 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# SCORE IGNORES
+cps_score/.idea/
+.idea/
+*.pkl
+*.ipynb
+.ipynb_checkpoints/
 
 # dependencies
 /Frontend/node_modules
@@ -22,3 +28,6 @@
 /Frontend/yarn-debug.log*
 /Frontend/yarn-error.log*
 
+node_modules
+*.zip
+.env

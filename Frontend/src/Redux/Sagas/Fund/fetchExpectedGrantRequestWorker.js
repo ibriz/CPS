@@ -1,42 +1,53 @@
 import { put, call, select } from 'redux-saga/effects';
-import { fetchExpectedGrantSuccess, fetchExpectedGrantFailure } from '../../Reducers/fundSlice';
+import {
+  fetchExpectedGrantSuccess,
+  fetchExpectedGrantFailure,
+} from '../../Reducers/fundSlice';
 import { callKeyStoreWallet } from '../../ICON/utils';
 
 function* fetchCPFScoreAddressWorker({ payload }) {
   try {
-
-    const getAddress = (state) => state.account.address
+    const getAddress = state => state.account.address;
     const walletAddress = yield select(getAddress);
 
-    const getCPSTreasuryScoreAddress = (state) => state.fund.cpsTreasuryScoreAddress
+    const getCPSTreasuryScoreAddress = state =>
+      state.fund.cpsTreasuryScoreAddress;
     const cpsTreasuryScoreAddress = yield select(getCPSTreasuryScoreAddress);
 
-    const getIsPrep = (state) => state.account.isPrep;
+    const getIsPrep = state => state.account.isPrep;
     const isPrep = yield select(getIsPrep);
 
-    const getIsRegistered = (state) => state.account.isRegistered;
+    const getIsRegistered = state => state.account.isRegistered;
     const isRegistered = yield select(getIsRegistered);
 
-
-    console.log("cpsTreasuryScoreAddress",cpsTreasuryScoreAddress);
+    console.log('cpsTreasuryScoreAddress', cpsTreasuryScoreAddress);
     if (cpsTreasuryScoreAddress) {
       const response = yield call(callKeyStoreWallet, {
-        method: (payload.type === 'sponsorReward') ? 'get_sponsor_projected_fund' : 'get_contributor_projected_fund',
+        method:
+          payload.type === 'sponsorReward'
+            ? 'get_sponsor_projected_fund'
+            : 'get_contributor_projected_fund',
         params: {
           _wallet_address: walletAddress,
-
         },
-        scoreAddress: cpsTreasuryScoreAddress
-
+        scoreAddress: cpsTreasuryScoreAddress,
       });
-      console.log("iscpsTreasuryScoreAddress", isPrep, isRegistered, isPrep && isRegistered, response)
+      console.log(
+        'iscpsTreasuryScoreAddress',
+        isPrep,
+        isRegistered,
+        isPrep && isRegistered,
+        response,
+      );
 
-      yield put(fetchExpectedGrantSuccess({
-        response: {
-          ...response,
-          type: payload.type
-        }
-      }));
+      yield put(
+        fetchExpectedGrantSuccess({
+          response: {
+            ...response,
+            type: payload.type,
+          },
+        }),
+      );
     }
   } catch (error) {
     yield put(fetchExpectedGrantFailure(error));

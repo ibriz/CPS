@@ -1,0 +1,17 @@
+{
+  "name": "drafts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "ibriz.ai",
+  "license": "ISC",
+  "dependencies": {
+    "@fleekhq/fleek-storage-js": "^1.0.3",
+    "redis": "^3.0.2",
+    "util": "^0.12.3",
+    "uuid": "^8.3.1"
+  }
+}

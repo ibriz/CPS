@@ -7,26 +7,23 @@
 }
 
 $theme-colors: (
-  "info": #1AAABA,
-  "information": #17A2B8,
-  "completed": #0F626B
+  'info': #1aaaba,
+  'information': #17a2b8,
+  'completed': #0f626b,
 );
-
 
 .input-group-text {
   border: 0px solid #ced4da !important;
   padding-bottom: 0rem !important;
-  padding-top: 0rem!important;
+  padding-top: 0rem !important;
 }
-
-
 
 @import '~bootstrap/scss/bootstrap';
 
-$sidebar-bg-color: #1AAABA;
+$sidebar-bg-color: #1aaaba;
 $submenu-bg-color: rgba(255, 255, 255, 0.05);
 $submenu-bg-color-collapsed: rgba(29, 29, 29, 0.95);
-$sidebar-color: #FFFFFF;
+$sidebar-color: #ffffff;
 $highlight-color: #d8d8d8;
 $icon-bg-color: rgba(255, 255, 255, 0.05);
 $icon-size: 35px;
@@ -37,7 +34,12 @@ body {
   height: 100vh;
   color: #353535;
   font-family: 'Montserrat', sans-serif;
-  background: linear-gradient(0deg, rgba(38, 38, 38, 0.05), rgba(38, 38, 38, 0.05)), #FFFFFF;
+  background: linear-gradient(
+      0deg,
+      rgba(38, 38, 38, 0.05),
+      rgba(38, 38, 38, 0.05)
+    ),
+    #ffffff;
 }
 
 #root {
@@ -45,8 +47,6 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-
-
 }
 
 .app {
@@ -108,7 +108,13 @@ body {
   }
 
   main {
-    background: linear-gradient(0deg, rgba(38, 38, 38, 0.05), rgba(38, 38, 38, 0.05)), #FFFFFF;    font-family: Montserrat;
+    background: linear-gradient(
+        0deg,
+        rgba(38, 38, 38, 0.05),
+        rgba(38, 38, 38, 0.05)
+      ),
+      #ffffff;
+    font-family: Montserrat;
     padding: 24px;
     flex-grow: 1;
     display: flex;
@@ -227,10 +233,9 @@ body {
 
 $col-base-size: 8.33%;
 
-$col-1half: $col-base-size*1.5;
+$col-1half: $col-base-size * 1.5;
 
-@media(min-width:768px) {
-
+@media (min-width: 768px) {
   .col-sm-1.5 {
     width: $col-1half;
     flex: 0 0 $col-1half;
@@ -239,11 +244,11 @@ $col-1half: $col-base-size*1.5;
 }
 
 @media screen and (min-width: 992px) {
-  .pro-icon  {
+  .pro-icon {
     font-size: 20px !important;
   }
 
-  .pro-item-content{
+  .pro-item-content {
     font-size: 1.1rem;
   }
 }
@@ -253,16 +258,17 @@ $col-1half: $col-base-size*1.5;
   justify-content: space-between !important;
   align-items: center !important;
 
-  span, svg {
+  span,
+  svg {
     font-size: 20px;
   }
 }
 
-.pro-icon  {
+.pro-icon {
   font-size: 20px !important;
 }
 
-.pro-item-content{
+.pro-item-content {
   font-size: 1.1rem;
 }
 
@@ -275,7 +281,7 @@ a.sidebarHeader {
   font-weight: normal;
   font-size: 26px;
   line-height: 32px;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 a.sidebarHeader:hover {

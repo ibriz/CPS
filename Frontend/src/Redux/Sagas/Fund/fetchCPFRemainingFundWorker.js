@@ -1,22 +1,25 @@
-import { put, call, select} from 'redux-saga/effects';
-import {fetchCPFRemainingFundSuccess, fetchCPFRemainingFundFailure} from '../../Reducers/fundSlice';
-import {callKeyStoreWallet} from '../../ICON/utils';
+import { put, call, select } from 'redux-saga/effects';
+import {
+  fetchCPFRemainingFundSuccess,
+  fetchCPFRemainingFundFailure,
+} from '../../Reducers/fundSlice';
+import { callKeyStoreWallet } from '../../ICON/utils';
 
-function* fetchCPFRemainingFundWorker({payload}) {
+function* fetchCPFRemainingFundWorker({ payload }) {
   try {
-
-    const getCPFScoreAddress = (state) => state.fund.cpfScoreAddress
+    const getCPFScoreAddress = state => state.fund.cpfScoreAddress;
     const cpfScoreAddress = yield select(getCPFScoreAddress);
 
     const response = yield call(callKeyStoreWallet, {
-        method: 'get_remaining_fund',
-        // scoreAddress: cpfScoreAddress
-});
+      method: 'get_remaining_fund',
+      // scoreAddress: cpfScoreAddress
+    });
 
-
-    yield put(fetchCPFRemainingFundSuccess({
-        response
-    }));
+    yield put(
+      fetchCPFRemainingFundSuccess({
+        response,
+      }),
+    );
   } catch (error) {
     yield put(fetchCPFRemainingFundFailure(error));
   }

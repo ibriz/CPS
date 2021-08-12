@@ -5,6 +5,7 @@ import submitProposalToScoreWorker from './submitProposalToScoreWorker';
 import submitProposalToIPFSWorker from './submitProposalWorker';
 import updateProposalStatusWorker from './updateProposalStatusWorker';
 import fetchProposalDetailWorker from './fetchProposalDetailWorker';
+import emptyProposalDetailWorker from './emptyProposalDetailWorker';
 import fetchSponsorRequestsListWorker from './fetchSponsorRequestsListWorker';
 import approveSponserRequestWorker from './approveSponserRequestWorker';
 import rejectSponserRequestWorker from './rejectSponserRequestWorker'
@@ -16,6 +17,7 @@ import fetchProposalVoteResultRequestWorker from './fetchProposalVoteResultReque
 import fetchProjectAmountsWorker from './fetchProjectAmountsWorker';
 import fetchRemainingVotesRequestWorker from './fetchRemainingVotesRequestWorker';
 import fetchSponsorMessageRequestWorker from './fetchSponsorMessageRequestWorker';
+import fetchProposalByIpfsWorker from './fetchProposalByIpfsWorker';
 
 export {
     fetchProposalListWorker,
@@ -24,6 +26,7 @@ export {
     submitProposalToIPFSWorker,
     updateProposalStatusWorker,
     fetchProposalDetailWorker,
+    emptyProposalDetailWorker,
     fetchSponsorRequestsListWorker,
     approveSponserRequestWorker,
     rejectSponserRequestWorker,
@@ -34,5 +37,6 @@ export {
     fetchProposalVoteResultRequestWorker,
     fetchProjectAmountsWorker,
     fetchRemainingVotesRequestWorker,
-    fetchSponsorMessageRequestWorker
+    fetchSponsorMessageRequestWorker,
+    fetchProposalByIpfsWorker
 }

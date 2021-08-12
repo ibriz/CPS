@@ -5,7 +5,7 @@ import updatePeriodWorker from './updatePeriodWorker';
 import updatePeriodFrontendWalletWorker from './updatePeriodFrontendWalletWorker';
 
 export {
-    fetchPeriodDetailsRequestWorker,
-    updatePeriodWorker,
-    updatePeriodFrontendWalletWorker
-}
+  fetchPeriodDetailsRequestWorker,
+  updatePeriodWorker,
+  updatePeriodFrontendWalletWorker,
+};

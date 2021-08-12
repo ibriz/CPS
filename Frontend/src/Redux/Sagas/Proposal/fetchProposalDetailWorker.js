@@ -1,19 +1,22 @@
-import { call, put} from 'redux-saga/effects';
-import {fetchProposalDetailSuccess, fetchProposalDetailFailure} from '../../Reducers/proposalSlice';
-import {PROPOSAL_ADD_URL} from '../../Constants';
-import {requestIPFS} from '../helpers';
+import { call, put } from 'redux-saga/effects';
+import {
+  fetchProposalDetailSuccess,
+  fetchProposalDetailFailure,
+} from '../../Reducers/proposalSlice';
+import { PROPOSAL_ADD_URL } from '../../Constants';
+import { requestIPFS } from '../helpers';
 
-function* fetchProposalDetailWorker({payload}) {
+function* fetchProposalDetailWorker({ payload }) {
   try {
     const response = yield call(requestIPFS, {
       hash: payload.hash,
-    //   method: 'GET'
+      //   method: 'GET'
     });
-    yield put(fetchProposalDetailSuccess(
-      {
-        response
-      }
-    ));
+    yield put(
+      fetchProposalDetailSuccess({
+        response,
+      }),
+    );
   } catch (error) {
     yield put(fetchProposalDetailFailure(error));
   }

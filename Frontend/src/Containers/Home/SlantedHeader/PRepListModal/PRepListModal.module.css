@@ -1,36 +1,35 @@
 .horizontalRule {
-    margin-top: 5px !important;
+  margin-top: 5px !important;
 }
 
-
-  /* @media screen and (max-width: 500px) {
+/* @media screen and (max-width: 500px) {
 
     .horizontalRule {
         margin-top: 10px !important;
     }
   } */
 
-  .name {
-    font-style: normal;
-    font-weight: 600;
-    font-size: 1rem;
-    /* line-height: 20px; */
-    /* margin-left: 2px; */
-    /* word-wrap: break-word; */
-    color: #262626;
+.name {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 1rem;
+  /* line-height: 20px; */
+  /* margin-left: 2px; */
+  /* word-wrap: break-word; */
+  color: #262626;
+}
+
+@media screen and (min-width: 992px) {
+  .address {
+    text-align: right;
   }
+}
 
- @media screen and (min-width: 992px) {
-    .address {
-        text-align: right;
-    }
- }
+.address {
+  color: #262626;
+  word-wrap: break-word;
+}
 
- .address {
-    color: #262626;
-    word-wrap: break-word;
- }
-
- .link:hover {
-    text-decoration: none;
- }
+.link:hover {
+  text-decoration: none;
+}

@@ -4,7 +4,11 @@ import styles from './ProposalCard.module.scss';
 import TabBar from 'Components/Card/TabBar';
 import ProposalList from 'Components/Card/ProposalList';
 import { connect } from 'react-redux';
-import { fetchProposalListRequest,setModalShowVoting, fetchRemainingVotesRequest } from 'Redux/Reducers/proposalSlice';
+import {
+  fetchProposalListRequest,
+  setModalShowVoting,
+  fetchRemainingVotesRequest,
+} from 'Redux/Reducers/proposalSlice';
 import Pagination from 'Components/Card/Pagination';
 import proposalStates from './proposalStates';
 // import { select } from 'redux-saga/effects';
@@ -66,7 +70,7 @@ const VotingCard = ({ proposalList, fetchProposalListRequest, walletAddress, tot
         // );
 
         const filteredProgressReports = remainingVotesPR.filter(
-            (proposal) => proposal.progressReportTitle?.includes(searchText)
+            (proposal) => proposal.progressReportTitle?.toLowerCase().includes(searchText?.toLowerCase())
         );
 
         // const filteredProgressReports = [];
@@ -169,64 +173,55 @@ const VotingCard = ({ proposalList, fetchProposalListRequest, walletAddress, tot
                                 currentPage={pageNumber?.[selectedTab]}
                                 setCurrentPage={(pageNumber) => setCurrentPages(selectedTab, pageNumber)}
                                 totalPages={totalPages[status]} /> */}
-                            {
-                                modalShow && <DetailsModal
-                                show={modalShow}
-                                onHide={() => setModalShow(false)}
-                                proposal={selectedProposal}
-                                status={status}
-                                voting = {true}
-                            />
-                            }
+              {modalShow && (
+                <DetailsModal
+                  show={modalShow}
+                  onHide={() => setModalShow(false)}
+                  proposal={selectedProposal}
+                  status={status}
+                  voting={true}
+                />
+              )}
 
-                            {
-                                modalShowPR && <DetailsModalProgressReport
-                                show={modalShowPR}
-                                onHide={() => setModalShowPR(false)}
-                                progressReport={selectedProgressReport}
-                                status={status}
-                                voting = {true}
+              {modalShowPR && (
+                <DetailsModalProgressReport
+                  show={modalShowPR}
+                  onHide={() => setModalShowPR(false)}
+                  progressReport={selectedProgressReport}
+                  status={status}
+                  voting={true}
+                />
+              )}
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </>
+  );
+};
 
-                            /> 
-                            }
-   
+const mapStateToProps = state => ({
+  proposalList: state.proposals.proposalList,
+  walletAddress: state.account.address,
+  totalPages: state.proposals.totalPages,
+  progressReportList: state.progressReport.progressReportList,
+  totalPagesProgressReport: state.progressReport.totalPages,
+  modalShow: state.proposals.modalShowVoting,
+  modalShowPR: state.progressReport.modalShowVotingPR,
 
-                        </Card.Body>
-                    </Card>
-                </Col>
-            </Row>
+  remainingVotesProposal: state.proposals.remainingVotes,
+  remainingVotesPR: state.progressReport.remainingVotes,
+});
 
-        </>
-    )
-}
-
-const mapStateToProps = state => (
-    {
-        proposalList: state.proposals.proposalList,
-        walletAddress: state.account.address,
-        totalPages: state.proposals.totalPages,
-        progressReportList: state.progressReport.progressReportList,
-        totalPagesProgressReport: state.progressReport.totalPages,
-        modalShow: state.proposals.modalShowVoting,
-        modalShowPR: state.progressReport.modalShowVotingPR,
-
-        remainingVotesProposal: state.proposals.remainingVotes,
-        remainingVotesPR: state.progressReport.remainingVotes,
-
-
-
-    }
-)
-
-const mapDispatchToProps = dispatch => (
-    {
-        fetchProposalListRequest: (payload) => dispatch(fetchProposalListRequest(payload)),
-        fetchProgressReport: (payload) => dispatch(fetchProgressReportListRequest(payload)),
-        setModalShow: (payload) => dispatch(setModalShowVoting(payload)),
-        setModalShowPR: payload => dispatch(setModalShowVotingPR(payload)),
-        fetchRemainingVotesRequest: payload => dispatch(fetchRemainingVotesRequest(payload))
-        
-    }
-)
+const mapDispatchToProps = dispatch => ({
+  fetchProposalListRequest: payload =>
+    dispatch(fetchProposalListRequest(payload)),
+  fetchProgressReport: payload =>
+    dispatch(fetchProgressReportListRequest(payload)),
+  setModalShow: payload => dispatch(setModalShowVoting(payload)),
+  setModalShowPR: payload => dispatch(setModalShowVotingPR(payload)),
+  fetchRemainingVotesRequest: payload =>
+    dispatch(fetchRemainingVotesRequest(payload)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(VotingCard);
