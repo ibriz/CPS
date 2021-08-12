@@ -22,7 +22,7 @@ export const provider = new HttpProvider(
 );
 
 export const iconService = new IconService(provider);
-export const trackerURL = 'https://tracker.icon.foundation/address';
+export const trackerURL = "https://bicon.tracker.solidwallet.io/address";
 
 // var testNet = "https://bicon.tracker.solidwallet.io/v3/address/info?address="
 // var mainNet = "https://tracker.icon.foundation/v3/address/info?address="
