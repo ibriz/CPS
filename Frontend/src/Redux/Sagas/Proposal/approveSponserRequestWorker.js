@@ -1,6 +1,6 @@
 import { sendTransaction } from 'Redux/ICON/utils';
-import { setSponsorRequestProposal } from 'Redux/Reducers/proposalSlice';
-import { put } from 'redux-saga/effects';
+import { setBackendTriggerData, setSponsorRequestProposal } from "Redux/Reducers/proposalSlice";
+import { put} from 'redux-saga/effects';
 
 function* approveSponserRequestWorker({ payload }) {
   const params = {
@@ -17,7 +17,16 @@ function* approveSponserRequestWorker({ payload }) {
   });
   yield put(setSponsorRequestProposal({ proposal: payload.proposal }));
 
-  console.log(params);
+    yield put(
+        setBackendTriggerData({
+                projectName: payload.proposal.title,
+                address: payload.proposal.contributorAddress,
+                sponsorAddress: payload.proposal.sponsorAddress,
+                sponsorAction: 'accepted'
+            })
+    );
+    
+    console.log(params);
 }
 
 export default approveSponserRequestWorker;

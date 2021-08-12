@@ -708,6 +708,11 @@ const proposalSlice = createSlice({
     fetchProposalByIpfsFailure(state) {
       return;
     },
+
+    setBackendTriggerData(state, action) {
+      state.backendTriggerData = action.payload.backendTriggerData
+      return;
+  },
   },
 
   extraReducers: {
@@ -770,5 +775,6 @@ export const {
   emptyProposalDetailSuccess,
   emptyProposalDetailRequest,
   emptyProposalDetailFailure,
+  setBackendTriggerData
 } = proposalSlice.actions;
 export default proposalSlice.reducer;

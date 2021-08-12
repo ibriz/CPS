@@ -18,8 +18,9 @@ async function request({
   walletAddress = store.getState().account.address,
   successCallback,
   failureCallback,
+  baseUrl = BASE_URL
 }) {
-  const baseURL = ipfs ? IPFS_URL : BASE_URL;
+  const baseURL = ipfs ? IPFS_URL : baseUrl;
   console.log('request');
 
   let headers = {

@@ -325,6 +325,7 @@ function DetailsModal(props) {
       proposal: {
         contributorAddress: proposal?._contributor_address,
         title: (proposalDetail && proposalDetail.projectName) || '',
+        sponsorAddress: proposalDetail?.sponserPrep 
       },
       sponsorBond: IconConverter.toBigNumber(
         proposalDetail?.totalBudget,
@@ -338,6 +339,11 @@ function DetailsModal(props) {
     rejectSponsorRequest({
       ipfsKey: proposal.ipfsKey,
       reason: sponsorVoteReason.replace(/&nbsp;/g, ''),
+      proposal: {
+        contributorAddress: proposal?._contributor_address,
+        title: (proposalDetail && proposalDetail.projectName) || '',
+        sponsorAddress: proposalDetail?.sponserPrep 
+      },
     });
     // props.onHide();
   };
