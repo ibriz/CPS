@@ -15,15 +15,6 @@ function* rejectSponserRequestWorker({ payload }) {
     id: 'reject_sponsor',
   });
 
-    }
-
-    sendTransaction({
-        method: 'sponsor_vote',
-        params,
-        id: 'reject_sponsor'
-    }
-    )
-
     yield put(
         setBackendTriggerData({
             backendTriggerData: {
