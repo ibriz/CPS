@@ -15,15 +15,14 @@ function* rejectSponserRequestWorker({ payload }) {
     id: 'reject_sponsor',
   });
 
-    yield put(
-        setBackendTriggerData({
-            backendTriggerData: {
-                _ipfs_key: payload.ipfsKey,
-                _vote: '_reject',
-                _vote_reason: payload.reason,
-            }
+  yield put(
+    setBackendTriggerData({
+            projectName: payload.proposal.title,
+            address: payload.proposal.contributorAddress,
+            sponsorAddress: payload.proposal.sponsorAddress,
+            sponsorAction: 'rejected'
         })
-    );
+);
 
     console.log(params);
 }

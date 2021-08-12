@@ -17,25 +17,13 @@ function* approveSponserRequestWorker({ payload }) {
   });
   yield put(setSponsorRequestProposal({ proposal: payload.proposal }));
 
-    sendTransaction({
-        method: 'sponsor_vote',
-        params,
-        icxAmount: payload.sponsorBond,
-        id: 'approve_sponsor'
-    }
-    );
-    yield put(
-        setSponsorRequestProposal({ proposal: payload.proposal })
-    );
-
     yield put(
         setBackendTriggerData({
-            backendTriggerData: {
-                ipfs_hash: payload.ipfsKey,
-                vote: '_accept',
-                vote_reason: payload.reason,
-            }
-        })
+                projectName: payload.proposal.title,
+                address: payload.proposal.contributorAddress,
+                sponsorAddress: payload.proposal.sponsorAddress,
+                sponsorAction: 'accepted'
+            })
     );
     
     console.log(params);
