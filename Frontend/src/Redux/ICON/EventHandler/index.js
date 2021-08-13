@@ -217,12 +217,6 @@ export default (event) => {
                         successMessage: "Sponsor Voted Successfully"
                     }, function(){
 
-                        request({
-                            body: store.getState().proposals.backendTriggerData,
-                            url: BACKEND_TRIGGER_URL,
-                            baseUrl: CPS_BOT_BASE_URL
-                        });
-
                         store.dispatch(fetchSponsorRequestsListRequest(
                             {
                                 status: "Pending",
@@ -412,11 +406,6 @@ export default (event) => {
                         successMessage: "Period Updated Successfully",
 
                     }, function() {
-                        request({
-                            body: store.getState().proposals.backendTriggerData,
-                            url: BACKEND_TRIGGER_URL,
-                            baseUrl: CPS_BOT_BASE_URL
-                        });
                         store.dispatch(fetchPeriodDetailsRequest());
 
                     });
@@ -432,11 +421,6 @@ export default (event) => {
                         successMessage: "Prep Unregistered Successfully",
 
                     }, function(){
-                        request({
-                            body: store.getState().proposals.backendTriggerData,
-                            url: BACKEND_TRIGGER_URL,
-                            baseUrl: CPS_BOT_BASE_URL
-                        });
                         console.log("loginPrepRequestreq");
 
                         store.dispatch(loginPrepRequest());
@@ -456,11 +440,6 @@ export default (event) => {
                         successMessage: "Prep Registered Successfully",
 
                     }, function(){
-                        request({
-                            body: store.getState().proposals.backendTriggerData,
-                            url: BACKEND_TRIGGER_URL,
-                            baseUrl: CPS_BOT_BASE_URL
-                        });
                         console.log("loginPrepRequestreq");
 
                         store.dispatch(loginPrepRequest());
@@ -479,11 +458,6 @@ export default (event) => {
                             successMessage: "Penalty Paid Successfully",
         
                         }, function(){
-                            request({
-                                body: store.getState().proposals.backendTriggerData,
-                                url: BACKEND_TRIGGER_URL,
-                                baseUrl: CPS_BOT_BASE_URL
-                            });
         
                             store.dispatch(loginPrepRequest());
                             return true;
@@ -500,11 +474,6 @@ export default (event) => {
                                 successMessage: "Reward Claimed Successfully",
             
                             }, function(){
-                                request({
-                                    body: store.getState().proposals.backendTriggerData,
-                                    url: BACKEND_TRIGGER_URL,
-                                    baseUrl: CPS_BOT_BASE_URL
-                                });
             
                                 store.dispatch(fetchCPSTreasuryScoreAddressRequest());
                                 store.dispatch(fetchExpectedGrantRequest({
