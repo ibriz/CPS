@@ -42,7 +42,8 @@ exports.handler = async (req) => {
                         teamName,
                         sponsorPrepAddress: sponserPrep,
                         sponserPrepName: sponserPrepName,
-                        totalBudgetIcx: totalBudget
+                        totalBudgetIcx: totalBudget,
+                        proposalIpfsHash,
                     };
 
                     await triggerWebhook(eventTypesMapping.sponsorApproval, finalResponse);
@@ -92,6 +93,7 @@ exports.handler = async (req) => {
                         proposalName: projectName,
                         proposalTeamName: teamName,
                         proposalSponsor: sponserPrepName,
+                        proposalIpfsHash,
                         approvingVoters: IconConverter.toBigNumber(proposalVotingInfo.approve_voters).toFixed(0),
                         approvingVotersPercentage: IconConverter.toNumber(proposalVotingInfo.total_voters) > 0 ?
                             IconConverter.toBigNumber(proposalVotingInfo.approve_voters).dividedBy(proposalVotingInfo.total_voters).toFixed(2, 1)
@@ -151,7 +153,9 @@ exports.handler = async (req) => {
                         additionalResources: progressDetails.additionalResources,
                         isLastProgressReport: progressDetails.isLastProgressReport,
                         revisionDescription: progressDetails.revisionDescription,
-                        projectTermRevision: progressDetails.projectTermRevision
+                        projectTermRevision: progressDetails.projectTermRevision,
+                        proposalIpfsHash,
+                        prIpfsHash: progressIpfsHash,
                     };
 
                     await triggerWebhook(eventTypesMapping.submitProgressReport, finalResponse);
@@ -209,6 +213,8 @@ exports.handler = async (req) => {
                         vote,
                         proposalName: proposalDetails['project_title'],
                         progressReportName: currProgressReport.progress_report_title,
+                        proposalIpfsHash,
+                        prIpfsHash: progressIpfsHash,
                         approvingVoters: IconConverter.toBigNumber(currProgressReport.approve_voters).toFixed(0),
                         approvingVotersPercentage: IconConverter.toNumber(currProgressReport.total_voters) > 0 ?
                             IconConverter.toBigNumber(currProgressReport.approve_voters).dividedBy(currProgressReport.total_voters).toFixed(2, 1)

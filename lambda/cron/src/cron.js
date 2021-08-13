@@ -13,15 +13,15 @@ async function formatPRsResponse(allPRs) {
 	};
 
 	for(let progressReport of allPRs) {
-		let progressReportDetails;
+		let proposalDetails;
 		try {
-				progressReportDetails = await fetchFromIpfs(progressReport.ipfs_hash);
+				proposalDetails = await fetchFromIpfs(progressReport.ipfs_hash);
 		} catch (err) {
 				console.error("ERROR FETCHING PROGRESS REPORT DATA" + JSON.stringify(err));
 				throw { statusCode: 400, name: "IPFS url", message: "Invalid IPFS hash provided" };
 		}
 
-		const { projectName, projectDuration, totalBudget, sponserPrepName, teamName } = progressReportDetails;
+		const { projectName, projectDuration, totalBudget, sponserPrepName, teamName } = proposalDetails;
 
 		const amtReleased = new BigNumber(totalBudget).div(projectDuration);
 
@@ -32,6 +32,8 @@ async function formatPRsResponse(allPRs) {
 			totalBudget,
 			sponsorName: sponserPrepName,
 			teamName,
+			proposalIpfsHash: progressReport.ipfs_hash,
+			prIpfsHash: progressReport.report_hash,
 		}
 
 		switch(progressReport.status) {
@@ -91,6 +93,7 @@ async function formatProposalDetailsResponse(allProposals) {
 			sponsorAddress: proposal.sponsor_address,
 			sponsorName: sponserPrepName,
 			sponsorVoteReason: proposal.sponsor_vote_reason,
+			proposalIpfsHash: proposal.ipfs_hash,
 		}
 
 		switch(proposal.status) {
