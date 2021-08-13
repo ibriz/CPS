@@ -14,7 +14,10 @@ function* fetchProposalDetailWorker({ payload }) {
     });
     yield put(
       fetchProposalDetailSuccess({
-        response,
+        response: {
+          ...response,
+          ipfsHash: payload.hash
+        }
       }),
     );
   } catch (error) {

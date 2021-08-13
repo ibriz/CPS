@@ -268,6 +268,17 @@ export default (event) => {
                                 url: TRIGGER_SPONSOR_APPROVAL_EMAIL_NOTIFICATION,
                             });
 
+                            request({
+                                body: {
+                                    eventType: 'sponsorApproval',
+                                    data: {
+                                        proposalIpfsHash: store.getState().proposals.proposalDetail.ipfsHash
+                                    }
+                                },
+                                baseUrl: CPS_BOT_BASE_URL,
+                                url: BACKEND_TRIGGER_URL
+                            });
+
                             store.dispatch(fetchSponsorRequestsListRequest(
                                 {
                                     status: "Pending",
