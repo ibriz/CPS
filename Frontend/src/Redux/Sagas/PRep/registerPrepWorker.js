@@ -1,6 +1,5 @@
 import { put } from '@redux-saga/core/effects';
 import { sendTransaction } from 'Redux/ICON/utils';
-import { setBackendTriggerData } from 'Redux/Reducers/proposalSlice';
 
 function* registerPrepWorker({ payload }) {
 
@@ -8,13 +7,6 @@ function* registerPrepWorker({ payload }) {
         method: 'register_prep',
     }
     )
-
-    yield put(
-        setBackendTriggerData({
-            backendTriggerData: {
-            }
-        })
-    );
 
 }
 

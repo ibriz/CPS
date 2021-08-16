@@ -19,11 +19,11 @@ function* approveSponserRequestWorker({ payload }) {
 
     yield put(
         setBackendTriggerData({
-                projectName: payload.proposal.title,
-                address: payload.proposal.contributorAddress,
-                sponsorAddress: payload.proposal.sponsorAddress,
-                sponsorAction: 'accepted'
-            })
+            projectName: payload.proposal.title,
+            address: payload.proposal.contributorAddress,
+            sponsorAddress: payload.proposal.sponsorAddress,
+            sponsorAction: 'accepted'
+        })
     );
     
     console.log(params);

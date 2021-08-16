@@ -1,7 +1,4 @@
-import store from '../../Store';
 import { sendTransaction } from '../../ICON/utils';
-import { put } from '@redux-saga/core/effects';
-import { setBackendTriggerData } from 'Redux/Reducers/proposalSlice';
 
 function* submitProposalToScoreWorker({ payload }) {
     console.log("submitProposalToScoreWorker");
@@ -37,18 +34,6 @@ function* submitProposalToScoreWorker({ payload }) {
 
     console.log(params);
 
-    yield put(
-        setBackendTriggerData({
-            backendTriggerData: {
-                project_title: payload.proposal.projectName,
-                total_budget: parseInt(payload.proposal.totalBudget).toFixed(),
-                sponsor_address: payload.proposal.sponserPrep,
-                ipfs_hash: payload.response.hash,
-                ipfs_link: `https://gateway.ipfs.io/ipfs/${payload.response.hash}`,
-                project_duration: `${payload.proposal.projectDuration}`
-            }
-        })
-    );
     //     const response = yield call(submitProposal, payload.proposal);
     //     yield put(submitProposalSuccess(
     //       {

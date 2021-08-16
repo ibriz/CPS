@@ -149,12 +149,6 @@ export default (event) => {
 
                     }, function(){
 
-                        request({
-                            body: store.getState().proposals.backendTriggerData,
-                            url: BACKEND_TRIGGER_URL,
-                            baseUrl: CPS_BOT_BASE_URL
-                        });
-
                         store.dispatch( fetchProposalListRequest(
                             {
                                 status: "Pending",
@@ -306,13 +300,13 @@ export default (event) => {
                             console.log('history');
                             history.push('/');
                             NotificationManager.info("Sponsor request rejection request sent");
-        
+
                             getResult({
                                 txHash: payload.result,
                                 failureMessage: "Error denying Sponsor Request",
                                 successMessage: "Sponsor request denied successfully"
                             }, function(){
-                                
+
                                 request({
                                     body: store.getState().proposals.backendTriggerData,
                                     url: TRIGGER_SPONSOR_APPROVAL_EMAIL_NOTIFICATION,
