@@ -22,6 +22,7 @@ exports.handler = async (req) => {
 
             switch (action) {
                 case userActions.subscribe: {
+                    console.log("TRYING TO SUBSCRIBE: ", receivingUrl);
                     // TODO: add username authentication when subscribing
                     // add the website info to redis
                     if (!receivingUrl) throw new ClientError("receivingUrl is required");
@@ -34,6 +35,7 @@ exports.handler = async (req) => {
                     break;
                 }
                 case userActions.unsubscribe: {
+                    console.log("TRYING TO UNSUBSCRIBE SUBSCRIBER WITH NAME: ", name);
                     // check if already subscribed, then remove the website info from redis
                     const subscriber = await hgetAsync(subscriptionKey, name);
                     if(subscriber) {
@@ -52,6 +54,7 @@ exports.handler = async (req) => {
             }
 
         } else if (req.httpMethod == 'GET') {
+            // TODO: Remove this method OR allow this to only user who has a secret key from env
             const urls = await hgetallAsync(subscriptionKey);
             console.log(urls);
             resMessage = JSON.parse(JSON.stringify(urls));

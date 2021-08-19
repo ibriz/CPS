@@ -11,6 +11,7 @@ const iconService = new IconService(provider);
 
 async function triggerWebhook(eventType, data) {
     // get all the subscribed Urls for receiving webhooks
+    console.log("TRYING TO TRIGGER WEBHOOKS");
     const subscribedUrls = await hgetallAsync(subscriptionKey);
 
     if(subscribedUrls) {
@@ -25,6 +26,7 @@ async function triggerWebhook(eventType, data) {
                 headers: { 'Token': secretKey },
                 timeout: 8000,
             };
+            console.log(axiosObj.data);
 
             try {
                 await axios(axiosObj);

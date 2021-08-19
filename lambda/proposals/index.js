@@ -152,6 +152,7 @@ exports.handler = async (event) => {
 
 		if (event.httpMethod === 'POST') {
 			if (event.path === process.env.PROPOSAL_PATH) {
+				console.log("RECEIVED REQUEST TO UPLOAD PROPOSAL AND SEND SPONSORSHIP REQUEST EMAIL");
 				//sample body: {"projectName":"testProj","category":"Development","projectDuration":"1","totalBudget":"100","sponserPrep":"hxd47ad924eba01ec91330e4e996cf7b8c658f4e4c","sponserPrepName":"CPS Test P-Rep3(DO NOT DELEGATE)","description":"<p>jaskldfjksld sdfksjd fksdjfk sdjfk sdjlfkjsadflk sjkldfj slkdj lksdjf lksdjlk sjkdl jsdlksdj dkf d df</p>","milestones":[{"name":"test-milestone","duration":"1","budget":null,"description":null}],"teamName":"test-team","teamEmail":"test-email@ibriz.com","teamSize":"10","address":"hx0dc852acca3aba28881963c665b557582de55356","type":"proposal"}
 				const body = JSON.parse(event.body);
 				if (!body.type) throw new Error('type of the proposal needs to be specified');
@@ -168,6 +169,7 @@ exports.handler = async (event) => {
 				}
 
 			} else if (event.path === process.env.SPONSOR_NOTIFY_PATH) {
+				console.log("RECEIVED REQUEST TO SEND SPONSORSHIP ACCEPTED/REJECTED EMAIL");
 				// notify user about sponsorship being accepted using projectName and contributor's address
 				const body = JSON.parse(event.body);
 				if(!body || !body.projectName || !body.address || !body.sponsorAddress || !body.sponsorAction) {
@@ -180,6 +182,8 @@ exports.handler = async (event) => {
 				proposal = await uploadFile(event);
 			}
 		} else if (event.httpMethod === 'PUT') {
+			console.log("RECEIVED REQUEST TO UPDATE PROPOSAL");
+			console.log(event.body);
 			const body = JSON.parse(event.body);
 			if (!body.type) throw new Error('type of the proposal needs to be specified');
 

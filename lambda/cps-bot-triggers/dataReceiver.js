@@ -24,6 +24,7 @@ exports.handler = async (req) => {
                 //-------------------------------------------------------------------------------
                 case eventTypesMapping.sponsorApproval: 
                 {
+                    console.log("NOTIFYING FOR SPONSOR APPROVAL");
                     // get details from IPFS using body's proposalIpfsHash & then filter info
                     const { proposalIpfsHash } = body.data;
                     if(!proposalIpfsHash) throw new Error("proposalIpfsHash requried");
@@ -53,6 +54,7 @@ exports.handler = async (req) => {
                 //-------------------------------------------------------------------------------
                 case eventTypesMapping.voteProposal: 
                 {
+                    console.log("NOTIFYING FOR VOTE ON APPROVAL");
                     const { proposalIpfsHash, userAddress } = body.data;
                     if(!proposalIpfsHash) throw new Error("proposalIpfsHash is required");
                     if(!userAddress) throw new Error("userAddress is required");
@@ -123,6 +125,7 @@ exports.handler = async (req) => {
                 //-------------------------------------------------------------------------------
                 case eventTypesMapping.submitProgressReport: 
                 {
+                    console.log("NOTIFYING FOR PROGRESS REPORT SUBMISSION");
                     const { proposalIpfsHash, progressIpfsHash } = body.data;
                     if(!proposalIpfsHash) throw new Error('proposalIpfsHash is required');
                     if(!progressIpfsHash) throw new Error('progressIpfsHash is required');
@@ -166,6 +169,7 @@ exports.handler = async (req) => {
                 //-----------------------------------------------------------------------------
                 case eventTypesMapping.voteProgressReport: 
                 {
+                    console.log("NOTIFYING FOR VOTE ON PROGRESS REPORT");
                     const { proposalIpfsHash, progressIpfsHash, userAddress, voteReason, vote } = body.data;
                     if(!proposalIpfsHash) throw new Error("proposalIpfsHash is required");
                     if(!progressIpfsHash) throw new Error("progressIpfsHash is required");

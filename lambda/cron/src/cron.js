@@ -238,6 +238,7 @@ async function execute() {
 			// ========================================CPS BOT TRIGGERS=========================================
 
 			if(present_period['period_name'] == PERIOD_MAPPINGS.APPLICATION_PERIOD) {
+				console.log("=================BOT NOTIFICATIONS FOR APPLICATION PERIOD==================");
 				const votingPeriodStatsForBot = new Promise(async (resolve, reject) => {
 					try {
 						// Send out last voting period's stats
@@ -308,6 +309,7 @@ async function execute() {
 			}
 			// Send out last application period's stats
 			if(present_period['period_name'] == PERIOD_MAPPINGS.VOTING_PERIOD) {
+				console.log("=================BOT NOTIFICATIONS FOR VOTING PERIOD==================");
 				const applicationPeriodStatsForBot = new Promise(async (resolve, reject) => {
 					try {
 						const pendingProjectAmt = await score.get_project_amounts_by_status(PROPOSAL_STATUS.PENDING);
@@ -355,7 +357,7 @@ async function execute() {
 		console.log(present_period);
 
 		if (present_period.period_name === PERIOD_MAPPINGS.APPLICATION_PERIOD && user_details_list.length > 0) {
-			console.log('=====================Notifications for Application Period=======================');
+			console.log('=====================EMAIL NOTIFICATIONS FOR APPLICATION PERIOD=======================');
 
 			if (period_triggered) {
 				const proposal_accepted_notification_async = score.proposal_accepted_notification(user_details_list).then(async (contributor_notification_list) => {

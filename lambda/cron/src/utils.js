@@ -8,8 +8,8 @@ function sleep(ms) {
 
 async function triggerWebhook(eventType, data) {
 	// get all the subscribed Urls for receiving webhooks
+	console.log("TRYING TO SEND WEBHOOK NOTIFICATIONS");
 	const subscribedUrls = await redis.getSubscribedUrls();
-	console.log("Sending data to ", subscribedUrls);
 
 	if(subscribedUrls) {
 			for (subscriberStr of Object.values(subscribedUrls)) {
@@ -23,7 +23,8 @@ async function triggerWebhook(eventType, data) {
 							headers: { 'Token': secretKey },
 							timeout: 8000,
 					};
-
+					console.log(axiosObj.data);
+					
 					try {
 							await axios(axiosObj);
 							console.log(`Successfully notified ${receivingUrl}`);
