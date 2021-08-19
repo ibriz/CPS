@@ -39,6 +39,22 @@ async function triggerWebhook(eventType, data) {
     }
 }
 
+
+function authenticateSubscriber(accessToken) {
+    return new Promise((resolve, reject) => {
+        if(!process.env['BOT_ACCESS_KEY']) {
+            reject(new Error('Unable to proceed with GET request'));
+        }
+
+        if(!accessToken || accessToken !== process.env['BOT_ACCESS_KEY']) {
+            reject(new ClientError('Unauthorized user'));
+        }
+
+        resolve(true);
+    })
+}
+
+
 async function contractMethodCallService (scoreAddr, method, params=null) {
     const callObj = new IconBuilder.CallBuilder()
         .to(scoreAddr)
@@ -59,5 +75,6 @@ module.exports = {
     iconService,
     contractMethodCallService,
     triggerWebhook,
-    ClientError
+    ClientError,
+    authenticateSubscriber
 }

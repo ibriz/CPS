@@ -2,7 +2,7 @@
 
 const rndToken = require('random-token').gen('abcdefghijklmnopqrstuvwxzyABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789');
 
-const { ClientError } = require('./helpers');
+const { ClientError, authenticateSubscriber } = require('./helpers');
 const { userActions, resHeaders, subscriptionKey } = require('./constants');
 const { hsetAsync, hgetAsync, hgetallAsync, hdelAsync } = require('./redis');
 
@@ -11,12 +11,15 @@ exports.handler = async (req) => {
         const responseCode = 200;
         let resMessage;
 
+        // ensure user has the access token to access /subscription path
+        await authenticateSubscriber(req.headers['accessToken']);
+
         if(req.httpMethod === 'POST') {
             const reqBody = JSON.parse(req.body);
             console.log(reqBody);
             if(!reqBody) throw new ClientError('POST Body is required');
-            const { action, receivingUrl, name } = reqBody;
 
+            const { action, receivingUrl, name } = reqBody;
             if (!action) throw new ClientError("action is required");
             if (!name) throw new ClientError("name is required");
 
@@ -54,7 +57,6 @@ exports.handler = async (req) => {
             }
 
         } else if (req.httpMethod == 'GET') {
-            // TODO: Remove this method OR allow this to only user who has a secret key from env
             const urls = await hgetallAsync(subscriptionKey);
             console.log(urls);
             resMessage = JSON.parse(JSON.stringify(urls));
