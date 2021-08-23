@@ -27,6 +27,7 @@ const PARAMS = {
 
   sponsorVoteReason: 'sponsor_vote_reason',
   projectDuration: 'project_duration',
+  token: 'token'
 };
 
 const initialState = {
@@ -139,6 +140,7 @@ const initialState = {
   sponsorRequestProposalTitle: '',
   sponsorRequestProposal: null,
   selectedProposal: {},
+  token: ''
 };
 
 const proposalSlice = createSlice({
@@ -210,6 +212,7 @@ const proposalSlice = createSlice({
           completedPercentage: parseInt(
             IconConverter.toBigNumber(proposal[PARAMS.percentageCompleted]),
           ),
+          token: proposal[PARAMS.token],
           // if(parseInt(totalVoters) === 0) {
           //     return 0;
           //   }
@@ -327,6 +330,7 @@ const proposalSlice = createSlice({
           completedPercentage: parseInt(
             IconConverter.toBigNumber(proposal[PARAMS.percentageCompleted]),
           ),
+          token:proposal[PARAMS.token]
         }))
         .sort((a, b) => b._timestamp - a._timestamp);
       state.totalPagesSponsorRequests[action.payload.status] = Math.ceil(
@@ -542,6 +546,7 @@ const proposalSlice = createSlice({
           completedPercentage: parseInt(
             IconConverter.toBigNumber(proposal[PARAMS.percentageCompleted]),
           ),
+          token:proposal[PARAMS.token],
           // if(parseInt(totalVoters) === 0) {
           //     return 0;
           //   }
@@ -616,6 +621,7 @@ const proposalSlice = createSlice({
           completedPercentage: parseInt(
             IconConverter.toBigNumber(proposal[PARAMS.percentageCompleted]),
           ),
+          token:proposal[PARAMS.token],
           // if(parseInt(totalVoters) === 0) {
           //     return 0;
           //   }
@@ -702,6 +708,7 @@ const proposalSlice = createSlice({
         completedPercentage: parseInt(
           IconConverter.toBigNumber(proposal[PARAMS.percentageCompleted]),
         ),
+        token:proposal[PARAMS.token]
       };
       return;
     },
@@ -712,7 +719,7 @@ const proposalSlice = createSlice({
     setBackendTriggerData(state, action) {
       state.backendTriggerData = action.payload.backendTriggerData
       return;
-  },
+    },
   },
 
   extraReducers: {
