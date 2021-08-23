@@ -23,16 +23,16 @@ function* approveSponserRequestWorker({ payload }) {
   });
   yield put(setSponsorRequestProposal({ proposal: payload.proposal }));
 
-  yield put(
-    setBackendTriggerData({
-      projectName: payload.proposal.title,
-      address: payload.proposal.contributorAddress,
-      sponsorAddress: payload.proposal.sponsorAddress,
-      sponsorAction: 'accepted'
-    })
-  );
-
-  console.log(params);
+    yield put(
+        setBackendTriggerData({
+            projectName: payload.proposal.title,
+            address: payload.proposal.contributorAddress,
+            sponsorAddress: payload.proposal.sponsorAddress,
+            sponsorAction: 'accepted'
+        })
+    );
+    
+    console.log(params);
 }
 
 export default approveSponserRequestWorker;

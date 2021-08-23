@@ -36,15 +36,10 @@ function* submitProgressReportToScoreWorker({ payload }) {
 
     yield put(
         setBackendTriggerData({
-            backendTriggerData: {
-                report_hash: payload.response.hash,
-                ipfs_hash: payload.progressReport.projectName,
-                progress_report_title: payload.progressReport.progressReportTitle ,
-                budget_adjustment: `${Number(payload.progressReport.projectTermRevision)}` ,
-                additional_budget: Number(payload.progressReport.additionalBudget).toFixed(),
-                ipfs_link: `https://gateway.ipfs.io/ipfs/${payload.response.hash}`,
-                percentage_completed: `${payload.progressReport.percentageCompleted || 0}`,
-                additional_month: `${payload.progressReport.additionalTime ?? 0}`,
+            eventType: "submitProgressReport",
+            data: {
+                progressIpfsHash: payload.response.hash,
+                proposalIpfsHash: payload.progressReport.projectName
             }
         })
     );

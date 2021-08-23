@@ -1,6 +1,5 @@
 import { sendTransaction } from 'Redux/ICON/utils';
 import { put, select } from 'redux-saga/effects';
-import { setBackendTriggerData } from 'Redux/Reducers/proposalSlice';
 
 function* claimRewardWorker({ payload }) {
 
@@ -15,13 +14,6 @@ function* claimRewardWorker({ payload }) {
         },
 
     )
-
-    yield put(
-        setBackendTriggerData({
-            backendTriggerData: {
-            }
-        })
-    );
 
 }
 

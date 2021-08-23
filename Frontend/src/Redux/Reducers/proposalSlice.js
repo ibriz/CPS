@@ -717,7 +717,7 @@ const proposalSlice = createSlice({
     },
 
     setBackendTriggerData(state, action) {
-      state.backendTriggerData = action.payload.backendTriggerData
+      state.backendTriggerData = action.payload
       return;
     },
   },

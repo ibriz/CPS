@@ -1,6 +1,8 @@
-import { put } from '@redux-saga/core/effects';
+import { put, select } from '@redux-saga/core/effects';
 import { sendTransaction } from 'Redux/ICON/utils';
 import { setBackendTriggerData } from 'Redux/Reducers/proposalSlice';
+
+const getAddress = state => state.account.address;
 
 const voteStatusMapping = {
   Abstain: '_abstain',
@@ -9,6 +11,9 @@ const voteStatusMapping = {
 };
 
 function* voteProgressReportWorker({ payload }) {
+
+  const walletAddress = yield select(getAddress);
+
   const params = {
     _vote: voteStatusMapping[payload.vote],
     _budget_adjustment_vote: voteStatusMapping[payload.voteProjectTermRevision],
@@ -24,12 +29,13 @@ function* voteProgressReportWorker({ payload }) {
 
     yield put(
         setBackendTriggerData({
-            backendTriggerData: {
-                _vote: voteStatusMapping[payload.vote],
-                _budget_adjustment_vote: voteStatusMapping[payload.voteProjectTermRevision],
-                _vote_reason: payload.voteReason,
-                _ipfs_key: payload.proposalKey,
-                _report_key: payload.reportKey
+            eventType: 'voteProgressReport',
+            data: {
+                vote: voteStatusMapping[payload.vote],
+                userAddress: walletAddress,
+                voteReason: payload.voteReason,
+                proposalIpfsHash: payload.proposalKey,
+                progressIpfsHash: payload.reportKey
             }
         })
     );

@@ -149,12 +149,6 @@ export default (event) => {
 
                     }, function(){
 
-                        request({
-                            body: store.getState().proposals.backendTriggerData,
-                            url: BACKEND_TRIGGER_URL,
-                            baseUrl: CPS_BOT_BASE_URL
-                        });
-
                         store.dispatch( fetchProposalListRequest(
                             {
                                 status: "Pending",
@@ -217,12 +211,6 @@ export default (event) => {
                         successMessage: "Sponsor Voted Successfully"
                     }, function(){
 
-                        request({
-                            body: store.getState().proposals.backendTriggerData,
-                            url: BACKEND_TRIGGER_URL,
-                            baseUrl: CPS_BOT_BASE_URL
-                        });
-
                         store.dispatch(fetchSponsorRequestsListRequest(
                             {
                                 status: "Pending",
@@ -268,6 +256,17 @@ export default (event) => {
                                 url: TRIGGER_SPONSOR_APPROVAL_EMAIL_NOTIFICATION,
                             });
 
+                            request({
+                                body: {
+                                    eventType: 'sponsorApproval',
+                                    data: {
+                                        proposalIpfsHash: store.getState().proposals.proposalDetail.ipfsHash
+                                    }
+                                },
+                                baseUrl: CPS_BOT_BASE_URL,
+                                url: BACKEND_TRIGGER_URL
+                            });
+
                             store.dispatch(fetchSponsorRequestsListRequest(
                                 {
                                     status: "Pending",
@@ -301,13 +300,13 @@ export default (event) => {
                             console.log('history');
                             history.push('/');
                             NotificationManager.info("Sponsor request rejection request sent");
-        
+
                             getResult({
                                 txHash: payload.result,
                                 failureMessage: "Error denying Sponsor Request",
                                 successMessage: "Sponsor request denied successfully"
                             }, function(){
-                                
+
                                 request({
                                     body: store.getState().proposals.backendTriggerData,
                                     url: TRIGGER_SPONSOR_APPROVAL_EMAIL_NOTIFICATION,
@@ -401,11 +400,6 @@ export default (event) => {
                         successMessage: "Period Updated Successfully",
 
                     }, function() {
-                        request({
-                            body: store.getState().proposals.backendTriggerData,
-                            url: BACKEND_TRIGGER_URL,
-                            baseUrl: CPS_BOT_BASE_URL
-                        });
                         store.dispatch(fetchPeriodDetailsRequest());
 
                     });
@@ -421,11 +415,6 @@ export default (event) => {
                         successMessage: "Prep Unregistered Successfully",
 
                     }, function(){
-                        request({
-                            body: store.getState().proposals.backendTriggerData,
-                            url: BACKEND_TRIGGER_URL,
-                            baseUrl: CPS_BOT_BASE_URL
-                        });
                         console.log("loginPrepRequestreq");
 
                         store.dispatch(loginPrepRequest());
@@ -445,11 +434,6 @@ export default (event) => {
                         successMessage: "Prep Registered Successfully",
 
                     }, function(){
-                        request({
-                            body: store.getState().proposals.backendTriggerData,
-                            url: BACKEND_TRIGGER_URL,
-                            baseUrl: CPS_BOT_BASE_URL
-                        });
                         console.log("loginPrepRequestreq");
 
                         store.dispatch(loginPrepRequest());
@@ -468,11 +452,6 @@ export default (event) => {
                             successMessage: "Penalty Paid Successfully",
         
                         }, function(){
-                            request({
-                                body: store.getState().proposals.backendTriggerData,
-                                url: BACKEND_TRIGGER_URL,
-                                baseUrl: CPS_BOT_BASE_URL
-                            });
         
                             store.dispatch(loginPrepRequest());
                             return true;
@@ -489,11 +468,6 @@ export default (event) => {
                                 successMessage: "Reward Claimed Successfully",
             
                             }, function(){
-                                request({
-                                    body: store.getState().proposals.backendTriggerData,
-                                    url: BACKEND_TRIGGER_URL,
-                                    baseUrl: CPS_BOT_BASE_URL
-                                });
             
                                 store.dispatch(fetchCPSTreasuryScoreAddressRequest());
                                 store.dispatch(fetchExpectedGrantRequest({
