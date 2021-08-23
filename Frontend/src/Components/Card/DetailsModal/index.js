@@ -30,7 +30,7 @@ import {
   fetchVoteResultRequest,
   fetchSponsorMessageRequest,
 } from 'Redux/Reducers/proposalSlice';
-import { fetchProgressReportByProposalRequest } from 'Redux/Reducers/progressReportSlice';
+import { emptyProgressReportDetailRequest, fetchProgressReportByProposalRequest } from 'Redux/Reducers/progressReportSlice';
 import { connect } from 'react-redux';
 import ProgressReportList from 'Components/Card/ProgressReportList';
 import {
@@ -103,10 +103,10 @@ const sponsorNote = (
 );
 
 function DetailsModal(props) {
-  const voteOptions = ['Approve', 'Reject', 'Abstain'];
+  const voteOptions = [{ title: 'Approve', bgColor: 'success' }, { title: 'Reject', bgColor: 'danger' }, { title: 'Abstain', bgColor: 'info' }];
   const [vote, setVote] = useState('');
 
-  const sponsorVoteOptions = ['Accept', 'Deny'];
+  const sponsorVoteOptions = [{ title: 'Accept', bgColor: 'success' }, { title: 'Deny', bgColor: 'danger' }];
   const [sponsorVote, setSponsorVote] = useState('');
 
   const [voteReason, setVoteReason] = useState('');
@@ -154,6 +154,7 @@ function DetailsModal(props) {
     preps,
     sponsorMessage,
     isPrep,
+    emptyProgressReportDetailRequest,
     ...remainingProps
   } = props;
 
@@ -207,7 +208,7 @@ function DetailsModal(props) {
   }, [sponsorVoteReason, sponsorRequest, status, period, remainingTime]);
 
   const handleSponsorVoteSubmission = () => {
-    if (!sponsorVoteOptions) {
+    if (!sponsorVote) {
       setError('Please cast your vote');
       return;
     }
@@ -234,9 +235,9 @@ function DetailsModal(props) {
     console.log(
       'voteReason',
       voting &&
-        period === 'VOTING' &&
-        remainingTime > 0 &&
-        !votesByProposal.some(vote => vote.sponsorAddress === walletAddress),
+      period === 'VOTING' &&
+      remainingTime > 0 &&
+      !votesByProposal.some(vote => vote.sponsorAddress === walletAddress),
     );
     if (
       voting &&
@@ -325,7 +326,7 @@ function DetailsModal(props) {
       proposal: {
         contributorAddress: proposal?._contributor_address,
         title: (proposalDetail && proposalDetail.projectName) || '',
-        sponsorAddress: proposalDetail?.sponserPrep 
+        sponsorAddress: proposalDetail?.sponserPrep
       },
       sponsorBond: IconConverter.toBigNumber(
         proposalDetail?.totalBudget,
@@ -342,7 +343,7 @@ function DetailsModal(props) {
       proposal: {
         contributorAddress: proposal?._contributor_address,
         title: (proposalDetail && proposalDetail.projectName) || '',
-        sponsorAddress: proposalDetail?.sponserPrep 
+        sponsorAddress: proposalDetail?.sponserPrep
       },
     });
     // props.onHide();
@@ -542,7 +543,7 @@ function DetailsModal(props) {
                       },
                       {
                         key: 'Total Budget',
-                        value: `${icxFormat(proposal?.budget)} ICX` || 'N/A',
+                        value: `${icxFormat(proposal?.budget)} ${proposal?.token}` || 'N/A',
                       },
                       {
                         key: 'Sponsor Prep',
@@ -651,17 +652,17 @@ function DetailsModal(props) {
                     }}
                   >
                     <ButtonGroup aria-label='Basic example'>
-                      {sponsorVoteOptions.map(sponsorVoteOptions => (
+                      {sponsorVoteOptions.map(sponsorVoteOption => (
                         <Button
                           variant={
-                            sponsorVote === sponsorVoteOptions
-                              ? 'success'
+                            sponsorVote === sponsorVoteOption.title
+                              ? sponsorVoteOption.bgColor
                               : 'light'
                           }
-                          onClick={() => setSponsorVote(sponsorVoteOptions)}
+                          onClick={() => setSponsorVote(sponsorVoteOption.title)}
                           style={{ border: '1px solid rgba(0,0,0,0.7)' }}
                         >
-                          {sponsorVoteOptions}
+                          {sponsorVoteOption.title}
                         </Button>
                       ))}
                     </ButtonGroup>
@@ -736,11 +737,11 @@ function DetailsModal(props) {
                       <ButtonGroup aria-label='Basic example'>
                         {voteOptions.map(voteOption => (
                           <Button
-                            variant={vote === voteOption ? 'success' : 'light'}
-                            onClick={() => setVote(voteOption)}
+                            variant={vote === voteOption.title ? voteOption.bgColor : 'light'}
+                            onClick={() => setVote(voteOption.title)}
                             style={{ border: '1px solid rgba(0,0,0,0.7)' }}
                           >
-                            {voteOption}
+                            {voteOption.title}
                           </Button>
                         ))}
                       </ButtonGroup>
@@ -796,11 +797,11 @@ function DetailsModal(props) {
               <Row>
                 <Col xs='12'>
                   {status === 'Voting' ||
-                  status === 'Active' ||
-                  status === 'Completed' ||
-                  status === 'Paused' ||
-                  status === 'Disqualified' ||
-                  (status === 'Rejected' && votesByProposal?.length) ? (
+                    status === 'Active' ||
+                    status === 'Completed' ||
+                    status === 'Paused' ||
+                    status === 'Disqualified' ||
+                    (status === 'Rejected' && votesByProposal?.length) ? (
                     <>
                       <ListTitle>VOTES</ListTitle>
                       <VoteList votes={votesByProposal} />
@@ -809,15 +810,15 @@ function DetailsModal(props) {
                   {(status === 'Active' ||
                     status === 'Completed' ||
                     status === 'Paused') && (
-                    <>
-                      <ListTitle>Progress Reports</ListTitle>
-                      <ProgressReportList
-                        projectReports={progressReportByProposal}
-                        onClickProgressReport={onClickProgressReport}
-                        isModal
-                      />
-                    </>
-                  )}
+                      <>
+                        <ListTitle>Progress Reports</ListTitle>
+                        <ProgressReportList
+                          projectReports={progressReportByProposal}
+                          onClickProgressReport={onClickProgressReport}
+                          isModal
+                        />
+                      </>
+                    )}
                 </Col>
               </Row>
             }
@@ -858,12 +859,16 @@ function DetailsModal(props) {
               Are you sure you want to {vote.toLowerCase()} the proposal?
             </ConfirmationModal>
 
-            <DetailsModalPR
+            {modalShow && <DetailsModalPR
               show={modalShow}
-              onHide={() => setModalShow(false)}
+              onHide={() => {
+                setModalShow(false);
+                emptyProgressReportDetailRequest();
+              }}
               progressReport={selectedProgressReport}
-              // status={selectedTab}
+            // status={selectedTab}
             />
+            }
           </Modal.Body>
         </>
       )}
@@ -902,6 +907,8 @@ const mapDispatchToProps = dispatch => ({
   fetchPrepsRequest: payload => dispatch(fetchPrepsRequest(payload)),
   fetchSponsorMessageRequest: payload =>
     dispatch(fetchSponsorMessageRequest(payload)),
+  emptyProgressReportDetailRequest: (payload) =>
+    dispatch(emptyProgressReportDetailRequest()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DetailsModal);
