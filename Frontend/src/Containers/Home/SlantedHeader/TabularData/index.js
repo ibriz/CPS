@@ -83,7 +83,7 @@ const TabularData = ({
     },
     {
       key: 'CPF Remaining Funds',
-      value: `${icxFormat(cpfRemainingFunds, true)} ICX`,
+      value: `${icxFormat(cpfRemainingFunds?.bnUSD || 0, true)} bnUSD`,
     },
   ];
 
