@@ -135,7 +135,7 @@ const HeaderComponents = ({
             className={styles.button}
             style={{ marginRight: '5px', marginLeft: '3px' }}
           >
-            GO TO CONSOLE
+            GO TO DASHBOARD
           </Button>
         </Link>
       ) : null}
