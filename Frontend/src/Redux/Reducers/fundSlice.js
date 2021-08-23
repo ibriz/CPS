@@ -48,9 +48,12 @@ const fundSlice = createSlice({
       return;
     },
     fetchCPFRemainingFundSuccess(state, action) {
-      state.cpfRemainingFunds = IconConverter.toBigNumber(
-        action.payload.response,
-      ).dividedBy(10 ** 18);
+      state.cpfRemainingFunds = {
+        icx: IconConverter.toBigNumber(
+          action.payload.response.ICX,
+        ).dividedBy(10 ** 18), bnUSD: IconConverter.toBigNumber(
+          action.payload.response.bnUSD).dividedBy(10 ** 18)
+      }
       // state.cpfScoreAddress = action.payload.response;
 
       return;
@@ -66,31 +69,31 @@ const fundSlice = createSlice({
       if (action.payload.response.type === 'proposalGrant') {
         state.expectedGrant = action.payload.response.total_amount
           ? IconConverter.toBigNumber(
-              action.payload.response.total_amount,
-            ).dividedBy(10 ** 18)
+            action.payload.response.total_amount,
+          ).dividedBy(10 ** 18)
           : 0;
         state.withDrawAmountProposalGrant = action.payload.response
           .withdraw_amount
           ? IconConverter.toBigNumber(
-              action.payload.response.withdraw_amount,
-            ).dividedBy(10 ** 18)
+            action.payload.response.withdraw_amount,
+          ).dividedBy(10 ** 18)
           : 0;
       } else {
         state.sponsorReward = action.payload.response.total_amount
           ? IconConverter.toBigNumber(
-              action.payload.response.total_amount,
-            ).dividedBy(10 ** 18)
+            action.payload.response.total_amount,
+          ).dividedBy(10 ** 18)
           : 0;
         state.sponsorBond = action.payload.response.total_sponsor_bond
           ? IconConverter.toBigNumber(
-              action.payload.response.total_sponsor_bond,
-            ).dividedBy(10 ** 18)
+            action.payload.response.total_sponsor_bond,
+          ).dividedBy(10 ** 18)
           : 0;
         state.withDrawAmountSponsorReward = action.payload.response
           .withdraw_amount
           ? IconConverter.toBigNumber(
-              action.payload.response.withdraw_amount,
-            ).dividedBy(10 ** 18)
+            action.payload.response.withdraw_amount,
+          ).dividedBy(10 ** 18)
           : 0;
       }
 
