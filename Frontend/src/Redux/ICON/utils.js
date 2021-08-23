@@ -14,12 +14,14 @@ import frontEndWallet from './FrontEndWallet';
 // var CPSScore = 'cx9f4ab72f854d3ccdc59aa6f2c3e2215dd62e879f';
 export const CPSScore = 'cx9f4ab72f854d3ccdc59aa6f2c3e2215dd62e879f';
 // export const CPSScore = 'cx7b98401aa6578296abd311b4cb70e90812e9ebae';
+// export const CPSScore = 'cxd5a7e85204259268fcd082ae51136dc3dfae2c07';
 
 var nid = 1;
 export const provider = new HttpProvider('https://ctz.solidwallet.io/api/v3');
 // export const provider = new HttpProvider(
 //   'https://bicon.net.solidwallet.io/api/v3',
 // );
+export const bnUSDScore = 'cxc48c9c81ceef04445c961c5cc8ff056d733dfe3a';
 
 export const iconService = new IconService(provider);
 export const trackerURL = 'https://tracker.icon.foundation/address';
