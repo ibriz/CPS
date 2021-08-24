@@ -4,7 +4,7 @@ const { BRIDGE_EVENT_TYPES } = require('./src/constants');
 
 exports.handler = async (event) => {
 	try {
-
+		// ------------------------------------unused-----------------------------------
 		if (event.hasOwnProperty('httpMethod') && event.httpMethod === 'POST') {
 			await cron.proposal_notification(JSON.parse(event.body));
 
@@ -20,7 +20,7 @@ exports.handler = async (event) => {
 			};
 
 			return response;
-
+		// ------------------------------------------------------------------
 		} else if(event.bridgeEventType) {
 
 			let cron_actions, response_msg;
