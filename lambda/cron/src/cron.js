@@ -336,45 +336,44 @@ async function execute() {
 		// ===================================================================================================
 
 
-
-		const preps = await score.get_preps();
-		const preps_key = preps.map(prep => 'users:address:' + prep.address);
-		console.log(preps_key);
-
-		//code block for email notifications
-		const registered_users_key = await redis.get_registered_users_keys();
-		const user_details_list = await redis.populate_users_details(registered_users_key);
-
-		const preps_list = await redis.populate_users_details(preps_key);
-		console.log('Notification enabled user details ' + JSON.stringify(user_details_list));
-		console.log('Notification enabled preps details ' + JSON.stringify(preps_list));
-
 		if (period_triggered) {
+			const preps = await score.get_preps();
+			const preps_key = preps.map(prep => 'users:address:' + prep.address);
+			console.log(preps_key);
+
+			//code block for email notifications
+			const registered_users_key = await redis.get_registered_users_keys();
+			const user_details_list = await redis.populate_users_details(registered_users_key);
+
+			const preps_list = await redis.populate_users_details(preps_key);
+			console.log('Notification enabled user details ' + JSON.stringify(user_details_list));
+			console.log('Notification enabled preps details ' + JSON.stringify(preps_list));
+
+			// Send out period changed email notifications
 			console.log("Period is changed so now sending bulk emails");
 			await period_changed(preps_list, present_period.period_name);
-		}
 
-		console.log(present_period);
+			console.log(present_period);
 
-		if (present_period.period_name === PERIOD_MAPPINGS.APPLICATION_PERIOD && user_details_list.length > 0) {
-			console.log('=====================EMAIL NOTIFICATIONS FOR APPLICATION PERIOD=======================');
+			if (present_period.period_name === PERIOD_MAPPINGS.APPLICATION_PERIOD && user_details_list.length > 0) {
+				console.log('=====================EMAIL NOTIFICATIONS FOR APPLICATION PERIOD=======================');
 
-			if (period_triggered) {
+
 				const proposal_accepted_notification_async = score.proposal_accepted_notification(user_details_list).then(async (contributor_notification_list) => {
 					if (contributor_notification_list !== undefined && contributor_notification_list.length > 0) {
 						console.log('contributor_notification_list' + contributor_notification_list)
 						console.log('Sending emails to ' + contributor_notification_list.length + ' contributors');
 						await mail.send_bulk_email('proposal-accepted',
 							contributor_notification_list,
-							'One week remaining for voting | ICON CPS',
+							'Proposal Accepted | ICON CPS',
 							`,\"type\": \"Proposal\"`);
 					} else {
 						console.log('No user to send notification: proposal_accepted_notification_async')
 					}
 				}).catch(e => { 
-          console.log("Error on proposal_accepted_notification");
-          console.error(e);
-        })
+					console.log("Error on proposal_accepted_notification");
+					console.error(e);
+				})
 
 				const budget_approved_notification_async = score.budget_approved_notification(user_details_list).then(async (contributor_notification_list) => {
 					if (contributor_notification_list !== undefined && contributor_notification_list.length > 0) {
@@ -388,9 +387,9 @@ async function execute() {
 						console.log('No user to send notification: budget_approved_notification_async')
 					}
 				}).catch(e => { 
-          console.log("Error on budget_approved_notification");
-          console.error(e);
-        })
+					console.log("Error on budget_approved_notification");
+					console.error(e);
+				})
 
 				const budget_rejected_notification_async = score.budget_rejected_notification(user_details_list).then(async (contributor_notification_list) => {
 					if (contributor_notification_list !== undefined && contributor_notification_list.length > 0) {
@@ -404,9 +403,9 @@ async function execute() {
 						console.log('No user to send notification: budget_rejected_notification_async')
 					}
 				}).catch(e => { 
-          console.log("Error on budget_rejected_notification");
-          console.error(e);
-        })
+					console.log("Error on budget_rejected_notification");
+					console.error(e);
+				})
 
 				actions.push(proposal_accepted_notification_async, budget_approved_notification_async, budget_rejected_notification_async);
 			}
