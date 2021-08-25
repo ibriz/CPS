@@ -67,7 +67,7 @@ exports.handler = async (req) => {
                         throw { statusCode: 400, name: "IPFS url", message: "Invalid IPFS hash provided" };
                     }
 
-                    const { projectName, teamName, sponserPrepName } = proposalDetails.data;
+                    const { projectName, teamName, sponserPrepName, sponserPrep } = proposalDetails.data;
 
                     const proposalVotingInfo = await contractMethodCallService(
                         process.env['CPS_SCORE'],
@@ -95,6 +95,7 @@ exports.handler = async (req) => {
                         proposalName: projectName,
                         proposalTeamName: teamName,
                         proposalSponsor: sponserPrepName,
+                        proposalSponsorAddress: sponserPrep,
                         proposalIpfsHash,
                         approvingVoters: IconConverter.toBigNumber(proposalVotingInfo.approve_voters).toFixed(0),
                         approvingVotersPercentage: IconConverter.toNumber(proposalVotingInfo.total_voters) > 0 ?
