@@ -140,14 +140,15 @@ const initialState = {
   sponsorRequestProposalTitle: '',
   sponsorRequestProposal: null,
   selectedProposal: {},
-  token: ''
+  token: '',
+  error: ''
 };
 
 const proposalSlice = createSlice({
   name: 'proposal',
   initialState,
   reducers: {
-    submitProposalRequest(state) {},
+    submitProposalRequest(state) { },
     submitProposalSuccess(state) {
       state.submittingProposal = false;
     },
@@ -246,14 +247,15 @@ const proposalSlice = createSlice({
     fetchProposalDetailSuccess(state, payload) {
       state.proposalDetail = payload.payload.response;
     },
-    fetchProposalDetailFailure() {
-      return;
+    fetchProposalDetailFailure(state) {
+      state.error = true;
     },
     emptyProposalDetailRequest() {
       return;
     },
     emptyProposalDetailSuccess(state) {
       delete state.proposalDetail;
+      state.error = '';
       state.selectedProposal = {};
     },
     emptyProposalDetailFailure() {
@@ -330,7 +332,7 @@ const proposalSlice = createSlice({
           completedPercentage: parseInt(
             IconConverter.toBigNumber(proposal[PARAMS.percentageCompleted]),
           ),
-          token:proposal[PARAMS.token]
+          token: proposal[PARAMS.token]
         }))
         .sort((a, b) => b._timestamp - a._timestamp);
       state.totalPagesSponsorRequests[action.payload.status] = Math.ceil(
@@ -546,7 +548,7 @@ const proposalSlice = createSlice({
           completedPercentage: parseInt(
             IconConverter.toBigNumber(proposal[PARAMS.percentageCompleted]),
           ),
-          token:proposal[PARAMS.token],
+          token: proposal[PARAMS.token],
           // if(parseInt(totalVoters) === 0) {
           //     return 0;
           //   }
@@ -621,7 +623,7 @@ const proposalSlice = createSlice({
           completedPercentage: parseInt(
             IconConverter.toBigNumber(proposal[PARAMS.percentageCompleted]),
           ),
-          token:proposal[PARAMS.token],
+          token: proposal[PARAMS.token],
           // if(parseInt(totalVoters) === 0) {
           //     return 0;
           //   }
@@ -708,7 +710,7 @@ const proposalSlice = createSlice({
         completedPercentage: parseInt(
           IconConverter.toBigNumber(proposal[PARAMS.percentageCompleted]),
         ),
-        token:proposal[PARAMS.token]
+        token: proposal[PARAMS.token]
       };
       return;
     },

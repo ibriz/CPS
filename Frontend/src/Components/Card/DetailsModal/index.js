@@ -57,6 +57,7 @@ import styled from 'styled-components';
 import InfoIcon from 'Components/InfoIcon';
 import VoteProgressBar from 'Components/VoteProgressBar';
 import { trackerURL } from 'Redux/ICON/utils';
+import { NotificationManager } from 'react-notifications';
 
 const DescriptionTitle = styled.div`
   font-style: normal;
@@ -155,6 +156,7 @@ function DetailsModal(props) {
     sponsorMessage,
     isPrep,
     emptyProgressReportDetailRequest,
+    ipfsError,
     ...remainingProps
   } = props;
 
@@ -301,6 +303,15 @@ function DetailsModal(props) {
     }
   }, [props.proposal]);
 
+
+  useEffect(() => {
+    if (ipfsError) {
+      setLoading(false);
+      props.onHide();
+      NotificationManager.error("Error fetching ipfs data");
+    }
+  }, [ipfsError])
+
   useEffect(() => {
     // if (status === 'Voting') {
     // alert("Voting");
@@ -349,6 +360,7 @@ function DetailsModal(props) {
     // props.onHide();
   };
 
+
   return (
     <Modal
       {...remainingProps}
@@ -361,7 +373,7 @@ function DetailsModal(props) {
           <Spinner animation='border' variant='secondary' />
         </LoadingDiv>
       ) : (
-        <>
+        !ipfsError && <>
           <Modal.Header
             closeButton
             className={styles.modalHeader}
@@ -862,7 +874,7 @@ function DetailsModal(props) {
             {modalShow && <DetailsModalPR
               show={modalShow}
               onHide={() => {
-                setModalShow(false);
+                setLoading(false);
                 emptyProgressReportDetailRequest();
               }}
               progressReport={selectedProgressReport}
@@ -894,6 +906,7 @@ const mapStateToProps = state => ({
   sponsorMessage: state.proposals.sponsorMessage,
   walletAddress: state.account.address,
   isPrep: state.account.isPrep,
+  ipfsError: state.proposals.error
 });
 
 const mapDispatchToProps = dispatch => ({

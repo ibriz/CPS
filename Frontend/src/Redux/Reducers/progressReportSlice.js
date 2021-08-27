@@ -140,6 +140,7 @@ const initialState = {
   progressReportByProposal: [],
   remainingVotes: [],
   selectedProgressReport: {},
+  ipfsError: ''
 };
 
 const proposalSlice = createSlice({
@@ -220,14 +221,15 @@ const proposalSlice = createSlice({
       state.progressReportDetail = action.payload.response;
     },
 
-    fetchProgressReportDetailFailure() {
-      return;
+    fetchProgressReportDetailFailure(state) {
+      state.ipfsError = true;
     },
     emptyProgressReportDetailRequest() {
       return;
     },
     emptyProgressReportDetailSuccess(state) {
       delete state.progressReportDetail;
+      state.ifpsError = '';
       state.selectedProgressReport = {};
     },
     emptyProposalReportDetailFailure() {
