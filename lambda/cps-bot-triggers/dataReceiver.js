@@ -152,6 +152,7 @@ exports.handler = async (req) => {
                         teamName: proposalDetails.teamName,
                         percentageCompleted: progressDetails.percentageCompleted,
                         sponsorPrep: proposalDetails.sponserPrepName,
+                        sponsorPrepAddress: proposalDetails.sponserPrep,
                         additionalBudget: progressDetails.additionalBudget,
                         additionalTime: progressDetails.additionalTime,
                         additionalResources: progressDetails.additionalResources,
