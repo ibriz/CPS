@@ -96,17 +96,33 @@ async function getRequest({ url, method = 'GET', ipfs = false }) {
 }
 
 async function requestIPFS({ hash }) {
-  var requestOptions = {
+  const response = await fetchIPFSRetry(hash);
+  return response;
+}
+
+
+const fetchIPFSRetry = async (hash, retries = 3, index = 0) => {
+  const ipfsUrlList = ['https://cloudflare-ipfs.com/ipfs/{hash}', 'https://gateway.ipfs.io/ipfs/{hash}', 'https://{hash}.ipfs.infura-ipfs.io/'];
+  const requestOptions = {
     method: 'GET',
     redirect: 'follow',
   };
-
-  const response = await fetch(
-    `https://gateway.ipfs.io/ipfs/${hash}`,
-    requestOptions,
-  );
-  const responseText = await response.json();
-  return responseText;
+  const ipfsUrl = ipfsUrlList[index].replace('{hash}', hash)
+  return fetch(ipfsUrl, requestOptions)
+    .then(res => {
+      if (res.ok) return res.json();
+      console.log('Retry', retries);
+      if (retries > 0) {
+        index=index+1;
+        return fetchIPFSRetry(hash, retries - 1, index);
+      } else {
+        throw new Error("Error while fetching records from IPFS");
+      }
+    })
+    .catch(async error => {
+      throw error;
+    });
 }
+
 
 export { request, requestIPFS, getRequest };
