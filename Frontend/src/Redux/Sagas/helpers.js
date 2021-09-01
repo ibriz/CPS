@@ -50,6 +50,16 @@ async function request({
     };
   }
 
+  // if payload and signature are supplied, then add payload+signature+address to headers
+  if(payload && signature) {
+    headers= {
+      ...headers,
+      signature,
+      payload,
+      address: walletAddress
+    }
+  }
+
   const response = await fetch(`${baseURL}/${url}`, {
     method: method,
     headers: headers,
