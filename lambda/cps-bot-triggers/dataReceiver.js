@@ -103,9 +103,7 @@ exports.handler = async (req) => {
                             :
                             '0',
                         rejectingVoters: IconConverter.toBigNumber(proposalVotingInfo.reject_voters).toFixed(0),
-                        abstainingVoters: IconConverter.toBigNumber(proposalVotingInfo.total_voters)
-                            .minus(proposalVotingInfo.approve_voters)
-                            .minus(proposalVotingInfo.reject_voters)
+                        totalVoters: IconConverter.toBigNumber(proposalVotingInfo.total_voters)
                             .toFixed(0),
                         approvedVotes: IconConverter.toBigNumber(proposalVotingInfo.approved_votes).toFixed(0),
                         approvedVotesPercentage: IconConverter.toNumber(proposalVotingInfo.total_votes) > 0 ?
@@ -113,9 +111,7 @@ exports.handler = async (req) => {
                             :
                             '0',
                         rejectedVotes: IconConverter.toBigNumber(proposalVotingInfo.rejected_votes).toFixed(0),
-                        abstainedVotes: IconConverter.toBigNumber(proposalVotingInfo.total_votes)
-                            .minus(proposalVotingInfo.approved_votes)
-                            .minus(proposalVotingInfo.rejected_votes)
+                        totalVotes: IconConverter.toBigNumber(proposalVotingInfo.total_votes)
                             .toFixed(0),
                     };
 
@@ -227,9 +223,7 @@ exports.handler = async (req) => {
                             :
                             '0',
                         rejectingVoters: IconConverter.toBigNumber(currProgressReport.reject_voters).toFixed(0),
-                        abstainOrRemainingVoters: IconConverter.toBigNumber(currProgressReport.total_voters)
-                            .minus(currProgressReport.approve_voters)
-                            .minus(currProgressReport.reject_voters)
+                        totalVoters: IconConverter.toBigNumber(currProgressReport.total_voters)
                             .toFixed(0),
                         approvedVotes: IconConverter.toBigNumber(currProgressReport.approved_votes).toFixed(0),
                         approvedVotesPercentage: IconConverter.toNumber(currProgressReport.total_votes) > 0 ?
@@ -237,9 +231,7 @@ exports.handler = async (req) => {
                             :
                             '0',
                         rejectedVotes: IconConverter.toBigNumber(currProgressReport.rejected_votes).toFixed(0),
-                        abstainOrRemainingVotes: IconConverter.toBigNumber(currProgressReport.total_votes)
-                            .minus(currProgressReport.approved_votes)
-                            .minus(currProgressReport.rejected_votes)
+                        totalVotes: IconConverter.toBigNumber(currProgressReport.total_votes)
                             .toFixed(0),
                     };
 
