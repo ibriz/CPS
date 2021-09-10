@@ -10,6 +10,10 @@ export default function* signTransactionWorker(payload) {
       setCookie('signature', payload.payload.signature, 12 * 2 * 100);
     }
 
+    if(payload.payload.signatureRawData) {
+      setCookie('signatureRawData', payload.payload.signatureRawData, 12 * 2 * 100);
+    }
+
     // yield put(loginPrepRequest());
   } catch (error) {
     console.log('error');

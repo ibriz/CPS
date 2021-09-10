@@ -51,7 +51,10 @@ async function request({
   }
 
   // if payload and signature are supplied, then add payload+signature+address to headers
-  if(payload && signature) {
+  if(payload || signature) {
+    if(payload == '-1' || signature == '-1' || !payload || !signature) {
+      throw new Error('Wallet Signature required');
+    }
     headers= {
       ...headers,
       signature,

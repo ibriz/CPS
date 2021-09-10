@@ -62,8 +62,10 @@ async function getResult({ txHash,
 
                 try {
                     callBack();
-                } catch {
-                    console.log("CallbackError")
+                } catch (e) {
+                    console.group("CallbackError");
+                    console.error(e);
+                    console.groupEnd();
                 } finally {
                     NotificationManager.success(successMessage);
 
@@ -119,7 +121,7 @@ export default (event) => {
 
         case 'CANCEL_SIGNING':
             console.log("CANCEL_SIGNING", JSON.stringify(payload));
-            store.dispatch(signTransaction({ signature: "-1" }));
+            store.dispatch(signTransaction({ signature: "-1", signatureRawData: "-1" }));
 
             break;
 
@@ -174,7 +176,9 @@ export default (event) => {
                         failureMessage: "Progress Report Creation Failed",
                         successMessage: "Progress Report Created Successfully"
                     },  async function(){
-                        const { signature, payload } = await signTxMethod(store.getState().account.address);
+                        const signature = store.getState().account.signature;
+                        const payload = store.getState().account.signatureRawData;
+                        
                         request({
                             body: store.getState().proposals.backendTriggerData,
                             url: BACKEND_TRIGGER_URL,
@@ -254,8 +258,9 @@ export default (event) => {
                             failureMessage: "Error accepting Sponsor Request",
                             successMessage: "Sponsor request accepted successfully"
                         }, async function(){
-                            const { signature, payload } = await signTxMethod(store.getState().account.address);
-    
+                            const signature = store.getState().account.signature;
+                            const payload = store.getState().account.signatureRawData;
+
                             request({
                                 body: store.getState().proposals.backendTriggerData,
                                 url: TRIGGER_SPONSOR_APPROVAL_EMAIL_NOTIFICATION,
@@ -315,7 +320,9 @@ export default (event) => {
                                 failureMessage: "Error denying Sponsor Request",
                                 successMessage: "Sponsor request denied successfully"
                             }, async function(){
-                                const { signature, payload } = await signTxMethod(store.getState().account.address);
+                                const signature = store.getState().account.signature;
+                                const payload = store.getState().account.signatureRawData;
+
                                 request({
                                     body: store.getState().proposals.backendTriggerData,
                                     url: TRIGGER_SPONSOR_APPROVAL_EMAIL_NOTIFICATION,
@@ -362,7 +369,9 @@ export default (event) => {
                         failureMessage: "Vote Proposal Failed",
                         successMessage: "Proposal Vote Succeded"
                     }, async function(){
-                        const { signature, payload } = await signTxMethod(store.getState().account.address);
+                        const signature = store.getState().account.signature;
+                        const payload = store.getState().account.signatureRawData;
+                        
                         request({
                             body: store.getState().proposals.backendTriggerData,
                             url: BACKEND_TRIGGER_URL,
@@ -389,7 +398,8 @@ export default (event) => {
                         failureMessage: "Vote Progress Report Failed",
                         successMessage: "Progress Report Vote Succeded"
                     }, async function(){
-                        const { signature, payload } = await signTxMethod(store.getState().account.address);
+                        const signature = store.getState().account.signature;
+                        const payload = store.getState().account.signatureRawData;
 
                         request({
                             body: store.getState().proposals.backendTriggerData,

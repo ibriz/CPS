@@ -26,6 +26,9 @@ function* submitProposalWorker({ payload }) {
     const walletAddress = yield select(getAddress);
 
     const address = yield select(getAddress);
+
+    yield signTransaction(address);
+
     const response = yield call(request, {
       body: {
         ...payload.proposal,
@@ -34,7 +37,8 @@ function* submitProposalWorker({ payload }) {
       },
       url: PROPOSAL_ADD_URL,
       failureMessage: 'Submit Proposal Failed',
-      requireSigning: true,
+      signature: store.getState().account.signature,
+      payload: store.getState().account.signatureRawData,
       callBackAfterSigning: () => store.dispatch(setSubmittingProposal(true)),
       // signature: signature,
       // payload: hash,
