@@ -1,0 +1,16 @@
+.modalTitle {
+  font-style: normal;
+  font-weight: 600 !important;
+  font-size: 18px !important;
+  line-height: 22px !important;
+  color: #262626;
+}
+
+.modalBody {
+  color: #262626;
+  font-size: 15px;
+}
+
+.footer {
+  justify-content: flex-end !important;
+}

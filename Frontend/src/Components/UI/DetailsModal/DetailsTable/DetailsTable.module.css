@@ -1,0 +1,31 @@
+.data {
+  display: flex;
+  justify-content: space-between;
+}
+
+.tableHeader {
+  background: #1aaaba !important;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 17px;
+  color: #ffffff;
+}
+
+.key {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 0.65rem;
+  line-height: 15px;
+  color: rgba(38, 38, 38, 0.9);
+}
+
+.value {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 0.65rem;
+  line-height: 15px;
+  text-align: right;
+
+  color: rgba(38, 38, 38, 0.9);
+}
