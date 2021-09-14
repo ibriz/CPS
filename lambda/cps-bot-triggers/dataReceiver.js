@@ -1,8 +1,8 @@
 const axios = require('axios');
 const { IconConverter } = require('icon-sdk-js');
 
-const { ipfsBaseUrl, eventTypesMapping, resHeaders, scoreMethods } = require('./constants');
-const { contractMethodCallService, triggerWebhook }  = require('./helpers');
+const { eventTypesMapping, resHeaders, scoreMethods } = require('./constants');
+const { contractMethodCallService, triggerWebhook, fetchFromIpfs }  = require('./helpers');
 
 
 exports.handler = async (req) => {
@@ -24,25 +24,27 @@ exports.handler = async (req) => {
                 //-------------------------------------------------------------------------------
                 case eventTypesMapping.sponsorApproval: 
                 {
+                    console.log("NOTIFYING FOR SPONSOR APPROVAL");
                     // get details from IPFS using body's proposalIpfsHash & then filter info
                     const { proposalIpfsHash } = body.data;
                     if(!proposalIpfsHash) throw new Error("proposalIpfsHash requried");
 
                     let proposalDetails;
                     try {
-                        proposalDetails = await axios.get(ipfsBaseUrl + proposalIpfsHash);
+                        proposalDetails = await fetchFromIpfs(proposalIpfsHash);
                     } catch (err) {
                         console.error("ERROR FETCHING PROPOSAL DATA" + JSON.stringify(err));
                         throw { statusCode: 400, name: "IPFS url", message: "Invalid IPFS hash provided" };
                     }
 
-                    const { projectName, teamName, sponserPrep, sponserPrepName, totalBudget} = proposalDetails.data;
+                    const { projectName, teamName, sponserPrep, sponserPrepName, totalBudget} = proposalDetails;
                     const finalResponse = {
                         projectName,
                         teamName,
                         sponsorPrepAddress: sponserPrep,
                         sponserPrepName: sponserPrepName,
-                        totalBudgetIcx: totalBudget
+                        totalBudgetIcx: totalBudget,
+                        proposalIpfsHash,
                     };
 
                     await triggerWebhook(eventTypesMapping.sponsorApproval, finalResponse);
@@ -52,19 +54,20 @@ exports.handler = async (req) => {
                 //-------------------------------------------------------------------------------
                 case eventTypesMapping.voteProposal: 
                 {
+                    console.log("NOTIFYING FOR VOTE ON APPROVAL");
                     const { proposalIpfsHash, userAddress } = body.data;
                     if(!proposalIpfsHash) throw new Error("proposalIpfsHash is required");
                     if(!userAddress) throw new Error("userAddress is required");
 
                     let proposalDetails;
                     try {
-                        proposalDetails = await axios.get(ipfsBaseUrl + proposalIpfsHash);
+                        proposalDetails = await fetchFromIpfs(proposalIpfsHash);
                     } catch (err) {
                         console.error("ERROR FETCHING PROPOSAL DATA" + JSON.stringify(err));
                         throw { statusCode: 400, name: "IPFS url", message: "Invalid IPFS hash provided" };
                     }
 
-                    const { projectName, teamName, sponserPrepName } = proposalDetails.data;
+                    const { projectName, teamName, sponserPrepName, sponserPrep } = proposalDetails;
 
                     const proposalVotingInfo = await contractMethodCallService(
                         process.env['CPS_SCORE'],
@@ -92,15 +95,15 @@ exports.handler = async (req) => {
                         proposalName: projectName,
                         proposalTeamName: teamName,
                         proposalSponsor: sponserPrepName,
+                        proposalSponsorAddress: sponserPrep,
+                        proposalIpfsHash,
                         approvingVoters: IconConverter.toBigNumber(proposalVotingInfo.approve_voters).toFixed(0),
                         approvingVotersPercentage: IconConverter.toNumber(proposalVotingInfo.total_voters) > 0 ?
                             IconConverter.toBigNumber(proposalVotingInfo.approve_voters).dividedBy(proposalVotingInfo.total_voters).toFixed(2, 1)
                             :
                             '0',
                         rejectingVoters: IconConverter.toBigNumber(proposalVotingInfo.reject_voters).toFixed(0),
-                        abstainingVoters: IconConverter.toBigNumber(proposalVotingInfo.total_voters)
-                            .minus(proposalVotingInfo.approve_voters)
-                            .minus(proposalVotingInfo.reject_voters)
+                        totalVoters: IconConverter.toBigNumber(proposalVotingInfo.total_voters)
                             .toFixed(0),
                         approvedVotes: IconConverter.toBigNumber(proposalVotingInfo.approved_votes).toFixed(0),
                         approvedVotesPercentage: IconConverter.toNumber(proposalVotingInfo.total_votes) > 0 ?
@@ -108,9 +111,7 @@ exports.handler = async (req) => {
                             :
                             '0',
                         rejectedVotes: IconConverter.toBigNumber(proposalVotingInfo.rejected_votes).toFixed(0),
-                        abstainedVotes: IconConverter.toBigNumber(proposalVotingInfo.total_votes)
-                            .minus(proposalVotingInfo.approved_votes)
-                            .minus(proposalVotingInfo.rejected_votes)
+                        totalVotes: IconConverter.toBigNumber(proposalVotingInfo.total_votes)
                             .toFixed(0),
                     };
 
@@ -121,6 +122,7 @@ exports.handler = async (req) => {
                 //-------------------------------------------------------------------------------
                 case eventTypesMapping.submitProgressReport: 
                 {
+                    console.log("NOTIFYING FOR PROGRESS REPORT SUBMISSION");
                     const { proposalIpfsHash, progressIpfsHash } = body.data;
                     if(!proposalIpfsHash) throw new Error('proposalIpfsHash is required');
                     if(!progressIpfsHash) throw new Error('progressIpfsHash is required');
@@ -129,11 +131,11 @@ exports.handler = async (req) => {
                     let proposalDetails, progressDetails;
                     try {
                         const [ proposalDetailsRaw, progressDetailsRaw ]  = await Promise.all([
-                            axios.get(ipfsBaseUrl + proposalIpfsHash),
-                            axios.get(ipfsBaseUrl + progressIpfsHash)
+                            fetchFromIpfs(proposalIpfsHash),
+                            fetchFromIpfs(progressIpfsHash)
                         ]);
-                        proposalDetails = proposalDetailsRaw.data;
-                        progressDetails = progressDetailsRaw.data
+                        proposalDetails = proposalDetailsRaw;
+                        progressDetails = progressDetailsRaw;
                         
                     } catch (err) {
                         console.error("ERROR FETCHING PROPOSAL DATA");
@@ -146,12 +148,15 @@ exports.handler = async (req) => {
                         teamName: proposalDetails.teamName,
                         percentageCompleted: progressDetails.percentageCompleted,
                         sponsorPrep: proposalDetails.sponserPrepName,
+                        sponsorPrepAddress: proposalDetails.sponserPrep,
                         additionalBudget: progressDetails.additionalBudget,
                         additionalTime: progressDetails.additionalTime,
                         additionalResources: progressDetails.additionalResources,
                         isLastProgressReport: progressDetails.isLastProgressReport,
                         revisionDescription: progressDetails.revisionDescription,
-                        projectTermRevision: progressDetails.projectTermRevision
+                        projectTermRevision: progressDetails.projectTermRevision,
+                        proposalIpfsHash,
+                        prIpfsHash: progressIpfsHash,
                     };
 
                     await triggerWebhook(eventTypesMapping.submitProgressReport, finalResponse);
@@ -162,6 +167,7 @@ exports.handler = async (req) => {
                 //-----------------------------------------------------------------------------
                 case eventTypesMapping.voteProgressReport: 
                 {
+                    console.log("NOTIFYING FOR VOTE ON PROGRESS REPORT");
                     const { proposalIpfsHash, progressIpfsHash, userAddress, voteReason, vote } = body.data;
                     if(!proposalIpfsHash) throw new Error("proposalIpfsHash is required");
                     if(!progressIpfsHash) throw new Error("progressIpfsHash is required");
@@ -209,15 +215,15 @@ exports.handler = async (req) => {
                         vote,
                         proposalName: proposalDetails['project_title'],
                         progressReportName: currProgressReport.progress_report_title,
+                        proposalIpfsHash,
+                        prIpfsHash: progressIpfsHash,
                         approvingVoters: IconConverter.toBigNumber(currProgressReport.approve_voters).toFixed(0),
                         approvingVotersPercentage: IconConverter.toNumber(currProgressReport.total_voters) > 0 ?
                             IconConverter.toBigNumber(currProgressReport.approve_voters).dividedBy(currProgressReport.total_voters).toFixed(2, 1)
                             :
                             '0',
                         rejectingVoters: IconConverter.toBigNumber(currProgressReport.reject_voters).toFixed(0),
-                        abstainOrRemainingVoters: IconConverter.toBigNumber(currProgressReport.total_voters)
-                            .minus(currProgressReport.approve_voters)
-                            .minus(currProgressReport.reject_voters)
+                        totalVoters: IconConverter.toBigNumber(currProgressReport.total_voters)
                             .toFixed(0),
                         approvedVotes: IconConverter.toBigNumber(currProgressReport.approved_votes).toFixed(0),
                         approvedVotesPercentage: IconConverter.toNumber(currProgressReport.total_votes) > 0 ?
@@ -225,9 +231,7 @@ exports.handler = async (req) => {
                             :
                             '0',
                         rejectedVotes: IconConverter.toBigNumber(currProgressReport.rejected_votes).toFixed(0),
-                        abstainOrRemainingVotes: IconConverter.toBigNumber(currProgressReport.total_votes)
-                            .minus(currProgressReport.approved_votes)
-                            .minus(currProgressReport.rejected_votes)
+                        totalVotes: IconConverter.toBigNumber(currProgressReport.total_votes)
                             .toFixed(0),
                     };
 

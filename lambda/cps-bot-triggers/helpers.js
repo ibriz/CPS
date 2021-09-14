@@ -2,7 +2,7 @@ const IconService = require('icon-sdk-js');
 const axios = require('axios');
 
 const { hgetallAsync } = require('./redis');
-const { subscriptionKey } = require('./constants');
+const { subscriptionKey, IPFS_BASE_URL } = require('./constants');
 
 const { IconBuilder, HttpProvider } = IconService;
 
@@ -11,6 +11,7 @@ const iconService = new IconService(provider);
 
 async function triggerWebhook(eventType, data) {
     // get all the subscribed Urls for receiving webhooks
+    console.log("TRYING TO TRIGGER WEBHOOKS");
     const subscribedUrls = await hgetallAsync(subscriptionKey);
 
     if(subscribedUrls) {
@@ -25,6 +26,7 @@ async function triggerWebhook(eventType, data) {
                 headers: { 'Token': secretKey },
                 timeout: 8000,
             };
+            console.log(axiosObj.data);
 
             try {
                 await axios(axiosObj);
@@ -36,6 +38,40 @@ async function triggerWebhook(eventType, data) {
         }
     }
 }
+
+// randomly fetch from available ipfs urls
+async function fetchFromIpfs(ipfsHash, availableIpfsUrls=IPFS_BASE_URL) {
+	if(!availableIpfsUrls.length) throw new Error('Could not load data using IPFS hash. Is the hash valid?');
+
+	const ipfsUrlIndex = Math.floor(Math.random() * availableIpfsUrls.length);
+	const fetchUrl = availableIpfsUrls[ipfsUrlIndex] + ipfsHash;
+	console.log("Fetching ipfs data from: ", fetchUrl);
+
+	availableIpfsUrls = availableIpfsUrls.filter((_, index) => index != ipfsUrlIndex);
+
+	try {
+		const res = await axios.get(fetchUrl, { timeout: 5000 });
+		return res.data;
+	} catch (e) {
+		console.log(JSON.stringify(e));
+		return await fetchFromIpfs(ipfsHash, availableIpfsUrls);
+	}
+}
+
+function authenticateSubscriber(accessToken) {
+    return new Promise((resolve, reject) => {
+        if(!process.env['BOT_ACCESS_KEY']) {
+            reject(new Error('Unable to proceed with GET request'));
+        }
+
+        if(!accessToken || accessToken !== process.env['BOT_ACCESS_KEY']) {
+            reject(new ClientError('Unauthorized user'));
+        }
+
+        resolve(true);
+    })
+}
+
 
 async function contractMethodCallService (scoreAddr, method, params=null) {
     const callObj = new IconBuilder.CallBuilder()
@@ -57,5 +93,7 @@ module.exports = {
     iconService,
     contractMethodCallService,
     triggerWebhook,
-    ClientError
+    ClientError,
+    authenticateSubscriber,
+    fetchFromIpfs
 }

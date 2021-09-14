@@ -2,7 +2,7 @@
 
 const rndToken = require('random-token').gen('abcdefghijklmnopqrstuvwxzyABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789');
 
-const { ClientError } = require('./helpers');
+const { ClientError, authenticateSubscriber } = require('./helpers');
 const { userActions, resHeaders, subscriptionKey } = require('./constants');
 const { hsetAsync, hgetAsync, hgetallAsync, hdelAsync } = require('./redis');
 
@@ -11,17 +11,21 @@ exports.handler = async (req) => {
         const responseCode = 200;
         let resMessage;
 
+        // ensure user has the access token to access /subscription path
+        await authenticateSubscriber(req.headers['accessToken']);
+
         if(req.httpMethod === 'POST') {
             const reqBody = JSON.parse(req.body);
             console.log(reqBody);
             if(!reqBody) throw new ClientError('POST Body is required');
-            const { action, receivingUrl, name } = reqBody;
 
+            const { action, receivingUrl, name } = reqBody;
             if (!action) throw new ClientError("action is required");
             if (!name) throw new ClientError("name is required");
 
             switch (action) {
                 case userActions.subscribe: {
+                    console.log("TRYING TO SUBSCRIBE: ", receivingUrl);
                     // TODO: add username authentication when subscribing
                     // add the website info to redis
                     if (!receivingUrl) throw new ClientError("receivingUrl is required");
@@ -34,6 +38,7 @@ exports.handler = async (req) => {
                     break;
                 }
                 case userActions.unsubscribe: {
+                    console.log("TRYING TO UNSUBSCRIBE SUBSCRIBER WITH NAME: ", name);
                     // check if already subscribed, then remove the website info from redis
                     const subscriber = await hgetAsync(subscriptionKey, name);
                     if(subscriber) {
