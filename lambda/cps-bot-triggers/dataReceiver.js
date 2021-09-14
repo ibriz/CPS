@@ -1,8 +1,8 @@
 const axios = require('axios');
 const { IconConverter } = require('icon-sdk-js');
 
-const { ipfsBaseUrl, eventTypesMapping, resHeaders, scoreMethods } = require('./constants');
-const { contractMethodCallService, triggerWebhook }  = require('./helpers');
+const { eventTypesMapping, resHeaders, scoreMethods } = require('./constants');
+const { contractMethodCallService, triggerWebhook, fetchFromIpfs }  = require('./helpers');
 
 
 exports.handler = async (req) => {
@@ -31,13 +31,13 @@ exports.handler = async (req) => {
 
                     let proposalDetails;
                     try {
-                        proposalDetails = await axios.get(ipfsBaseUrl + proposalIpfsHash);
+                        proposalDetails = await fetchFromIpfs(proposalIpfsHash);
                     } catch (err) {
                         console.error("ERROR FETCHING PROPOSAL DATA" + JSON.stringify(err));
                         throw { statusCode: 400, name: "IPFS url", message: "Invalid IPFS hash provided" };
                     }
 
-                    const { projectName, teamName, sponserPrep, sponserPrepName, totalBudget} = proposalDetails.data;
+                    const { projectName, teamName, sponserPrep, sponserPrepName, totalBudget} = proposalDetails;
                     const finalResponse = {
                         projectName,
                         teamName,
@@ -61,13 +61,13 @@ exports.handler = async (req) => {
 
                     let proposalDetails;
                     try {
-                        proposalDetails = await axios.get(ipfsBaseUrl + proposalIpfsHash);
+                        proposalDetails = await fetchFromIpfs(proposalIpfsHash);
                     } catch (err) {
                         console.error("ERROR FETCHING PROPOSAL DATA" + JSON.stringify(err));
                         throw { statusCode: 400, name: "IPFS url", message: "Invalid IPFS hash provided" };
                     }
 
-                    const { projectName, teamName, sponserPrepName, sponserPrep } = proposalDetails.data;
+                    const { projectName, teamName, sponserPrepName, sponserPrep } = proposalDetails;
 
                     const proposalVotingInfo = await contractMethodCallService(
                         process.env['CPS_SCORE'],
@@ -131,11 +131,11 @@ exports.handler = async (req) => {
                     let proposalDetails, progressDetails;
                     try {
                         const [ proposalDetailsRaw, progressDetailsRaw ]  = await Promise.all([
-                            axios.get(ipfsBaseUrl + proposalIpfsHash),
-                            axios.get(ipfsBaseUrl + progressIpfsHash)
+                            fetchFromIpfs(proposalIpfsHash),
+                            fetchFromIpfs(progressIpfsHash)
                         ]);
-                        proposalDetails = proposalDetailsRaw.data;
-                        progressDetails = progressDetailsRaw.data
+                        proposalDetails = proposalDetailsRaw;
+                        progressDetails = progressDetailsRaw;
                         
                     } catch (err) {
                         console.error("ERROR FETCHING PROPOSAL DATA");

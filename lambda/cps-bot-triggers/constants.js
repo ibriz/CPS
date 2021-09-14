@@ -1,7 +1,7 @@
 const subscriptionKey = 'botSubscriber';
 
 
-const ipfsBaseUrl = 'https://gateway.ipfs.io/ipfs/';
+const IPFS_BASE_URL = ['https://gateway.ipfs.io/ipfs/', 'https://cloudflare-ipfs.com/ipfs/'];
 
 const eventTypesMapping = {
     voteProposal: 'voteProposal',
@@ -32,9 +32,9 @@ const userActions = {
 
 module.exports = {
   subscriptionKey,
-  ipfsBaseUrl,
   eventTypesMapping,
   resHeaders,
   scoreMethods,
   userActions,
+  IPFS_BASE_URL
 }

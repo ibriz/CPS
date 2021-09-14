@@ -2,7 +2,7 @@ const IconService = require('icon-sdk-js');
 const axios = require('axios');
 
 const { hgetallAsync } = require('./redis');
-const { subscriptionKey } = require('./constants');
+const { subscriptionKey, IPFS_BASE_URL } = require('./constants');
 
 const { IconBuilder, HttpProvider } = IconService;
 
@@ -39,6 +39,24 @@ async function triggerWebhook(eventType, data) {
     }
 }
 
+// randomly fetch from available ipfs urls
+async function fetchFromIpfs(ipfsHash, availableIpfsUrls=IPFS_BASE_URL) {
+	if(!availableIpfsUrls.length) throw new Error('Could not load data using IPFS hash. Is the hash valid?');
+
+	const ipfsUrlIndex = Math.floor(Math.random() * availableIpfsUrls.length);
+	const fetchUrl = availableIpfsUrls[ipfsUrlIndex] + ipfsHash;
+	console.log("Fetching ipfs data from: ", fetchUrl);
+
+	availableIpfsUrls = availableIpfsUrls.filter((_, index) => index != ipfsUrlIndex);
+
+	try {
+		const res = await axios.get(fetchUrl, { timeout: 5000 });
+		return res.data;
+	} catch (e) {
+		console.log(JSON.stringify(e));
+		return await fetchFromIpfs(ipfsHash, availableIpfsUrls);
+	}
+}
 
 function authenticateSubscriber(accessToken) {
     return new Promise((resolve, reject) => {
@@ -76,5 +94,6 @@ module.exports = {
     contractMethodCallService,
     triggerWebhook,
     ClientError,
-    authenticateSubscriber
+    authenticateSubscriber,
+    fetchFromIpfs
 }
