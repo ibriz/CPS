@@ -1,5 +1,5 @@
 import { put, select } from '@redux-saga/core/effects';
-import { sendTransaction } from 'Redux/ICON/utils';
+import { sendTransaction, signTransaction } from 'Redux/ICON/utils';
 import { setBackendTriggerData } from 'Redux/Reducers/proposalSlice';
 
 const getAddress = state => state.account.address;
@@ -21,6 +21,12 @@ function* voteProgressReportWorker({ payload }) {
     _ipfs_key: payload.proposalKey,
     _report_key: payload.reportKey,
   };
+
+  const { signature } =  yield signTransaction(walletAddress);
+  
+  if(signature == '-1' || !signature) {
+    return;
+  }
 
   sendTransaction({
     method: 'vote_progress_report',

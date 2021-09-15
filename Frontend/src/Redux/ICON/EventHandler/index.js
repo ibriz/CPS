@@ -1,4 +1,5 @@
 import store from '../../Store';
+import { signTransaction as signTxMethod } from 'Redux/ICON/utils';
 import { login, signTransaction } from '../../Reducers/accountSlice';
 import history from '../../../Router/history';
 import { NotificationManager } from 'react-notifications';
@@ -61,8 +62,10 @@ async function getResult({ txHash,
 
                 try {
                     callBack();
-                } catch {
-                    console.log("CallbackError")
+                } catch (e) {
+                    console.group("CallbackError");
+                    console.error(e);
+                    console.groupEnd();
                 } finally {
                     NotificationManager.success(successMessage);
 
@@ -118,7 +121,7 @@ export default (event) => {
 
         case 'CANCEL_SIGNING':
             console.log("CANCEL_SIGNING", JSON.stringify(payload));
-            store.dispatch(signTransaction({ signature: "-1" }));
+            store.dispatch(signTransaction({ signature: "-1", signatureRawData: "-1" }));
 
             break;
 
@@ -172,11 +175,16 @@ export default (event) => {
                         txHash: payload.result,
                         failureMessage: "Progress Report Creation Failed",
                         successMessage: "Progress Report Created Successfully"
-                    },  function(){
+                    },  async function(){
+                        const signature = store.getState().account.signature;
+                        const payload = store.getState().account.signatureRawData;
+                        
                         request({
                             body: store.getState().proposals.backendTriggerData,
                             url: BACKEND_TRIGGER_URL,
-                            baseUrl: CPS_BOT_BASE_URL
+                            baseUrl: CPS_BOT_BASE_URL,
+                            signature,
+                            payload
                         });
 
                         store.dispatch( fetchProposalByAddressRequest(
@@ -244,16 +252,20 @@ export default (event) => {
                         console.log('history');
                         history.push('/');
                         NotificationManager.info("Sponsor request approval request sent");
-    
+
                         getResult({
                             txHash: payload.result,
                             failureMessage: "Error accepting Sponsor Request",
                             successMessage: "Sponsor request accepted successfully"
-                        }, function(){
+                        }, async function(){
+                            const signature = store.getState().account.signature;
+                            const payload = store.getState().account.signatureRawData;
 
                             request({
                                 body: store.getState().proposals.backendTriggerData,
                                 url: TRIGGER_SPONSOR_APPROVAL_EMAIL_NOTIFICATION,
+                                payload,
+                                signature
                             });
 
                             request({
@@ -263,6 +275,8 @@ export default (event) => {
                                         proposalIpfsHash: store.getState().proposals.proposalDetail.ipfsHash
                                     }
                                 },
+                                payload,
+                                signature,
                                 baseUrl: CPS_BOT_BASE_URL,
                                 url: BACKEND_TRIGGER_URL
                             });
@@ -305,11 +319,15 @@ export default (event) => {
                                 txHash: payload.result,
                                 failureMessage: "Error denying Sponsor Request",
                                 successMessage: "Sponsor request denied successfully"
-                            }, function(){
+                            }, async function(){
+                                const signature = store.getState().account.signature;
+                                const payload = store.getState().account.signatureRawData;
 
                                 request({
                                     body: store.getState().proposals.backendTriggerData,
                                     url: TRIGGER_SPONSOR_APPROVAL_EMAIL_NOTIFICATION,
+                                    payload,
+                                    signature
                                 });
         
                                 store.dispatch(fetchSponsorRequestsListRequest(
@@ -350,11 +368,16 @@ export default (event) => {
                         txHash: payload.result,
                         failureMessage: "Vote Proposal Failed",
                         successMessage: "Proposal Vote Succeded"
-                    }, function(){
+                    }, async function(){
+                        const signature = store.getState().account.signature;
+                        const payload = store.getState().account.signatureRawData;
+                        
                         request({
                             body: store.getState().proposals.backendTriggerData,
                             url: BACKEND_TRIGGER_URL,
-                            baseUrl: CPS_BOT_BASE_URL
+                            baseUrl: CPS_BOT_BASE_URL,
+                            payload,
+                            signature
                         });
                         store.dispatch(fetchRemainingVotesRequest(
                             {
@@ -374,11 +397,16 @@ export default (event) => {
                         txHash: payload.result,
                         failureMessage: "Vote Progress Report Failed",
                         successMessage: "Progress Report Vote Succeded"
-                    }, function(){
+                    }, async function(){
+                        const signature = store.getState().account.signature;
+                        const payload = store.getState().account.signatureRawData;
+
                         request({
                             body: store.getState().proposals.backendTriggerData,
                             url: BACKEND_TRIGGER_URL,
-                            baseUrl: CPS_BOT_BASE_URL
+                            baseUrl: CPS_BOT_BASE_URL,
+                            signature,
+                            payload
                         });
                         store.dispatch(fetchRemainingVotesRequest(
                             {

@@ -12,6 +12,7 @@ const initialState = {
   penaltyAmount: 15,
   walletBalance: 0,
   signature: null,
+  signatureRawData: null,
   hasAddress: null,
   loginButtonClicked: false,
 };
@@ -51,6 +52,7 @@ const accountSlice = createSlice({
 
     signTransaction(state, action) {
       state.signature = action.payload.signature;
+      state.signatureRawData = action.payload.signatureRawData ?? null;
     },
   },
 });
