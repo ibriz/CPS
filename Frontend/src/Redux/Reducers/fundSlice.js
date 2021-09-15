@@ -14,6 +14,7 @@ const initialState = {
   withDrawAmountSponsorReward: 0,
   withDrawAmountProposalGrant: 0,
   sponsorBondReward: 0,
+  bnUSDScoreAddress: null
 };
 
 const fundSlice = createSlice({
@@ -122,6 +123,16 @@ const fundSlice = createSlice({
     fetchSponsorBondFailure() {
       return;
     },
+    fetchbnUSDAddressRequest(state) {
+      return;
+    },
+    fetchbnUSDAddressSuccess(state, action) {
+      console.log('bnUSD Score', action);
+      state.bnUSDScoreAddress = action.payload
+    },
+    fetchbnUSDAddressFailure() {
+      return;
+    },
   },
 
   extraReducers: {
@@ -151,5 +162,8 @@ export const {
   fetchSponsorBondRequest,
   fetchSponsorBondSuccess,
   fetchSponsorBondFailure,
+  fetchbnUSDAddressRequest,
+  fetchbnUSDAddressSuccess,
+  fetchbnUSDAddressFailure
 } = fundSlice.actions;
 export default fundSlice.reducer;

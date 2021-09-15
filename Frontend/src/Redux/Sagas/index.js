@@ -58,6 +58,7 @@ import {
   claimRewardWorker,
   fetchSponsorBondWorker,
   claimSponsorBondWorker,
+  fetchbnUSDAddressWorker
 } from './Fund';
 
 import {
@@ -134,6 +135,7 @@ import {
   claimReward,
   fetchSponsorBondRequest,
   claimSponsorBondReward,
+  fetchbnUSDAddressRequest
 } from '../Reducers/fundSlice';
 import {
   fetchUserDataRequest,
@@ -245,6 +247,7 @@ function* rootSaga() {
   yield takeEvery(registerPrep.type, registerPrepWorker);
 
   yield takeEvery(fetchCPFScoreAddressRequest.type, fetchCPFScoreAddressWorker);
+  yield takeEvery(fetchbnUSDAddressRequest.type, fetchbnUSDAddressWorker);
   yield takeEvery(
     fetchCPSTreasuryScoreAddressRequest.type,
     fetchCPSTreasuryScoreAddressWorker,

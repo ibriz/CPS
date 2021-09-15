@@ -12,13 +12,17 @@ import Footer from 'Components/Footer';
 import { Helmet } from 'react-helmet';
 import UnsubscribePage from 'Containers/UnsubscribePage';
 import VerifiedPage from 'Containers/VerifiedPage';
+import { fetchbnUSDAddressRequest } from './Redux/Reducers/fundSlice'
 
-function App({ address, fetchUserDataRequest, fetchUserPromptRequest }) {
+function App({ address, fetchUserDataRequest, fetchUserPromptRequest, fetchbnUSDAddressRequest }) {
   useEffect(() => {
     address && fetchUserDataRequest();
     address && fetchUserPromptRequest();
   }, [address]);
 
+  useEffect(() => {
+    fetchbnUSDAddressRequest()
+  }, [])
   return (
     <>
       <Switch>
@@ -69,6 +73,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = {
   fetchUserDataRequest,
   fetchUserPromptRequest,
+  fetchbnUSDAddressRequest
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
