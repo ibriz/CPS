@@ -328,8 +328,8 @@ const Dashboard = ({
           <Col xs='12'>
             <Alert variant='danger'>
               {period === 'APPLICATION' && !isRemainingTimeZero
-                ? `You missed voting on some of the proposals or progress reports in the voting period. Please pay the penalty amount of ${payPenaltyAmount} ICX to re-register.`
-                : `You missed voting on some of the proposals or progress reports in the voting period. Please pay the penalty amount of ${payPenaltyAmount} ICX in the next Application period to re-register.`}
+                ? `You missed voting on some of the proposals or progress reports in the voting period. Please pay the penalty amount of ${payPenaltyAmount} bnUSD to re-register.`
+                : `You missed voting on some of the proposals or progress reports in the voting period. Please pay the penalty amount of ${payPenaltyAmount} bnUSD in the next Application period to re-register.`}
 
               {period === 'APPLICATION' && !isRemainingTimeZero && (
                 <>
