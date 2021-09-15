@@ -88,7 +88,7 @@ function EditMilestoneModal(props) {
                   placeholder='Duration'
                   type='number'
                   min={0}
-                  max={6}
+                  max={12}
                   value={milestone.duration}
                   name='duration'
                   onChange={handleChange}

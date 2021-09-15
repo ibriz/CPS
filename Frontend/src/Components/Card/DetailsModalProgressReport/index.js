@@ -60,6 +60,7 @@ import useTimer from 'Hooks/useTimer';
 import VoteProgressBar from 'Components/VoteProgressBar';
 import InfoIcon from 'Components/InfoIcon';
 import styled from 'styled-components';
+import { NotificationManager } from 'react-notifications';
 
 const LoadingDiv = styled.div`
   height: 50vh;
@@ -113,6 +114,7 @@ function DetailsModal(props) {
     rejectedPercentageBudgetChange,
     rejectedVoterPercentageBudgetChange,
     isPrep,
+    ipfsError,
     ...remainingProps
   } = props;
 
@@ -124,9 +126,9 @@ function DetailsModal(props) {
     console.log(
       'voteReason',
       voting &&
-        period === 'VOTING' &&
-        remainingTime > 0 &&
-        !votesByProposal.some(vote => vote.sponsorAddress === walletAddress),
+      period === 'VOTING' &&
+      remainingTime > 0 &&
+      !votesByProposal.some(vote => vote.sponsorAddress === walletAddress),
     );
     if (
       voting &&
@@ -233,6 +235,15 @@ function DetailsModal(props) {
     // props.onHide();
   };
 
+
+  useEffect(() => {
+    if (ipfsError) {
+      setLoading(false);
+      props.onHide();
+      NotificationManager.error("Error fetching ipfs data");
+    }
+  }, [ipfsError])
+
   return (
     <Modal
       {...remainingProps}
@@ -245,7 +256,7 @@ function DetailsModal(props) {
           <Spinner animation='border' variant='secondary' />
         </LoadingDiv>
       ) : (
-        <>
+        !ipfsError && <>
           <Modal.Header closeButton className={styles.modalHeader}>
             <Container fluid className={styles.container}>
               <Row>
@@ -518,8 +529,8 @@ function DetailsModal(props) {
                           key: 'Additional Budget',
                           value: progressDetail?.additionalBudget
                             ? `${icxFormat(
-                                progressDetail?.additionalBudget,
-                              )} ICX`
+                              progressDetail?.additionalBudget,
+                            )} ICX`
                             : 'N/A',
                         },
                         {
@@ -838,6 +849,7 @@ const mapStateToProps = state => ({
   remainingTime: state.period.remainingTime,
   walletAddress: state.account.address,
   isPrep: state.account.isPrep,
+  ipfsError: state.progressReport.ipfsError
 });
 
 const mapDispatchToProps = dispatch => ({

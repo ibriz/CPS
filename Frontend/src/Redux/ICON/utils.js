@@ -20,9 +20,10 @@ var nid = 3;
 export const provider = new HttpProvider(
   'https://bicon.net.solidwallet.io/api/v3',
 );
+export const bnUSDScore = 'cxc48c9c81ceef04445c961c5cc8ff056d733dfe3a';
 
 export const iconService = new IconService(provider);
-export const trackerURL = "https://bicon.tracker.solidwallet.io/address";
+export const trackerURL = 'https://bicon.tracker.solidwallet.io/address';
 
 // var testNet = "https://bicon.tracker.solidwallet.io/v3/address/info?address="
 // var mainNet = "https://tracker.icon.foundation/v3/address/info?address="
@@ -159,8 +160,8 @@ export function signTransaction(walletAddress) {
         });
         return;
       }
-    };    
-    
+    };
+
     interFunctionHandle = setInterval(interFunction, 100);
   });
 }

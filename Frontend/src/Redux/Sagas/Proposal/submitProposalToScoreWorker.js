@@ -19,7 +19,8 @@ function* submitProposalToScoreWorker({ payload }) {
             sponsor_address: payload.proposal.sponserPrep,
             ipfs_hash: payload.response.hash,
             ipfs_link: `https://gateway.ipfs.io/ipfs/${payload.response.hash}`,
-            project_duration: `${payload.proposal.projectDuration}`
+            project_duration: `${payload.proposal.projectDuration}`,
+            token: 'bnUSD'
         }
      
 

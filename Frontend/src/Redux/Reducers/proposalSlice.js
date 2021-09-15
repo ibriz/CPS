@@ -27,6 +27,7 @@ const PARAMS = {
 
   sponsorVoteReason: 'sponsor_vote_reason',
   projectDuration: 'project_duration',
+  token: 'token'
 };
 
 const initialState = {
@@ -139,13 +140,15 @@ const initialState = {
   sponsorRequestProposalTitle: '',
   sponsorRequestProposal: null,
   selectedProposal: {},
+  token: '',
+  error: ''
 };
 
 const proposalSlice = createSlice({
   name: 'proposal',
   initialState,
   reducers: {
-    submitProposalRequest(state) {},
+    submitProposalRequest(state) { },
     submitProposalSuccess(state) {
       state.submittingProposal = false;
     },
@@ -210,6 +213,7 @@ const proposalSlice = createSlice({
           completedPercentage: parseInt(
             IconConverter.toBigNumber(proposal[PARAMS.percentageCompleted]),
           ),
+          token: proposal[PARAMS.token],
           // if(parseInt(totalVoters) === 0) {
           //     return 0;
           //   }
@@ -243,14 +247,15 @@ const proposalSlice = createSlice({
     fetchProposalDetailSuccess(state, payload) {
       state.proposalDetail = payload.payload.response;
     },
-    fetchProposalDetailFailure() {
-      return;
+    fetchProposalDetailFailure(state) {
+      state.error = true;
     },
     emptyProposalDetailRequest() {
       return;
     },
     emptyProposalDetailSuccess(state) {
       delete state.proposalDetail;
+      state.error = '';
       state.selectedProposal = {};
     },
     emptyProposalDetailFailure() {
@@ -327,6 +332,7 @@ const proposalSlice = createSlice({
           completedPercentage: parseInt(
             IconConverter.toBigNumber(proposal[PARAMS.percentageCompleted]),
           ),
+          token: proposal[PARAMS.token]
         }))
         .sort((a, b) => b._timestamp - a._timestamp);
       state.totalPagesSponsorRequests[action.payload.status] = Math.ceil(
@@ -471,11 +477,16 @@ const proposalSlice = createSlice({
       // state.proposalList.
       for (const proposalStatus of proposalStatusMapping) {
         state.projectAmounts[proposalStatus.name] = {
-          amount: parseFloat(
-            IconConverter.toBigNumber(
-              action.payload[proposalStatus.status]?._total_amount ?? 0,
-            ).dividedBy(10 ** 18),
-          ),
+          amount: {
+            icx: parseFloat(
+              IconConverter.toBigNumber(
+                action.payload[proposalStatus.status]?._total_amount.ICX ?? 0,
+              ).dividedBy(10 ** 18)),
+            bnUSD: parseFloat(
+              IconConverter.toBigNumber(
+                action.payload[proposalStatus.status]?._total_amount.bnUSD ?? 0,
+              ).dividedBy(10 ** 18))
+          },
           count: parseInt(
             IconConverter.toBigNumber(
               action.payload[proposalStatus.status]?._count ?? 0,
@@ -542,6 +553,7 @@ const proposalSlice = createSlice({
           completedPercentage: parseInt(
             IconConverter.toBigNumber(proposal[PARAMS.percentageCompleted]),
           ),
+          token: proposal[PARAMS.token],
           // if(parseInt(totalVoters) === 0) {
           //     return 0;
           //   }
@@ -616,6 +628,7 @@ const proposalSlice = createSlice({
           completedPercentage: parseInt(
             IconConverter.toBigNumber(proposal[PARAMS.percentageCompleted]),
           ),
+          token: proposal[PARAMS.token],
           // if(parseInt(totalVoters) === 0) {
           //     return 0;
           //   }
@@ -702,6 +715,7 @@ const proposalSlice = createSlice({
         completedPercentage: parseInt(
           IconConverter.toBigNumber(proposal[PARAMS.percentageCompleted]),
         ),
+        token: proposal[PARAMS.token]
       };
       return;
     },
@@ -712,7 +726,7 @@ const proposalSlice = createSlice({
     setBackendTriggerData(state, action) {
       state.backendTriggerData = action.payload
       return;
-  },
+    },
   },
 
   extraReducers: {

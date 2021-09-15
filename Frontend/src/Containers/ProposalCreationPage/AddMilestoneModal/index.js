@@ -89,7 +89,7 @@ function AddMilestoneModal(props) {
                   value={milestone.duration}
                   name='duration'
                   min={0}
-                  max={6}
+                  max={12}
                   onChange={handleChange}
                   required
                 />
