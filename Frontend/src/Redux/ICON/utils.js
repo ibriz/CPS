@@ -13,7 +13,7 @@ import frontEndWallet from './FrontEndWallet';
 // var CPSScore = 'cx6bb0e6683dd326165d42289c12b6bd0eaa596cc9';
 // var CPSScore = 'cx9f4ab72f854d3ccdc59aa6f2c3e2215dd62e879f';
 // export const CPSScore = 'cx9f4ab72f854d3ccdc59aa6f2c3e2215dd62e879f';
-export const CPSScore = 'cx7b98401aa6578296abd311b4cb70e90812e9ebae';
+export const CPSScore = 'cxcedc4ab6d494638ca2f4ecec8dbca4fbad166419';
 
 var nid = 3;
 // export const provider = new HttpProvider('https://ctz.solidwallet.io/api/v3');
