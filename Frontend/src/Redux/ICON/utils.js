@@ -23,7 +23,7 @@ export const provider = new HttpProvider(
 export const bnUSDScore = 'cxc48c9c81ceef04445c961c5cc8ff056d733dfe3a';
 
 export const iconService = new IconService(provider);
-export const trackerURL = 'https://tracker.icon.foundation/address';
+export const trackerURL = 'https://bicon.tracker.solidwallet.io/address';
 
 // var testNet = "https://bicon.tracker.solidwallet.io/v3/address/info?address="
 // var mainNet = "https://tracker.icon.foundation/v3/address/info?address="
@@ -160,8 +160,8 @@ export function signTransaction(walletAddress) {
         });
         return;
       }
-    };    
-    
+    };
+
     interFunctionHandle = setInterval(interFunction, 100);
   });
 }
