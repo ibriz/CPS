@@ -22,6 +22,7 @@ import styles from './DetailsModal.module.css';
 import ProgressBar from '../../UI/ProgressBar';
 import ProgressText from '../../UI/ProgressText';
 import {
+  fetchChangeVoteRequestProgressReport,
   fetchProgressReportDetailRequest,
   // approveSponserRequest, rejectSponsorRequest, voteProposal
 } from 'Redux/Reducers/progressReportSlice';
@@ -87,6 +88,7 @@ function DetailsModal(props) {
   const { remainingTime: remainingTimer } = useTimer();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
+  const [changeVoteButton, setChangeVoteButton] = useState(false);
 
   const {
     progressDetail,
@@ -115,6 +117,8 @@ function DetailsModal(props) {
     rejectedVoterPercentageBudgetChange,
     isPrep,
     ipfsError,
+    changeVote,
+    fetchChangeVoteRequest,
     ...remainingProps
   } = props;
 
@@ -208,6 +212,10 @@ function DetailsModal(props) {
       });
   }, [props.progressReport, props.show]);
 
+  useEffect(() => {
+    props.progressReport && fetchChangeVoteRequest({ ipfs_key: props.progressReport.ipfsHash, address: walletAddress })
+  }, [props.progressReport])
+
   const onSubmitVote = () => {
     voteProgressReport({
       vote,
@@ -217,6 +225,7 @@ function DetailsModal(props) {
         : null,
       proposalKey: progressReport.proposalKey,
       reportKey: progressReport.reportKey,
+      vote_change: changeVoteButton ? true : false
     });
   };
 
@@ -603,7 +612,7 @@ function DetailsModal(props) {
               <>
                 {!votesByProposal.some(
                   vote => vote.sponsorAddress === walletAddress,
-                ) ? (
+                ) || changeVoteButton ? (
                   <>
                     {progressDetail?.projectTermRevision && (
                       <Row>
@@ -741,9 +750,13 @@ function DetailsModal(props) {
                   </>
                 ) : (
                   <>
-                    <p style={{ color: '#262626', textAlign: 'center' }}>
-                      You have already voted for this progress report
+                    {status === 'Voting' && <p style={{ color: '#262626', textAlign: 'center' }}>
+                      You have already voted for this progress report. <br /> {changeVote &&
+                        <ButtonGroup aria-label='Basic example'>
+                          <Button onClick={() => setChangeVoteButton(true)} variant="primary">Change Vote</Button>
+                        </ButtonGroup>}
                     </p>
+                    }
                   </>
                 )}
               </>
@@ -849,7 +862,8 @@ const mapStateToProps = state => ({
   remainingTime: state.period.remainingTime,
   walletAddress: state.account.address,
   isPrep: state.account.isPrep,
-  ipfsError: state.progressReport.ipfsError
+  ipfsError: state.progressReport.ipfsError,
+  changeVote: state.proposals.changeVote
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -861,6 +875,8 @@ const mapDispatchToProps = dispatch => ({
   fetchVoteResultRequest: payload => dispatch(fetchVoteResultRequest(payload)),
   fetchVoteResultBudgetChangeRequest: payload =>
     dispatch(fetchVoteResultBudgetChangeRequest(payload)),
+  fetchChangeVoteRequest: (payload) => dispatch(fetchChangeVoteRequestProgressReport(payload))
+
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DetailsModal);
