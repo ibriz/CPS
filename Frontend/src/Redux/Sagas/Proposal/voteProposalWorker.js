@@ -19,6 +19,7 @@ function* voteProposalWorker({ payload }) {
     _vote: voteStatusMapping[payload.vote],
     _vote_reason: payload.voteReason,
     _ipfs_key: payload.ipfsKey,
+    _vote_change:payload.vote_change
   };
 
   const { signature } = yield signTransaction(walletAddress);
