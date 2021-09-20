@@ -10,6 +10,8 @@ import fetchProgressReportByProposalRequestWorker from './fetchProgressReportByP
 import fetchVoteResultBudgetChangeRequestWorker from './fetchVoteResultBudgetChangeRequestWorker';
 import fetchProgressReportByIpfsWorker from './fetchProgressReportByIpfsWorker';
 import emptyProgressReportDetailWorker from './emptyProgressReportDetailWorker';
+import fetchChangeVoteWorkerProgressReport from './fetchChangeVoteWorker';
+
 
 export {
   fetchProgressReportListWorker,
@@ -24,4 +26,5 @@ export {
   fetchVoteResultBudgetChangeRequestWorker,
   fetchProgressReportByIpfsWorker,
   emptyProgressReportDetailWorker,
+  fetchChangeVoteWorkerProgressReport
 };

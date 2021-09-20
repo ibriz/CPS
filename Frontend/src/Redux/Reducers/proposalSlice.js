@@ -13,6 +13,7 @@ const PARAMS = {
   proposalHash: 'ipfs_hash',
 
   approvedVotes: 'approved_votes',
+  approvedReports: 'approved_reports',
   totalVotes: 'total_votes',
   rejectedVotes: 'rejected_votes',
 
@@ -141,7 +142,8 @@ const initialState = {
   sponsorRequestProposal: null,
   selectedProposal: {},
   token: '',
-  error: ''
+  error: '',
+  changeVote: false
 };
 
 const proposalSlice = createSlice({
@@ -715,7 +717,9 @@ const proposalSlice = createSlice({
         completedPercentage: parseInt(
           IconConverter.toBigNumber(proposal[PARAMS.percentageCompleted]),
         ),
-        token: proposal[PARAMS.token]
+        token: proposal[PARAMS.token],
+        approvedReports: proposal['approved_reports'],
+        projectDuration: proposal['project_duration']
       };
       return;
     },
@@ -727,6 +731,22 @@ const proposalSlice = createSlice({
       state.backendTriggerData = action.payload
       return;
     },
+    fetchChangeVoteRequest(state) {
+      return;
+    },
+    fetchChangeVoteSuccess(state, action) {
+      const status = Number(action.payload.response);
+      if (!status) {
+        state.changeVote = true;
+      }
+      else {
+        state.changeVote = false;
+      }
+    },
+    fetchChangeVoteFailure(state) {
+      state.changeVote = false;
+      return
+    }
   },
 
   extraReducers: {
@@ -789,6 +809,10 @@ export const {
   emptyProposalDetailSuccess,
   emptyProposalDetailRequest,
   emptyProposalDetailFailure,
-  setBackendTriggerData
+  setBackendTriggerData,
+  fetchChangeVoteRequest,
+  fetchChangeVoteSuccess,
+  fetchChangeVoteFailure
+
 } = proposalSlice.actions;
 export default proposalSlice.reducer;

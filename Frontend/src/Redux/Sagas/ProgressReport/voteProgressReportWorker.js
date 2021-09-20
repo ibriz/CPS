@@ -20,6 +20,7 @@ function* voteProgressReportWorker({ payload }) {
     _vote_reason: payload.voteReason,
     _ipfs_key: payload.proposalKey,
     _report_key: payload.reportKey,
+    _vote_change:payload.vote_change
   };
 
   const { signature } =  yield signTransaction(walletAddress);

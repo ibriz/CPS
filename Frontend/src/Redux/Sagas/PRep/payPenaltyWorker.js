@@ -5,7 +5,7 @@ import IconService from 'icon-sdk-js';
 
 
 function* payPenaltyWorker({ payload }) {
-  const getPayPenaltyAmount = state => state.account.penaltyAmount;
+  const getPayPenaltyAmount = state => state.account.unchangedPenaltyAmount;
   const payPenaltyAmount = yield select(getPayPenaltyAmount);
   const { IconAmount, IconConverter } = IconService;
   let _data = JSON.stringify({ "method": "pay_prep_penalty", "params": {} });

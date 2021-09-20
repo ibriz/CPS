@@ -70,15 +70,19 @@ const TabularData = ({
     {
       key: 'Voting Proposals',
       value: `${projectAmounts.Voting.count} (${icxFormat(
-        projectAmounts.Voting.amount.bnUSD,
-      )} bnUSD)`,
+        projectAmounts.Voting.amount.bnUSD || 0,
+      )} bnUSD,${icxFormat(
+        projectAmounts.Voting.amount.icx  || 0,
+      )} ICX)`,
     },
     {
       key: 'Approved Proposals',
-      value: `${projectAmounts.Active.count + projectAmounts.Paused.count
+      value: `${projectAmounts.Active.count  + projectAmounts.Paused.count
         } (${icxFormat(
-          projectAmounts.Active.amount.bnUSD + projectAmounts.Paused.amount.bnUSD,
-        )} bnUSD)`,
+          projectAmounts.Active.amount.bnUSD  || 0 + projectAmounts.Paused.amount.bnUSD  || 0,
+        )} bnUSD,${icxFormat(
+          projectAmounts.Active.amount.icx  || 0 + projectAmounts.Paused.amount.icx  || 0
+        )} ICX)`,
     },
     {
       key: 'CPF Remaining Funds',

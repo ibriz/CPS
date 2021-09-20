@@ -33,6 +33,7 @@ import {
   fetchSponsorMessageRequestWorker,
   fetchProposalByIpfsWorker,
   emptyProposalDetailWorker,
+  fetchChangeVoteWorker
 } from './Proposal/index';
 
 import {
@@ -48,6 +49,7 @@ import {
   fetchVoteResultBudgetChangeRequestWorker,
   fetchProgressReportByIpfsWorker,
   emptyProgressReportDetailWorker,
+  fetchChangeVoteWorkerProgressReport
 } from './ProgressReport';
 
 import {
@@ -101,6 +103,7 @@ import {
   fetchSponsorMessageRequest,
   fetchProposalByIpfsRequest,
   emptyProposalDetailRequest,
+  fetchChangeVoteRequest
 } from '../Reducers/proposalSlice';
 import {
   submitProgressReportRequest,
@@ -115,6 +118,7 @@ import {
   fetchVoteResultBudgetChangeRequest,
   fetchProgressReportByIpfsRequest,
   emptyProgressReportDetailRequest,
+  fetchChangeVoteRequestProgressReport
 } from '../Reducers/progressReportSlice';
 import {
   fetchPeriodDetailsRequest,
@@ -305,6 +309,15 @@ function* rootSaga() {
     emptyProgressReportDetailRequest.type,
     emptyProgressReportDetailWorker,
   );
+  yield takeEvery(
+    fetchChangeVoteRequest.type,
+    fetchChangeVoteWorker,
+  );
+  yield takeEvery(
+    fetchChangeVoteRequestProgressReport.type,
+    fetchChangeVoteWorkerProgressReport,
+  );
+
 }
 
 export default rootSaga;

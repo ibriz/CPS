@@ -29,6 +29,7 @@ import {
   voteProposal,
   fetchVoteResultRequest,
   fetchSponsorMessageRequest,
+  fetchChangeVoteRequest,
 } from 'Redux/Reducers/proposalSlice';
 import { emptyProgressReportDetailRequest, fetchProgressReportByProposalRequest } from 'Redux/Reducers/progressReportSlice';
 import { connect } from 'react-redux';
@@ -131,6 +132,8 @@ function DetailsModal(props) {
 
   const [loading, setLoading] = useState(true);
 
+  const [changeVoteButton, setChangeVoteButton] = useState(false);
+
   const {
     proposalDetail,
     proposal,
@@ -157,6 +160,8 @@ function DetailsModal(props) {
     isPrep,
     emptyProgressReportDetailRequest,
     ipfsError,
+    changeVote,
+    fetchChangeVoteRequest,
     ...remainingProps
   } = props;
 
@@ -322,11 +327,16 @@ function DetailsModal(props) {
     // }
   }, [props.proposal, props.show]);
 
+  useEffect(() => {
+    props.proposal && fetchChangeVoteRequest({ ipfs_key: props.proposal.ipfsKey, address: walletAddress })
+  }, [props.proposal])
+
   const onSubmitVote = () => {
     voteProposal({
       vote,
       voteReason: voteReason.replace(/&nbsp;/g, ''),
       ipfsKey: proposal.ipfsKey,
+      vote_change: changeVoteButton ? true : false
     });
   };
 
@@ -738,7 +748,7 @@ function DetailsModal(props) {
               <>
                 {!votesByProposal.some(
                   vote => vote.sponsorAddress === walletAddress,
-                ) ? (
+                ) || changeVoteButton ? (
                   <>
                     <Row
                       style={{
@@ -796,9 +806,13 @@ function DetailsModal(props) {
                   </>
                 ) : (
                   <>
-                    <p style={{ color: '#262626', textAlign: 'center' }}>
-                      You have already voted for this proposal
+                    {status === 'Voting' && <p style={{ color: '#262626', textAlign: 'center' }}>
+                      You have already voted for this proposal. <br /> {changeVote &&
+                        <ButtonGroup aria-label='Basic example'>
+                          <Button onClick={() => setChangeVoteButton(true)} variant="primary">Change Vote</Button>
+                        </ButtonGroup>}
                     </p>
+                    }
                   </>
                 )}
               </>
@@ -906,7 +920,8 @@ const mapStateToProps = state => ({
   sponsorMessage: state.proposals.sponsorMessage,
   walletAddress: state.account.address,
   isPrep: state.account.isPrep,
-  ipfsError: state.proposals.error
+  ipfsError: state.proposals.error,
+  changeVote: state.proposals.changeVote
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -922,6 +937,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(fetchSponsorMessageRequest(payload)),
   emptyProgressReportDetailRequest: (payload) =>
     dispatch(emptyProgressReportDetailRequest()),
+  fetchChangeVoteRequest: (payload) => dispatch(fetchChangeVoteRequest(payload))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DetailsModal);

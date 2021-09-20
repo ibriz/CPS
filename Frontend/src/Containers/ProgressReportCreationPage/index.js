@@ -29,6 +29,7 @@ import RichTextEditor from 'Components/RichTextEditor';
 import LoaderModal from '../../Components/UI/LoaderModal';
 // import {getCurrentUserActiveProposals} from 'Selectors';
 import {
+  fetchProposalByIpfsRequest,
   fetchProposalListRequest,
   fetchProposalByAddressRequest,
 } from 'Redux/Reducers/proposalSlice';
@@ -74,6 +75,8 @@ const ProgressReportCreationPage = ({
   fetchCPFRemainingFundRequest,
   cpfScoreAddress,
   cpfRemainingFunds,
+  selectedProposal,
+  fetchProposalByIpfsRequest
 }) => {
   const { draftProgressReport, isDraft, ipfsKey } = location;
   const [progressReport, setProposal] = useState({
@@ -301,6 +304,17 @@ const ProgressReportCreationPage = ({
       document.getElementById(name).reportValidity();
   };
 
+  useEffect(() => {
+    if (progressReport.projectName) {
+      fetchProposalByIpfsRequest({ ipfs_key: progressReport.projectName })
+    }
+  }, [progressReport.projectName])
+
+  useEffect(() => {
+    if (selectedProposal?.approvedReports && selectedProposal?.projectDuration) {
+      setProposal((prevState) => ({ ...prevState, timeRemainingToCompletion: Number(selectedProposal?.projectDuration) - Number(selectedProposal?.approvedReports) }))
+    }
+  }, [selectedProposal])
   const handleCheckedChange = event => {
     let name = event.target.name;
     let value = event.target.checked;
@@ -469,6 +483,8 @@ const ProgressReportCreationPage = ({
                     onChange={handleChange}
                     min={0}
                     max={6}
+                    disabled
+                    style={{backgroundColor:'white'}}
                     required
                   />
                   <InputGroup.Append>
@@ -668,7 +684,7 @@ const ProgressReportCreationPage = ({
               isTimeRemainingNotZero &&
               progressReport.projectTermRevision &&
               progressReport.timeRemainingToCompletion !==
-                progressReport.additionalTime && (
+              progressReport.additionalTime && (
                 <Alert variant='primary'>
                   Note: Recommended additional time:{' '}
                   {progressReport.timeRemainingToCompletion} month (The time
@@ -754,6 +770,7 @@ const ProgressReportCreationPage = ({
       </ConfirmationModal>
     </div>
   );
+
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -770,6 +787,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(fetchCPFScoreAddressRequest(payload)),
   fetchCPFRemainingFundRequest: payload =>
     dispatch(fetchCPFRemainingFundRequest(payload)),
+  fetchProposalByIpfsRequest: payload => dispatch(fetchProposalByIpfsRequest(payload))
 });
 
 const mapStateToProps = state => ({
@@ -785,6 +803,7 @@ const mapStateToProps = state => ({
 
   cpfRemainingFunds: state.fund.cpfRemainingFunds,
   cpfScoreAddress: state.fund.cpfScoreAddress,
+  selectedProposal: state.proposals.selectedProposal
 });
 
 export default withRouter(
