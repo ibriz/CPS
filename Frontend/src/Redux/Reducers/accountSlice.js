@@ -15,6 +15,7 @@ const initialState = {
   signatureRawData: null,
   hasAddress: null,
   loginButtonClicked: false,
+  unchangedPenaltyAmount: 0,
 };
 
 const accountSlice = createSlice({
@@ -31,8 +32,8 @@ const accountSlice = createSlice({
     setLoginButtonClicked(state, action) {
       state.loginButtonClicked = action.payload.click;
     },
-    loginRequest(state) {},
-    loginPrepRequest(state) {},
+    loginRequest(state) { },
+    loginPrepRequest(state) { },
     loginSuccess(state, action) {
       state.isPrep = action.payload.isPrep;
       state.isRegistered = action.payload.isRegistered;
@@ -40,7 +41,7 @@ const accountSlice = createSlice({
       state.penaltyAmount = IconConverter.toBigNumber(
         action.payload.penaltyAmount,
       ).dividedBy(10 ** 18);
-
+      state.unchangedPenaltyAmount = action.payload.penaltyAmount;
       state.walletBalance = IconConverter.toBigNumber(
         action.payload.walletBalance,
       ).dividedBy(10 ** 18);
