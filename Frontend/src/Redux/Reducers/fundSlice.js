@@ -11,8 +11,8 @@ const initialState = {
   sponsorReward: 0,
   sponsorBond: 0,
 
-  withDrawAmountSponsorReward: 0,
-  withDrawAmountProposalGrant: 0,
+  withDrawAmountSponsorReward: { icx: 0, bnUSD: 0 },
+  withDrawAmountProposalGrant: { icx: 0, bnUSD: 0 },
   sponsorBondReward: 0,
   bnUSDScoreAddress: null
 };
@@ -73,12 +73,20 @@ const fundSlice = createSlice({
             action.payload.response.total_amount,
           ).dividedBy(10 ** 18)
           : 0;
-        state.withDrawAmountProposalGrant = action.payload.response
-          .withdraw_amount
-          ? IconConverter.toBigNumber(
-            action.payload.response.withdraw_amount,
-          ).dividedBy(10 ** 18)
-          : 0;
+        state.withDrawAmountProposalGrant = {
+          icx: action.payload.response
+            .withdraw_amount_icx
+            ? IconConverter.toBigNumber(
+              action.payload.response.withdraw_amount_icx,
+            ).dividedBy(10 ** 18)
+            : 0,
+          bnUSD: action.payload.response
+            .withdraw_amount_bnusd
+            ? IconConverter.toBigNumber(
+              action.payload.response.withdraw_amount_bnusd,
+            )
+            : 0
+        };
       } else {
         state.sponsorReward = action.payload.response.total_amount
           ? IconConverter.toBigNumber(
@@ -90,12 +98,20 @@ const fundSlice = createSlice({
             action.payload.response.total_sponsor_bond,
           ).dividedBy(10 ** 18)
           : 0;
-        state.withDrawAmountSponsorReward = action.payload.response
-          .withdraw_amount
-          ? IconConverter.toBigNumber(
-            action.payload.response.withdraw_amount,
-          ).dividedBy(10 ** 18)
-          : 0;
+        state.withDrawAmountSponsorReward = {
+          icx: action.payload.response
+            .withdraw_amount_icx
+            ? IconConverter.toBigNumber(
+              action.payload.response.withdraw_amount_icx,
+            ).dividedBy(10 ** 18)
+            : 0,
+          bnUSD: action.payload.response
+            .withdraw_amount_bnusd
+            ? IconConverter.toBigNumber(
+              action.payload.response.withdraw_amount_bnusd,
+            )
+            : 0
+        };
       }
 
       // state.cpfScoreAddress = action.payload.response;
