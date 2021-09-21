@@ -225,7 +225,7 @@ function DetailsModal(props) {
         : null,
       proposalKey: progressReport.proposalKey,
       reportKey: progressReport.reportKey,
-      vote_change: changeVoteButton ? true : false
+      vote_change: changeVoteButton ? 1 : 0
     });
   };
 
@@ -753,7 +753,7 @@ function DetailsModal(props) {
                     {status === 'Voting' && <p style={{ color: '#262626', textAlign: 'center' }}>
                       You have already voted for this progress report. <br /> {changeVote &&
                         <ButtonGroup aria-label='Basic example'>
-                          <Button onClick={() => setChangeVoteButton(true)} variant="primary">Change Vote</Button>
+                          <Button style={{ width: 200 }} onClick={() => setChangeVoteButton(true)} variant="primary">Change Vote</Button>
                         </ButtonGroup>}
                     </p>
                     }
