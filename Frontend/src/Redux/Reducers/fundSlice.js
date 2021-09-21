@@ -84,7 +84,7 @@ const fundSlice = createSlice({
             .withdraw_amount_bnusd
             ? IconConverter.toBigNumber(
               action.payload.response.withdraw_amount_bnusd,
-            )
+            ).dividedBy(10 ** 18)
             : 0
         };
       } else {
@@ -109,7 +109,7 @@ const fundSlice = createSlice({
             .withdraw_amount_bnusd
             ? IconConverter.toBigNumber(
               action.payload.response.withdraw_amount_bnusd,
-            )
+            ).dividedBy(10 ** 18)
             : 0
         };
       }

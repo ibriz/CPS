@@ -11,7 +11,7 @@ function* payPenaltyWorker({ payload }) {
   let _data = JSON.stringify({ "method": "pay_prep_penalty", "params": {} });
   const getbnUSDAddress = state => state.fund.bnUSDScoreAddress;
   const bnUSDScore = yield select(getbnUSDAddress);
-  let params = { '_to': CPSScore, '_value': IconConverter.toHex(IconAmount.of(payPenaltyAmount, IconAmount.Unit.ICX).toLoop()), "_data": IconConverter.toHex(_data) }
+  let params = { '_to': CPSScore, '_value': payPenaltyAmount, "_data": IconConverter.toHex(_data) }
   sendTransaction({
     method: 'transfer',
     params,
