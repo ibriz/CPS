@@ -225,7 +225,7 @@ function DetailsModal(props) {
         : null,
       proposalKey: progressReport.proposalKey,
       reportKey: progressReport.reportKey,
-      vote_change: changeVoteButton ? 1 : 0
+      vote_change: changeVoteButton ? "1" : "0"
     });
   };
 

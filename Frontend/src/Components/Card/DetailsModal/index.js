@@ -336,7 +336,7 @@ function DetailsModal(props) {
       vote,
       voteReason: voteReason.replace(/&nbsp;/g, ''),
       ipfsKey: proposal.ipfsKey,
-      vote_change: changeVoteButton ? 1 : 0
+      vote_change: changeVoteButton ? "1" : "0"
     });
   };
 
