@@ -10,7 +10,7 @@ function* fetchChangeVoteWorker({ payload }) {
         console.log('Change Vote payload', payload);
         const response = yield call(callKeyStoreWallet, {
             method: 'check_change_vote',
-            params: { _ipfs_hash: payload.ipfs_key, _address: payload.address },
+            params: { _ipfs_hash: payload.ipfs_key, _address: payload.address, _proposal_type: "proposal" },
         });
         yield put(
             fetchChangeVoteSuccess({
