@@ -7,13 +7,13 @@ const initialState = {
 
   cpsTreasuryScoreAddress: null,
 
-  expectedGrant: 0,
-  sponsorReward: 0,
-  sponsorBond: 0,
+  expectedGrant: { icx: 0, bnUSD: 0 },
+  sponsorReward: { icx: 0, bnUSD: 0 },
+  sponsorBond: { icx: 0, bnUSD: 0 },
 
   withDrawAmountSponsorReward: { icx: 0, bnUSD: 0 },
   withDrawAmountProposalGrant: { icx: 0, bnUSD: 0 },
-  sponsorBondReward: 0,
+  sponsorBondReward: { icx: 0, bnUSD: 0 },
   bnUSDScoreAddress: null
 };
 
@@ -68,11 +68,18 @@ const fundSlice = createSlice({
     },
     fetchExpectedGrantSuccess(state, action) {
       if (action.payload.response.type === 'proposalGrant') {
-        state.expectedGrant = action.payload.response.total_amount
-          ? IconConverter.toBigNumber(
-            action.payload.response.total_amount,
-          ).dividedBy(10 ** 18)
-          : 0;
+        state.expectedGrant = {
+          icx: action.payload.response.total_amount.ICX
+            ? IconConverter.toBigNumber(
+              action.payload.response.total_amount.ICX,
+            ).dividedBy(10 ** 18)
+            : 0,
+          bnUSD: action.payload.response.total_amount.bnUSD
+            ? IconConverter.toBigNumber(
+              action.payload.response.total_amount.bnUSD,
+            ).dividedBy(10 ** 18)
+            : 0
+        };
         state.withDrawAmountProposalGrant = {
           icx: action.payload.response
             .withdraw_amount_icx
@@ -88,16 +95,30 @@ const fundSlice = createSlice({
             : 0
         };
       } else {
-        state.sponsorReward = action.payload.response.total_amount
-          ? IconConverter.toBigNumber(
-            action.payload.response.total_amount,
-          ).dividedBy(10 ** 18)
-          : 0;
-        state.sponsorBond = action.payload.response.total_sponsor_bond
-          ? IconConverter.toBigNumber(
-            action.payload.response.total_sponsor_bond,
-          ).dividedBy(10 ** 18)
-          : 0;
+        state.sponsorReward = {
+          icx: action.payload.response.total_amount.ICX
+            ? IconConverter.toBigNumber(
+              action.payload.response.total_amount.ICX,
+            ).dividedBy(10 ** 18)
+            : 0,
+          bnUSD: action.payload.response.total_amount.bnUSD
+            ? IconConverter.toBigNumber(
+              action.payload.response.total_amount.bnUSD,
+            ).dividedBy(10 ** 18)
+            : 0
+        }
+        state.sponsorBond = {
+          icx: action.payload.response.total_sponsor_bond.ICX
+            ? IconConverter.toBigNumber(
+              action.payload.response.total_sponsor_bond.ICX,
+            ).dividedBy(10 ** 18)
+            : 0,
+          bnUSD: action.payload.response.total_sponsor_bond.bnUSD
+            ? IconConverter.toBigNumber(
+              action.payload.response.total_sponsor_bond.bnUSD,
+            ).dividedBy(10 ** 18)
+            : 0
+        }
         state.withDrawAmountSponsorReward = {
           icx: action.payload.response
             .withdraw_amount_icx
@@ -132,9 +153,14 @@ const fundSlice = createSlice({
     },
     fetchSponsorBondSuccess(state, action) {
       console.log('Sponsor', action);
-      state.sponsorBondReward = action.payload
-        ? IconConverter.toBigNumber(action.payload).dividedBy(10 ** 18)
-        : 0;
+      state.sponsorBondReward = {
+        icx: action.payload.ICX
+          ? IconConverter.toBigNumber(action.payload.ICX).dividedBy(10 ** 18)
+          : 0,
+        bnUSD: action.payload.bnUSD
+          ? IconConverter.toBigNumber(action.payload.bnUSD).dividedBy(10 ** 18)
+          : 0
+      };
     },
     fetchSponsorBondFailure() {
       return;
@@ -155,7 +181,8 @@ const fundSlice = createSlice({
     'account/logout': (state, action) => {
       state.expectedGrant = 0;
       state.sponsorBond = 0;
-      state.sponsorBondReward = 0;
+      state.sponsorBondReward = { icx: 0, bnUSD: 0 }
+
     },
   },
 });

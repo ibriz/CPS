@@ -72,7 +72,7 @@ const LoadingDiv = styled.div`
 `;
 
 function DetailsModal(props) {
-  const voteOptions = ['Approve', 'Reject'];
+  const voteOptions = [{ title: 'Approve', bgColor: 'success' }, { title: 'Reject', bgColor: 'danger' }];
   const [vote, setVote] = useState('');
   const [voteProjectTermRevision, setVoteProjectTermRevision] = useState();
 
@@ -635,13 +635,11 @@ function DetailsModal(props) {
                         <ButtonGroup aria-label='Basic example'>
                           {voteOptions.map(voteOption => (
                             <Button
-                              variant={
-                                vote === voteOption ? 'success' : 'light'
-                              }
-                              onClick={() => setVote(voteOption)}
+                              variant={vote === voteOption.title ? voteOption.bgColor : 'light'}
+                              onClick={() => setVote(voteOption.title)}
                               style={{ border: '1px solid rgba(0,0,0,0.7)' }}
                             >
-                              {voteOption}
+                              {voteOption.title}
                             </Button>
                           ))}
                         </ButtonGroup>
@@ -863,7 +861,7 @@ const mapStateToProps = state => ({
   walletAddress: state.account.address,
   isPrep: state.account.isPrep,
   ipfsError: state.progressReport.ipfsError,
-  changeVote: state.proposals.changeVote
+  changeVote: state.progressReport.changeVote
 });
 
 const mapDispatchToProps = dispatch => ({

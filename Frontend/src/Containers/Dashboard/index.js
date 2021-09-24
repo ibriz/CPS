@@ -80,6 +80,65 @@ const Dashboard = ({
 
   let cardInfo;
 
+  const getSponsorBondRewardText = (amount) => {
+    if (parseFloat(amount.icx) > 0 && parseFloat(amount.bnUSD) > 0) {
+      return `${icxFormat(
+        parseFloat(
+          amount.icx
+        ),
+        true)} ICX (${icxFormat(
+          parseFloat(
+            amount.bnUSD
+          ),
+          true,
+        )} bnUSD)`
+    }
+    else if (parseFloat(amount.icx) > 0) {
+      return `${icxFormat(
+        parseFloat(
+          amount.icx
+        ),
+        true)} ICX`
+    }
+    else {
+      return `${icxFormat(parseFloat(
+        amount.bnUSD || 0
+      ),
+        true,
+      )} bnUSD`
+    }
+
+  }
+  const getIcxbnUSDAmount = (amount) => {
+    if (parseFloat(amount.icx) > 0 && parseFloat(amount.bnUSD) > 0) {
+      return `${icxFormat(
+        parseFloat(
+          amount.icx
+        ),
+        true)} ICX <br/> ${icxFormat(
+          parseFloat(
+            amount.bnUSD
+          ),
+          true,
+        )} bnUSD`
+    }
+    else if (parseFloat(amount.icx) > 0) {
+      return `${icxFormat(
+        parseFloat(
+          amount.icx
+        ),
+        true)} ICX`
+    }
+    else {
+      return `${icxFormat(parseFloat(
+        amount.bnUSD || 0
+      ),
+        true,
+      )} bnUSD`
+    }
+
+  }
+
   if (!isPrep || !isRegistered) {
     cardInfo = [
       {
@@ -102,7 +161,7 @@ const Dashboard = ({
         color: '#1AAABA',
         title: `Next Disbursement in ${highestSignificantTimeForGrant.value} ${highestSignificantTimeForGrant.text}`,
         // value={`${icxFormat(cpfRemainingFunds, true)} ICX`}
-        value: `${icxFormat(expectedGrant, true)} ICX`,
+        value: getIcxbnUSDAmount(expectedGrant)
       },
       {
         title: `Remaining Time in ${period !== 'VOTING' ? 'Application Period' : 'Voting Period'
@@ -153,19 +212,19 @@ const Dashboard = ({
         color: '#1AAABA',
         title: 'My Sponsor Bond',
         // value={`${projectAmounts.Active.count + projectAmounts.Paused.count} (${icxFormat(projectAmounts.Active.amount + projectAmounts.Paused.amount)} ICX)`} />
-        value: `${icxFormat(sponsorBond, true)} ICX`,
+        value: getIcxbnUSDAmount(sponsorBond),
       },
       {
         color: '#1AAABA',
         title: `Next Sponsor Reward in  ${highestSignificantTimeForGrant.value} ${highestSignificantTimeForGrant.text}`,
         // value={`${icxFormat(cpfRemainingFunds, true)} ICX`}
-        value: `${icxFormat(sponsorReward, true)} ICX`,
+        value: getIcxbnUSDAmount(sponsorReward),
       },
       {
         color: '#1AAABA',
         title: `Next Disbursement in ${highestSignificantTimeForGrant.value} ${highestSignificantTimeForGrant.text}`,
         // value={`${icxFormat(cpfRemainingFunds, true)} ICX`}
-        value: `${icxFormat(expectedGrant, true)} ICX`,
+        value: getIcxbnUSDAmount(expectedGrant),
       },
 
       // {
@@ -319,16 +378,12 @@ const Dashboard = ({
           </Row>
         )}
 
-      {parseFloat(sponsorBondReward) > 0 && (
+      {(parseFloat(sponsorBondReward.icx) > 0 || parseFloat(sponsorBondReward.bnUSD) > 0) && (
         <Row style={{ marginTop: '15px' }}>
           <Col xs='12'>
             <Alert variant='success'>
               {isPrep &&
-                `Congratulations! You can claim a total sponsor bond of ${icxFormat(
-                  parseFloat(sponsorBondReward),
-                  true,
-                )
-                } ICX.`}
+                `Congratulations! You can claim a total sponsor bond of ${getSponsorBondRewardText(sponsorBondReward)}`}
 
               {
                 <>
