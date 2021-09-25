@@ -28,7 +28,7 @@ async function sendEmailNotifications() {
     if (present_period.period_name === PERIOD_MAPPINGS.APPLICATION_PERIOD && user_details_list.length > 0) {
       console.log('=====================Notifications for Application Period=======================');
 
-      if (parseInt(present_period.remaining_time, 16) <= DAY) {
+      if (parseInt(present_period.remaining_time, 16) <= DAY && parseInt(present_period.remaining_time, 16) > 0) {
         console.log("LESS THAN DAY REMAINING");
         const progress_report_reminder_before_one_day_async = score.progress_report_reminder_before_one_day(user_details_list).then(async (contributor_notification_list) => {
           if (contributor_notification_list !== undefined && contributor_notification_list.length > 0) {
