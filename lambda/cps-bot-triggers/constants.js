@@ -1,7 +1,8 @@
 const subscriptionKey = 'botSubscriber';
 
 
-const IPFS_BASE_URL = ['https://gateway.ipfs.io/ipfs/', 'https://cloudflare-ipfs.com/ipfs/'];
+const IPFS_BASE_URL = ['https://gateway.ipfs.io/ipfs/', 'https://cloudflare-ipfs.com/ipfs/', 
+'https://ipfs.trusti.id/ipfs/', 'https://ipfs.eth.aragon.network/ipfs/'];
 
 const eventTypesMapping = {
     voteProposal: 'voteProposal',

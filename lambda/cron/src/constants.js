@@ -26,7 +26,8 @@ const EVENT_TYPES = {
   APPLICATION_PERIOD_STATS: 'applicationPeriodStats',
 }
 
-const IPFS_BASE_URL = ['https://gateway.ipfs.io/ipfs/', 'https://cloudflare-ipfs.com/ipfs/'];
+const IPFS_BASE_URL = ['https://gateway.ipfs.io/ipfs/', 'https://cloudflare-ipfs.com/ipfs/', 
+'https://ipfs.trusti.id/ipfs/', 'https://ipfs.eth.aragon.network/ipfs/'];
 
 const SUBSCRIPTION_KEY = 'botSubscriber';
 
