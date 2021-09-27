@@ -417,31 +417,4 @@ async function execute() {
 	}
 }
 
-async function proposal_notification(proposal) {
-	try {
-		const preps = await score.get_preps();
-		const preps_key = preps.map(prep => 'users:address:' + prep.address);
-		console.log(preps_key);
-
-		const preps_list = await redis.populate_users_details(preps_key);
-
-		let  notification_list = [];
-
-		for(const user of preps_list){
-			user.replacementTemplateData = `{
-				\"firstName\": \"${user.firstName}\",
-			}`
-
-			notification_list.push(user);
-		}
-
-		await mail.send_bulk_email('proposal-up-by-sponsor',
-			notification_list,
-			'Proposal is submitted on ICON CPS',
-			`,\"projectName\": \"${proposal.projectName}\", \"address\": \"${proposal.address}\"`);
-	} catch (err) {
-		throw err;
-	}
-}
-
-module.exports = { execute, proposal_notification };
+module.exports = { execute };
