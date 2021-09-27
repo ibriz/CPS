@@ -6,35 +6,6 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function triggerWebhook(eventType, data) {
-	// get all the subscribed Urls for receiving webhooks
-	console.log("TRYING TO SEND WEBHOOK NOTIFICATIONS");
-	const subscribedUrls = await redis.getSubscribedUrls();
-
-	if(subscribedUrls) {
-			for (subscriberStr of Object.values(subscribedUrls)) {
-					const subscriberDetails = JSON.parse(subscriberStr);
-					const { receivingUrl, secretKey } = subscriberDetails;
-					console.log(`Trying to notify ${receivingUrl}`);
-					const axiosObj = {
-							method: 'post',
-							url: receivingUrl, 
-							data: { eventType, data }, 
-							headers: { 'Token': secretKey },
-							timeout: 8000,
-					};
-					console.log(axiosObj.data);
-					
-					try {
-							await axios(axiosObj);
-							console.log(`Successfully notified ${receivingUrl}`);
-					} catch (e) {
-							console.error(`Error nofifying ${receivingUrl}`);
-							console.error(e);
-					}
-			}
-	}
-}
 // randomly fetch from available ipfs urls
 async function fetchFromIpfs(ipfsHash, availableIpfsUrls=IPFS_BASE_URL) {
 	if(!availableIpfsUrls.length) throw new Error('Could not load data using IPFS hash. Is the hash valid?');
@@ -56,6 +27,5 @@ async function fetchFromIpfs(ipfsHash, availableIpfsUrls=IPFS_BASE_URL) {
 
 module.exports = {
 	sleep,
-	triggerWebhook,
 	fetchFromIpfs
 }

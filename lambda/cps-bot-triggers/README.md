@@ -4,3 +4,6 @@
 - **REDIS_URL**	&nbsp;&nbsp;&nbsp;&nbsp; redis://redis-cache-01.9hnobd.0001.use2.cache.amazonaws.com:6379
 - **SUBSCRIPTION_PATH** &nbsp;&nbsp;&nbsp;&nbsp;	/subscription
 - **TRIGGER_PATH** &nbsp;&nbsp;&nbsp;&nbsp;	/submit_notification
+- **BOT_ACCESS_KEY** &nbsp;&nbsp;&nbsp;&nbsp;	893nadsjakjdkj34kjknjm,
+- **PERIOD_CHANGE_NOTIFY_PATH** &nbsp;&nbsp;&nbsp;&nbsp;	/period_change
+- **USER_ADDRESS** &nbsp;&nbsp;&nbsp;&nbsp;	hx....

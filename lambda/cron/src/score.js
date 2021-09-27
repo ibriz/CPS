@@ -232,7 +232,6 @@ async function get_proposals_details(address) {
 async function getProposalDetailsByStatus(status, fromLastPeriodOnly=false) {
 	console.log('Recursive RPC Call for method get_proposal_details for status ', status);
 
-	// let proposalDetails = [];
 	const proposalDetails = await recursive_score_call(
 		'get_proposal_details', 
 		{
@@ -240,15 +239,11 @@ async function getProposalDetailsByStatus(status, fromLastPeriodOnly=false) {
 			'_wallet_address': user_address
 		}
 	);
-	// console.log('getProposalDetailsByStatus: ' + JSON.stringify(proposalDetails));
 	
 	if(fromLastPeriodOnly) {
 		// retrun data from last period only (timestamp < 24hrs)
 		return proposalDetails.filter(proposal => {
 			const timeDiff = new BigNumber(proposal.timestamp).div(1000).minus(Date.now());	// micro to milli
-			// TODO: remove console msgs
-			console.log(proposal.project_title);
-			console.log(Math.abs(timeDiff.div(1000*24*60*60).toNumber()));
 			return Math.abs(timeDiff.div(1000*24*60*60).toNumber()) < 1;
 		})
 	}
