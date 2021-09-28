@@ -88,7 +88,7 @@ async function execute() {
 					presentPeriod: present_period['period_name']
 				},
 				{
-					timeout: 5000,
+					timeout: 10000,
 					headers: {
 						accessToken: process.env['BOT_ACCESS_KEY']
 					}

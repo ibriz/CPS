@@ -17,7 +17,7 @@ async function fetchFromIpfs(ipfsHash, availableIpfsUrls=IPFS_BASE_URL) {
 	availableIpfsUrls = availableIpfsUrls.filter((_, index) => index != ipfsUrlIndex);
 
 	try {
-		const res = await axios.get(fetchUrl, { timeout: 7000 });
+		const res = await axios.get(fetchUrl, { timeout: 10000 });
 		return res.data;
 	} catch (e) {
 		console.log(JSON.stringify(e));
