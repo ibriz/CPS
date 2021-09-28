@@ -90,7 +90,7 @@ async function periodChangeNotifications(presentPeriod, periodEndingDate) {
         const applicationPeriodStats = {
           votingProposalsCount: new BigNumber(pendingProjectAmt['_count']).toFixed(),
           votingProposalsBudget: new BigNumber(pendingProjectAmt['_total_amount']).div(Math.pow(10,18)).toFixed(),
-          periodEndsOn: periodEndingDate.getTime().toString(),
+          periodEndsOn: typeof periodEndingDate == 'number' ? periodEndingDate.toString() : periodEndingDate,	
           votingPRsCount: new BigNumber(waitingProgressReports.length).toFixed(),
         };
         await triggerWebhook(EVENT_TYPES.APPLICATION_PERIOD_STATS, applicationPeriodStats);
