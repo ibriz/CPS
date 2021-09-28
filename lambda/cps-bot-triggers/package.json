@@ -4,7 +4,6 @@
     "version": "0.0.1",
     "private": true,
     "dependencies": {
-        "@fleekhq/fleek-storage-js": "^1.0.4",
         "axios": "^0.21.1",
         "bignumber.js": "^9.0.1",
         "icon-sdk-js": "0.0.19",
