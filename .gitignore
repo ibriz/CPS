@@ -31,3 +31,6 @@ cps_score/.idea/
 node_modules
 *.zip
 .env
+
+# sam-app
+**/sam-app/*

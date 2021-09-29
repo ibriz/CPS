@@ -4,25 +4,7 @@ const { BRIDGE_EVENT_TYPES } = require('./src/constants');
 
 exports.handler = async (event) => {
 	try {
-		// ------------------------------------unused-----------------------------------
-		if (event.hasOwnProperty('httpMethod') && event.httpMethod === 'POST') {
-			await cron.proposal_notification(JSON.parse(event.body));
-
-			const response = {
-				statusCode: 200,
-				headers: {
-					'Access-Control-Allow-Origin': '*',
-					'Access-Control-Allow-Headers': '*'
-				},
-				body: JSON.stringify({
-					message: "Email sent"
-				})
-			};
-
-			return response;
-		// ------------------------------------------------------------------
-		} else if(event.bridgeEventType) {
-
+		if(event.bridgeEventType) {
 			let cron_actions, response_msg;
 			if(event.bridgeEventType == BRIDGE_EVENT_TYPES.periodChangeNotifications) {
 				console.log("Sending notifications on period change");
