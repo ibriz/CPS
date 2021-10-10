@@ -1,5 +1,3 @@
-// TODOs: only allow owners to update their subscription record
-
 const rndToken = require('random-token').gen('abcdefghijklmnopqrstuvwxzyABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789');
 
 const { ClientError, authenticateSubscriber } = require('./helpers');

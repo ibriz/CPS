@@ -1,9 +1,3 @@
-TODOs:
-  - Authorize frontend
-  - Authorize subscriber
-  - Move lambda to s3 if >10MB
-  - Test recursive_score_call with multiple pages on get_proposal_details method
-
 LAMBDA:
   Create and upload lambda
   On the API gateway resources, create methods (GET, POST) and link to your lambda. Create resources if you need sub-url paths.
