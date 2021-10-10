@@ -1,8 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const ListTitle = ({ children }) => {
-  const ListTitle = styled.div`
+const ListTitleComp = styled.div`
     font-family: 'Montserrat', sans-serif;
     font-style: normal;
     font-weight: 600;
@@ -11,9 +10,11 @@ const ListTitle = ({ children }) => {
     color: #262626;
     margin-bottom: 18px;
   `;
+
+const ListTitle = ({ children }) => {
   return (
     <>
-      <ListTitle>{children}</ListTitle>
+      <ListTitleComp>{children}</ListTitleComp>
     </>
   );
 };

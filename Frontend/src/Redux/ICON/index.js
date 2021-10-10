@@ -9,8 +9,10 @@ export const initialSetup = () => {
   window.addEventListener('ICONEX_RELAY_RESPONSE', eventHandler);
   const address = getCookie('wallet_address');
   const signature = getCookie('signature');
+  const signatureRawData = getCookie('signatureRawData');
   store.dispatch(login({ address }));
-  store.dispatch(signTransaction({ signature: signature }));
+  
+  store.dispatch(signTransaction({ signature: signature, signatureRawData: signatureRawData }));
 
   // callKeyStoreWallet(
   //     {

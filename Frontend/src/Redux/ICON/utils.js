@@ -135,30 +135,33 @@ export function signTransaction(walletAddress) {
     //       resolve(signature);
     //       return;
     //   }
-    store.dispatch(signTransactionRequest({ signature: null }));
+    store.dispatch(signTransactionRequest({ signature: null, signatureRawData: null }));
 
     const payload = getRanHex(51) + new Date().getTime();
     signTransactionFromICONEX(payload, walletAddress);
 
+    let interFunctionHandle = null;
+
     const interFunction = () => {
       const signature = store.getState().account.signature;
       if (signature) {
-        clearInterval(interFunction);
+        clearInterval(interFunctionHandle);
         if (signature === '-1') {
           resolve({
             signature: -1,
             payload: -1,
           });
         }
+        store.dispatch(signTransactionRequest({ signature, signatureRawData: payload }));
         resolve({
           signature,
           payload,
         });
         return;
       }
-    };
-
-    setInterval(interFunction, 100);
+    };    
+    
+    interFunctionHandle = setInterval(interFunction, 100);
   });
 }
 

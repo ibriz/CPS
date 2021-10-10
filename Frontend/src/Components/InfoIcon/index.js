@@ -5,7 +5,7 @@ import { OverlayTrigger, Tooltip, Popover } from 'react-bootstrap';
 const InfoIcon = ({ description, placement = 'right' }) => {
   return (
     <OverlayTrigger
-      trigger='hover'
+      trigger={['hover', 'focus']}
       placement={placement}
       overlay={
         <Popover id='popover-basic'>

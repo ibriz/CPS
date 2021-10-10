@@ -17,8 +17,9 @@ const SES = new AWS.SES({
 
 const emailFrom = process.env.MAIL_FROM;
 const template = process.env.SPONSORSHIP_REQUEST_TEMPLATE;
+const sponsorAcceptTemplate = process.env.SPONSORSHIP_ACCEPTED_TEMPLATE;
 
-async function send_email(emailAddress, body) {
+async function send_email(firstName, emailAddress, body) {
 	try {
 		//build params for sending email
 		const params = {
@@ -27,7 +28,8 @@ async function send_email(emailAddress, body) {
 			},
 			Template: template,
 			TemplateData: `{\"proposalName\":\"${body.projectName}\",
-                        \"contributor_address\":\"${body.address}\",
+											\"firstName\":\"${firstName}\",
+                        \"contributor_address\":\"${body.sponserPrep}\",
                         \"subject\":\"${process.env.SUBJECT}\",
                         \"frontend_url":\"${process.env.FRONTEND_URL}\"}`,
 			Source: emailFrom
@@ -108,6 +110,39 @@ async function uploadFile(payload) {
 	}
 }
 
+async function notifySponsorship (projectName, address, sponsorAddress, sponsorAction) {
+	// sponsorAction: accepted or rejected
+	try {
+		// fetch contributor's email from redis
+		const rawUserDetails = await getAsync(`users:address:${address}`);
+		const userDetails = JSON.parse(rawUserDetails);
+		if(!userDetails) throw new Error("User not found!");
+		//build params for sending email
+		const params = {
+			Destination: {
+				ToAddresses: [userDetails.email],
+			},
+			Template: sponsorAcceptTemplate,
+			TemplateData: `{
+				\"firstName\": \"${userDetails.firstName}\",
+				\"project_title\": \"${projectName}\",
+				\"sponsor_address\": \"${sponsorAddress}\",
+				\"sponsor_action\": \"${sponsorAction}\",
+				\"contributor_address\": \"${address}\",
+				\"frontend_url\": \"${process.env.FRONTEND_URL}\"
+			}`,
+			Source: emailFrom
+		};
+		console.log(params);
+		const emailResponse = await SES.sendTemplatedEmail(params).promise();
+		console.log('Email Sent Successfully to ' + JSON.stringify(emailResponse));
+		return { message: `Successfully sent email to ${userDetails.email}`}
+	} catch (error) {
+		console.error('Email sending Failed! ' + error);
+		throw new Error('Email sending Failed! ' + error);
+	}
+}
+
 exports.handler = async (event) => {
 	try {
 		const responseCode = 200;
@@ -117,7 +152,8 @@ exports.handler = async (event) => {
 
 		if (event.httpMethod === 'POST') {
 			if (event.path === process.env.PROPOSAL_PATH) {
-
+				console.log("RECEIVED REQUEST TO UPLOAD PROPOSAL AND SEND SPONSORSHIP REQUEST EMAIL");
+				//sample body: {"projectName":"testProj","category":"Development","projectDuration":"1","totalBudget":"100","sponserPrep":"hxd47ad924eba01ec91330e4e996cf7b8c658f4e4c","sponserPrepName":"CPS Test P-Rep3(DO NOT DELEGATE)","description":"<p>jaskldfjksld sdfksjd fksdjfk sdjfk sdjlfkjsadflk sjkldfj slkdj lksdjf lksdjlk sjkdl jsdlksdj dkf d df</p>","milestones":[{"name":"test-milestone","duration":"1","budget":null,"description":null}],"teamName":"test-team","teamEmail":"test-email@ibriz.com","teamSize":"10","address":"hx0dc852acca3aba28881963c665b557582de55356","type":"proposal"}
 				const body = JSON.parse(event.body);
 				if (!body.type) throw new Error('type of the proposal needs to be specified');
 
@@ -129,12 +165,25 @@ exports.handler = async (event) => {
 					const sponsor = JSON.parse(sponsorData);
 					console.log(sponsor);
 
-					if (body.type === 'proposal' && sponsor.verified && sponsor.enableEmailNotifications) await send_email(sponsor.email, body);
+					if (body.type === 'proposal' && sponsor.verified && sponsor.enableEmailNotifications) await send_email(sponsor.firstName, sponsor.email, body);
 				}
+
+			} else if (event.path === process.env.SPONSOR_NOTIFY_PATH) {
+				console.log("RECEIVED REQUEST TO SEND SPONSORSHIP ACCEPTED/REJECTED EMAIL");
+				// notify user about sponsorship being accepted using projectName and contributor's address
+				const body = JSON.parse(event.body);
+				if(!body || !body.projectName || !body.address || !body.sponsorAddress || !body.sponsorAction) {
+					throw new Error('projectName, address, sponsorAddress and sponsorAction need to be specified');
+				}
+				console.log(`Sending email to ${body.address} about sponsorship acceptance`);
+				proposal = await notifySponsorship(body.projectName, body.address, body.sponsorAddress, body.sponsorAction);
+			
 			} else {
 				proposal = await uploadFile(event);
 			}
 		} else if (event.httpMethod === 'PUT') {
+			console.log("RECEIVED REQUEST TO UPDATE PROPOSAL");
+			console.log(event.body);
 			const body = JSON.parse(event.body);
 			if (!body.type) throw new Error('type of the proposal needs to be specified');
 

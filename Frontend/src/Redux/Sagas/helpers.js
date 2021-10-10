@@ -18,8 +18,9 @@ async function request({
   walletAddress = store.getState().account.address,
   successCallback,
   failureCallback,
+  baseUrl = BASE_URL
 }) {
-  const baseURL = ipfs ? IPFS_URL : BASE_URL;
+  const baseURL = ipfs ? IPFS_URL : baseUrl;
   console.log('request');
 
   let headers = {
@@ -47,6 +48,19 @@ async function request({
       payload: payload,
       address: walletAddress,
     };
+  }
+
+  // if payload and signature are supplied, then add payload+signature+address to headers
+  if(payload || signature) {
+    if(payload == '-1' || signature == '-1' || !payload || !signature) {
+      throw new Error('Wallet Signature required');
+    }
+    headers= {
+      ...headers,
+      signature,
+      payload,
+      address: walletAddress
+    }
   }
 
   const response = await fetch(`${baseURL}/${url}`, {

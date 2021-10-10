@@ -10,6 +10,7 @@ import {
 import { PROGRESS_REPORT_ADD_URL } from '../../Constants';
 import { request } from '../helpers';
 import store from 'Redux/Store';
+import { signTransaction } from 'Redux/ICON/utils';
 import { NotificationManager } from 'react-notifications';
 
 export const getAddress = state => state.account.address;
@@ -26,6 +27,8 @@ function* submitProgressReportWorker({ payload }) {
     }
     const address = yield select(getAddress);
 
+    yield signTransaction(address);
+
     const response = yield call(request, {
       body: {
         ...payload.progressReport,
@@ -33,7 +36,8 @@ function* submitProgressReportWorker({ payload }) {
         type: 'report',
       },
       url: PROGRESS_REPORT_ADD_URL,
-      requireSigning: true,
+      signature: store.getState().account.signature,
+      payload: store.getState().account.signatureRawData,
       callBackAfterSigning: () =>
         store.dispatch(setSubmittingProgressReport(true)),
     });

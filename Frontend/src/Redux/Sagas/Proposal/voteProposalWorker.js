@@ -1,4 +1,7 @@
-import { sendTransaction } from 'Redux/ICON/utils';
+import { put, select } from '@redux-saga/core/effects';
+import { sendTransaction, signTransaction } from 'Redux/ICON/utils';
+import { setBackendTriggerData } from 'Redux/Reducers/proposalSlice';
+import store from 'Redux/Store';
 
 const voteStatusMapping = {
   Abstain: '_abstain',
@@ -6,19 +9,40 @@ const voteStatusMapping = {
   Approve: '_approve',
 };
 
+export const getAddress = state => state.account.address;
+
 function* voteProposalWorker({ payload }) {
+
+  const walletAddress = yield select(getAddress);
+
   const params = {
     _vote: voteStatusMapping[payload.vote],
     _vote_reason: payload.voteReason,
     _ipfs_key: payload.ipfsKey,
   };
 
+  const { signature } = yield signTransaction(walletAddress);
+  
+  if(signature == '-1' || !signature) {
+    return;
+  }
+
   sendTransaction({
     method: 'vote_proposal',
     params,
   });
 
-  console.log(params);
+    yield put(
+        setBackendTriggerData({
+            eventType: "voteProposal",
+            data: {
+                userAddress: walletAddress,
+                proposalIpfsHash: payload.ipfsKey
+            }
+        })
+    );
+
+    console.log(params);
 }
 
 export default voteProposalWorker;

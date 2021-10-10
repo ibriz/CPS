@@ -4,7 +4,7 @@ import { OverlayTrigger, Popover } from 'react-bootstrap';
 const Popup = ({ component, popOverText, placement = 'right' }) => {
   return (
     <OverlayTrigger
-      trigger='hover'
+      trigger={['hover', 'focus']}
       placement={placement}
       overlay={
         <Popover id='popover-basic'>
