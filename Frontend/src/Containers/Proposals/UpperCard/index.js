@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import useTimer from 'Hooks/useTimer';
 import { updatePeriod } from 'Redux/Reducers/periodSlice';
 import ConfirmationModal from 'Components/UI/ConfirmationModal';
+import Popup from 'Components/Popup';
 
 const UpperCard = ({
   numberOfSubmittedProposals,
@@ -38,15 +39,21 @@ const UpperCard = ({
     text = null;
     button = null;
   } else {
-    button = (
+    button = period !== 'VOTING' ? (
+      <Popup
+        component={
+          <Button style={{ 'pointer-events': 'none' }} title="New proposals disabled until ICON 2.0" disabled="disabled" variant='info' className={styles.createProposalButton} >
+            CREATE NEW PROPOSAL
+          </Button>
+        }
+        popOverText='New proposals disabled until ICON 2.0'
+        placement='left' />
+    ) : (
       <Link to='/newProposal'>
-        <Button variant='info' className={styles.createProposalButton}>
-          {period !== 'VOTING'
-            ? 'CREATE NEW PROPOSAL'
-            : 'CREATE PROPOSAL DRAFT'}
+        <Button style={{ cursor: 'pointer' }} variant='info' className={styles.createProposalButton}>
+          CREATE PROPOSAL DRAFT
         </Button>
-      </Link>
-    );
+      </Link>);
 
     // text = <span className={styles.proposalNumber}>{numberOfSubmittedProposals} Proposals submitted</span>
 

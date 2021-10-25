@@ -100,7 +100,7 @@ const Main = ({
                     <title>CPS - Create New Proposal</title>
                   </Helmet>
                 </>
-                }
+
               </Route>
               <Route path='/newProgressReport'>
                 {
