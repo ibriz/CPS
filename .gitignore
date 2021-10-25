@@ -34,3 +34,6 @@ node_modules
 
 # sam-app
 **/sam-app/*
+
+#netlify 
+/Frontend/.netlify
