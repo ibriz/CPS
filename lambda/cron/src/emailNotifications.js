@@ -78,7 +78,7 @@ async function sendEmailNotifications() {
             await mail.send_bulk_email('prep-day-reminder',
               preps_notification_list,
               'One day remaining for voting | ICON CPS',
-              `,\"icx\": \"${process.env.ICX_PENALTY}\"`);
+              `,\"icx\": \"${process.env.ICX_PENALTY}\",\"remainingHrs\": \"${parseInt(parseInt(present_period.period_name, 16) / 3600)}\"`);
           } else {
             console.log('No user to send notification: voting_reminder_before_one_day_proposal_async')
           }
@@ -94,7 +94,7 @@ async function sendEmailNotifications() {
             await mail.send_bulk_email('prep-day-reminder',
               preps_notification_list,
               'One day remaining for voting | ICON CPS',
-              `,\"icx\": \"${process.env.ICX_PENALTY}\"`);
+              `,\"icx\": \"${process.env.ICX_PENALTY}\",\"remainingHrs\": \"${parseInt(parseInt(present_period.period_name, 16) / 3600)}\"`);
           } else {
             console.log('No user to send notification: voting_reminder_before_one_day_progress_report_async')
           }
