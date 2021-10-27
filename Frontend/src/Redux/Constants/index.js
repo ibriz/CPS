@@ -1,7 +1,7 @@
-// export const BASE_URL = 'https://u7hj3y857d.execute-api.us-east-2.amazonaws.com/cps';
-export const BASE_URL = 'https://65ca82rpg0.execute-api.us-west-2.amazonaws.com/stage';
+export const BASE_URL = 'https://u7hj3y857d.execute-api.us-east-2.amazonaws.com/cps';
+// export const BASE_URL = 'https://65ca82rpg0.execute-api.us-west-2.amazonaws.com/stage';
 
-export const CPS_BOT_BASE_URL = 'https://bateafjulf.execute-api.us-east-2.amazonaws.com/cps-bot-prod';
+export const CPS_BOT_BASE_URL = 'https://i0ej2feka9.execute-api.us-east-2.amazonaws.com/dev-cps-bot';
 export const IPFS_URL = 'https://gateway.ipfs.io/ipfs';
 
 export const PROPOSAL_ADD_URL = 'proposals';
