@@ -216,7 +216,7 @@ const Footer = ({ console = false }) => {
               }
               target='_blank'
             >
-              iBriz-ICONOsphere P-Rep
+              ICONOsphere P-Rep
             </a>
           </div>
           <div style={{ marginTop: '5px' }}>

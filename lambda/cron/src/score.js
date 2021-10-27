@@ -1,4 +1,7 @@
 const IconService = require('icon-sdk-js');
+const BigNumber = require('bignumber.js');
+const { PERIOD_MAPPINGS } = require('./constants')
+const { sleep } = require('./utils');
 
 // Environment variable declaration
 const provider = process.env.BLOCKCHAIN_PROVIDER;
@@ -18,6 +21,8 @@ const { CallTransactionBuilder, CallBuilder } = IconBuilder;
 const httpProvider = new HttpProvider(provider);
 const iconService = new IconService(httpProvider);
 
+// TODO: uncomment
+// let wallet;
 const wallet = IconWallet.loadPrivateKey(priv_key);
 
 const timeout = instance => {
@@ -54,10 +59,10 @@ function icon_call_builder(methodName, params = {}) {
 function icon_transaction_call_builder(methodName, params = {}) {
 	const callTransactionBuilder = new CallTransactionBuilder();
 	const call = callTransactionBuilder
-		.from(user_address)
+		.from(wallet.getAddress())
 		.to(score_address)
 		.stepLimit(IconConverter.toBigNumber('20000000'))
-		.nid(IconConverter.toBigNumber('1'))
+		.nid(IconConverter.toBigNumber(process.env.NID))
 		.nonce(IconConverter.toBigNumber('1'))
 		.version(IconConverter.toBigNumber('3'))
 		.timestamp((new Date()).getTime() * 1000)
@@ -67,10 +72,12 @@ function icon_transaction_call_builder(methodName, params = {}) {
 	return call;
 }
 
+
 async function recursive_score_call(func, params = {}, data = []) {
-	console.log(params);
+
 	if (Object.keys(params).length !== 0) {
 		if (!params._start_index) params._start_index = 0;
+		if (!params._end_index) params._end_index = '20';
 	}
 
 	const results = await iconService.call(icon_call_builder(func, params)).execute();
@@ -79,8 +86,10 @@ async function recursive_score_call(func, params = {}, data = []) {
 
 	data = data.concat(results.data);
 
-	if (parseInt(results.count, 'hex') > results.data.length) {
-		params._start_index = params._end_index + 20;
+	if (parseInt(results.count, 'hex') > data.length) {
+		const interval = parseInt(params._end_index) - parseInt(params._start_index);
+		params._start_index = (parseInt(params._start_index) + interval).toFixed(0);
+		params._end_index = (parseInt(params._end_index) + interval).toFixed(0);
 		return await recursive_score_call(func, params, data)
 	} else {
 		return data;
@@ -119,7 +128,7 @@ async function update_period() {
 
 		const updatePeriodTransaction = await icon_transaction_call_builder('update_period');
 
-		console.log(updatePeriodTransaction, wallet);
+		console.log(JSON.stringify(updatePeriodTransaction), JSON.stringify(wallet));
 
 		const signedTransaction = new SignedTransaction(updatePeriodTransaction, wallet);
 		const txHash = await iconService.sendTransaction(signedTransaction).execute();
@@ -132,62 +141,126 @@ async function update_period() {
 	}
 }
 
-async function get_active_proposals(address) {
-	console.log('RPC Call for Active Proposals');
-	const active_proposals = await recursive_score_call('get_active_proposals', { _wallet_address: address });
-	// const active_proposals = await iconService.call(icon_call_builder('get_active_proposals', { _wallet_address: address })).execute();
+async function recursivelyUpdatePeriod(retry = 0) {
+	try {
+		present_period = await period_check();
+		if(present_period['period_name'] == PERIOD_MAPPINGS.TRANSITION_PERIOD) {
+			console.log('In transition period, should change to application period in 20 secs');
+			await update_period();
+			await sleep(2000);	// sleep for 2 secs
+			// todo: move to recursive func, max 10 calls
+			if(retry < 8) {
+				await recursivelyUpdatePeriod(++retry);
+			} else {
+				throw new Error('Retry limit reached. Error transitioning from transition period to application period');
+			}
+		}
+	} catch(e) {
+		console.log("Error updating period recursively", JSON.stringify(e));
+		await recursivelyUpdatePeriod(++retry);
+	}
+}
 
-	console.log('get_active_proposals: ' + JSON.stringify(active_proposals));
+async function get_active_proposals(address) {
+	console.log('RPC Call for Active Proposals', address);
+	// const active_proposals = await recursive_score_call('get_active_proposals', { _wallet_address: address });
+	const active_proposals = await iconService.call(icon_call_builder('get_active_proposals', { _wallet_address: address })).execute();
+
+	// console.log('get_active_proposals: ' + JSON.stringify(active_proposals));
 	return active_proposals;
 }
 
-async function get_progress_reports_by_status(status = '_approved') {
-	console.log('RPC Call for Accepted Progress Reports');
-	const accepted_active_proposals = await recursive_score_call('get_progress_reports', { _status: status });
+function get_remaining_funds() {
+	console.log('RPC call for remaining funds');
+	return iconService.call(icon_call_builder('get_remaining_fund')).execute();
+}
+
+async function get_project_amounts_by_status(status) {
+	console.log('RPC call for project amounts');
+	const res = await iconService.call(icon_call_builder('get_project_amounts')).execute();
+	// console.log(JSON.stringify(res));
+	return res[status];
+}
+
+async function get_progress_reports_by_status(status = '_approved', fromLastPeriodOnly=false) {
+	console.log(`RPC Call for ${status} Progress Reports`);
+	const progressReports = await recursive_score_call('get_progress_reports', { _status: status });
 	// const accepted_active_proposals = await iconService.call(icon_call_builder('get_progress_reports', { status: '_approved' }));
 
-	console.log('get_progress_reports_by_status: ' + JSON.stringify(accepted_active_proposals));
-	return accepted_active_proposals;
+	if(fromLastPeriodOnly) {
+		return progressReports.filter(progressReport => {
+			const timeDiff = new BigNumber(progressReport.timestamp).div(1000).minus(Date.now());	// micro to milli
+			return Math.abs(timeDiff.div(1000*24*60*60).toNumber()) < 1;
+		})
+	}
+
+	// console.log('get_progress_reports_by_status: ' + JSON.stringify(accepted_active_proposals));
+	return progressReports;
 }
 
 async function get_proposal_and_progress_report_count() {
 	console.log('RPC Call for Proposal and Progress Report Count');
-	const accepted_active_proposals = await iconService.call(icon_call_builder('get_proposals_keys_by_status', { status: '_pending' })).execute();
+	const accepted_active_proposals = await iconService.call(icon_call_builder('get_proposals_keys_by_status', { _status: '_pending' })).execute();
 
-	const accepted_active_progress_report = await iconService.call(icon_call_builder('get_progress_reports', { status: '_waiting' })).execute();
+	const accepted_active_progress_report = await recursive_score_call('get_progress_reports', { _status: '_waiting' });
 
 	return {
 		proposals_count: accepted_active_proposals.length,
-		progress_report_count: accepted_active_progress_report.count
+		progress_report_count: accepted_active_progress_report.length
 	};
 }
 
-async function get_remaining_projects(address) {
+// returns all the projects that this wallet address is yet to vote on
+async function get_remaining_projects(address, type) {
+	// type can be proposal or progress_report
 	console.log('RPC Call for Remaining Project');
-	const project_list = await recursive_score_call('get_remaining_project', { _project_type: 'proposal', _wallet_address: address });
-	// const project_list = await iconService.call(icon_call_builder('get_remaining_project', { _wallet_address: address })).execute();
+	// const project_list = await recursive_score_call('get_remaining_project', { _project_type: 'proposal', _wallet_address: address });
+	const project_list = await iconService.call(icon_call_builder('get_remaining_project', { _project_type: type, _wallet_address: address })).execute();
 
-	console.log('get_remaining_projects: ' + JSON.stringify(project_list));
+	// console.log('get_remaining_projects: ' + JSON.stringify(project_list));
 	return project_list;
 }
 
 async function get_proposals_details(address) {
 	console.log('RPC Call for Proposal Details');
-	const proposal_details = await recursive_score_call('get_proposal_detail_by_wallet', { _wallet_address: address });
+	const proposal_details = await iconService.call(icon_call_builder('get_proposal_detail_by_wallet', { _wallet_address: address })).execute();
 
-	console.log('get_proposals_details: ' + JSON.stringify(proposal_details));
+	// console.log('get_proposals_details: ' + JSON.stringify(proposal_details));
 	return proposal_details;
+}
+
+async function getProposalDetailsByStatus(status, fromLastPeriodOnly=false) {
+	console.log('Recursive RPC Call for method get_proposal_details for status ', status);
+
+	const proposalDetails = await recursive_score_call(
+		'get_proposal_details', 
+		{
+			'_status': status,
+			'_wallet_address': user_address
+		}
+	);
+	
+	if(fromLastPeriodOnly) {
+		// retrun data from last period only (timestamp < 24hrs)
+		return proposalDetails.filter(proposal => {
+			const timeDiff = new BigNumber(proposal.timestamp).div(1000).minus(Date.now());	// micro to milli
+			return Math.abs(timeDiff.div(1000*24*60*60).toNumber()) < 1;
+		})
+	}
+
+	return proposalDetails;
 }
 
 async function progress_report_reminder_before_one_day(user_details_list) {
 	let address_notification_list = [];
+	console.log("USER DETAIL LIST IS ", user_details_list);
 	try {
 		for (const user_detail of user_details_list) {
 			const user_active_proposals = await get_active_proposals(user_detail.address);
 
 			if (user_active_proposals.length > 0) {
 				const new_user_active_proposals = user_active_proposals.filter(function (proposal) {
-					return parseInt(proposal.new_progress_report) == 1;
+					return parseInt(proposal.new_progress_report) == 0;
 				})
 
 				for (const new_proposal of new_user_active_proposals) {
@@ -218,7 +291,7 @@ async function progress_report_reminder_before_one_week(user_details_list) {
 
 			if (user_active_proposals.length > 0) {
 				const new_user_active_proposals = user_active_proposals.filter(function (proposal) {
-					return parseInt(proposal.new_progress_report) == 1;
+					return parseInt(proposal.new_progress_report) == 0;
 				})
 
 				for (const new_proposal of new_user_active_proposals) {
@@ -244,17 +317,14 @@ async function progress_report_reminder_before_one_week(user_details_list) {
 async function voting_reminder_before_one_day(user_details_list, type) {
 	let address_notification_list = [];
 	try {
-		type = (type === 'Proposal') ? 'Proposal' : 'Progress Report';
+		type = (type === 'Proposal') ? 'proposal' : 'progress_report';
 
 		for (const user_detail of user_details_list) {
-			const user_active_proposals = await get_remaining_projects(user_detail.address);
+			const user_active_proposals = await get_remaining_projects(user_detail.address, type);
 
 			if (user_active_proposals.length > 0) {
-				const new_user_active_proposals = user_active_proposals.filter(function (proposal) {
-					return proposal._project_type == type;
-				})
 
-				if (new_user_active_proposals.length != 0 && address_notification_list.indexOf(user_detail) === -1) {
+				if (address_notification_list.indexOf(user_detail) === -1) {
 					user_detail.replacementTemplateData = `{
                     \"firstName\": \"${user_detail.firstName}\",
                     \"address\": \"${user_detail.address}\"
@@ -276,17 +346,14 @@ async function voting_reminder_before_one_day(user_details_list, type) {
 async function voting_reminder_before_one_week(user_details_list, type) {
 	let address_notification_list = [];
 	try {
-		type = (type === 'Proposal') ? 'Proposal' : 'Progress Report';
+		type = (type === 'Proposal') ? 'proposal' : 'progress_report';
 
 		for (const user_detail of user_details_list) {
-			const user_active_proposals = await get_remaining_projects(user_detail.address);
+			const user_active_proposals = await get_remaining_projects(user_detail.address, type);
 
 			if (user_active_proposals.length > 0) {
-				const new_user_active_proposals = user_active_proposals.filter(function (proposal) {
-					return proposal._project_type == type;
-				})
 
-				if (new_user_active_proposals.length != 0 && address_notification_list.indexOf(user_detail) === -1) {
+				if (address_notification_list.indexOf(user_detail) === -1) {
 					user_detail.replacementTemplateData = `{
                     \"firstName\": \"${user_detail.firstName}\",
                     \"address\": \"${user_detail.address}\"
@@ -305,37 +372,6 @@ async function voting_reminder_before_one_week(user_details_list, type) {
 	}
 }
 
-async function sponsorship_accepted_notification(user_details_list) {
-	let address_notification_list = [];
-	try {
-
-		for (const user_detail of user_details_list) {
-			const user_active_proposals = await get_proposals_details(user_detail.address);
-
-			if (user_active_proposals.length > 0) {
-				const new_user_active_proposals = user_active_proposals.filter(function (proposal) {
-					return proposal._status == '_pending';
-				})
-
-				for (const new_proposal of new_user_active_proposals) {
-					user_detail.replacementTemplateData = `{
-                    \"firstName\": \"${user_detail.firstName}\",
-                    \"project_title\": \"${new_proposal.project_title}\",
-                    \"contributor_address\": \"${new_proposal.contributor_address}\"
-                }`
-					address_notification_list.push(user_detail);
-				}
-			} else {
-				console.log('function: get_proposals_details in sponsorship_accepted_notification is empty');
-			}
-		}
-	} catch (error) {
-		console.error(error);
-		throw new Error(error);
-	} finally {
-		return address_notification_list;
-	}
-}
 
 async function proposal_accepted_notification(user_details_list) {
 	let address_notification_list = [];
@@ -435,7 +471,6 @@ module.exports = {
 	budget_rejected_notification,
 	budget_approved_notification,
 	proposal_accepted_notification,
-	sponsorship_accepted_notification,
 	voting_reminder_before_one_day,
 	voting_reminder_before_one_week,
 	progress_report_reminder_before_one_day,
@@ -447,5 +482,9 @@ module.exports = {
 	get_remaining_projects,
 	update_period,
 	period_check,
-	get_preps
+	get_preps,
+	get_remaining_funds,
+	get_project_amounts_by_status,
+	recursivelyUpdatePeriod,
+	getProposalDetailsByStatus
 }

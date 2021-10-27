@@ -697,9 +697,14 @@ const ProposalCreationPage = ({
               </Col>
               <Col className={styles.saveButton}>
                 {period !== 'VOTING' ? (
-                  <Button variant='info' type='submit'>
-                    SUBMIT
-                  </Button>
+                  <Popup
+                    component={
+                      <Button variant='info' disabled style={{ pointerEvents: 'none' }}>
+                        SUBMIT
+                      </Button>}
+                    popOverText='New proposals disabled until ICON 2.0'
+                    placement='left'
+                  />
                 ) : (
                   //     <OverlayTrigger trigger="hover" placement="left"
                   //     overlay={
