@@ -276,7 +276,7 @@ const ProposalCreationPage = ({
 
   const handleSubmit = event => {
     event.preventDefault();
-    setSubmissionConfirmationShow(true);
+    setSubmissionConfirmationShow(false);
   };
 
   const onClickSaveDraft = () => {
