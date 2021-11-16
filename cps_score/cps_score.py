@@ -1797,14 +1797,28 @@ class CPS_Score(IconScoreBase):
                     'bafybeiaubhdzignnbe24ypwwulsr6fxju4uyujzx5tnyqc6fgop3qbyldu': 1200 * MULTIPLIER,
                     'bafybeibd3fxxvyhzj2qk57pvjznbak2veomnpz6nviuvpjj2qsxdxrqb44': 510 * MULTIPLIER}
 
-        if self.msg.sender not in self.valid_preps:
-            revert(f"{TAG} : Not a P-Rep.")
+    @external
+    def tokenFallback(self, _from: Address, _value: int, _data: bytes):
+        """
+        _data = {'method':methodName,params:{'key1':'value1'}}
+        """
+        unpacked_data = json_loads(_data.decode('utf-8'))
 
-        _proposal_details = self._get_proposal_details(_key)
-        _sponsor = _proposal_details[SPONSOR_ADDRESS]
+        bnusd = self.balanced_dollar.get()
+        if self.msg.sender != bnusd:
+            revert(f'{TAG}: Only {bnusd} can send {bnUSD} tokens to this contract.')
 
-        if self.msg.sender != _sponsor:
-            revert(f"{TAG} : Not a valid Sponsor.")
+        if unpacked_data["method"] == "sponsor_vote":
+            _ipfs_hash = unpacked_data["params"][IPFS_HASH]
+            _vote = unpacked_data["params"][VOTE]
+            _vote_reason = unpacked_data["params"][VOTE_REASON]
+
+            self._sponsor_vote(_ipfs_hash, _vote, _vote_reason, _from, _value)
+
+        elif unpacked_data["method"] == "pay_prep_penalty":
+            self._pay_prep_penalty(_from, _value)
+        else:
+            revert(f'{TAG}: Token not received.')
 
         if self.msg.value != _amounts.get(_key):
             revert(f'{TAG}: Please deposit the sponsor bond amount: {_amounts.get(_key)}')
