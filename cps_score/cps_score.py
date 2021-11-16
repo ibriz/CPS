@@ -510,6 +510,10 @@ class CPS_Score(IconScoreBase):
         if self.msg.value != to_loop(SPONSOR_FEE):
             revert(f"{TAG} : Deposit {SPONSOR_FEE} to submit a proposal.")
 
+        _token_flag = proposal_key.get('token')
+        if _token_flag != bnUSD:
+            revert(f"{TAG}: {_token_flag} Not a supported token.")
+
         proposal_key.pop(IPFS_LINK, None)
         proposal_key[TIMESTAMP] = self.now()
         proposal_key[STATUS] = self._SPONSOR_PENDING
