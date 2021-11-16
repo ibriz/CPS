@@ -449,7 +449,10 @@ class CPS_Score(IconScoreBase):
             revert(f"{TAG} : {_address} does not need to pay penalty")
 
         idx = count - 1 if count < 3 else 2
-        return self.penalty_amount[idx]
+        amount: int = self.penalty_amount[idx]
+        delegation_amount = self._get_stake(_address)
+        penalty_amount = (delegation_amount * amount) // self.max_delegation.get()
+        return penalty_amount
 
     def _update_proposal_status(self, _proposal_key: str, _status: str) -> None:
         prefix = self.proposal_prefix(_proposal_key)
