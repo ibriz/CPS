@@ -195,6 +195,15 @@ class CPS_Score(IconScoreBase):
         if not _score.is_contract:
             revert(f"{TAG} : Target({_score}) is not SCORE.")
 
+    def _check_maintenance(self):
+        if self.maintenance.get():
+            revert(f'{TAG}: Maintenance mode is on. Will resume soon.')
+
+    @external
+    def toggle_maintenance(self):
+        self._validate_admins()
+        self.maintenance.set(not self.maintenance.get())
+
     @payable
     def fallback(self):
         revert(f"{TAG} :ICX can only be sent while submitting a proposal or paying the penalty.")
@@ -310,6 +319,7 @@ class CPS_Score(IconScoreBase):
         Unregister a registered P-Rep from CPS.
         :return:
         """
+        self._check_maintenance()
         self.update_period()
 
         if self.msg.sender not in self.valid_preps and self.msg.sender not in self.registered_preps:
@@ -330,6 +340,7 @@ class CPS_Score(IconScoreBase):
         Unregister a registered P-Rep from CPS.
         :return:
         """
+        self._check_maintenance()
         self.update_period()
 
         _address = self.msg.sender
@@ -461,6 +472,7 @@ class CPS_Score(IconScoreBase):
         :param _proposals: dict of the necessary params to be stored
         :return:
         """
+        self._check_maintenance()
         self.update_period()
         if self.period_name.get() == VOTING_PERIOD:
             revert(f"{TAG} : Proposals can only be submitted on Application Period")
@@ -510,6 +522,7 @@ class CPS_Score(IconScoreBase):
         :param _progress_report: TypedDict of the necessary params to be stored
         :return:
         """
+        self._check_maintenance()
         self.update_period()
         if self.period_name.get() == VOTING_PERIOD:
             revert(f"{TAG} : Progress Reports can only be submitted on Application Period")
@@ -595,6 +608,7 @@ class CPS_Score(IconScoreBase):
         :param _ipfs_key : proposal ipfs hash
         :type _ipfs_key : str
         """
+        self._check_maintenance()
         self.update_period()
         if self.period_name.get() != APPLICATION_PERIOD:
             revert(f"{TAG} : Sponsor Vote can only be done on Application Period")
@@ -643,6 +657,7 @@ class CPS_Score(IconScoreBase):
         :param _vote_reason : Any specific reason behind the vote
         :type _vote_reason : str
         """
+        self._check_maintenance()
         self.update_period()
         if self.period_name.get() != VOTING_PERIOD:
             revert(f"{TAG} : Proposals can be voted only on Voting Period.")
@@ -701,6 +716,7 @@ class CPS_Score(IconScoreBase):
         :param _vote_reason : Any specific reason behind the vote
         :type _vote_reason : str
         """
+        self._check_maintenance()
         self.update_period()
         if self.period_name.get() != VOTING_PERIOD:
             revert(f"{TAG} : Progress Reports can be voted only on Voting Period.")
@@ -759,6 +775,7 @@ class CPS_Score(IconScoreBase):
 
         :return:
         """
+        self._check_maintenance()
         self._validate_admins()
 
         if len(_penalty) != 3:
@@ -775,6 +792,7 @@ class CPS_Score(IconScoreBase):
         To remove the address from denylist
         :return:
         """
+        self._check_maintenance()
         self.update_period()
         if self.period_name.get() != APPLICATION_PERIOD:
             revert(f"{TAG} : Penalty can only be paid on Application Period")
@@ -1422,6 +1440,7 @@ class CPS_Score(IconScoreBase):
         Update Period after ending of the Allocated BlockTime for each period.
         :return:
         """
+        self._check_maintenance()
         _current_block = self.block_height
         if _current_block <= self.next_block.get():
             pass
