@@ -1014,36 +1014,52 @@ class CPS_Score(IconScoreBase):
         :return: A dict of amount with the proposal status
         """
         _status_list = [self._PENDING, self._ACTIVE, self._PAUSED, self._COMPLETED, self._DISQUALIFIED]
-        _pending_amount = 0
-        _active_amount = 0
-        _paused_amount = 0
-        _completed_amount = 0
-        _disqualified_amount = 0
+        _pending_amount_icx = 0
+        _active_amount_icx = 0
+        _paused_amount_icx = 0
+        _completed_amount_icx = 0
+        _disqualified_amount_icx = 0
+
+        _pending_amount_bnusd = 0
+        _active_amount_bnusd = 0
+        _paused_amount_bnusd = 0
+        _completed_amount_bnusd = 0
+        _disqualified_amount_bnusd = 0
         for status in range(0, len(_status_list)):
-            _amount = 0
+            _amount_icx = 0
+            _amount_bnusd = 0
             for keys in self.get_proposals_keys_by_status(_status_list[status]):
-                _amount += self._get_proposal_details(keys)[TOTAL_BUDGET]
+                proposal_details = self._get_proposal_details(keys)
+                if proposal_details.get('token') == ICX:
+                    _amount_icx += proposal_details[TOTAL_BUDGET]
+                else:
+                    _amount_bnusd += proposal_details[TOTAL_BUDGET]
 
             if status == 0:
-                _pending_amount = _amount
+                _pending_amount_icx = _amount_icx
+                _pending_amount_bnusd = _amount_bnusd
             elif status == 1:
-                _active_amount = _amount
+                _active_amount_icx = _amount_icx
+                _active_amount_bnusd = _amount_bnusd
             elif status == 2:
-                _paused_amount = _amount
+                _paused_amount_icx = _amount_icx
+                _paused_amount_bnusd = _amount_bnusd
             elif status == 3:
-                _completed_amount = _amount
+                _completed_amount_icx = _amount_icx
+                _completed_amount_bnusd = _amount_bnusd
             elif status == 4:
-                _disqualified_amount = _amount
+                _disqualified_amount_icx = _amount_icx
+                _disqualified_amount_bnusd = _amount_bnusd
 
-        _amount_dict = {_status_list[0]: {AMOUNT: _pending_amount,
+        _amount_dict = {_status_list[0]: {AMOUNT: {ICX: _pending_amount_icx, bnUSD: _pending_amount_bnusd},
                                           "_count": len(self.get_proposals_keys_by_status(_status_list[0]))},
-                        _status_list[1]: {AMOUNT: _active_amount,
+                        _status_list[1]: {AMOUNT: {ICX: _active_amount_icx, bnUSD: _active_amount_bnusd},
                                           "_count": len(self.get_proposals_keys_by_status(_status_list[1]))},
-                        _status_list[2]: {AMOUNT: _paused_amount,
+                        _status_list[2]: {AMOUNT: {ICX: _paused_amount_icx, bnUSD: _paused_amount_bnusd},
                                           "_count": len(self.get_proposals_keys_by_status(_status_list[2]))},
-                        _status_list[3]: {AMOUNT: _completed_amount,
+                        _status_list[3]: {AMOUNT: {ICX: _completed_amount_icx, bnUSD: _completed_amount_bnusd},
                                           "_count": len(self.get_proposals_keys_by_status(_status_list[3]))},
-                        _status_list[4]: {AMOUNT: _disqualified_amount,
+                        _status_list[4]: {AMOUNT: {ICX: _disqualified_amount_icx, bnUSD: _disqualified_amount_bnusd},
                                           "_count": len(self.get_proposals_keys_by_status(_status_list[4]))}}
 
         return _amount_dict
