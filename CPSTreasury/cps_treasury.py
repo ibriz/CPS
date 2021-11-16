@@ -219,31 +219,39 @@ class CPS_TREASURY(IconScoreBase):
         :param _wallet_address: wallet address of the contributor
         :return:
         """
-        _total_amount_to_be_paid = 0
-        _installment_amount = []
+        _total_amount_to_be_paid_icx = 0
+        _total_amount_to_be_paid_bnusd = 0
+        project_details = []
         for _ipfs_key in self._proposals_keys:
             prefix = self.proposal_prefix(_ipfs_key)
-            if self.proposals[prefix].status.get() != self._DISQUALIFIED:
-                if self.proposals[prefix].contributor_address.get() == _wallet_address:
-                    _total_installment = self.proposals[prefix].project_duration.get()
-                    _total_paid_count = _total_installment - self.proposals[prefix].installment_count.get()
+            prefix_ = self.proposals[prefix]
+            if prefix_.status.get() != self._DISQUALIFIED:
+                if prefix_.contributor_address.get() == _wallet_address:
+                    _total_installment = prefix_.project_duration.get()
+                    _total_paid_count = _total_installment - prefix_.installment_count.get()
                     if _total_paid_count < _total_installment:
-                        _total_budget = self.proposals[prefix].total_budget.get()
-                        _total_paid_amount = self.proposals[prefix].withdraw_amount.get()
+                        _flag = prefix_.token.get()
+                        _total_budget = prefix_.total_budget.get()
+                        _total_paid_amount = prefix_.withdraw_amount.get()
 
-                        _installment_amount.append({self._IPFS_HASH: _ipfs_key,
-                                                    self._TOTAL_BUDGET: _total_budget,
-                                                    self._TOTAL_INSTALLMENT_PAID: _total_paid_amount,
-                                                    self._TOTAL_INSTALLMENT_COUNT: _total_installment,
-                                                    self._TOTAL_TIMES_INSTALLMENT_PAID: _total_paid_count,
-                                                    self._INSTALLMENT_AMOUNT: _total_budget // _total_installment})
-                        _total_amount_to_be_paid += _total_budget // _total_installment
+                        project_details.append({self._IPFS_HASH: _ipfs_key,
+                                                self._TOTAL_BUDGET: f'{_total_budget} {_flag}',
+                                                self._TOTAL_INSTALLMENT_PAID: f'{_total_paid_amount} {_flag}',
+                                                self._TOTAL_INSTALLMENT_COUNT: _total_installment,
+                                                self._TOTAL_TIMES_INSTALLMENT_PAID: _total_paid_count,
+                                                self._INSTALLMENT_AMOUNT: f'{_total_budget // _total_installment} {_flag}'})
+                        if _flag == ICX:
+                            _total_amount_to_be_paid_icx += _total_budget // _total_installment
+                        else:
+                            _total_amount_to_be_paid_bnusd += _total_budget // _total_installment
 
-        _withdraw_amount = self._fund_record[str(_wallet_address)]
-        return {"data": _installment_amount,
-                "project_count": len(_installment_amount),
-                "total_amount": _total_amount_to_be_paid,
-                "withdraw_amount": _withdraw_amount}
+        _withdraw_amount_icx = self.installment_fund_record[str(_wallet_address)][ICX]
+        _withdraw_amount_bnusd = self.installment_fund_record[str(_wallet_address)][bnUSD]
+        return {"data": project_details,
+                "project_count": len(project_details),
+                "total_amount": {ICX: _total_amount_to_be_paid_icx, bnUSD: _total_amount_to_be_paid_bnusd},
+                "withdraw_amount_icx": _withdraw_amount_icx,
+                "withdraw_amount_bnusd": _withdraw_amount_bnusd}
 
     @external(readonly=True)
     def get_sponsor_projected_fund(self, _wallet_address: Address) -> dict:
@@ -252,37 +260,46 @@ class CPS_TREASURY(IconScoreBase):
         :param _wallet_address: wallet address of the sponsor p-rep
         :return:
         """
-        _total_amount_to_be_paid = 0
-        _total_sponsor_bond = 0
-        _installment_amount = []
+        _total_amount_to_be_paid_icx = 0
+        _total_amount_to_be_paid_bnusd = 0
+        _total_sponsor_bond_icx, _total_sponsor_bond_bnusd = 0, 0
+        projects_details = []
         for _ipfs_key in self._proposals_keys:
             prefix = self.proposal_prefix(_ipfs_key)
-            if self.proposals[prefix].status.get() != self._DISQUALIFIED:
-                if self.proposals[prefix].sponsor_address.get() == _wallet_address:
-                    _total_installment = self.proposals[prefix].project_duration.get()
-                    _total_paid_count = _total_installment - self.proposals[prefix].sponsor_reward_count.get()
+            prefix_ = self.proposals[prefix]
+            if prefix_.status.get() != self._DISQUALIFIED:
+                if prefix_.sponsor_address.get() == _wallet_address:
+                    _total_installment = prefix_.project_duration.get()
+                    _total_paid_count = _total_installment - prefix_.sponsor_reward_count.get()
                     if _total_paid_count < _total_installment:
-                        _total_budget = self.proposals[prefix].sponsor_reward.get()
-                        _total_paid_amount = self.proposals[prefix].sponsor_withdraw_amount.get()
-                        _deposited_sponsor_bond = self.proposals[prefix].total_budget.get() // 10
+                        _flag = prefix_.token.get()
+                        _total_budget = prefix_.sponsor_reward.get()
+                        _total_paid_amount = prefix_.sponsor_withdraw_amount.get()
+                        _deposited_sponsor_bond = prefix_.total_budget.get() // 10
 
-                        _installment_amount.append({self._IPFS_HASH: _ipfs_key,
-                                                    self._SPONSOR_REWARD: _total_budget,
-                                                    self._TOTAL_INSTALLMENT_PAID: _total_paid_amount,
-                                                    self._TOTAL_INSTALLMENT_COUNT: _total_installment,
-                                                    self._TOTAL_TIMES_INSTALLMENT_PAID: _total_paid_count,
-                                                    self._INSTALLMENT_AMOUNT: _total_budget // _total_installment,
-                                                    self._SPONSOR_BOND_AMOUNT: _deposited_sponsor_bond})
-                        _total_amount_to_be_paid += _total_budget // _total_installment
-                        _total_sponsor_bond += _deposited_sponsor_bond
+                        projects_details.append({self._IPFS_HASH: _ipfs_key,
+                                                 self._TOTAL_BUDGET: f'{_total_budget} {_flag}',
+                                                 self._TOTAL_INSTALLMENT_PAID: f'{_total_paid_amount} {_flag}',
+                                                 self._TOTAL_INSTALLMENT_COUNT: _total_installment,
+                                                 self._TOTAL_TIMES_INSTALLMENT_PAID: _total_paid_count,
+                                                 self._INSTALLMENT_AMOUNT: f'{_total_budget // _total_installment} {_flag}',
+                                                 self._SPONSOR_BOND_AMOUNT: f'{_deposited_sponsor_bond} {_flag}'})
+                        if _flag == ICX:
+                            _total_amount_to_be_paid_icx += _total_budget // _total_installment
+                            _total_sponsor_bond_icx += _deposited_sponsor_bond
+                        else:
+                            _total_amount_to_be_paid_bnusd += _total_budget // _total_installment
+                            _total_sponsor_bond_bnusd += _deposited_sponsor_bond
 
-        _withdraw_amount = self._fund_record[str(_wallet_address)]
+        _withdraw_amount_icx = self.installment_fund_record[str(_wallet_address)][ICX]
+        _withdraw_amount_bnusd = self.installment_fund_record[str(_wallet_address)][bnUSD]
 
-        return {"data": _installment_amount,
-                "project_count": len(_installment_amount),
-                "total_amount": _total_amount_to_be_paid,
-                "withdraw_amount": _withdraw_amount,
-                "total_sponsor_bond": _total_sponsor_bond}
+        return {"data": projects_details,
+                "project_count": len(projects_details),
+                "total_amount": {ICX: _total_amount_to_be_paid_icx, bnUSD: _total_amount_to_be_paid_bnusd},
+                "withdraw_amount_icx": _withdraw_amount_icx,
+                "withdraw_amount_bnusd": _withdraw_amount_bnusd,
+                "total_sponsor_bond": {ICX: _total_sponsor_bond_icx, bnUSD: _total_sponsor_bond_bnusd}}
 
     def _deposit_proposal_fund(self, _proposals: ProposalAttributes, _value: int = 0) -> None:
         """
