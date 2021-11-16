@@ -86,6 +86,7 @@ class CPF_TREASURY(IconScoreBase):
         self._proposal_budgets = DictDB(self._PROPOSAL_BUDGETS, db, value_type=int, depth=1)
 
         self.treasury_fund = VarDB(self.TREASURY_FUND, db, value_type=int)
+        self.treasury_fund_bnusd = VarDB(self.TREASURY_FUND_BNUSD, db, value_type=int)
 
         self._cps_treasury_score = VarDB(self._CPS_TREASURY_SCORE, db, value_type=Address)
         self._cps_score = VarDB(self._CPS_SCORE, db, value_type=Address)
