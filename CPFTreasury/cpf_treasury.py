@@ -55,6 +55,11 @@ class CPF_TREASURY(IconScoreBase):
         self._cps_treasury_score = VarDB(self._CPS_TREASURY_SCORE, db, value_type=Address)
         self._cps_score = VarDB(self._CPS_SCORE, db, value_type=Address)
 
+        self.balanced_dollar = VarDB(self.BALANCED_DOLLAR, db, value_type=Address)
+        self.dex_score = VarDB(self.DEX_SCORE, db, value_type=Address)
+        self.staking_score = VarDB(self.STAKING_SCORE, db, value_type=Address)
+        self.sicx_score = VarDB(self.SICX_SCORE, db, value_type=Address)
+
     def on_install(self, amount: int = 1_000_000 * MULTIPLIER) -> None:
         super().on_install()
         self.treasury_fund.set(amount)
@@ -138,6 +143,86 @@ class CPF_TREASURY(IconScoreBase):
         :rtype: :class:`iconservice.base.address.Address`
         """
         return self._cps_treasury_score.get()
+
+    @external
+    def set_bnUSD_score(self, _score: Address) -> None:
+        """
+        Sets the cps treasury score address. Only owner can set the address.
+        :param _score: Address of the cps treasury score address
+        :type _score: :class:`iconservice.base.address.Address`
+        :return:
+        """
+        self._validate_owner_score(_score)
+        self.balanced_dollar.set(_score)
+
+    @external
+    def set_staking_score(self, _score: Address) -> None:
+        """
+        Sets the cps treasury score address. Only owner can set the address.
+        :param _score: Address of the cps treasury score address
+        :type _score: :class:`iconservice.base.address.Address`
+        :return:
+        """
+        self._validate_owner_score(_score)
+        self.staking_score.set(_score)
+
+    @external
+    def set_sicx_score(self, _score: Address) -> None:
+        """
+        Sets the cps treasury score address. Only owner can set the address.
+        :param _score: Address of the cps treasury score address
+        :type _score: :class:`iconservice.base.address.Address`
+        :return:
+        """
+        self._validate_owner_score(_score)
+        self.sicx_score.set(_score)
+
+    @external
+    def set_dex_score(self, _score: Address) -> None:
+        """
+        Sets the Balanced DEX score address. Only owner can set the address.
+        :param _score: Address of the cps treasury score address
+        :type _score: :class:`iconservice.base.address.Address`
+        :return:
+        """
+        self._validate_owner_score(_score)
+        self.dex_score.set(_score)
+
+    @external(readonly=True)
+    def get_dex_score(self) -> Address:
+        """
+        Returns the Balanced DEX Score Address
+        :return: cps treasury score address
+        :rtype: :class:`iconservice.base.address.Address`
+        """
+        return self.dex_score.get()
+
+    @external(readonly=True)
+    def get_bnusd_score(self) -> Address:
+        """
+        Returns the Balanced Dollars score address
+        :return: cps treasury score address
+        :rtype: :class:`iconservice.base.address.Address`
+        """
+        return self.balanced_dollar.get()
+
+    @external(readonly=True)
+    def get_staking_score(self) -> Address:
+        """
+        Returns the Staking score address
+        :return: cps treasury score address
+        :rtype: :class:`iconservice.base.address.Address`
+        """
+        return self.staking_score.get()
+
+    @external(readonly=True)
+    def get_sicx_score(self) -> Address:
+        """
+        Returns the sICX score address
+        :return: cps treasury score address
+        :rtype: :class:`iconservice.base.address.Address`
+        """
+        return self.sicx_score.get()
 
     def _burn(self, amount: int) -> None:
         """
