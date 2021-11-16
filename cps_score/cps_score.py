@@ -545,7 +545,7 @@ class CPS_Score(IconScoreBase):
         """
         self._check_maintenance()
         self.update_period()
-        if self.period_name.get() == VOTING_PERIOD:
+        if self.period_name.get() != APPLICATION_PERIOD:
             revert(f"{TAG} : Progress Reports can only be submitted on Application Period")
 
         # TODO
