@@ -428,32 +428,44 @@ class CPS_TREASURY(IconScoreBase):
         """
         self._validate_cps_score()
 
-        if _ipfs_key in self._proposals_keys:
-            prefix = self.proposal_prefix(_ipfs_key)
-            proposals = self.proposals[prefix]
+        ix = self.proposals_key_list_index[_ipfs_key]
+        if ix == 0:
+            revert(f'{TAG}: Project not found. Invalid IPFS Hash.')
 
-            # Set Proposal status to disqualified
-            proposals.status.set(self._DISQUALIFIED)
+        prefix = self.proposal_prefix(self._proposals_keys[ix])
+        proposals = self.proposals[prefix]
 
-            _total_budget = proposals.total_budget.get()
-            _withdraw_amount = proposals.withdraw_amount.get()
-            _sponsor_reward = proposals.sponsor_reward.get()
-            _sponsor_withdraw_amount = proposals.sponsor_withdraw_amount.get()
+        # Set Proposal status to disqualified
+        proposals.status.set(self._DISQUALIFIED)
 
-            _remaining_budget = _total_budget - _withdraw_amount
-            _remaining_reward = _sponsor_reward - _sponsor_withdraw_amount
+        _total_budget = proposals.total_budget.get()
+        _withdraw_amount = proposals.withdraw_amount.get()
+        _sponsor_reward = proposals.sponsor_reward.get()
+        _sponsor_withdraw_amount = proposals.sponsor_withdraw_amount.get()
+        token_flag = proposals.token.get()
 
-            # return remaining fund amount to the CPF
-            try:
-                cpf_treasury_score = self.create_interface_score(self._cpf_treasury_score.get(), CPF_TREASURY_INTERFACE)
-                cpf_treasury_score.icx(_remaining_budget + _remaining_reward).disqualify_proposal_fund(
-                    _ipfs_key)
+        _remaining_budget = _total_budget - _withdraw_amount
+        _remaining_reward = _sponsor_reward - _sponsor_withdraw_amount
+        total_return_amount = _remaining_budget + _remaining_reward
 
-                self.ProposalDisqualified(_ipfs_key, f"{_ipfs_key}, Proposal disqualified")
-            except BaseException as e:
-                revert(f"{TAG} : Network problem. Sending proposal funds. {e}")
-        else:
-            revert(f"{TAG} : Provided IPFS key not found.")
+        # return remaining fund amount to the CPF
+        try:
+            if token_flag == ICX:
+                cpf_treasury_score = self.create_interface_score(self._cpf_treasury_score.get(),
+                                                                 CPF_TREASURY_INTERFACE)
+                cpf_treasury_score.icx(total_return_amount).disqualify_proposal_fund(_ipfs_key)
+            elif token_flag == bnUSD:
+                _data = json_dumps({"method": "disqualify_project",
+                                    "params": {"ipfs_key": _ipfs_key}}).encode()
+                bnusd_score = self.create_interface_score(self.balanced_dollar.get(), TokenInterface)
+                bnusd_score.transfer(self._cpf_treasury_score.get(), total_return_amount, _data)
+
+            else:
+                revert(f'{TAG}: Not supported token.')
+
+            self.ProposalDisqualified(_ipfs_key, f"{_ipfs_key}, Proposal disqualified")
+        except Exception:
+            revert(f"{TAG} : Network problem. Sending proposal funds to CPF after project disqualification.")
 
     @external
     def claim_reward(self) -> None:
