@@ -375,9 +375,16 @@ class CPF_TREASURY(IconScoreBase):
         Burning the extra amount above the maximum threshold of CPF
         :return:
         """
-        _extra_amount = self.icx.get_balance(self.address) - self.treasury_fund.get()
-        if _extra_amount > 0:
-            self._burn(_extra_amount)
+        amounts = self.get_total_funds()
+        icx_amount = amounts.get(ICX)
+        bnusd_amount = amounts.get(BNUSD)
+        _extra_amount_icx = icx_amount - self.treasury_fund.get()
+        if _extra_amount_icx > 0:
+            self._burn(_extra_amount_icx)
+
+        _extra_amount_bnusd = bnusd_amount - self.treasury_fund_bnusd.get()
+        if _extra_amount_bnusd > 0:
+            self._swap_tokens(self.get_bnusd_score(), self.get_sicx_score(), _extra_amount_bnusd)
 
     @external(readonly=True)
     def get_proposals_details(self, _start_index: int = 0, _end_index: int = 20) -> dict:
