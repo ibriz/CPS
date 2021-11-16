@@ -49,6 +49,7 @@ class CPS_Score(IconScoreBase):
     PROGRESS_REPORT_STATUS_TYPE = [_APPROVED, _WAITING, _PROGRESS_REPORT_REJECTED]
 
     _SPONSOR_BOND_RETURN = '_sponsor_bond_return'
+    SPONSOR_BOND_RETURN = 'sponsor_bond_return'
 
     @eventlog(indexed=1)
     def ProposalSubmitted(self, _sender_address: Address, note: str):
