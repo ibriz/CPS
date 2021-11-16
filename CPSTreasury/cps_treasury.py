@@ -3,6 +3,8 @@ from .proposal_data import *
 
 PROPOSAL_DB_PREFIX = b'proposal'
 TAG = "CPS_TREASURY"
+ICX = "ICX"
+bnUSD = "bnUSD"
 
 
 class ProposalAttributes(TypedDict):
@@ -23,7 +25,9 @@ class CPF_TREASURY_INTERFACE(InterfaceScore):
 class CPS_TREASURY(IconScoreBase):
     ID = 'id'
     _PROPOSALS_KEYS = "_proposals_keys"
+    PROPOSALS_KEY_LIST_INDEX = 'proposals_key_list_index'
     _FUND_RECORD = "fund_record"
+    INSTALLMENT_FUND_RECORD = 'installment_fund_record'
 
     _TOTAL_INSTALLMENT_COUNT = "_total_installment_count"
     _TOTAL_TIMES_INSTALLMENT_PAID = "_total_times_installment_paid"
@@ -35,6 +39,7 @@ class CPS_TREASURY(IconScoreBase):
 
     _CPS_SCORE = "_cps_score"
     _CPF_TREASURY_SCORE = "_cpf_treasury_score"
+    BALANCED_DOLLAR = 'balanced_dollar'
 
     _SPONSOR_ADDRESS = 'sponsor_address'
     _CONTRIBUTOR_ADDRESS = "contributor_address"
@@ -70,7 +75,9 @@ class CPS_TREASURY(IconScoreBase):
         self.proposals = ProposalDataDB(db)
 
         self._proposals_keys = ArrayDB(self._PROPOSALS_KEYS, db, value_type=str)
+        self.proposals_key_list_index = DictDB(self.PROPOSALS_KEY_LIST_INDEX, db, value_type=int)
         self._fund_record = DictDB(self._FUND_RECORD, db, value_type=int)
+        self.installment_fund_record = DictDB(self.INSTALLMENT_FUND_RECORD, db, value_type=int, depth=2)
 
         self._cpf_treasury_score = VarDB(self._CPF_TREASURY_SCORE, db, value_type=Address)
         self._cps_score = VarDB(self._CPS_SCORE, db, value_type=Address)
