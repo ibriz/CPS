@@ -298,7 +298,7 @@ class CPF_TREASURY(IconScoreBase):
     @external
     def transfer_proposal_fund_to_cps_treasury(self, _ipfs_key: str, _total_installment_count: int,
                                                _sponsor_address: Address, _contributor_address: Address,
-                                               _total_budget: int) -> None:
+                                               token_flag: str, _total_budget: int) -> None:
         """
         Sends the Allocated budget of a proposal after being passed from 2/3 of the  P-Rep to the CPF Treasury
         Score to a certain proposal key
@@ -306,41 +306,52 @@ class CPF_TREASURY(IconScoreBase):
         :param _total_installment_count: Total Month count of the project
         :param _sponsor_address: Sponsor P-Rep Address
         :param _contributor_address: Contributor Address
+        :param token_flag: Token Name
         :param _total_budget: Total Budget for the Project.
         :return:
         """
 
         self._validate_cps_score()
+        ix = self._proposals_keys_index[_ipfs_key]
+        if ix != 0:
+            revert(f'{TAG}: Project already exists. Invalid IPFS Hash.')
 
         # Calculating sponsor reward for sponsor(2%) and total budget for contributor
         _sponsor_reward = _total_budget * 2 // 100
         total_transfer = _total_budget + _sponsor_reward
 
-        if self.icx.get_balance(self.address) < total_transfer:
-            revert(f"{TAG} : Not enough fund in treasury.")
+        bnusd_score = self.create_interface_score(self.balanced_dollar.get(), TokenInterface)
 
-        if _ipfs_key not in self._proposals_keys:
-            self._proposals_keys.put(_ipfs_key)
-            self._proposal_budgets[_ipfs_key] = total_transfer
+        balanceOf = bnusd_score.balanceOf(self.address)
+        if balanceOf < total_transfer:
+            revert(f"{TAG} : Not enough fund {balanceOf} in treasury.")
 
-            # Required Params for the deposit_proposal_fund method for CPS_Treasury Score
-            params = {"ipfs_hash": _ipfs_key,
-                      "project_duration": _total_installment_count,
-                      "sponsor_address": _sponsor_address,
-                      "contributor_address": _contributor_address,
-                      "total_budget": _total_budget,
-                      "sponsor_reward": _sponsor_reward}
+        if token_flag != BNUSD:
+            revert(f'{TAG}: {token_flag} is not supported. Only {BNUSD} token available.')
 
-            try:
-                cps_treasury_score = self.create_interface_score(self._cps_treasury_score.get(), CPS_TREASURY_INTERFACE)
-                cps_treasury_score.icx(total_transfer).deposit_proposal_fund(params)
+        self._proposals_keys.put(_ipfs_key)
+        self._proposals_keys_index[_ipfs_key] = len(self._proposals_keys)
+        self._proposal_budgets[_ipfs_key] = total_transfer
 
-                self.ProposalFundTransferred(_ipfs_key, _total_budget, f"Successfully transferred "
-                                                                       f"{total_transfer} to CPF Treasury.")
-            except BaseException as e:
-                revert(f"{TAG} : Network problem. Sending proposal funds. {e}")
-        else:
-            revert(f"{TAG} : IPFS key already Exists")
+        # Required Params for the deposit_proposal_fund method for CPS_Treasury Score
+        params = {"method": "deposit_proposal_fund",
+                  "params": {"ipfs_hash": _ipfs_key,
+                             "project_duration": _total_installment_count,
+                             "sponsor_address": str(_sponsor_address),
+                             "contributor_address": str(_contributor_address),
+                             "total_budget": _total_budget,
+                             "sponsor_reward": _sponsor_reward,
+                             "token": token_flag}}
+
+        try:
+            _data = json_dumps(params).encode("utf-8")
+            bnusd_score.transfer(self._cps_treasury_score.get(), total_transfer, _data)
+
+            self.ProposalFundTransferred(_ipfs_key, f"Successfully transferred {total_transfer} "
+                                                    f"{token_flag} to CPF Treasury.")
+
+        except BaseException as e:
+            revert(f"{TAG} : Network problem. Sending proposal funds. {e}")
 
     @external
     def update_proposal_fund(self, _ipfs_key: str, _flag: str = ICX, _added_budget: int = 0,
