@@ -642,9 +642,7 @@ class CPS_Score(IconScoreBase):
 
         return [x for x in self.proposals_status[_status]]
 
-    @external
-    @payable
-    def sponsor_vote(self, _ipfs_key: str, _vote: str, _vote_reason: str) -> None:
+    def _sponsor_vote(self, _ipfs_key: str, _vote: str, _vote_reason: str, _from: Address, _value: int = 0) -> None:
         """
         Selected Sponsor P-Rep to approve the requested proposal for CPS
         :param _vote: Vote from Sponsor [_accept,_reject]
@@ -662,34 +660,42 @@ class CPS_Score(IconScoreBase):
         _proposal_details = self._get_proposal_details(_ipfs_key)
         _status = _proposal_details[STATUS]
         _sponsor = _proposal_details[SPONSOR_ADDRESS]
+        _token = _proposal_details['token']
         _contributor_address = _proposal_details[CONTRIBUTOR_ADDRESS]
 
-        if self.msg.sender not in self.valid_preps:
+        if _from not in self.valid_preps:
             revert(f"{TAG} : Not a P-Rep.")
 
-        if self.msg.sender != _sponsor:
+        if _from != _sponsor:
             revert(f"{TAG} : Not a valid Sponsor.")
+
+        if _vote not in [ACCEPT, REJECT]:
+            revert(f'{TAG}: Not a valid vote.')
 
         if _vote == ACCEPT:
             if _status == self._SPONSOR_PENDING:
                 _budget: int = _proposal_details[TOTAL_BUDGET]
+                if _token != bnUSD:
+                    revert(f'{TAG}: Only {bnUSD} supported.')
 
-                if self.msg.value != _budget // 10:
+                if _value != _budget // 10:
                     revert(f"{TAG} : Deposit 10% of the total budget of the project.")
 
                 self._update_proposal_status(_ipfs_key, self._PENDING)
 
                 prefix = self.proposal_prefix(_ipfs_key)
-                self.proposals[prefix].sponsor_deposit_amount.set(self.msg.value)
+                self.proposals[prefix].sponsor_deposit_amount.set(_value)
                 self.proposals[prefix].sponsored_timestamp.set(self.now())
                 self.proposals[prefix].sponsor_deposit_status.set(BOND_RECEIVED)
                 self.proposals[prefix].sponsor_vote_reason.set(_vote_reason.encode())
 
-                self.SponsorBondReceived(self.msg.sender, f"Sponsor Bond Received from {self.msg.sender}.")
+                self.SponsorBondReceived(_from, f"Sponsor Bond Received from {_from}.")
+            else:
+                revert(f'{TAG}: Sponsor can be only approve sponsorship for Pending proposals.')
         else:
             self._remove_contributor(_contributor_address)
             self._update_proposal_status(_ipfs_key, self._REJECTED)
-            self.SponsorBondRejected(self.msg.sender,
+            self.SponsorBondRejected(_from,
                                      f"Sponsor Bond Rejected for project {_proposal_details[PROJECT_TITLE]}.")
 
     @external
