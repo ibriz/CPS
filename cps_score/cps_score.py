@@ -1840,24 +1840,39 @@ class CPS_Score(IconScoreBase):
         """
         Claim the reward or the installment amount
         """
-        _available_amount = self._sponsor_bond_return[str(self.msg.sender)]
-        if _available_amount > 0:
+        _available_amount_icx = self.sponsor_bond_return[str(self.msg.sender)][ICX]
+        _available_amount_bnusd = self.sponsor_bond_return[str(self.msg.sender)][bnUSD]
+        if _available_amount_icx > 0:
             try:
                 # set the remaining fund 0
-                self._sponsor_bond_return[str(self.msg.sender)] = 0
+                self.sponsor_bond_return[str(self.msg.sender)][ICX] = 0
 
-                self.icx.transfer(self.msg.sender, _available_amount)
-                self.SponsorBondClaimed(self.msg.sender, _available_amount, f"{_available_amount} withdrawn to "
-                                                                            f"{self.msg.sender}")
-            except BaseException as e:
-                revert(f"{TAG} : Network problem. Claiming Reward{e}")
+                self.icx.transfer(self.msg.sender, _available_amount_icx)
+                self.SponsorBondClaimed(self.msg.sender, _available_amount_icx,
+                                        f"{_available_amount_icx} withdrawn to {self.msg.sender}")
+            except Exception as e:
+                revert(f"{TAG} : Network problem. Claiming sponsor bond. {e}")
+
+        elif _available_amount_bnusd > 0:
+            try:
+                # set the remaining fund 0
+                self.sponsor_bond_return[str(self.msg.sender)][bnUSD] = 0
+
+                bnusd_score = self.create_interface_score(self.balanced_dollar.get(), TokenInterface)
+                bnusd_score.transfer(self.msg.sender, _available_amount_bnusd)
+                self.SponsorBondClaimed(self.msg.sender, _available_amount_bnusd,
+                                        f"{_available_amount_bnusd} withdrawn to {self.msg.sender}")
+            except Exception as e:
+                revert(f"{TAG} : Network problem. Claiming sponsor bond. {e}")
 
         else:
-            revert(f"{TAG} :Claim Reward Fails. Available Amount = {_available_amount}.")
+            revert(f"{TAG} :Claim Reward Fails. Available Amounts are {_available_amount_icx} ICX and "
+                   f"{_available_amount_bnusd} {bnUSD}.")
 
     @external(readonly=True)
-    def check_claimable_sponsor_bond(self, _address: Address) -> int:
-        return self._sponsor_bond_return[str(_address)]
+    def check_claimable_sponsor_bond(self, _address: Address) -> dict:
+        return {ICX: self.sponsor_bond_return[str(_address)][ICX],
+                bnUSD: self.sponsor_bond_return[str(_address)][bnUSD]}
 
     @external
     def update_project_flag(self):
