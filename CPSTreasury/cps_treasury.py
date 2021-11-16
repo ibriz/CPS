@@ -497,58 +497,23 @@ class CPS_TREASURY(IconScoreBase):
         installment_count = proposals.installment_count.get()
         sponsor_reward_count = proposals.sponsor_reward_count.get()
 
-        _added_amount = _added_amounts.get(_ipfs_key)
-        _added_time = _added_time.get(_ipfs_key)
-        _added_sponsor_reward = (_added_amount * 2) // 100
-        _total_budget = proposals.total_budget.get()
+    @external
+    def tokenFallback(self, _from: Address, _value: int, _data: bytes):
+        if _from != self._cpf_treasury_score.get():
+            revert(f'{TAG}: Only Receiving from {self._cpf_treasury_score.get()}, {_from}')
 
-        proposals.remaining_amount.set(_remaining_amount + _added_amount)
-        proposals.sponsor_remaining_amount.set(_sponsor_remaining_amount + _added_sponsor_reward)
-        proposals.installment_count.set(installment_count + _added_time)
-        proposals.sponsor_reward_count.set(sponsor_reward_count + _added_time)
+        unpacked_data = json_loads(_data.decode('utf-8'))
 
-        _remaining_amount = proposals.remaining_amount.get()
-        _sponsor_remaining_amount = proposals.sponsor_remaining_amount.get()
-        installment_count = proposals.installment_count.get()
-        sponsor_reward_count = proposals.sponsor_reward_count.get()
+        if unpacked_data["method"] == "deposit_proposal_fund":
+            self._deposit_proposal_fund(unpacked_data["params"], _value)
 
-        if _ipfs_key == 'bafybeie5cifgwgu2x3guixgrs67miydug7ocyp6yia5kxv3imve6fthbs4':
-            _remaining_amount = self._fund_record[str(_contributor_address)]
-            _remaining_sponsor_amount = self._fund_record[str(_sponsor_address)]
-            proposals.remaining_amount.set(_remaining_amount - _remaining_amount // 4)
-            proposals.sponsor_remaining_amount.set(_remaining_sponsor_amount - _remaining_sponsor_amount // 4)
-            self._fund_record[str(_contributor_address)] = _remaining_amount // 4
-            self._fund_record[str(_sponsor_address)] = _remaining_sponsor_amount // 4
-            proposals.status.set(self._ACTIVE)
+        elif unpacked_data["method"] == "budget_adjustment":
+            _params = unpacked_data["params"]
+            ipfs_key = _params['_ipfs_key']
+            added_budget = _params['_added_budget']
+            added_sponsor_reward = _params['_added_sponsor_reward']
+            added_installment_count = _params['_added_installment_count']
 
-        elif _ipfs_key == 'bafybeid3xfky4rx2bvqzybip6jg5xgjm2uonvuxbhkc7sxa375hgw7736e':
-            self._fund_record[str(_contributor_address)] += _remaining_amount
-            self._fund_record[str(_sponsor_address)] += _sponsor_remaining_amount
-            proposals.remaining_amount.set(0)
-            proposals.sponsor_remaining_amount.set(0)
-            proposals.status.set(self._COMPLETED)
-
+            self.update_proposal_fund(ipfs_key, added_budget, added_sponsor_reward, added_installment_count)
         else:
-            _total_installment_remaining = installment_count + 1
-            _total_sponsor_installment_remaining = sponsor_reward_count + 1
-
-            _old_budget = _total_budget - _added_amount
-            _total_duration = proposals.project_duration.get()
-            _old_duration = _total_duration - _added_time
-            _sent_installment = _old_budget // _old_duration
-
-            _old_sponsor_budget = (_old_budget * 2) // 100
-            _sent_sponsor_reward = _old_sponsor_budget // _old_duration
-
-            total_remaining_amount = _remaining_amount + _sent_installment
-            _total_sending_amount = total_remaining_amount // _total_installment_remaining
-
-            total_remaining_sponsor_amount = _sponsor_remaining_amount + _sent_sponsor_reward
-            _total_sending_sponsor_amount = total_remaining_sponsor_amount // _total_sponsor_installment_remaining
-
-            proposals.remaining_amount.set(total_remaining_amount - _total_sending_amount)
-            proposals.sponsor_remaining_amount.set(total_remaining_sponsor_amount - _total_sending_sponsor_amount)
-
-            self._fund_record[str(_contributor_address)] += (_total_sending_amount - _sent_installment)
-            self._fund_record[str(_sponsor_address)] += (_total_sending_sponsor_amount - _sent_sponsor_reward)
-            proposals.status.set(self._ACTIVE)
+            revert(f'{TAG}: {unpacked_data["method"]} Not a valid method.')
