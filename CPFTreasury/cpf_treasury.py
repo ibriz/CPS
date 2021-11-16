@@ -70,6 +70,7 @@ class CPF_TREASURY(IconScoreBase):
     def __init__(self, db: IconScoreDatabase) -> None:
         super().__init__(db)
         self._proposals_keys = ArrayDB(self._PROPOSALS_KEYS, db, value_type=str)
+        self._proposals_keys_index = DictDB(f'{self._PROPOSALS_KEYS}_index', db, value_type=int)
         self._proposal_budgets = DictDB(self._PROPOSAL_BUDGETS, db, value_type=int, depth=1)
 
         self.treasury_fund = VarDB(self.TREASURY_FUND, db, value_type=int)
