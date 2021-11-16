@@ -928,11 +928,7 @@ class CPS_Score(IconScoreBase):
 
     @external(readonly=True)
     def get_admins(self) -> list:
-        admins = []
-        for admin in self.admins:
-            admins.append(admin)
-
-        return admins
+        return [_address for _address in self.admins]
 
     @external(readonly=True)
     def get_cps_treasury_score(self) -> Address:
