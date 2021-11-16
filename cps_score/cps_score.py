@@ -849,9 +849,7 @@ class CPS_Score(IconScoreBase):
                 revert(f"{TAG} : Invalid amount({amount})")
             self.penalty_amount[i] = to_loop(amount)
 
-    @payable
-    @external
-    def pay_prep_penalty(self):
+    def _pay_prep_penalty(self, _from: Address, _value: int) -> None:
         """
         To remove the address from denylist
         :return:
@@ -861,22 +859,21 @@ class CPS_Score(IconScoreBase):
         if self.period_name.get() != APPLICATION_PERIOD:
             revert(f"{TAG} : Penalty can only be paid on Application Period")
 
-        if self.msg.sender not in self.denylist:
-            revert(f"{TAG} : {self.msg.sender} not in denylist.")
+        if _from not in self.denylist:
+            revert(f"{TAG} : {_from} not in denylist.")
 
-        _penalty_amount = self._get_penalty_amount(self.msg.sender)
+        _penalty_amount = self._get_penalty_amount(_from)
 
-        if self.msg.value != _penalty_amount:
+        if _value != _penalty_amount:
             revert(f"{TAG} :  Please pay Penalty amount of {_penalty_amount} to register as a P-Rep.")
 
-        ArrayDBUtils.remove_array_item(self.denylist, self.msg.sender)
+        ArrayDBUtils.remove_array_item(self.denylist, _from)
 
-        self.valid_preps.put(self.msg.sender)
-        self._burn(self.msg.value)
-        self.PRepPenalty(self.msg.sender,
-                         f"{self.msg.value} Penalty Received. P-Rep removed from Denylist.")
+        self.registered_preps.put(_from)
+        self.valid_preps.put(_from)
+        self._burn(_value, self.balanced_dollar.get())
+        self.PRepPenalty(_from, f"{_value} Penalty Received. P-Rep removed from Denylist.")
 
-    @only_owner
     @external
     def set_initialBlock(self) -> None:
         """
