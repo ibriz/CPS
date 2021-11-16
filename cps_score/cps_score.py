@@ -549,8 +549,8 @@ class CPS_Score(IconScoreBase):
         if self.msg.sender != _prefix.contributor_address.get():
             revert(f"{TAG} : Sorry, You are not the contributor for this project.")
 
-        if _ipfs_hash not in self._get_proposal_keys():
-            revert(f"{TAG} : Sorry, Project not found.")
+        if _prefix.status.get() not in [self._ACTIVE, self._PAUSED]:
+            revert(f"{TAG} : Sorry, Active Project not found.")
 
         if _prefix.submit_progress_report.get():
             revert(f"{TAG} : Progress Report is already submitted this cycle.")
