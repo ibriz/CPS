@@ -1782,6 +1782,13 @@ class CPS_Score(IconScoreBase):
         ArrayDBUtils.array_db_clear(self.inactive_preps)
 
     @external
+    def remove_denylist_preps(self):
+        self._validate_admins()
+        for wallet in self.denylist:
+            self.preps_denylist_status[str(wallet)] = 0
+            self.denylist.pop()
+
+    @external
     def claim_sponsor_bond(self) -> None:
         """
         Claim the reward or the installment amount
