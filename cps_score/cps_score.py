@@ -913,7 +913,7 @@ class CPS_Score(IconScoreBase):
         :rtype: int
         """
         cpf_treasury_score = self.create_interface_score(self.cpf_score.get(), CPF_TREASURY_INTERFACE)
-        return cpf_treasury_score.get_total_fund()
+        return cpf_treasury_score.get_total_funds()
 
     @external(readonly=True)
     def get_PReps(self) -> list:
