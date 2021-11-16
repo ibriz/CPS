@@ -102,18 +102,18 @@ class CPF_TREASURY(IconScoreBase):
         if not _score.is_contract:
             revert(f"{TAG} : Target({_score}) is not SCORE.")
 
-    def _validate_cps_score(self):
-        if self.msg.sender != self._cps_score.get():
+    def _validate_cps_score(self, _from: Address = None):
+        if _from is None:
+            _from = self.msg.sender
+        if _from != self._cps_score.get():
             revert(f"{TAG} : Only CPS({self._cps_score.get()}) SCORE can send fund using this method.")
 
-    def _validate_cps_treasury_score(self):
-        if self.msg.sender != self._cps_treasury_score.get():
-            revert(
-                f"{TAG} : Only CPS Treasury({self._cps_treasury_score.get()}) SCORE can send fund using this method.")
-
-    @payable
-    def fallback(self):
-        revert(f"{TAG} : ICX can only be sent using add_fund() method.")
+    def _validate_cps_treasury_score(self, _from: Address = None):
+        if _from is None:
+            _from = self.msg.sender
+        if _from != self._cps_treasury_score.get():
+            revert(f"{TAG} : Only CPS Treasury({self._cps_treasury_score.get()}) "
+                   f"SCORE can send fund using this method.")
 
     @external
     def set_maximum_treasury_fund(self, _value: int) -> None:
