@@ -872,6 +872,7 @@ class CPS_Score(IconScoreBase):
 
         :return: None
         """
+        self._validate_admins()
         self.set_PReps()
 
         self.initial_block.set(self.block_height)
