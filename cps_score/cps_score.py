@@ -165,6 +165,9 @@ class CPS_Score(IconScoreBase):
 
     def on_update(self) -> None:
         super().on_update()
+        self.maintenance.set(True)
+        self.swap_block_height.set(self.block_height)
+        self.swap_count.set(10)
 
     @external(readonly=True)
     def name(self) -> str:
