@@ -122,7 +122,9 @@ class CPS_Score(IconScoreBase):
         self.preps_denylist_status = DictDB(PREPS_DENYLIST_STATUS, db, value_type=int)
 
         self.proposals_key_list = ArrayDB(PROPOSALS_KEY_LIST, db, value_type=str)
+        self.proposals_key_list_index = DictDB(PROPOSALS_KEY_LIST_INDEX, db, value_type=int)
         self.progress_key_list = ArrayDB(PROGRESS_KEY_LIST, db, value_type=str)
+        self.progress_key_list_index = DictDB(PROGRESS_KEY_LIST_INDEX, db, value_type=int)
         self.budget_approvals_list = ArrayDB(BUDGET_APPROVALS_LIST, db, value_type=str)
 
         self.active_proposals = ArrayDB(ACTIVE_PROPOSALS, db, value_type=str)
@@ -430,10 +432,12 @@ class CPS_Score(IconScoreBase):
 
     def _add_proposals(self, _proposal: ProposalAttributes) -> None:
         proposal_data_obj = createProposalDataObject(_proposal)
-        if proposal_data_obj.ipfs_hash not in self._get_proposal_keys():
-            self.proposals_key_list.put(proposal_data_obj.ipfs_hash)
-            prefix = self.proposal_prefix(proposal_data_obj.ipfs_hash)
+        ipfs_hash = proposal_data_obj.ipfs_hash
+        if self.proposals_key_list_index[ipfs_hash] == 0:
+            self.proposals_key_list.put(ipfs_hash)
+            prefix = self.proposal_prefix(ipfs_hash)
             addDataToProposalDB(prefix, self.proposals, proposal_data_obj)
+            self.proposals_key_list_index[ipfs_hash] = len(self.proposals_key_list)
         else:
             revert(f"{TAG} : Proposal Hash Already Exists.")
 
@@ -461,10 +465,12 @@ class CPS_Score(IconScoreBase):
 
     def _add_progress_report(self, _progress_report: ProgressReportAttributes) -> None:
         progress_report_obj = createProgressDataObject(_progress_report)
-        if progress_report_obj.report_hash not in self._get_progress_keys():
-            self._add_new_progress_report_key(progress_report_obj.ipfs_hash, progress_report_obj.report_hash)
-            prefix = self.progress_report_prefix(progress_report_obj.report_hash)
+        report_hash = progress_report_obj.report_hash
+        if self.progress_key_list_index[report_hash] == 0:
+            self._add_new_progress_report_key(progress_report_obj.ipfs_hash, report_hash)
+            prefix = self.progress_report_prefix(report_hash)
             addDataToProgressReportDB(prefix, self.progress_reports, progress_report_obj)
+            self.progress_key_list_index[report_hash] = len(self.progress_key_list)
         else:
             revert(f"{TAG} : Report Hash Already Exists.")
 
@@ -1799,11 +1805,32 @@ class CPS_Score(IconScoreBase):
         return self._sponsor_bond_return[str(_address)]
 
     @external
-    @payable
-    def request_added_fund(self, _key: str):
-        _amounts = {'bafybeie5cifgwgu2x3guixgrs67miydug7ocyp6yia5kxv3imve6fthbs4': 3182 * 10 ** 17,
-                    'bafybeiaubhdzignnbe24ypwwulsr6fxju4uyujzx5tnyqc6fgop3qbyldu': 1200 * MULTIPLIER,
-                    'bafybeibd3fxxvyhzj2qk57pvjznbak2veomnpz6nviuvpjj2qsxdxrqb44': 510 * MULTIPLIER}
+    def update_project_flag(self):
+        """
+        Update every existing projects with a key `token` : ICX, migrate sponsor_bond value to new dictDB.
+        Update the proposal index for setting up enumerableSetDB
+        :return:
+        """
+        self._validate_admins()
+        for _ix in range(0, len(self.proposals_key_list)):
+            _ipfs_hash = self.proposals_key_list[_ix]
+            self.proposals_key_list_index[_ipfs_hash] = _ix + 1
+            proposalPrefix = self.proposal_prefix(_ipfs_hash)
+            _prefix = self.proposals[proposalPrefix]
+            _prefix.token.set(ICX)
+            sponsor_ = _prefix.sponsor_address.get()
+            self.sponsor_bond_return[str(sponsor_)][ICX] = self._sponsor_bond_return[str(sponsor_)]
+
+    @external
+    def update_progress_report_index(self):
+        """
+        Update every existing progress reports key index on DB.
+        :return:
+        """
+        self._validate_admins()
+        for _ix in range(0, len(self.progress_key_list)):
+            _ipfs_hash = self.progress_key_list[_ix]
+            self.progress_key_list_index[_ipfs_hash] = _ix + 1
 
     @external
     def tokenFallback(self, _from: Address, _value: int, _data: bytes):
