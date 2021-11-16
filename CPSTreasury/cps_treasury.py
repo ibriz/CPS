@@ -23,6 +23,17 @@ class CPF_TREASURY_INTERFACE(InterfaceScore):
         pass
 
 
+class CPSScoreInterface(InterfaceScore):
+    @interface
+    def get_admins(self) -> list:
+        pass
+
+
+class TokenInterface(InterfaceScore):
+    @interface
+    def transfer(self, _to: Address, _value: int, _data: bytes = None) -> None: pass
+
+
 class CPS_TREASURY(IconScoreBase):
     ID = 'id'
     _PROPOSALS_KEYS = "_proposals_keys"
