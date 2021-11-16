@@ -110,6 +110,12 @@ class CPS_TREASURY(IconScoreBase):
     def proposal_prefix(self, _proposal_key: str) -> bytes:
         return b'|'.join([PROPOSAL_DB_PREFIX, self.id.get().encode(), _proposal_key.encode()])
 
+    def _validate_admins(self):
+        cps_score = self.create_interface_score(self._cps_score.get(), CPSScoreInterface)
+        admins = cps_score.get_admins()
+        if self.msg.sender not in admins:
+            revert(f"{TAG} : Only Admins can call this method.")
+
     def _validate_owner(self):
         if self.msg.sender != self.owner:
             revert(f"{TAG} :Only owner can call this method.")
