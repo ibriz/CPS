@@ -3,6 +3,9 @@ from iconservice import *
 # ICX Multiplier
 MULTIPLIER = 10 ** 18
 TAG = "CPF_TREASURY"
+ICX = 'ICX'
+BNUSD = 'bnUSD'
+ZERO_WALLET = 'hx0000000000000000000000000000000000000000'
 
 
 class CPS_TREASURY_INTERFACE(InterfaceScore):
@@ -44,8 +47,17 @@ class CPF_TREASURY(IconScoreBase):
     _CPS_SCORE = "_cps_score"
 
     TREASURY_FUND = "treasury_fund"
+    TREASURY_FUND_BNUSD = "treasury_fund_bnusd"
     _IPFS_HASH = "_ipfs_hash"
     _TOTAL_BUDGET = '_budget_transfer'
+
+    BALANCED_DOLLAR = 'balanced_dollar'
+    DEX_SCORE = 'dex_score'
+    SICX_SCORE = 'sicx_score'
+    STAKING_SCORE = 'staking_score'
+
+    SWAP_STATE = "swap_state"
+    SWAP_COUNT = "swap_count"
 
     @eventlog(indexed=1)
     def ProposalFundTransferred(self, _ipfs_key: str, note: str):
