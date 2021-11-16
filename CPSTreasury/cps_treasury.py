@@ -54,7 +54,7 @@ class CPS_TREASURY(IconScoreBase):
     _COMPLETED = "completed"
 
     @eventlog(indexed=1)
-    def ProposalFundDeposited(self, _ipfs_key: str, _total_budget: int, note: str):
+    def ProposalFundDeposited(self, _ipfs_key: str, note: str):
         pass
 
     @eventlog(indexed=1)
@@ -62,7 +62,7 @@ class CPS_TREASURY(IconScoreBase):
         pass
 
     @eventlog(indexed=1)
-    def ProposalFundWithdrawn(self, _receiver_address: Address, _fund: int, note: str):
+    def ProposalFundWithdrawn(self, _receiver_address: Address, note: str):
         pass
 
     @eventlog(indexed=1)
