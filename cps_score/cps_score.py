@@ -474,10 +474,14 @@ class CPS_Score(IconScoreBase):
         if proposal_key[PROJECT_DURATION] > MAX_PROJECT_PERIOD:
             revert(f"{TAG} : Maximum Project Duration exceeds 6 months.")
 
-        remaining_fund = self.get_remaining_fund()
-        if to_loop(proposal_key[TOTAL_BUDGET]) > remaining_fund:
-            revert(f"{TAG} : Budget Exceeds than Treasury Amount. "
-                   f"{remaining_fund}")
+        budget_ = to_loop(proposal_key[TOTAL_BUDGET])
+
+        total_fund = self.proposal_fund.get()
+        if (total_fund + budget_) < self._get_max_cap_bnusd():
+            # Add extra 2% for sponsor reward
+            self.proposal_fund.set(total_fund + (budget_ * 102) // 100)
+        else:
+            revert(f'{TAG}: Max Cap fund already reached for this period.')
 
         if proposal_key[SPONSOR_ADDRESS] not in self.valid_preps:
             revert(f"{TAG} : Sponsor P-Rep not a Top 100 P-Rep.")
@@ -537,9 +541,19 @@ class CPS_Score(IconScoreBase):
         if _progress[BUDGET_ADJUSTMENT]:
             # Check if budget adjustment is already submitted or not
             if not _prefix.budget_adjustment.get():
-                remaining_fund = self.get_remaining_fund()
-                if _progress[ADDITIONAL_BUDGET] > remaining_fund:
-                    revert(f"{TAG} : Additional Budget Exceeds than Treasury Amount. {remaining_fund}")
+                budget_added = _progress[ADDITIONAL_BUDGET]
+                if flag == bnUSD:
+                    total_fund = self.proposal_fund.get()
+                    if total_fund + budget_added < self._get_max_cap_bnusd():
+                        self.proposal_fund.set(total_fund + (budget_added * 102) // 100)
+                    else:
+                        revert(f'{TAG}: Max Cap fund already reached for this period.')
+                else:
+                    if budget_added > self.get_remaining_fund()[ICX]:
+                        revert(f'{TAG}: Not enough ICX.')
+
+                if _progress[ADDITIONAL_DURATION] + _prefix.project_duration.get() > MAX_PROJECT_PERIOD:
+                    revert(f'{TAG}: Maximum period for a project is {MAX_PROJECT_PERIOD} months.')
                 self.budget_approvals_list.put(_progress[REPORT_HASH])
                 _progress[BUDGET_ADJUSTMENT_STATUS] = self._PENDING
                 _prefix.budget_adjustment.set(True)
