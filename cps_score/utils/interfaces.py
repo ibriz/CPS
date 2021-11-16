@@ -1,5 +1,7 @@
 from iconservice import *
 
+from .consts import ICX
+
 
 class InterfaceSystemScore(InterfaceScore):
     @interface
@@ -16,17 +18,26 @@ class CPF_TREASURY_INTERFACE(InterfaceScore):
     @interface
     def transfer_proposal_fund_to_cps_treasury(self, _ipfs_key: str, _total_installment_count: int,
                                                _sponsor_address: Address, _contributor_address: Address,
-                                               _total_budget: int = 0) -> None: pass
+                                               token_flag: str, _total_budget: int = 0) -> None: pass
 
     @interface
-    def update_proposal_fund(self, _ipfs_key: str, _total_added_budget: int = 0,
+    def update_proposal_fund(self, _ipfs_key: str, _flag: str = ICX, _total_added_budget: int = 0,
                              _total_added_installment_count: int = 0) -> None: pass
 
     @interface
     def return_fund_amount(self, _address: Address) -> None: pass
 
     @interface
-    def get_total_fund(self) -> int: pass
+    def get_total_funds(self) -> dict: pass
+
+    @interface
+    def get_remaining_swap_amount(self) -> dict: pass
+
+    @interface
+    def swap_tokens(self, _count: int) -> None: pass
+
+    @interface
+    def reset_swap_state(self): pass
 
 
 class CPS_TREASURY_INTERFACE(InterfaceScore):
@@ -45,5 +56,13 @@ class CPS_TREASURY_INTERFACE(InterfaceScore):
     @interface
     def get_sponsor_projected_fund(self, _wallet_address: Address) -> dict: pass
 
+
+class TokenInterface(InterfaceScore):
     @interface
-    def request_additional_budget(self, _ipfs_key: str) -> None: pass
+    def transfer(self, _to: Address, _value: int, _data: bytes = None) -> None: pass
+
+    @interface
+    def decimals(self) -> int: pass
+
+    @interface
+    def balanceOf(self, _owner: Address) -> int: pass
