@@ -404,24 +404,31 @@ class CPF_TREASURY(IconScoreBase):
 
     @external
     @payable
-    def disqualify_proposal_fund(self, _ipfs_key: str) -> None:
+    def disqualify_proposal_fund(self, _ipfs_key: str, _value: int = 0, _flag: str = ICX,
+                                 _from: Address = None) -> None:
         """
         After being approved by the majority of the P-Rep votes, if the contributor failed to submit the progress
         report as their milestones, the project will be disqualified after being rejected the two progress reports.
+        :param _from:
+        :param _flag:
+        :param _value:
         :param _ipfs_key: Proposal IPFS Hash
         :return:
         """
-        self._validate_cps_treasury_score()
+        self._validate_cps_treasury_score(_from)
 
-        if _ipfs_key in self._proposals_keys:
-            _budget = self._proposal_budgets[_ipfs_key]
-            self._proposal_budgets[_ipfs_key] = _budget - self.msg.value
-            self._burn_extra_fund()
-
-            self.ProposalDisqualified(_ipfs_key, f"Proposal disqualified. "
-                                                 f"{self.msg.value} returned back to Treasury")
-        else:
+        if self._proposals_keys_index[_ipfs_key] == 0:
             revert(f"{TAG} : IPFS key doesn't exist")
+
+        _budget = self._proposal_budgets[_ipfs_key]
+        if _flag == ICX:
+            _value = self.msg.value
+            self._proposal_budgets[_ipfs_key] = _budget - _value
+        elif _flag == BNUSD:
+            self._proposal_budgets[_ipfs_key] = _budget - _value
+
+        self._burn_extra_fund()
+        self.ProposalDisqualified(_ipfs_key, f"Proposal disqualified. {_value} returned back to Treasury")
 
     @external
     @payable
