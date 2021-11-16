@@ -233,16 +233,29 @@ class CPF_TREASURY(IconScoreBase):
         try:
             sys_interface = self.create_interface_score(SYSTEM_SCORE_ADDRESS, InterfaceSystemScore)
             sys_interface.icx(amount).burn()
-        except BaseException as e:
-            revert(f"{TAG} : Network problem. Burning amount. {e}")
+        except Exception as e:
+            revert(f"{TAG} : Network problem while Burning {amount} ICX. Exception: {e}.")
 
     @external(readonly=True)
-    def get_total_fund(self) -> int:
+    def get_total_funds(self) -> dict:
         """
         Get total amount of fund on the SCORE
         :return: integer value of amount
         """
-        return self.icx.get_balance(self.address)
+        bnusd_score = self.create_interface_score(self.balanced_dollar.get(), TokenInterface)
+        return {ICX: self.icx.get_balance(self.address),
+                BNUSD: bnusd_score.balanceOf(self.address)}
+
+    @external(readonly=True)
+    def get_remaining_swap_amount(self) -> dict:
+        """
+        Get total amount of fund on the SCORE
+        :return: integer value of amount
+        """
+        total_funds = self.get_total_funds()
+        maxCap = self.treasury_fund_bnusd.get()
+        return {'maxCap': maxCap,
+                'remainingToSwap': maxCap - total_funds.get(BNUSD)}
 
     @external
     @payable
