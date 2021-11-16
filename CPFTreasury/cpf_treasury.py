@@ -26,7 +26,7 @@ class CPF_TREASURY(IconScoreBase):
     _TOTAL_BUDGET = '_budget_transfer'
 
     @eventlog(indexed=1)
-    def ProposalFundTransferred(self, _ipfs_key: str, _total_budget: int, note: str):
+    def ProposalFundTransferred(self, _ipfs_key: str, note: str):
         pass
 
     @eventlog(indexed=1)
