@@ -522,6 +522,7 @@ class CPS_Score(IconScoreBase):
         self._sponsor_pending.put(proposal_key[IPFS_HASH])
         self.contributors.put(self.msg.sender)
         self.ProposalSubmitted(self.msg.sender, "Successfully submitted a Proposal.")
+        self._swap_bnusd_token()
         self._burn(self.msg.value)
 
     @external
@@ -592,6 +593,7 @@ class CPS_Score(IconScoreBase):
         self._add_progress_report(_progress)
         self._waiting_progress_reports.put(_progress[REPORT_HASH])
 
+        self._swap_bnusd_token()
         self.ProgressReportSubmitted(self.msg.sender, f'{_progress[PROGRESS_REPORT_TITLE]} --> Progress '
                                                       f'Report Submitted Successfully.')
 
@@ -621,6 +623,8 @@ class CPS_Score(IconScoreBase):
         self.update_period()
         if self.period_name.get() != APPLICATION_PERIOD:
             revert(f"{TAG} : Sponsor Vote can only be done on Application Period")
+
+        self._swap_bnusd_token()
 
         _proposal_details = self._get_proposal_details(_ipfs_key)
         _status = _proposal_details[STATUS]
