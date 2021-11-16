@@ -471,20 +471,32 @@ class CPS_TREASURY(IconScoreBase):
         """
         Claim he reward or the installment amount
         """
-        _available_amount = self._fund_record[str(self.msg.sender)]
-        if _available_amount > 0:
+        _available_amount_icx = self.installment_fund_record[str(self.msg.sender)][ICX]
+        _available_amount_bnusd = self.installment_fund_record[str(self.msg.sender)][bnUSD]
+        if _available_amount_icx > 0:
             try:
                 # set the remaining fund 0
-                self._fund_record[str(self.msg.sender)] = 0
+                self.installment_fund_record[str(self.msg.sender)][ICX] = 0
 
-                self.icx.transfer(self.msg.sender, _available_amount)
-                self.ProposalFundWithdrawn(self.msg.sender, _available_amount, f"{_available_amount} withdrawn to "
-                                                                               f"{self.msg.sender}")
-            except BaseException as e:
-                revert(f"{TAG} : Network problem. Claiming Reward{e}")
+                self.icx.transfer(self.msg.sender, _available_amount_icx)
+                self.ProposalFundWithdrawn(self.msg.sender, f"{_available_amount_icx} withdrawn to {self.msg.sender}")
+            except Exception as e:
+                revert(f"{TAG} : Network problem while claiming Reward.")
+
+        elif _available_amount_bnusd > 0:
+            try:
+                # set the remaining fund 0
+                self.installment_fund_record[str(self.msg.sender)][bnUSD] = 0
+
+                bnusd_score = self.create_interface_score(self.balanced_dollar.get(), TokenInterface)
+                bnusd_score.transfer(self.msg.sender, _available_amount_bnusd)
+                self.ProposalFundWithdrawn(self.msg.sender, f"{_available_amount_bnusd} withdrawn to {self.msg.sender}")
+            except Exception as e:
+                revert(f"{TAG} : Network problem while claiming Reward. {e}")
 
         else:
-            revert(f"{TAG} :Claim Reward Fails. Available Amount = {_available_amount}.")
+            revert(f"{TAG} :Claim Reward Fails. Available Amount(ICX) = {_available_amount_icx} and "
+                   f"Available Amount (bnUSD): {_available_amount_bnusd}")
 
     @external
     def update_project_flag(self) -> None:
