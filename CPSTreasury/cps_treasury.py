@@ -283,8 +283,10 @@ class CPS_TREASURY(IconScoreBase):
         :type _added_installment_count: int
         :return:
         """
-        self._validate_cpf_treasury_score()
 
+        ix = self.proposals_key_list_index[_ipfs_key]
+        if ix == 0:
+            revert(f'{TAG}: Invalid IPFS Hash.')
         prefix = self.proposal_prefix(_ipfs_key)
         _proposal_prefix = self.proposals[prefix]
         _total_budget: int = _proposal_prefix.total_budget.get()
@@ -295,20 +297,16 @@ class CPS_TREASURY(IconScoreBase):
         installment_count: int = _proposal_prefix.installment_count.get()
         sponsor_reward_count: int = _proposal_prefix.sponsor_reward_count.get()
 
-        if _ipfs_key in self._proposals_keys:
-            _proposal_prefix.total_budget.set(_total_budget + _added_budget)
-            _proposal_prefix.sponsor_reward.set(_sponsor_reward + _added_sponsor_reward)
-            _proposal_prefix.project_duration.set(_total_duration + _added_installment_count)
-            _proposal_prefix.remaining_amount.set(_remaining_amount + _added_budget)
-            _proposal_prefix.sponsor_remaining_amount.set(_sponsor_remaining_amount + _added_sponsor_reward)
-            _proposal_prefix.installment_count.set(installment_count + _added_installment_count)
-            _proposal_prefix.sponsor_reward_count.set(sponsor_reward_count + _added_installment_count)
+        _proposal_prefix.total_budget.set(_total_budget + _added_budget)
+        _proposal_prefix.sponsor_reward.set(_sponsor_reward + _added_sponsor_reward)
+        _proposal_prefix.project_duration.set(_total_duration + _added_installment_count)
+        _proposal_prefix.remaining_amount.set(_remaining_amount + _added_budget)
+        _proposal_prefix.sponsor_remaining_amount.set(_sponsor_remaining_amount + _added_sponsor_reward)
+        _proposal_prefix.installment_count.set(installment_count + _added_installment_count)
+        _proposal_prefix.sponsor_reward_count.set(sponsor_reward_count + _added_installment_count)
 
-            self.ProposalFundDeposited(_ipfs_key, _added_budget,
-                                       f"{_ipfs_key} : Added Budget : {_added_budget} and Added Time: "
-                                       f"{_added_installment_count} Successfully")
-        else:
-            revert(f"{TAG} : IPFS Hash doesn't exist")
+        self.ProposalFundDeposited(_ipfs_key, f"{_ipfs_key} : Added Budget : {_added_budget} and Added Time: "
+                                              f"{_added_installment_count} Successfully")
 
     @external
     def send_installment_to_contributor(self, _ipfs_key: str) -> None:
