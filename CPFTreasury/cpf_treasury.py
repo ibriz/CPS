@@ -343,7 +343,8 @@ class CPF_TREASURY(IconScoreBase):
             revert(f"{TAG} : IPFS key already Exists")
 
     @external
-    def update_proposal_fund(self, _ipfs_key: str, _added_budget: int = 0, _total_installment_count: int = 0) -> None:
+    def update_proposal_fund(self, _ipfs_key: str, _flag: str = ICX, _added_budget: int = 0,
+                             _total_installment_count: int = 0) -> None:
         """
         Update the proposal fund after the budget adjustment voting is passed by majority of P-Reps
         :param _ipfs_key: Proposal IPFS Hash Key
@@ -354,25 +355,40 @@ class CPF_TREASURY(IconScoreBase):
 
         self._validate_cps_score()
 
-        _total_added_budget = _added_budget
         # sponsor reward (2%)
-        _sponsor_reward = _total_added_budget * 2 // 100
-        total_transfer = _total_added_budget + _sponsor_reward
+        _sponsor_reward = _added_budget * 2 // 100
+        total_transfer = _added_budget + _sponsor_reward
 
-        if self.icx.get_balance(self.address) < total_transfer:
-            revert(f"{TAG} : Not enough fund in treasury.")
-
-        if _ipfs_key in self._proposals_keys:
-            self._proposal_budgets[_ipfs_key] += total_transfer
-            try:
-                cps_treasury_score = self.create_interface_score(self._cps_treasury_score.get(), CPS_TREASURY_INTERFACE)
-                cps_treasury_score.icx(total_transfer).update_proposal_fund(_ipfs_key, _total_added_budget,
-                                                                            _sponsor_reward, _total_installment_count)
-                self.ProposalFundTransferred(_ipfs_key, _added_budget, "Successfully updated fund")
-            except BaseException as e:
-                revert(f"{TAG} : Network problem. Sending proposal funds. {e}")
-        else:
+        if self._proposals_keys_index[_ipfs_key] == 0:
             revert(f"{TAG} : IPFS key doesn't exist")
+
+        self._proposal_budgets[_ipfs_key] += total_transfer
+        funds = self.get_total_funds()
+        try:
+            if _flag == ICX:
+                if funds.get(ICX) < total_transfer:
+                    revert(f"{TAG} : Not enough {total_transfer} ICX fund in treasury.")
+                cps_treasury_score = self.create_interface_score(self._cps_treasury_score.get(),
+                                                                 CPS_TREASURY_INTERFACE)
+                cps_treasury_score.icx(total_transfer).update_proposal_fund(_ipfs_key, _added_budget,
+                                                                            _sponsor_reward,
+                                                                            _total_installment_count)
+            elif _flag == BNUSD:
+                if funds.get(BNUSD) < total_transfer:
+                    revert(f'{TAG}: Not enough {total_transfer} BNUSD on treasury.')
+                params = {"method": "budget_adjustment",
+                          "params": {"_ipfs_key": _ipfs_key,
+                                     "_added_budget": _added_budget,
+                                     "_added_sponsor_reward": _sponsor_reward,
+                                     "_added_installment_count": _total_installment_count}}
+                _data = json_dumps(params).encode("utf-8")
+                bnusd_score = self.create_interface_score(self.balanced_dollar.get(), TokenInterface)
+                bnusd_score.transfer(self._cps_treasury_score.get(), total_transfer, _data)
+            else:
+                revert(f'{TAG}: {_flag} is not supported.')
+            self.ProposalFundTransferred(_ipfs_key, f"Successfully transferred {total_transfer} to CPS Treasury")
+        except BaseException as e:
+            revert(f"{TAG} : Network problem. Sending proposal funds. {e}")
 
     @external
     @payable
