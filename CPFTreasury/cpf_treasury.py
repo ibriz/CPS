@@ -104,6 +104,9 @@ class CPF_TREASURY(IconScoreBase):
 
     def on_update(self) -> None:
         super().on_update()
+        self.swap_state.set(0)
+        self.swap_count.set(0)
+        self.treasury_fund_bnusd.set(400_000 * 10 ** 18)
 
     @external(readonly=True)
     def name(self) -> str:
