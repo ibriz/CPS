@@ -12,8 +12,9 @@ class ProposalAttributes(TypedDict):
     project_duration: int
     total_budget: int
     sponsor_reward: int
-    contributor_address: Address
-    sponsor_address: Address
+    token: str
+    contributor_address: str
+    sponsor_address: str
 
 
 class CPF_TREASURY_INTERFACE(InterfaceScore):
