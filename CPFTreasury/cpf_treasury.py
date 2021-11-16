@@ -14,6 +14,28 @@ class CPS_TREASURY_INTERFACE(InterfaceScore):
                              _total_installment_count: int): pass
 
 
+class CPSScoreInterface(InterfaceScore):
+    @interface
+    def get_admins(self) -> list:
+        pass
+
+
+class DEX_INTERFACE(InterfaceScore):
+    @interface
+    def getPrice(self, _id: int) -> int: pass
+
+
+class TokenInterface(InterfaceScore):
+    @interface
+    def transfer(self, _to: Address, _value: int, _data: bytes = None) -> None: pass
+
+    @interface
+    def decimals(self) -> int: pass
+
+    @interface
+    def balanceOf(self, _owner: Address) -> int: pass
+
+
 class CPF_TREASURY(IconScoreBase):
     _PROPOSAL_BUDGETS = '_proposals_budgets'
     _PROPOSALS_KEYS = '_proposals_keys'
