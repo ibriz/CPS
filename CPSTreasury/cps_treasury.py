@@ -380,34 +380,38 @@ class CPS_TREASURY(IconScoreBase):
         """
         self._validate_cps_score()
 
-        if _ipfs_key in self._proposals_keys:
-            prefix = self.proposal_prefix(_ipfs_key)
-            proposal = self.proposals[prefix]
+        ix = self.proposals_key_list_index[_ipfs_key]
+        if ix == 0:
+            revert(f'{TAG}: Invalid IPFS Hash.')
 
-            _installment_count: int = proposal.installment_count.get()
-            withdraw_amount: int = proposal.withdraw_amount.get()
-            remaining_amount: int = proposal.remaining_amount.get()
-            contributor_address: 'Address' = proposal.contributor_address.get()
+        prefix = self.proposal_prefix(self._proposals_keys[ix])
+        proposal = self.proposals[prefix]
 
-            # Calculating Installment Amount and adding to Wallet Address
-            try:
-                if _installment_count == 1:
-                    _installment_amount = remaining_amount
-                else:
-                    _installment_amount = remaining_amount // _installment_count
-                proposal.installment_count.set(_installment_count - 1)
-                proposal.remaining_amount.set(remaining_amount - _installment_amount)
-                proposal.withdraw_amount.set(withdraw_amount + _installment_amount)
-                self._fund_record[str(contributor_address)] += _installment_amount
+        _installment_count: int = proposal.installment_count.get()
+        withdraw_amount: int = proposal.withdraw_amount.get()
+        remaining_amount: int = proposal.remaining_amount.get()
+        contributor_address: 'Address' = proposal.contributor_address.get()
+        flag: str = proposal.token.get()  # ICX/BNUSD
 
-                self.ProposalFundSent(contributor_address, _installment_amount,
-                                      f"New Installment sent to contributors address.")
+        # Calculating Installment Amount and adding to Wallet Address
+        try:
+            if _installment_count == 1:
+                _installment_amount = remaining_amount
+            else:
+                _installment_amount = remaining_amount // _installment_count
+            proposal.installment_count.set(_installment_count - 1)
+            proposal.remaining_amount.set(remaining_amount - _installment_amount)
+            proposal.withdraw_amount.set(withdraw_amount + _installment_amount)
+            self.installment_fund_record[str(contributor_address)][flag] += _installment_amount
 
-                if proposal.installment_count.get() == 0:
-                    proposal.status.set(self._COMPLETED)
+            self.ProposalFundSent(contributor_address, _installment_amount,
+                                  f"New Installment sent to contributors address.")
 
-            except BaseException as e:
-                revert(f'{TAG}: Network problem. Sending project funds. {e}')
+            if proposal.installment_count.get() == 0:
+                proposal.status.set(self._COMPLETED)
+
+        except Exception:
+            revert(f'{TAG}: Network problem. Sending project funds to contributor.')
 
     @external
     def send_reward_to_sponsor(self, _ipfs_key: str) -> None:
@@ -419,33 +423,37 @@ class CPS_TREASURY(IconScoreBase):
         """
         self._validate_cps_score()
 
-        if _ipfs_key in self._proposals_keys:
-            prefix = self.proposal_prefix(_ipfs_key)
-            proposals = self.proposals[prefix]
+        ix = self.proposals_key_list_index[_ipfs_key]
+        if ix == 0:
+            revert(f'{TAG}: Invalid IPFS Hash.')
 
-            _sponsor_reward_count: int = proposals.sponsor_reward_count.get()
-            _sponsor_withdraw_amount: int = proposals.sponsor_withdraw_amount.get()
-            _sponsor_remaining_amount: int = proposals.sponsor_remaining_amount.get()
-            _sponsor_address: 'Address' = proposals.sponsor_address.get()
+        prefix = self.proposal_prefix(self._proposals_keys[ix])
+        proposals = self.proposals[prefix]
 
-            # Calculating Installment Amount and adding to Wallet Address
-            try:
-                if _sponsor_reward_count == 1:
-                    _installment_amount = _sponsor_remaining_amount
-                else:
-                    _installment_amount = _sponsor_remaining_amount // _sponsor_reward_count
-                proposals.sponsor_reward_count.set(_sponsor_reward_count - 1)
-                proposals.sponsor_withdraw_amount.set(_sponsor_withdraw_amount + _installment_amount)
-                proposals.sponsor_remaining_amount.set(_sponsor_remaining_amount - _installment_amount)
-                self._fund_record[str(_sponsor_address)] += _installment_amount
+        _sponsor_reward_count: int = proposals.sponsor_reward_count.get()
+        _sponsor_withdraw_amount: int = proposals.sponsor_withdraw_amount.get()
+        _sponsor_remaining_amount: int = proposals.sponsor_remaining_amount.get()
+        _sponsor_address: 'Address' = proposals.sponsor_address.get()
+        flag: str = proposals.token.get()  # ICX/BNUSD
 
-                self.ProposalFundSent(_sponsor_address, _installment_amount,
-                                      f"New Installment sent to sponsor address.")
+        # Calculating Installment Amount and adding to Wallet Address
+        try:
+            if _sponsor_reward_count == 1:
+                _installment_amount = _sponsor_remaining_amount
+            else:
+                _installment_amount = _sponsor_remaining_amount // _sponsor_reward_count
+            proposals.sponsor_reward_count.set(_sponsor_reward_count - 1)
+            proposals.sponsor_withdraw_amount.set(_sponsor_withdraw_amount + _installment_amount)
+            proposals.sponsor_remaining_amount.set(_sponsor_remaining_amount - _installment_amount)
+            self.installment_fund_record[str(_sponsor_address)][flag] += _installment_amount
 
-                if proposals.sponsor_reward_count.get() == 0:
-                    proposals.status.set(self._COMPLETED)
-            except BaseException as e:
-                revert(f"{TAG} : Network problem. Sending project funds. {e}")
+            self.ProposalFundSent(_sponsor_address, _installment_amount,
+                                  f"New Installment sent to sponsor address.")
+
+            if proposals.sponsor_reward_count.get() == 0:
+                proposals.status.set(self._COMPLETED)
+        except Exception:
+            revert(f"{TAG} : Network problem. Sending project funds to sponsor.")
 
     @external
     def disqualify_project(self, _ipfs_key: str) -> None:
