@@ -400,3 +400,98 @@ class CPF_TREASURY(IconScoreBase):
 
         _proposals_dict_list = {"data": _proposals_details_list, "count": count}
         return _proposals_dict_list
+
+    def _swap_tokens(self, _from: Address, _to: Address, _amount: int):
+        from_score = self.create_interface_score(_from, TokenInterface)
+        _data = json_dumps({"method": "_swap", "params": {"toToken": str(_to)}}).encode("utf-8")
+        from_score.transfer(self.dex_score.get(), _amount, _data)
+
+    @external
+    def swap_tokens(self, _count: int) -> None:
+        self._validate_cps_score()
+        dex = self.create_interface_score(self.dex_score.get(), DEX_INTERFACE)
+        sicx_score = self.create_interface_score(self.sicx_score.get(), TokenInterface)
+        sicxBnusdPrice: int = dex.getPrice(2)
+        bnUSDRemainingToSwap = self.get_remaining_swap_amount().get('remainingToSwap')
+        sicxBalance = sicx_score.balanceOf(self.address)
+
+        if bnUSDRemainingToSwap < 10 * 10 ** 18:
+            self.swap_state.set(2)
+
+        try:
+            if self.swap_state.get() == 0:
+                remainingSICXToSwap = (bnUSDRemainingToSwap // sicxBnusdPrice) * 10 ** 18 - sicxBalance
+                self._swap_icx_sicx(dex, remainingSICXToSwap, sicxBalance)
+                self.swap_state.set(1)
+                self.swap_count.set(0)
+            elif self.swap_state.get() == 1:
+                count_swap = self.swap_count.get()
+                remainingSICXToSwap = (bnUSDRemainingToSwap // (sicxBnusdPrice * (_count - count_swap))) * 10 ** 18
+
+                self._swap_icx_sicx(dex, remainingSICXToSwap, sicxBalance)
+                self._swap_tokens(self.get_sicx_score(), self.get_bnusd_score(), remainingSICXToSwap)
+                self.swap_count.set(count_swap + 1)
+        except Exception as e:
+            revert(f'{TAG}: Error Swapping tokens. {e}')
+
+    def _swap_icx_sicx(self, dex, remainingSICXToSwap, sicxBalance):
+        sicxICXPrice: int = dex.getPrice(1)
+        icxSicxBalance = (remainingSICXToSwap * 10 ** 18) // sicxICXPrice
+        if self.icx.get_balance(self.address) < icxSicxBalance * 120 // 100:
+            revert(f'{TAG}: Not enough ICX.')
+        if sicxBalance < remainingSICXToSwap:
+            self.icx.transfer(self.staking_score.get(), icxSicxBalance * 120 // 100)
+
+    @external
+    def reset_swap_state(self):
+        self._validate_cps_score()
+        self.swap_state.set(0)
+
+    @external
+    def tokenFallback(self, _from: Address, _value: int, _data: bytes):
+        if _data != b'None':
+            unpacked_data = json_loads(_data.decode('utf-8'))
+        else:
+            unpacked_data = {}
+
+        bnusd = self.balanced_dollar.get()
+        staking = self.sicx_score.get()
+        if self.msg.sender not in [staking, bnusd]:
+            revert(f'{TAG}: Only {bnusd} and sICX can send tokens to CPF Treasury.')
+
+        if self.msg.sender == staking:
+            if _from == self.get_dex_score():
+                from_score = self.create_interface_score(self.msg.sender, TokenInterface)
+                _data = json_dumps({"method": "_swap_icx"}).encode("utf-8")
+                from_score.transfer(self.dex_score.get(), _value, _data)
+
+        else:
+            if _from == self._cps_score.get():
+                if unpacked_data['method'] == 'return_fund_amount':
+                    _sponsor_address = Address.from_string(unpacked_data['params']['sponsor_address'])
+                    self.return_fund_amount(_sponsor_address, _from, BNUSD, _value)
+                elif unpacked_data['method'] == 'burn_amount':
+                    self._swap_tokens(self.msg.sender, self.get_sicx_score(), _value)
+                else:
+                    revert(f"{TAG}: Not supported method {unpacked_data['method']}")
+            if _from == self._cps_treasury_score.get():
+                if unpacked_data['method'] == 'disqualify_project':
+                    ipfs_key = unpacked_data['params']['ipfs_key']
+                    self.disqualify_proposal_fund(ipfs_key, _value, BNUSD, _from)
+                else:
+                    revert(f"{TAG}: Not supported method {unpacked_data['method']}")
+
+    @payable
+    def fallback(self):
+        if self.msg.sender == self.dex_score.get():
+            self._burn(self.msg.value)
+
+        else:
+            revert(f'{TAG}: Please send fund using add_fund().')
+
+    @external
+    def update_project_index(self):
+        self._validate_admins()
+        for _ix in range(0, len(self._proposals_keys)):
+            _ipfs_hash = self._proposals_keys[_ix]
+            self._proposals_keys_index[_ipfs_hash] = _ix + 1
