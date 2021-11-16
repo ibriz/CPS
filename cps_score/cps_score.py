@@ -532,7 +532,7 @@ class CPS_Score(IconScoreBase):
             revert(f"{TAG} : Contract Address not supported.")
 
         if proposal_key[PROJECT_DURATION] > MAX_PROJECT_PERIOD:
-            revert(f"{TAG} : Maximum Project Duration exceeds 6 months.")
+            revert(f"{TAG} : Maximum Project Duration exceeds {MAX_PROJECT_PERIOD} months.")
 
         budget_ = to_loop(proposal_key[TOTAL_BUDGET])
 
