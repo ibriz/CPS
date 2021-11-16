@@ -487,7 +487,7 @@ class CPF_TREASURY(IconScoreBase):
         _proposals_keys = self._proposals_keys
 
         if _end_index - _start_index > 50:
-            return {-1: "Page length must not be greater than 50."}
+            return {"message": "Page length must not be greater than 50."}
         if _start_index < 0:
             _start_index = 0
         count = len(_proposals_keys)
