@@ -106,6 +106,7 @@ class CPS_Score(IconScoreBase):
 
         self.cps_treasury_score = VarDB(CPS_TREASURY_SCORE, db, value_type=Address)
         self.cpf_score = VarDB(CPF_SCORE, db, value_type=Address)
+        self.balanced_dollar = VarDB(BALANCED_DOLLAR, db, value_type=Address)
 
         self.initial_block = VarDB(INITIAL_BLOCK, db, value_type=int)
         self.period_name = VarDB(PERIOD_NAME, db, value_type=str)
@@ -159,6 +160,16 @@ class CPS_Score(IconScoreBase):
                                        self._PROGRESS_REPORT_REJECTED: self._progress_rejected}
 
         self._sponsor_bond_return = DictDB(self._SPONSOR_BOND_RETURN, db, value_type=int)
+        self.sponsor_bond_return = DictDB(self.SPONSOR_BOND_RETURN, db, value_type=int, depth=2)
+
+        self.delegation_snapshot = DictDB(DELEGATION_SNAPSHOT, db, value_type=int)
+        self.max_delegation = VarDB(MAX_DELEGATION, db, value_type=int)
+
+        self.proposal_fund = VarDB(PROPOSAL_FUND, db, value_type=int)
+        self.swap_block_height = VarDB(SWAP_BLOCK_HEIGHT, db, value_type=int)
+        self.swap_count = VarDB(SWAP_COUNT, db, value_type=int)
+
+        self.maintenance = VarDB(MAINTENANCE, db, value_type=bool)
 
     def on_install(self) -> None:
         super().on_install()
@@ -271,6 +282,17 @@ class CPS_Score(IconScoreBase):
         """
         self._validate_admin_score(_score)
         self.cpf_score.set(_score)
+
+    @external
+    def set_bnUSD_score(self, _score: Address) -> None:
+        """
+        Sets the cps treasury score address. Only owner can set the address.
+        :param _score: Address of the cps treasury score address
+        :type _score: :class:`iconservice.base.address.Address`
+        :return:
+        """
+        self._validate_admin_score(_score)
+        self.balanced_dollar.set(_score)
 
     def _get_preps_address(self) -> list:
         """
@@ -913,7 +935,16 @@ class CPS_Score(IconScoreBase):
         return self.cpf_score.get()
 
     @external(readonly=True)
-    def get_remaining_fund(self) -> int:
+    def get_bnUSD_score(self) -> Address:
+        """
+        Returns the balanced dollar score address
+        :return: bnUSD score address
+        :rtype: :class:`iconservice.base.address.Address`
+        """
+        return self.balanced_dollar.get()
+
+    @external(readonly=True)
+    def get_remaining_fund(self) -> dict:
         """
         Returns the remaining Treasury amount on CPF Score
         :return: Return amount on CPF Treasury amount
