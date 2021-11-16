@@ -1917,7 +1917,16 @@ class CPS_Score(IconScoreBase):
             if stake > max_delegation:
                 self.max_delegation.set(stake)
 
-        self._update_proposal_status(_key, self._ACTIVE)
+    def _get_max_cap_bnusd(self) -> int:
+        cpf_treasury_score = self.create_interface_score(self.cpf_score.get(), CPF_TREASURY_INTERFACE)
+        return cpf_treasury_score.get_remaining_swap_amount().get('maxCap')
+
+    def _swap_bnusd_token(self):
+        swapped_bh = self.swap_block_height.get()
+        if swapped_bh < self.block_height:
+            self.swap_block_height.set(swapped_bh + SWAP_BLOCK_DIFF)
+            cpf_treasury_score = self.create_interface_score(self.cpf_score.get(), CPF_TREASURY_INTERFACE)
+            cpf_treasury_score.swap_tokens(self.swap_count.get())
 
     @external
     def return_sponsor_bond(self, _ipfs_hash: str) -> None:
