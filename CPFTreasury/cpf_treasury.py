@@ -83,6 +83,9 @@ class CPF_TREASURY(IconScoreBase):
         self.staking_score = VarDB(self.STAKING_SCORE, db, value_type=Address)
         self.sicx_score = VarDB(self.SICX_SCORE, db, value_type=Address)
 
+        self.swap_state = VarDB(self.SWAP_STATE, db, value_type=int)
+        self.swap_count = VarDB(self.SWAP_COUNT, db, value_type=int)
+
     def on_install(self, amount: int = 1_000_000 * MULTIPLIER) -> None:
         super().on_install()
         self.treasury_fund.set(amount)
