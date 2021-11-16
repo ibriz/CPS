@@ -1537,6 +1537,10 @@ class CPS_Score(IconScoreBase):
                 self._update_application_result()
                 self.update_period_index.set(0)
                 self.set_PReps()
+                self._snapshot_delegations()
+
+                active_proposals = len(self._pending) + len(self._waiting_progress_reports)
+                self.swap_count.set(active_proposals * len(self.valid_preps))
 
             else:
                 update_period_index = self.update_period_index.get()
@@ -1563,6 +1567,12 @@ class CPS_Score(IconScoreBase):
                     self.previous_period_name.set(VOTING_PERIOD)
                     self.PeriodUpdate("4/4. Period Successfully Updated to Application Period.")
                     self.set_PReps()
+
+                    active_proposals = len(self.active_proposals) + len(self._waiting_progress_reports)
+
+                    self.swap_count.set(active_proposals + active_proposals * len(self.valid_preps))
+                    cpf_treasury_score = self.create_interface_score(self.cpf_score.get(), CPF_TREASURY_INTERFACE)
+                    cpf_treasury_score.reset_swap_state()
 
     def _update_application_result(self):
         """
