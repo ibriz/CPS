@@ -283,9 +283,7 @@ class CPS_TREASURY(IconScoreBase):
                 "withdraw_amount": _withdraw_amount,
                 "total_sponsor_bond": _total_sponsor_bond}
 
-    @external
-    @payable
-    def deposit_proposal_fund(self, _proposals: ProposalAttributes) -> None:
+    def _deposit_proposal_fund(self, _proposals: ProposalAttributes, _value: int = 0) -> None:
         """
         Treasury Score sending the amount to the CPS Treasury Score
         :ipfs_hash: Proposal IPFS HASH key
@@ -296,14 +294,12 @@ class CPS_TREASURY(IconScoreBase):
         :sponsor_reward: Reward for the Sponsor (Loop)
         """
 
-        self._validate_cpf_treasury_score()
-
         proposal_key = _proposals.copy()
         proposal_key[self._STATUS] = self._ACTIVE
 
         self._add_record(proposal_key)
-        self.ProposalFundDeposited(proposal_key[self._IPFS_HASH], proposal_key[self._TOTAL_BUDGET],
-                                   f"Received {self.msg.value} fund from CPF.")
+        self.ProposalFundDeposited(proposal_key[self._IPFS_HASH],
+                                   f"Received {proposal_key} {_value} {bnUSD} fund from CPF.")
 
     @external
     @payable
