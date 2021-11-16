@@ -527,7 +527,7 @@ class CPS_Score(IconScoreBase):
         proposal_key[CONTRIBUTOR_ADDRESS] = self.msg.sender
         proposal_key[TX_HASH] = bytes.hex(self.tx.hash)
         proposal_key[PERCENTAGE_COMPLETED] = 0
-        proposal_key[TOTAL_BUDGET] = to_loop(proposal_key[TOTAL_BUDGET])
+        proposal_key[TOTAL_BUDGET] = budget_
 
         self._add_proposals(proposal_key)
         self._sponsor_pending.put(proposal_key[IPFS_HASH])
@@ -1884,7 +1884,9 @@ class CPS_Score(IconScoreBase):
         self._update_proposal_status(_key, self._ACTIVE)
 
     @external
-    def send_remaining_funds(self, _project_key: str):
+    def return_sponsor_bond(self, _ipfs_hash: str) -> None:
         self._validate_admins()
-        cps_treasury_score = self.create_interface_score(self.cps_treasury_score.get(), CPS_TREASURY_INTERFACE)
-        cps_treasury_score.request_additional_budget(_project_key)
+        details = self._get_proposal_details(_ipfs_hash)
+
+        sponsor_deposit = details.get(SPONSOR_DEPOSIT_AMOUNT)
+        self._sponsor_bond_return[str(self.msg.sender)] += sponsor_deposit
