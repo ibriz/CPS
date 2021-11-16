@@ -16,6 +16,7 @@ class ProposalAttributes(TypedDict):
     project_title: str
     project_duration: int
     total_budget: int
+    token: str
     sponsor_address: Address
     ipfs_link: str
 
@@ -588,6 +589,7 @@ class CPS_Score(IconScoreBase):
         _ipfs_hash = _progress[IPFS_HASH]
         prefix = self.proposal_prefix(_ipfs_hash)
         _prefix = self.proposals[prefix]
+        flag: str = _prefix.token.get()
 
         if self.msg.sender != _prefix.contributor_address.get():
             revert(f"{TAG} : Sorry, You are not the contributor for this project.")
