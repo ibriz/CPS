@@ -713,7 +713,7 @@ class CPS_Score(IconScoreBase):
                                      f"Sponsor Bond Rejected for project {_proposal_details[PROJECT_TITLE]}.")
 
     @external
-    def vote_proposal(self, _ipfs_key: str, _vote: str, _vote_reason: str) -> None:
+    def vote_proposal(self, _ipfs_key: str, _vote: str, _vote_reason: str, _vote_change: bool = False) -> None:
         """
         P-Rep(s) voting for a proposal to be approved or not
         :param _ipfs_key : proposal ipfs hash
@@ -722,6 +722,8 @@ class CPS_Score(IconScoreBase):
         :type _vote : str
         :param _vote_reason : Any specific reason behind the vote
         :type _vote_reason : str
+        :param _vote_change: Option if user want to change the vote
+        :type _vote_change: bool
         """
         self._check_maintenance()
         self.update_period()
@@ -740,11 +742,11 @@ class CPS_Score(IconScoreBase):
         proposals_prefix_ = self.proposals[prefix]
         _voters_list = proposals_prefix_.voters_list
 
-        if self.msg.sender in _voters_list:
+        if not _vote_change and self.msg.sender in _voters_list:
             revert(f"{TAG} : Already voted on this Proposal.")
 
         if _status == self._PENDING:
-            _voter_stake: int = self._get_stake(self.msg.sender)
+            _voter_stake: int = self.delegation_snapshot[self.msg.sender]
             _total_votes: int = _proposal_details[TOTAL_VOTES]
             _approved_votes: int = _proposal_details[APPROVED_VOTES]
             _rejected_votes: int = _proposal_details[REJECTED_VOTES]
@@ -752,23 +754,51 @@ class CPS_Score(IconScoreBase):
             if _proposal_details[TOTAL_VOTERS] == 0:
                 proposals_prefix_.total_voters.set(len(self.valid_preps))
 
-            proposals_prefix_.total_votes.set(_total_votes + _voter_stake)
-            proposals_prefix_.voters_list.put(self.msg.sender)
-            proposals_prefix_.voters_reasons.put(_vote_reason.encode())
+            voter_index_db = proposals_prefix_.voters_list_index[self.msg.sender]
+            if not _vote_change:
+                proposals_prefix_.total_votes.set(_total_votes + _voter_stake)
+                proposals_prefix_.voters_list.put(self.msg.sender)
+                voter_index_db['index'] = len(proposals_prefix_.voters_list)
+                proposals_prefix_.voters_reasons.put(_vote_reason.encode())
+
+            else:
+                if voter_index_db['change_vote'] == VOTED:
+                    revert(f'{TAG}: Vote change can be done only once.')
+                voter_index_db['change_vote'] = VOTED
+                _index = voter_index_db['index']
+                vote_index = voter_index_db['vote']
+                proposals_prefix_.voters_reasons[_index - 1] = _vote_reason.encode()
+                if vote_index == 1:
+                    ArrayDBUtils.remove_array_item(proposals_prefix_.approve_voters, self.msg.sender)
+                    proposals_prefix_.approved_votes.set(_approved_votes - _voter_stake)
+                elif vote_index == 2:
+                    ArrayDBUtils.remove_array_item(proposals_prefix_.reject_voters, self.msg.sender)
+                    proposals_prefix_.rejected_votes.set(_rejected_votes - _voter_stake)
+
+                _approved_votes: int = proposals_prefix_.approved_votes.get()
+                _rejected_votes: int = proposals_prefix_.rejected_votes.get()
 
             if _vote == APPROVE:
                 proposals_prefix_.approve_voters.put(self.msg.sender)
+                voter_index_db['vote'] = APPROVE_
                 proposals_prefix_.approved_votes.set(_approved_votes + _voter_stake)
             elif _vote == REJECT:
                 proposals_prefix_.reject_voters.put(self.msg.sender)
+                voter_index_db['vote'] = REJECT_
                 proposals_prefix_.rejected_votes.set(_rejected_votes + _voter_stake)
+            else:
+                voter_index_db['vote'] = ABSTAIN_
 
-            self.VotedSuccessfully(self.msg.sender, f"Proposal Vote for "
-                                                    f"{_proposal_details[PROJECT_TITLE]} Successful.")
+        else:
+            revert(f'{TAG}: Proposal must be done in Voting state.')
+
+        self.VotedSuccessfully(self.msg.sender, f"Proposal Vote for "
+                                                f"{_proposal_details[PROJECT_TITLE]} Successful.")
+        self._swap_bnusd_token()
 
     @external
     def vote_progress_report(self, _ipfs_key: str, _report_key: str, _vote: str, _vote_reason: str,
-                             _budget_adjustment_vote: str = "") -> None:
+                             _budget_adjustment_vote: str = "", _vote_change: bool = False) -> None:
         """
         P-Rep(s) voting for a progress report of all active proposals
         :param _ipfs_key : proposal ipfs hash
@@ -781,6 +811,8 @@ class CPS_Score(IconScoreBase):
         :type _budget_adjustment_vote : str
         :param _vote_reason : Any specific reason behind the vote
         :type _vote_reason : str
+        :param _vote_change: Option if user want to change the vote
+        :type _vote_change: bool
         """
         self._check_maintenance()
         self.update_period()
@@ -796,40 +828,87 @@ class CPS_Score(IconScoreBase):
         reports_prefix_ = self.progress_reports[prefix]
         _voters_list = reports_prefix_.voters_list
 
-        if self.msg.sender in _voters_list:
+        self._swap_bnusd_token()
+
+        if not _vote_change and self.msg.sender in _voters_list:
             revert(f"{TAG} : Already Voted on this proposal.")
 
         if _status == self._WAITING:
-            _voter_stake = self._get_stake(self.msg.sender)
+            _voter_stake = self.delegation_snapshot[self.msg.sender]
             _total_votes: int = _progress_report_details[TOTAL_VOTES]
             _approved_votes: int = _progress_report_details[APPROVED_VOTES]
             _rejected_votes: int = _progress_report_details[REJECTED_VOTES]
 
             if _progress_report_details[TOTAL_VOTERS] == 0:
                 reports_prefix_.total_voters.set(len(self.valid_preps))
-            reports_prefix_.total_votes.set(_total_votes + _voter_stake)
-            reports_prefix_.voters_list.put(self.msg.sender)
-            reports_prefix_.voters_reasons.put(_vote_reason.encode())
+
+            voter_index_db = reports_prefix_.voters_list_index[self.msg.sender]
+            if not _vote_change:
+                reports_prefix_.total_votes.set(_total_votes + _voter_stake)
+                reports_prefix_.voters_list.put(self.msg.sender)
+                voter_index_db['index'] = len(reports_prefix_.voters_list)
+                reports_prefix_.voters_reasons.put(_vote_reason.encode())
+
+            else:
+                if voter_index_db['change_vote'] == VOTED:
+                    revert(f'{TAG}: Vote change can be done only once.')
+                voter_index_db['change_vote'] = VOTED
+                _index = voter_index_db['index']
+                vote_index = voter_index_db['vote']
+                reports_prefix_.voters_reasons[_index - 1] = _vote_reason.encode()
+                if vote_index == APPROVE_:
+                    ArrayDBUtils.remove_array_item(reports_prefix_.approve_voters, self.msg.sender)
+                    reports_prefix_.approved_votes.set(_approved_votes - _voter_stake)
+                elif vote_index == REJECT_:
+                    ArrayDBUtils.remove_array_item(reports_prefix_.reject_voters, self.msg.sender)
+                    reports_prefix_.rejected_votes.set(_rejected_votes - _voter_stake)
+
+                if _report_key in self.budget_approvals_list:
+                    _budget_approved_votes: int = _progress_report_details[BUDGET_APPROVED_VOTES]
+                    _budget_rejected_votes: int = _progress_report_details[BUDGET_REJECTED_VOTES]
+                    budget_vote_index = reports_prefix_.budget_voters_list_index[self.msg.sender]['vote']
+                    if budget_vote_index == APPROVE_:
+                        ArrayDBUtils.remove_array_item(reports_prefix_.budget_approve_voters, self.msg.sender)
+                        reports_prefix_.budget_approved_votes.set(_budget_approved_votes - _voter_stake)
+                    elif budget_vote_index == REJECT_:
+                        ArrayDBUtils.remove_array_item(reports_prefix_.budget_reject_voters, self.msg.sender)
+                        reports_prefix_.budget_rejected_votes.set(_budget_rejected_votes - _voter_stake)
+                    else:
+                        revert(f'{TAG}: Choose option {APPROVE} or {REJECT} for budget adjustment.')
+
+                _approved_votes: int = reports_prefix_.approved_votes.get()
+                _rejected_votes: int = reports_prefix_.rejected_votes.get()
 
             if _vote == APPROVE:
                 reports_prefix_.approve_voters.put(self.msg.sender)
+                voter_index_db['vote'] = APPROVE_
                 reports_prefix_.approved_votes.set(_approved_votes + _voter_stake)
             elif _vote == REJECT:
                 reports_prefix_.reject_voters.put(self.msg.sender)
+                voter_index_db['vote'] = REJECT_
                 reports_prefix_.rejected_votes.set(_rejected_votes + _voter_stake)
+            else:
+                revert(f'{TAG}: {_vote} is not valid. Please select {APPROVE} or {REJECT}. ')
 
             if _report_key in self.budget_approvals_list:
-                _budget_approved_votes: int = _progress_report_details[BUDGET_APPROVED_VOTES]
-                _budget_rejected_votes: int = _progress_report_details[BUDGET_REJECTED_VOTES]
+                _budget_approved_votes: int = reports_prefix_.budget_approved_votes.get()
+                _budget_rejected_votes: int = reports_prefix_.budget_rejected_votes.get()
                 if _budget_adjustment_vote == APPROVE:
                     reports_prefix_.budget_approve_voters.put(self.msg.sender)
+                    reports_prefix_.budget_voters_list_index[self.msg.sender]['vote'] = APPROVE_
                     reports_prefix_.budget_approved_votes.set(_budget_approved_votes + _voter_stake)
                 elif _budget_adjustment_vote == REJECT:
                     reports_prefix_.budget_reject_voters.put(self.msg.sender)
+                    reports_prefix_.budget_voters_list_index[self.msg.sender]['vote'] = REJECT_
                     reports_prefix_.budget_rejected_votes.set(_budget_rejected_votes + _voter_stake)
+                else:
+                    revert(f'{TAG}: Choose option {APPROVE} or {REJECT} for budget adjustment.')
 
             self.VotedSuccessfully(self.msg.sender, f"Progress Report Vote for "
                                                     f"{_progress_report_details[PROGRESS_REPORT_TITLE]} Successful.")
+
+        else:
+            revert(f'{TAG}: Progress report can be voted only for Waiting status.')
 
     @external
     def set_prep_penalty_amount(self, _penalty: List[int]) -> None:
@@ -890,6 +969,19 @@ class CPS_Score(IconScoreBase):
         self.next_block.set(self.block_height + BLOCKS_DAY_COUNT * DAY_COUNT)
         self.period_name.set(APPLICATION_PERIOD)
         self.previous_period_name.set("None")
+
+    @external(readonly=True)
+    def check_change_vote(self, _address: Address, _ipfs_hash: str, _proposal_type: str) -> int:
+        if _proposal_type == "proposal":
+            prefix = self.proposal_prefix(_ipfs_hash)
+            prefix_ = self.proposals[prefix]
+            return prefix_.voters_list_index[_address]['change_vote']
+        elif _proposal_type == "progress_report":
+            prefix = self.progress_report_prefix(_ipfs_hash)
+            prefix_ = self.progress_reports[prefix]
+            return prefix_.voters_list_index[_address]['change_vote']
+        else:
+            return 0
 
     @external(readonly=True)
     def login_prep(self, _address: Address) -> dict:
