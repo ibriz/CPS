@@ -1565,8 +1565,26 @@ class CPS_Score(IconScoreBase):
             self.PeriodUpdate("Period Updated back to Application Period due to less Registered P-Reps Count")
 
         elif len(self.get_proposals_keys_by_status(self._PENDING)) == 0 and len(
-                self.progress_report_status[self._WAITING]) == 0:
+                self.progress_report_status[self._WAITING]) == 0 and \
+                len(self.active_proposals) + len(self._paused) == 0:
             # If there is no any voting proposals or Progress Reports then Application Period will restart
+            self.period_name.set(APPLICATION_PERIOD)
+            self.PeriodUpdate("Period Updated back to Application Period due not enough "
+                              "Voting Proposals or Progress Reports.")
+
+        elif len(self._pending) == 0 and len(self._waiting_progress_reports) == 0 and \
+                len(self.active_proposals) + len(self._paused) > 0:
+            for x in range(0, len(self._active)):
+                act_prop = self._active[x]
+                if act_prop not in self.active_proposals:
+                    self.active_proposals.put(act_prop)
+
+            for x in range(0, len(self._paused)):
+                paused_prop = self._paused[x]
+                if paused_prop not in self.active_proposals:
+                    self.active_proposals.put(paused_prop)
+
+            self._check_progress_report_submission()
             self.period_name.set(APPLICATION_PERIOD)
             self.PeriodUpdate("Period Updated back to Application Period due not enough "
                               "Voting Proposals or Progress Reports.")
@@ -1574,12 +1592,15 @@ class CPS_Score(IconScoreBase):
         else:
             # Adding all the active and paused Proposals to check if they submitted any progress report or not
             for x in range(0, len(self._active)):
-                if self._active[x] not in self.active_proposals:
-                    self.active_proposals.put(self._active[x])
+                act_prop = self._active[x]
+                if act_prop not in self.active_proposals:
+                    self.active_proposals.put(act_prop)
 
             for x in range(0, len(self._paused)):
-                if self._paused[x] not in self.active_proposals:
-                    self.active_proposals.put(self._paused[x])
+                paused_prop = self._paused[x]
+                if paused_prop not in self.active_proposals:
+                    self.active_proposals.put(paused_prop)
+
             self.PeriodUpdate("Period Updated to Voting Period")
 
     def _update_proposals_result(self):
@@ -1604,6 +1625,7 @@ class CPS_Score(IconScoreBase):
             _approved_votes: int = _proposal_details[APPROVED_VOTES]
             _total_votes: int = _proposal_details[TOTAL_VOTES]
             _total_voters: int = _proposal_details[TOTAL_VOTERS]
+            flag: str = _proposal_details['token']
 
             # All voters for this Proposal
             _voters_list = ArrayDBUtils.arraydb_to_list(self.proposals[prefix].voters_list)
@@ -1620,9 +1642,11 @@ class CPS_Score(IconScoreBase):
 
             if _total_voters == 0 or _total_votes == 0 or len(self.valid_preps) < MINIMUM_PREPS:
                 self._update_proposal_status(_pending_proposals[proposal], self._REJECTED)
+                updated_status = self._REJECTED
 
             elif _approve_voters / _total_voters >= MAJORITY and _approved_votes / _total_votes >= MAJORITY:
                 self._update_proposal_status(_pending_proposals[proposal], self._ACTIVE)
+                updated_status = self._ACTIVE
                 self.sponsors.put(_sponsor_address)
                 self.proposals[prefix].sponsor_deposit_status.set(BOND_APPROVED)
 
@@ -1630,16 +1654,19 @@ class CPS_Score(IconScoreBase):
 
                 # After the proposal is being accepted, it requests CPF to send amount to CPS_Treasury
                 cpf_treasury_score.transfer_proposal_fund_to_cps_treasury(_pending_proposals[proposal], _period_count,
-                                                                          _sponsor_address, _contributor_address,
+                                                                          _sponsor_address, _contributor_address, flag,
                                                                           _total_budget)
 
             else:
                 self._update_proposal_status(_pending_proposals[proposal], self._REJECTED)
+                updated_status = self._REJECTED
+
+            if updated_status == self._REJECTED:
                 self._remove_contributor(_contributor_address)
                 self.proposals[prefix].sponsor_deposit_status.set(BOND_RETURNED)
 
                 # Returning back the Sponsor Bond to the sponsor address
-                self._sponsor_bond_return[str(_sponsor_address)] = _sponsor_deposit_amount
+                self.sponsor_bond_return[str(_sponsor_address)][flag] += _sponsor_deposit_amount
                 self.SponsorBondReturned(_sponsor_address,
                                          f"{_sponsor_deposit_amount} returned to sponsor address.")
 
@@ -1669,6 +1696,7 @@ class CPS_Score(IconScoreBase):
             _completed: int = _proposal_details[PERCENTAGE_COMPLETED]
             _budget_adjustment: int = _report_result[BUDGET_ADJUSTMENT]
             _sponsor_deposit_amount: int = _proposal_details[SPONSOR_DEPOSIT_AMOUNT]
+            flag: str = _proposal_details['token']
 
             _approve_voters: int = _report_result[APPROVE_VOTERS]
             _reject_voters: int = _report_result[REJECT_VOTERS]
@@ -1695,16 +1723,20 @@ class CPS_Score(IconScoreBase):
 
             _project_duration: int = self.proposals[proposal_prefix].project_duration.get()
             cps_treasury_score = self.create_interface_score(self.cps_treasury_score.get(), CPS_TREASURY_INTERFACE)
-            cpf_treasury_score = self.create_interface_score(self.cpf_score.get(), CPF_TREASURY_INTERFACE)
 
-            if _approve_voters / _total_voters >= MAJORITY and _approved_votes / _total_votes >= MAJORITY:
+            if _total_voters == 0 or _total_votes == 0 or len(self.valid_preps) < MINIMUM_PREPS:
+                self._update_progress_report_status(_reports, self._PROGRESS_REPORT_REJECTED)
+                updated_status = self._PROGRESS_REPORT_REJECTED
+
+            elif _approve_voters / _total_voters >= MAJORITY and _approved_votes / _total_votes >= MAJORITY:
                 self._update_progress_report_status(_reports, self._APPROVED)
+                updated_status = self._APPROVED
                 _approved_reports_count += 1
 
                 if _approved_reports_count == _project_duration:
                     self._update_proposal_status(_ipfs_hash, self._COMPLETED)
                     # Transfer the Sponsor-Bond back to the Sponsor P-Rep after the project is completed.
-                    self._sponsor_bond_return[str(_sponsor_address)] = _sponsor_deposit_amount
+                    self.sponsor_bond_return[str(_sponsor_address)][flag] += _sponsor_deposit_amount
                     self.proposals[proposal_prefix].sponsor_deposit_status.set(BOND_RETURNED)
                     self.SponsorBondReturned(_sponsor_address,
                                              f"{_sponsor_deposit_amount} returned to sponsor address.")
@@ -1720,6 +1752,9 @@ class CPS_Score(IconScoreBase):
 
             else:
                 self._update_progress_report_status(_reports, self._PROGRESS_REPORT_REJECTED)
+                updated_status = self._PROGRESS_REPORT_REJECTED
+
+            if updated_status == self._PROGRESS_REPORT_REJECTED:
                 if _proposal_status == self._ACTIVE:
                     self._update_proposal_status(_ipfs_hash, self._PAUSED)
 
@@ -1733,10 +1768,7 @@ class CPS_Score(IconScoreBase):
                     self.proposals[proposal_prefix].sponsor_deposit_status.set(BOND_CANCELLED)
 
                     # Transferring the sponsor bond deposit to CPF after the project being disqualified
-                    cpf_treasury_score.icx(_sponsor_deposit_amount).return_fund_amount(_sponsor_address)
-                    self.SponsorBondReturned(self.cpf_score.get(),
-                                             f'Project Disqualified. {_sponsor_deposit_amount} '
-                                             f'returned to CPF Treasury Address.')
+                    self._disqualify_project(_sponsor_address, _sponsor_deposit_amount, flag)
 
     def _check_progress_report_submission(self):
         """
@@ -1754,6 +1786,7 @@ class CPS_Score(IconScoreBase):
             _proposal_status = _proposal_details[STATUS]
             _sponsor_address: 'Address' = _proposal_details[SPONSOR_ADDRESS]
             _contributor_address: 'Address' = _proposal_details[CONTRIBUTOR_ADDRESS]
+            flag: str = _proposal_details.get('token')
 
             if not _prefix.submit_progress_report.get():
                 if _proposal_status == self._ACTIVE:
@@ -1770,10 +1803,7 @@ class CPS_Score(IconScoreBase):
                     _sponsor_deposit_amount: int = _proposal_details[SPONSOR_DEPOSIT_AMOUNT]
 
                     # Transferring the sponsor bond deposit to CPF after the project being disqualified
-                    cpf_treasury_score.icx(_sponsor_deposit_amount).return_fund_amount(_sponsor_address)
-                    self.SponsorBondReturned(self.cpf_score.get(),
-                                             f'Project Disqualified. {_sponsor_deposit_amount} '
-                                             f'returned to CPF Treasury Address.')
+                    self._disqualify_project(_sponsor_address, _sponsor_deposit_amount, flag)
 
     def _update_budget_adjustments(self, _budget_key: str):
         """
@@ -1791,10 +1821,14 @@ class CPS_Score(IconScoreBase):
         _approved_votes: int = _vote_result[APPROVED_VOTES]
         _total_votes: int = _vote_result[TOTAL_VOTES]
 
-        if _approve_voters / _total_voters >= MAJORITY and _approved_votes / _total_votes >= MAJORITY:
+        if _total_voters == 0 or _total_votes == 0 or len(self.valid_preps) < MINIMUM_PREPS:
+            self.progress_reports[_prefix].budget_adjustment_status.set(self._REJECTED)
+
+        elif _approve_voters / _total_voters >= MAJORITY and _approved_votes / _total_votes >= MAJORITY:
             _ipfs_hash = _report_result[IPFS_HASH]
             proposal_prefix = self.proposal_prefix(_ipfs_hash)
             proposals = self.proposals[proposal_prefix]
+            token_flag: str = proposals.token.get()
 
             _period_count = proposals.project_duration.get()
             _total_budget = proposals.total_budget.get()
@@ -1808,7 +1842,7 @@ class CPS_Score(IconScoreBase):
             cpf_treasury_score = self.create_interface_score(self.cpf_score.get(), CPF_TREASURY_INTERFACE)
 
             # After the budget adjustment is approved, Request new added fund to CPF
-            cpf_treasury_score.update_proposal_fund(_ipfs_hash, _additional_budget, _additional_duration)
+            cpf_treasury_score.update_proposal_fund(_ipfs_hash, token_flag, _additional_budget, _additional_duration)
 
         else:
             self.progress_reports[_prefix].budget_adjustment_status.set(self._REJECTED)
