@@ -246,14 +246,17 @@ class CPF_TREASURY(IconScoreBase):
 
     @external
     @payable
-    def return_fund_amount(self, _address: Address) -> None:
+    def return_fund_amount(self, _address: Address, _from: Address = None, _flag: str = ICX, _value: int = 0) -> None:
         """
         After the Project is disqualified. The Sponsor bond deposit is transferred to CPF Treasury Fund.
+        :param _from:
+        :param _value:
+        :param _flag: Token Name
         :param _address: Sponsor P-Rep Address
         :return: None
         """
 
-        self._validate_cps_score()
+        self._validate_cps_score(_from)
         self._burn_extra_fund()
         self.FundReturned(_address, "Sponsor Bond Returned to Treasury.")
 
