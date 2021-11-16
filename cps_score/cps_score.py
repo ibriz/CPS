@@ -376,6 +376,8 @@ class CPS_Score(IconScoreBase):
         """
         if _address in self.sponsors:
             ArrayDBUtils.remove_array_item(self.sponsors, _address)
+        else:
+            revert(f'{TAG}: {_address} not on sponsor list.')
 
     def _remove_contributor(self, _address: Address) -> None:
         """
@@ -386,6 +388,8 @@ class CPS_Score(IconScoreBase):
         """
         if _address in self.contributors:
             ArrayDBUtils.remove_array_item(self.contributors, _address)
+        else:
+            revert(f'{TAG}: {_address} not on contributor list.')
 
     def _get_proposal_keys(self) -> list:
         """
@@ -443,6 +447,8 @@ class CPS_Score(IconScoreBase):
         prefix = self.proposal_prefix(proposal_key)
         if proposal_key not in self.proposals[prefix].progress_reports:
             self.proposals[prefix].progress_reports.put(progress_key)
+        else:
+            revert(f"{TAG}: Progress report {progress_key} already exists.")
 
     def _update_progress_report_status(self, progress_report_key: str, _status: str) -> None:
         prefix = self.progress_report_prefix(progress_report_key)
@@ -1033,13 +1039,13 @@ class CPS_Score(IconScoreBase):
     def get_proposal_details(self, _status: str, _wallet_address: Address = None, _start_index: int = 0,
                              _end_index: int = 20) -> dict:
         if _status not in self.STATUS_TYPE:
-            return {-1: "Not a valid status."}
+            return {"message": "Not a valid status."}
 
         _proposals_list = []
         _proposals_keys = self.get_proposals_keys_by_status(_status)
 
         if _end_index - _start_index > 50:
-            return {-1: "Page length must not be greater than 50."}
+            return {"message": "Page length must not be greater than 50."}
         if _start_index < 0:
             _start_index = 0
         count = len(_proposals_keys)
@@ -1140,13 +1146,13 @@ class CPS_Score(IconScoreBase):
         """
 
         if _status not in self.PROGRESS_REPORT_STATUS_TYPE:
-            return {-1: f"{TAG} : Not a valid status"}
+            return {"message": f"{TAG} : Not a valid status"}
 
         _progress_report_list = []
         _progress_keys = self.progress_report_status[_status]
 
         if _end_index - _start_index > 50:
-            return {-1: "Page length must not be greater than 50."}
+            return {"message": "Page length must not be greater than 50."}
         if _start_index < 0:
             _start_index = 0
         count = len(_progress_keys)
@@ -1176,9 +1182,8 @@ class CPS_Score(IconScoreBase):
         :return : List of all progress report with status
         :rtype : dict
         """
-
-        if _report_key not in self.progress_key_list:
-            return {-1: f"{TAG} : Not a valid IPFS Hash for Progress Report"}
+        if self.progress_key_list_index[_report_key] == 0:
+            return {"message": f"{TAG} : Not a valid IPFS Hash for Progress Report"}
 
         progressDetails = self._get_progress_reports_details(_report_key)
         _ipfs_hash = progressDetails.get(IPFS_HASH)
@@ -1232,7 +1237,7 @@ class CPS_Score(IconScoreBase):
         _proposals_keys = []
 
         if _status not in [self._APPROVED, self._SPONSOR_PENDING, self._REJECTED, self._DISQUALIFIED]:
-            return {-1: f"{TAG} : Not valid status."}
+            return {"message": f"{TAG} : Not valid status."}
 
         if _status == self._APPROVED:
             for pa in self.get_proposals_keys_by_status(self._PENDING):
@@ -1253,7 +1258,7 @@ class CPS_Score(IconScoreBase):
         if _start_index < 0:
             _start_index = 0
         if _end_index - _start_index > 50:
-            return {-1: f"{TAG} : Page length must not be greater than 50."}
+            return {"message": f"{TAG} : Page length must not be greater than 50."}
 
         start = _end_index * _start_index
         count = len(_proposals_keys)
