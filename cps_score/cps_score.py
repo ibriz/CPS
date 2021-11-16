@@ -225,17 +225,24 @@ class CPS_Score(IconScoreBase):
     def fallback(self):
         revert(f"{TAG} :ICX can only be sent while submitting a proposal or paying the penalty.")
 
-    def _burn(self, amount: int) -> None:
+    def _burn(self, amount: int, token: Address = SYSTEM_SCORE_ADDRESS) -> None:
         """
         Burn ICX method
         :param amount: ICX LOOP amount to burn
         :return: none
         """
         try:
-            sys_interface = self.create_interface_score(SYSTEM_SCORE_ADDRESS, InterfaceSystemScore)
-            sys_interface.icx(amount).burn()
-        except BaseException as e:
-            revert(f"{TAG} : Network problem. Burning Funds. {e}")
+            if token == SYSTEM_SCORE_ADDRESS:
+                sys_interface = self.create_interface_score(SYSTEM_SCORE_ADDRESS, InterfaceSystemScore)
+                sys_interface.icx(amount).burn()
+            elif token == self.balanced_dollar.get():
+                bnusd_score = self.create_interface_score(token, TokenInterface)
+                _data = json_dumps({"method": "burn_amount"}).encode()
+                bnusd_score.transfer(self.cpf_score.get(), amount, _data)
+            else:
+                revert(f'{TAG}: Not a supported token.')
+        except Exception as e:
+            revert(f"{TAG} : Network problem. Burning Funds. {token},{amount}. Exception: {e}")
 
     @only_owner
     @external
@@ -649,6 +656,8 @@ class CPS_Score(IconScoreBase):
         :param _vote_reason : Reason behind the _vote
         :param _ipfs_key : proposal ipfs hash
         :type _ipfs_key : str
+        :param _from : Sponsor Address
+        :param _value: bnUSD transferred
         """
         self._check_maintenance()
         self.update_period()
