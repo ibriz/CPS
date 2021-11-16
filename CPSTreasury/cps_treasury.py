@@ -136,10 +136,13 @@ class CPS_TREASURY(IconScoreBase):
 
     def _add_record(self, _proposal: ProposalAttributes) -> None:
         proposal_data_obj = createProposalDataObject(_proposal)
-        if proposal_data_obj.ipfs_hash not in self._proposals_keys:
-            self._proposals_keys.put(proposal_data_obj.ipfs_hash)
-            prefix = self.proposal_prefix(proposal_data_obj.ipfs_hash)
+        ipfs_hash = proposal_data_obj.ipfs_hash
+        if self.proposals_key_list_index[ipfs_hash] == 0:
+            self._proposals_keys.put(ipfs_hash)
+            prefix = self.proposal_prefix(ipfs_hash)
             addDataToProposalDB(prefix, self.proposals, proposal_data_obj)
+            self.proposals_key_list_index[ipfs_hash] = len(self._proposals_keys)
+
         else:
             revert(f"{TAG} : Already have this project.")
 
@@ -488,32 +491,21 @@ class CPS_TREASURY(IconScoreBase):
             revert(f"{TAG} :Claim Reward Fails. Available Amount = {_available_amount}.")
 
     @external
-    def request_additional_budget(self, _ipfs_key: str) -> None:
-        self._validate_cps_score()
-        _added_amounts = {'bafybeibd3fxxvyhzj2qk57pvjznbak2veomnpz6nviuvpjj2qsxdxrqb44': 3000000000000000000000,
-                          'bafybeighs4wxki52zadu2rftuopdua2357zztgbcy4ioikgjr6javyhb7y': 1840000000000000000000,
-                          'bafybeid3xfky4rx2bvqzybip6jg5xgjm2uonvuxbhkc7sxa375hgw7736e': 2980000000000000000000,
-                          'bafybeia2ixxrl2kapogh56mwc4nnn24333t5cntuquepxyifbr4bk3wb6a': 29580000000000000000000,
-                          'bafybeiaubhdzignnbe24ypwwulsr6fxju4uyujzx5tnyqc6fgop3qbyldu': 18357000000000000000000,
-                          'bafybeie5cifgwgu2x3guixgrs67miydug7ocyp6yia5kxv3imve6fthbs4': 0}
+    def update_project_flag(self) -> None:
+        self._validate_admins()
+        for _ix in range(0, len(self._proposals_keys)):
+            _ipfs_hash = self._proposals_keys[_ix]
+            self.proposals_key_list_index[_ipfs_hash] = _ix + 1
+            proposalPrefix = self.proposal_prefix(_ipfs_hash)
+            _prefix = self.proposals[proposalPrefix]
+            _prefix.token.set(ICX)
 
-        _added_time = {'bafybeibd3fxxvyhzj2qk57pvjznbak2veomnpz6nviuvpjj2qsxdxrqb44': 1,
-                       'bafybeighs4wxki52zadu2rftuopdua2357zztgbcy4ioikgjr6javyhb7y': 0,
-                       'bafybeid3xfky4rx2bvqzybip6jg5xgjm2uonvuxbhkc7sxa375hgw7736e': 0,
-                       'bafybeia2ixxrl2kapogh56mwc4nnn24333t5cntuquepxyifbr4bk3wb6a': 0,
-                       'bafybeiaubhdzignnbe24ypwwulsr6fxju4uyujzx5tnyqc6fgop3qbyldu': 1,
-                       'bafybeie5cifgwgu2x3guixgrs67miydug7ocyp6yia5kxv3imve6fthbs4': 3}
-
-        prefix = self.proposal_prefix(_ipfs_key)
-        proposals = self.proposals[prefix]
-
-        _contributor_address = proposals.contributor_address.get()
-        _sponsor_address = proposals.sponsor_address.get()
-
-        _remaining_amount = proposals.remaining_amount.get()
-        _sponsor_remaining_amount = proposals.sponsor_remaining_amount.get()
-        installment_count = proposals.installment_count.get()
-        sponsor_reward_count = proposals.sponsor_reward_count.get()
+            _address = _prefix.contributor_address.get()
+            sp_address = _prefix.sponsor_address.get()
+            if self.installment_fund_record[str(_address)][ICX] == 0:
+                self.installment_fund_record[str(_address)][ICX] = self._fund_record[str(_address)]
+            if self.installment_fund_record[str(sp_address)][ICX] == 0:
+                self.installment_fund_record[str(sp_address)][ICX] = self._fund_record[str(sp_address)]
 
     @external
     def tokenFallback(self, _from: Address, _value: int, _data: bytes):
