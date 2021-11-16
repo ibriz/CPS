@@ -126,7 +126,7 @@ class CPF_TREASURY(IconScoreBase):
                    f"SCORE can send fund using this method.")
 
     @external
-    def set_maximum_treasury_fund(self, _value: int) -> None:
+    def set_maximum_treasury_fund_icx(self, _value: int) -> None:
         """
         Set the maximum Treasury fund. Default 1M ICX
         :param _value: Value in Loop
@@ -135,6 +135,17 @@ class CPF_TREASURY(IconScoreBase):
         """
         self._validate_owner()
         self.treasury_fund.set(_value)
+
+    @external
+    def set_maximum_treasury_fund_bnusd(self, _value: int) -> None:
+        """
+        Set the maximum Treasury fund. Default 1M ICX
+        :param _value: Value in Loop
+        :type _value : int
+        :return:
+        """
+        self._validate_owner()
+        self.treasury_fund_bnusd.set(_value)
 
     @external
     def set_cps_score(self, _score: Address) -> None:
