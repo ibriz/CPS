@@ -81,6 +81,7 @@ class CPS_TREASURY(IconScoreBase):
 
         self._cpf_treasury_score = VarDB(self._CPF_TREASURY_SCORE, db, value_type=Address)
         self._cps_score = VarDB(self._CPS_SCORE, db, value_type=Address)
+        self.balanced_dollar = VarDB(self.BALANCED_DOLLAR, db, value_type=Address)
 
     def on_install(self) -> None:
         super().on_install()
@@ -180,6 +181,26 @@ class CPS_TREASURY(IconScoreBase):
         :rtype: :class:`iconservice.base.address.Address`
         """
         return self._cpf_treasury_score.get()
+
+    @external
+    def set_bnUSD_score(self, _score: Address) -> None:
+        """
+        Sets the cps treasury score address. Only owner can set the address.
+        :param _score: Address of the cps treasury score address
+        :type _score: :class:`iconservice.base.address.Address`
+        :return:
+        """
+        self._validate_owner_score(_score)
+        self.balanced_dollar.set(_score)
+
+    @external(readonly=True)
+    def get_bnUSD_score(self) -> Address:
+        """
+        Returns the bnusd score address
+        :return: bnusd score address
+        :rtype: :class:`iconservice.base.address.Address`
+        """
+        return self.balanced_dollar.get()
 
     @external(readonly=True)
     def get_contributor_projected_fund(self, _wallet_address: Address) -> dict:
