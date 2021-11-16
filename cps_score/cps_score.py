@@ -1909,8 +1909,13 @@ class CPS_Score(IconScoreBase):
                                  f'Project Disqualified. {_sponsor_deposit_amount} '
                                  f'returned to CPF Treasury Address.')
 
-        proposal_prefix = self.proposal_prefix(_key)
-        self.proposals[proposal_prefix].sponsor_deposit_status.set(BOND_APPROVED)
+    def _snapshot_delegations(self):
+        for preps in self.valid_preps:
+            stake = self._get_stake(preps)
+            self.delegation_snapshot[preps] = stake
+            max_delegation = self.max_delegation.get()
+            if stake > max_delegation:
+                self.max_delegation.set(stake)
 
         self._update_proposal_status(_key, self._ACTIVE)
 
