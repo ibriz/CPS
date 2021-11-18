@@ -302,9 +302,12 @@ class CPF_TREASURY(IconScoreBase):
         Get total amount of fund on the SCORE
         :return: integer value of amount
         """
-        bnusd_score = self.create_interface_score(self.balanced_dollar.get(), TokenInterface)
         return {ICX: self.icx.get_balance(self.address),
-                BNUSD: bnusd_score.balanceOf(self.address)}
+                BNUSD: self._get_total_fund_bnusd()}
+
+    def _get_total_fund_bnusd(self) -> int:
+        bnusd_score = self.create_interface_score(self.balanced_dollar.get(), TokenInterface)
+        return bnusd_score.balanceOf(self.address)
 
     @external(readonly=True)
     def get_remaining_swap_amount(self) -> dict:
@@ -312,10 +315,9 @@ class CPF_TREASURY(IconScoreBase):
         Get total amount of fund on the SCORE
         :return: integer value of amount
         """
-        total_funds = self.get_total_funds()
         maxCap = self.treasury_fund_bnusd.get()
         return {'maxCap': maxCap,
-                'remainingToSwap': maxCap - total_funds.get(BNUSD)}
+                'remainingToSwap': maxCap - self._get_total_fund_bnusd()}
 
     @external
     @payable
