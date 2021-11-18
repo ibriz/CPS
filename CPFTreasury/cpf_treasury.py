@@ -130,14 +130,16 @@ class CPF_TREASURY(IconScoreBase):
     def _validate_cps_score(self, _from: Address = None):
         if _from is None:
             _from = self.msg.sender
-        if _from != self._cps_score.get():
-            revert(f"{TAG} : Only CPS({self._cps_score.get()}) SCORE can send fund using this method.")
+        score_address = self._cps_score.get()
+        if _from != score_address:
+            revert(f"{TAG} : Only CPS({score_address}) SCORE can send fund using this method.")
 
     def _validate_cps_treasury_score(self, _from: Address = None):
         if _from is None:
             _from = self.msg.sender
-        if _from != self._cps_treasury_score.get():
-            revert(f"{TAG} : Only CPS Treasury({self._cps_treasury_score.get()}) "
+        score_address = self._cps_treasury_score.get()
+        if _from != score_address:
+            revert(f"{TAG} : Only CPS Treasury({score_address}) "
                    f"SCORE can send fund using this method.")
 
     @external
