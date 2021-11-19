@@ -101,6 +101,9 @@ class CPS_TREASURY(IconScoreBase):
     def on_update(self) -> None:
         super().on_update()
 
+    def _proposal_exists(self, _ipfs_key: str) -> bool:
+        return _ipfs_key in self.proposals_key_list_index
+
     @external(readonly=True)
     def name(self) -> str:
         """
@@ -149,11 +152,11 @@ class CPS_TREASURY(IconScoreBase):
     def _add_record(self, _proposal: ProposalAttributes) -> None:
         proposal_data_obj = createProposalDataObject(_proposal)
         ipfs_hash = proposal_data_obj.ipfs_hash
-        if self.proposals_key_list_index[ipfs_hash] == 0:
+        if not self._proposal_exists(ipfs_hash):
             self._proposals_keys.put(ipfs_hash)
             prefix = self.proposal_prefix(ipfs_hash)
             addDataToProposalDB(prefix, self.proposals, proposal_data_obj)
-            self.proposals_key_list_index[ipfs_hash] = len(self._proposals_keys)
+            self.proposals_key_list_index[ipfs_hash] = len(self._proposals_keys) - 1
 
         else:
             revert(f"{TAG} : Already have this project.")
@@ -343,8 +346,7 @@ class CPS_TREASURY(IconScoreBase):
         :return:
         """
 
-        ix = self.proposals_key_list_index[_ipfs_key]
-        if ix == 0:
+        if not self._proposal_exists(_ipfs_key):
             revert(f'{TAG}: Invalid IPFS Hash.')
         prefix = self.proposal_prefix(_ipfs_key)
         _proposal_prefix = self.proposals[prefix]
@@ -377,11 +379,10 @@ class CPS_TREASURY(IconScoreBase):
         """
         self._validate_cps_score()
 
-        ix = self.proposals_key_list_index[_ipfs_key]
-        if ix == 0:
+        if not self._proposal_exists(_ipfs_key):
             revert(f'{TAG}: Invalid IPFS Hash.')
 
-        prefix = self.proposal_prefix(self._proposals_keys[ix])
+        prefix = self.proposal_prefix(_ipfs_key)
         proposal = self.proposals[prefix]
 
         _installment_count: int = proposal.installment_count.get()
@@ -421,11 +422,10 @@ class CPS_TREASURY(IconScoreBase):
         """
         self._validate_cps_score()
 
-        ix = self.proposals_key_list_index[_ipfs_key]
-        if ix == 0:
+        if not self._proposal_exists(_ipfs_key):
             revert(f'{TAG}: Invalid IPFS Hash.')
 
-        prefix = self.proposal_prefix(self._proposals_keys[ix])
+        prefix = self.proposal_prefix(_ipfs_key)
         proposals = self.proposals[prefix]
 
         _sponsor_reward_count: int = proposals.sponsor_reward_count.get()
@@ -463,11 +463,10 @@ class CPS_TREASURY(IconScoreBase):
         """
         self._validate_cps_score()
 
-        ix = self.proposals_key_list_index[_ipfs_key]
-        if ix == 0:
+        if not self._proposal_exists(_ipfs_key):
             revert(f'{TAG}: Project not found. Invalid IPFS Hash.')
 
-        prefix = self.proposal_prefix(self._proposals_keys[ix])
+        prefix = self.proposal_prefix(_ipfs_key)
         proposals = self.proposals[prefix]
 
         # Set Proposal status to disqualified
@@ -540,7 +539,7 @@ class CPS_TREASURY(IconScoreBase):
         self._validate_admins()
         for _ix in range(len(self._proposals_keys)):
             _ipfs_hash = self._proposals_keys[_ix]
-            self.proposals_key_list_index[_ipfs_hash] = _ix + 1
+            self.proposals_key_list_index[_ipfs_hash] = _ix
             proposalPrefix = self.proposal_prefix(_ipfs_hash)
             _prefix = self.proposals[proposalPrefix]
             _prefix.token.set(ICX)
