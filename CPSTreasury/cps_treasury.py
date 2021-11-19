@@ -560,11 +560,12 @@ class CPS_TREASURY(IconScoreBase):
             revert(f'{TAG}: Only Receiving from {self._cpf_treasury_score.get()}, {_from}')
 
         unpacked_data = json_loads(_data.decode('utf-8'))
+        method = unpacked_data["method"]
 
-        if unpacked_data["method"] == "deposit_proposal_fund":
+        if method == "deposit_proposal_fund":
             self._deposit_proposal_fund(unpacked_data["params"], _value)
 
-        elif unpacked_data["method"] == "budget_adjustment":
+        elif method == "budget_adjustment":
             _params = unpacked_data["params"]
             ipfs_key = _params['_ipfs_key']
             added_budget = _params['_added_budget']
@@ -573,4 +574,4 @@ class CPS_TREASURY(IconScoreBase):
 
             self.update_proposal_fund(ipfs_key, added_budget, added_sponsor_reward, added_installment_count)
         else:
-            revert(f'{TAG}: {unpacked_data["method"]} Not a valid method.')
+            revert(f'{TAG}: {method} Not a valid method.')
