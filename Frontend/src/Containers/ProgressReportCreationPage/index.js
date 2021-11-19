@@ -272,7 +272,7 @@ const ProgressReportCreationPage = ({
 
   const handleSubmit = event => {
     event.preventDefault();
-    setSubmissionConfirmationShow(false);
+    setSubmissionConfirmationShow(true);
   };
 
   // useEffect(() => {
@@ -668,7 +668,7 @@ const ProgressReportCreationPage = ({
               isTimeRemainingNotZero &&
               progressReport.projectTermRevision &&
               progressReport.timeRemainingToCompletion !==
-                progressReport.additionalTime && (
+              progressReport.additionalTime && (
                 <Alert variant='primary'>
                   Note: Recommended additional time:{' '}
                   {progressReport.timeRemainingToCompletion} month (The time
