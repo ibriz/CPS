@@ -539,12 +539,13 @@ class CPF_TREASURY(IconScoreBase):
             self.swap_state.set(2)
 
         try:
-            if self.swap_state.get() == 0:
+            swap_state = self.swap_state.get()
+            if swap_state == 0:
                 remainingSICXToSwap = (bnUSDRemainingToSwap // sicxBnusdPrice) * 10 ** 18 - sicxBalance
                 self._swap_icx_sicx(dex, remainingSICXToSwap, sicxBalance)
                 self.swap_state.set(1)
                 self.swap_count.set(0)
-            elif self.swap_state.get() == 1:
+            elif swap_state == 1:
                 count_swap = self.swap_count.get()
                 remainingSICXToSwap = (bnUSDRemainingToSwap // (sicxBnusdPrice * (_count - count_swap))) * 10 ** 18
 
@@ -591,7 +592,7 @@ class CPF_TREASURY(IconScoreBase):
                     _sponsor_address = Address.from_string(unpacked_data['params']['sponsor_address'])
                     self.return_fund_amount(_sponsor_address, _from, BNUSD, _value)
                 elif unpacked_data['method'] == 'burn_amount':
-                    self._swap_tokens(self.msg.sender, self.get_sicx_score(), _value)
+                    self._swap_tokens(self.msg.sender, staking, _value)
                 else:
                     revert(f"{TAG}: Not supported method {unpacked_data['method']}")
             if _from == self._cps_treasury_score.get():
