@@ -399,6 +399,7 @@ class CPF_TREASURY(IconScoreBase):
         """
         Update the proposal fund after the budget adjustment voting is passed by majority of P-Reps
         :param _ipfs_key: Proposal IPFS Hash Key
+        :param _flag: Token Name
         :param _added_budget: New added Budget
         :param _total_installment_count: Added Month Count
         :return:
