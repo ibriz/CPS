@@ -81,7 +81,6 @@ class CPF_TREASURY(IconScoreBase):
     def __init__(self, db: IconScoreDatabase) -> None:
         super().__init__(db)
         self._proposals_keys = ArrayDB(self._PROPOSALS_KEYS, db, value_type=str)
-        self._proposals_keys_index = DictDB(f'{self._PROPOSALS_KEYS}_index', db, value_type=int)
         self._proposal_budgets = DictDB(self._PROPOSAL_BUDGETS, db, value_type=int, depth=1)
 
         self.treasury_fund = VarDB(self.TREASURY_FUND, db, value_type=int)
@@ -107,6 +106,9 @@ class CPF_TREASURY(IconScoreBase):
         self.swap_state.set(0)
         self.swap_count.set(0)
         self.treasury_fund_bnusd.set(400_000 * 10 ** 18)
+
+    def _proposal_exists(self, _ipfs_key: str) -> bool:
+        return _ipfs_key in self._proposal_budgets
 
     @external(readonly=True)
     def name(self) -> str:
@@ -352,8 +354,7 @@ class CPF_TREASURY(IconScoreBase):
         """
 
         self._validate_cps_score()
-        ix = self._proposals_keys_index[_ipfs_key]
-        if ix != 0:
+        if self._proposal_exists(_ipfs_key):
             revert(f'{TAG}: Project already exists. Invalid IPFS Hash.')
 
         # Calculating sponsor reward for sponsor(2%) and total budget for contributor
@@ -370,7 +371,6 @@ class CPF_TREASURY(IconScoreBase):
             revert(f'{TAG}: {token_flag} is not supported. Only {BNUSD} token available.')
 
         self._proposals_keys.put(_ipfs_key)
-        self._proposals_keys_index[_ipfs_key] = len(self._proposals_keys)
         self._proposal_budgets[_ipfs_key] = total_transfer
 
         # Required Params for the deposit_proposal_fund method for CPS_Treasury Score
@@ -411,7 +411,7 @@ class CPF_TREASURY(IconScoreBase):
         _sponsor_reward = _added_budget * 2 // 100
         total_transfer = _added_budget + _sponsor_reward
 
-        if self._proposals_keys_index[_ipfs_key] == 0:
+        if not self._proposal_exists(_ipfs_key):
             revert(f"{TAG} : IPFS key doesn't exist")
 
         self._proposal_budgets[_ipfs_key] += total_transfer
@@ -457,7 +457,7 @@ class CPF_TREASURY(IconScoreBase):
         """
         self._validate_cps_treasury_score(_from)
 
-        if self._proposals_keys_index[_ipfs_key] == 0:
+        if not self._proposal_exists(_ipfs_key):
             revert(f"{TAG} : IPFS key doesn't exist")
 
         _budget = self._proposal_budgets[_ipfs_key]
@@ -609,10 +609,3 @@ class CPF_TREASURY(IconScoreBase):
 
         else:
             revert(f'{TAG}: Please send fund using add_fund().')
-
-    @external
-    def update_project_index(self):
-        self._validate_admins()
-        for _ix in range(0, len(self._proposals_keys)):
-            _ipfs_hash = self._proposals_keys[_ix]
-            self._proposals_keys_index[_ipfs_hash] = _ix + 1
