@@ -507,12 +507,13 @@ class CPS_TREASURY(IconScoreBase):
         """
         Claim he reward or the installment amount
         """
-        _available_amount_icx = self.installment_fund_record[str(self.msg.sender)][ICX]
-        _available_amount_bnusd = self.installment_fund_record[str(self.msg.sender)][bnUSD]
+        installment_fund_record = self.installment_fund_record[str(self.msg.sender)]
+        _available_amount_icx = installment_fund_record[ICX]
+        _available_amount_bnusd = installment_fund_record[bnUSD]
         if _available_amount_icx > 0:
             try:
                 # set the remaining fund 0
-                self.installment_fund_record[str(self.msg.sender)][ICX] = 0
+                installment_fund_record[ICX] = 0
 
                 self.icx.transfer(self.msg.sender, _available_amount_icx)
                 self.ProposalFundWithdrawn(self.msg.sender, f"{_available_amount_icx} withdrawn to {self.msg.sender}")
@@ -522,7 +523,7 @@ class CPS_TREASURY(IconScoreBase):
         elif _available_amount_bnusd > 0:
             try:
                 # set the remaining fund 0
-                self.installment_fund_record[str(self.msg.sender)][bnUSD] = 0
+                installment_fund_record[bnUSD] = 0
 
                 bnusd_score = self.create_interface_score(self.balanced_dollar.get(), TokenInterface)
                 bnusd_score.transfer(self.msg.sender, _available_amount_bnusd)
