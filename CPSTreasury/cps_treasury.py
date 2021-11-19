@@ -256,13 +256,12 @@ class CPS_TREASURY(IconScoreBase):
                         else:
                             _total_amount_to_be_paid_bnusd += _total_budget // _total_installment
 
-        _withdraw_amount_icx = self.installment_fund_record[str(_wallet_address)][ICX]
-        _withdraw_amount_bnusd = self.installment_fund_record[str(_wallet_address)][bnUSD]
+        installment_fund_record = self.installment_fund_record[str(_wallet_address)]
         return {"data": project_details,
                 "project_count": len(project_details),
                 "total_amount": {ICX: _total_amount_to_be_paid_icx, bnUSD: _total_amount_to_be_paid_bnusd},
-                "withdraw_amount_icx": _withdraw_amount_icx,
-                "withdraw_amount_bnusd": _withdraw_amount_bnusd}
+                "withdraw_amount_icx": installment_fund_record[ICX],
+                "withdraw_amount_bnusd": installment_fund_record[bnUSD]}
 
     @external(readonly=True)
     def get_sponsor_projected_fund(self, _wallet_address: Address) -> dict:
@@ -302,14 +301,12 @@ class CPS_TREASURY(IconScoreBase):
                             _total_amount_to_be_paid_bnusd += _total_budget // _total_installment
                             _total_sponsor_bond_bnusd += _deposited_sponsor_bond
 
-        _withdraw_amount_icx = self.installment_fund_record[str(_wallet_address)][ICX]
-        _withdraw_amount_bnusd = self.installment_fund_record[str(_wallet_address)][bnUSD]
-
+        installment_fund_record = self.installment_fund_record[str(_wallet_address)]
         return {"data": projects_details,
                 "project_count": len(projects_details),
                 "total_amount": {ICX: _total_amount_to_be_paid_icx, bnUSD: _total_amount_to_be_paid_bnusd},
-                "withdraw_amount_icx": _withdraw_amount_icx,
-                "withdraw_amount_bnusd": _withdraw_amount_bnusd,
+                "withdraw_amount_icx": installment_fund_record[ICX],
+                "withdraw_amount_bnusd": installment_fund_record[bnUSD],
                 "total_sponsor_bond": {ICX: _total_sponsor_bond_icx, bnUSD: _total_sponsor_bond_bnusd}}
 
     def _deposit_proposal_fund(self, _proposals: ProposalAttributes, _value: int = 0) -> None:
