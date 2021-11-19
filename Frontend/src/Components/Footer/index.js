@@ -264,7 +264,7 @@ const Footer = ({ console = false }) => {
         >
           <div style={{ marginTop: '15px' }}>Find us on:</div>
           <div
-            style={{ display: 'flex', marginTop: '15px', alignItems: 'center' }}
+            style={{ display: 'flex', marginTop: '15px', alignItems: 'center', gap: 5 }}
           >
             {socialLinks.map(socialLink => (
               <a
@@ -273,23 +273,14 @@ const Footer = ({ console = false }) => {
                 target='_blank'
                 style={{ zIndex: 1000 }}
               >
-                {console ? (
-                  <socialLink.icon
-                    style={{
-                      fontSize: socialLink.fontSize
-                        ? socialLink.fontSize
-                        : '35px',
-                      color: consoleColor,
-                    }}
-                  />
-                ) : (
-                  <span
-                    className={ClassNames(
-                      styles.socialLink,
-                      styles[socialLink.name],
-                    )}
-                  ></span>
-                )}
+                <socialLink.icon
+                  style={{
+                    fontSize: socialLink.fontSize
+                      ? socialLink.fontSize
+                      : '35px',
+                    color: console ? consoleColor : 'white'
+                  }}
+                />
               </a>
             ))}
           </div>
