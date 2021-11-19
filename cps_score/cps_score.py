@@ -483,7 +483,7 @@ class CPS_Score(IconScoreBase):
     def _add_new_progress_report_key(self, proposal_key: str, progress_key: str) -> None:
         self.progress_key_list.put(progress_key)
         prefix = self.proposal_prefix(proposal_key)
-        if proposal_key not in self.proposals[prefix].progress_reports:
+        if progress_key not in self.proposals[prefix].progress_reports:
             self.proposals[prefix].progress_reports.put(progress_key)
         else:
             revert(f"{TAG}: Progress report {progress_key} already exists.")
