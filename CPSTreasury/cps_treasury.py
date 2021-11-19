@@ -396,7 +396,8 @@ class CPS_TREASURY(IconScoreBase):
                 _installment_amount = remaining_amount
             else:
                 _installment_amount = remaining_amount // _installment_count
-            proposal.installment_count.set(_installment_count - 1)
+            new_installment_count = _installment_count - 1
+            proposal.installment_count.set(new_installment_count)
             proposal.remaining_amount.set(remaining_amount - _installment_amount)
             proposal.withdraw_amount.set(withdraw_amount + _installment_amount)
             self.installment_fund_record[str(contributor_address)][flag] += _installment_amount
@@ -404,7 +405,7 @@ class CPS_TREASURY(IconScoreBase):
             self.ProposalFundSent(contributor_address, _installment_amount,
                                   f"New Installment sent to contributors address.")
 
-            if proposal.installment_count.get() == 0:
+            if new_installment_count == 0:
                 proposal.status.set(self._COMPLETED)
 
         except Exception:
@@ -439,7 +440,8 @@ class CPS_TREASURY(IconScoreBase):
                 _installment_amount = _sponsor_remaining_amount
             else:
                 _installment_amount = _sponsor_remaining_amount // _sponsor_reward_count
-            proposals.sponsor_reward_count.set(_sponsor_reward_count - 1)
+            new_sponsor_reward_count = _sponsor_reward_count - 1
+            proposals.sponsor_reward_count.set(new_sponsor_reward_count)
             proposals.sponsor_withdraw_amount.set(_sponsor_withdraw_amount + _installment_amount)
             proposals.sponsor_remaining_amount.set(_sponsor_remaining_amount - _installment_amount)
             self.installment_fund_record[str(_sponsor_address)][flag] += _installment_amount
@@ -447,7 +449,7 @@ class CPS_TREASURY(IconScoreBase):
             self.ProposalFundSent(_sponsor_address, _installment_amount,
                                   f"New Installment sent to sponsor address.")
 
-            if proposals.sponsor_reward_count.get() == 0:
+            if new_sponsor_reward_count == 0:
                 proposals.status.set(self._COMPLETED)
         except Exception:
             revert(f"{TAG} : Network problem. Sending project funds to sponsor.")
