@@ -538,7 +538,7 @@ class CPS_TREASURY(IconScoreBase):
     @external
     def update_project_flag(self) -> None:
         self._validate_admins()
-        for _ix in range(0, len(self._proposals_keys)):
+        for _ix in range(len(self._proposals_keys)):
             _ipfs_hash = self._proposals_keys[_ix]
             self.proposals_key_list_index[_ipfs_hash] = _ix + 1
             proposalPrefix = self.proposal_prefix(_ipfs_hash)
@@ -549,8 +549,10 @@ class CPS_TREASURY(IconScoreBase):
             sp_address = _prefix.sponsor_address.get()
             if self.installment_fund_record[str(_address)][ICX] == 0:
                 self.installment_fund_record[str(_address)][ICX] = self._fund_record[str(_address)]
+                del self._fund_record[str(_address)]
             if self.installment_fund_record[str(sp_address)][ICX] == 0:
                 self.installment_fund_record[str(sp_address)][ICX] = self._fund_record[str(sp_address)]
+                del self._fund_record[str(sp_address)]
 
     @external
     def tokenFallback(self, _from: Address, _value: int, _data: bytes):
