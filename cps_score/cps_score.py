@@ -768,10 +768,10 @@ class CPS_Score(IconScoreBase):
                 _index = voter_index_db['index']
                 vote_index = voter_index_db['vote']
                 proposals_prefix_.voters_reasons[_index - 1] = _vote_reason.encode()
-                if vote_index == 1:
+                if vote_index == APPROVE_:
                     ArrayDBUtils.remove_array_item(proposals_prefix_.approve_voters, self.msg.sender)
                     proposals_prefix_.approved_votes.set(_approved_votes - _voter_stake)
-                elif vote_index == 2:
+                elif vote_index == REJECT_:
                     ArrayDBUtils.remove_array_item(proposals_prefix_.reject_voters, self.msg.sender)
                     proposals_prefix_.rejected_votes.set(_rejected_votes - _voter_stake)
 
