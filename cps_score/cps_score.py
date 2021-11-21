@@ -2040,6 +2040,7 @@ class CPS_Score(IconScoreBase):
             _prefix.token.set(ICX)
             sponsor_ = _prefix.sponsor_address.get()
             self.sponsor_bond_return[str(sponsor_)][ICX] = self._sponsor_bond_return[str(sponsor_)]
+            del self._sponsor_bond_return[str(sponsor_)]
 
     @external
     def update_progress_report_index(self):
