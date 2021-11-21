@@ -187,6 +187,9 @@ class CPS_Score(IconScoreBase):
     def _proposal_key_exists(self, key: str) -> bool:
         return key in self.proposals_key_list_index
 
+    def _progress_key_exists(self, key: str) -> bool:
+        return key in self.progress_key_list_index
+
     @external(readonly=True)
     def name(self) -> str:
         """
@@ -503,11 +506,11 @@ class CPS_Score(IconScoreBase):
     def _add_progress_report(self, _progress_report: ProgressReportAttributes) -> None:
         progress_report_obj = createProgressDataObject(_progress_report)
         report_hash = progress_report_obj.report_hash
-        if self.progress_key_list_index[report_hash] == 0:
+        if not self._progress_key_exists(report_hash):
             self._add_new_progress_report_key(progress_report_obj.ipfs_hash, report_hash)
             prefix = self.progress_report_prefix(report_hash)
             addDataToProgressReportDB(prefix, self.progress_reports, progress_report_obj)
-            self.progress_key_list_index[report_hash] = len(self.progress_key_list)
+            self.progress_key_list_index[report_hash] = len(self.progress_key_list) - 1
         else:
             revert(f"{TAG} : Report Hash Already Exists.")
 
@@ -1353,7 +1356,7 @@ class CPS_Score(IconScoreBase):
         :return : List of all progress report with status
         :rtype : dict
         """
-        if self.progress_key_list_index[_report_key] == 0:
+        if not self._progress_key_exists(_report_key):
             return {"message": f"{TAG} : Not a valid IPFS Hash for Progress Report"}
 
         progressDetails = self._get_progress_reports_details(_report_key)
@@ -2054,7 +2057,7 @@ class CPS_Score(IconScoreBase):
         self._validate_admins()
         for _ix in range(0, len(self.progress_key_list)):
             _ipfs_hash = self.progress_key_list[_ix]
-            self.progress_key_list_index[_ipfs_hash] = _ix + 1
+            self.progress_key_list_index[_ipfs_hash] = _ix
 
     @external
     def tokenFallback(self, _from: Address, _value: int, _data: bytes):
