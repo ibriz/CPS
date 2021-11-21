@@ -2064,14 +2064,17 @@ class CPS_Score(IconScoreBase):
         if self.msg.sender != bnusd:
             revert(f'{TAG}: Only {bnusd} can send {bnUSD} tokens to this contract.')
 
-        if unpacked_data["method"] == "sponsor_vote":
-            _ipfs_hash = unpacked_data["params"][IPFS_HASH]
-            _vote = unpacked_data["params"][VOTE]
-            _vote_reason = unpacked_data["params"][VOTE_REASON]
+        method = unpacked_data["method"]
+        params = unpacked_data["params"]
+
+        if method == "sponsor_vote":
+            _ipfs_hash = params[IPFS_HASH]
+            _vote = params[VOTE]
+            _vote_reason = params[VOTE_REASON]
 
             self._sponsor_vote(_ipfs_hash, _vote, _vote_reason, _from, _value)
 
-        elif unpacked_data["method"] == "pay_prep_penalty":
+        elif method == "pay_prep_penalty":
             self._pay_prep_penalty(_from, _value)
         else:
             revert(f'{TAG}: Token not received.')
