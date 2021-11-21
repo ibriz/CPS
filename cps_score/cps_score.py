@@ -2080,17 +2080,18 @@ class CPS_Score(IconScoreBase):
             revert(f'{TAG}: Token not received.')
 
     def _disqualify_project(self, _sponsor_address: Address, _sponsor_deposit_amount: int, flag: str):
-        cpf_treasury_score = self.create_interface_score(self.cpf_score.get(), CPF_TREASURY_INTERFACE)
+        cpf_score_address: Address = self.cpf_score.get()
+        cpf_treasury_score = self.create_interface_score(cpf_score_address, CPF_TREASURY_INTERFACE)
         if flag == ICX:
             cpf_treasury_score.icx(_sponsor_deposit_amount).return_fund_amount(_sponsor_address)
         elif flag == bnUSD:
             _data = json_dumps({"method": "return_fund_amount",
                                 "params": {"sponsor_address": str(_sponsor_address)}}).encode()
             bnusd_score = self.create_interface_score(self.balanced_dollar.get(), TokenInterface)
-            bnusd_score.transfer(self.cpf_score.get(), _sponsor_deposit_amount, _data)
+            bnusd_score.transfer(cpf_score_address, _sponsor_deposit_amount, _data)
         else:
             revert(f'{TAG}: Not supported token {flag}. ')
-        self.SponsorBondReturned(self.cpf_score.get(),
+        self.SponsorBondReturned(cpf_score_address,
                                  f'Project Disqualified. {_sponsor_deposit_amount} '
                                  f'returned to CPF Treasury Address.')
 
