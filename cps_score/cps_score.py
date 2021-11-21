@@ -1889,7 +1889,6 @@ class CPS_Score(IconScoreBase):
         :return:
         """
         cps_treasury_score = self.create_interface_score(self.cps_treasury_score.get(), CPS_TREASURY_INTERFACE)
-        cpf_treasury_score = self.create_interface_score(self.cpf_score.get(), CPF_TREASURY_INTERFACE)
 
         for _ipfs_hash in self.active_proposals:
             proposalPrefix = self.proposal_prefix(_ipfs_hash)
