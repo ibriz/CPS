@@ -184,6 +184,9 @@ class CPS_Score(IconScoreBase):
         self.swap_block_height.set(self.block_height)
         self.swap_count.set(10)
 
+    def _proposal_key_exists(self, key: str) -> bool:
+        return key in self.proposals_key_list_index
+
     @external(readonly=True)
     def name(self) -> str:
         """
@@ -467,11 +470,11 @@ class CPS_Score(IconScoreBase):
     def _add_proposals(self, _proposal: ProposalAttributes) -> None:
         proposal_data_obj = createProposalDataObject(_proposal)
         ipfs_hash = proposal_data_obj.ipfs_hash
-        if self.proposals_key_list_index[ipfs_hash] == 0:
+        if not self._proposal_key_exists(ipfs_hash):
             self.proposals_key_list.put(ipfs_hash)
             prefix = self.proposal_prefix(ipfs_hash)
             addDataToProposalDB(prefix, self.proposals, proposal_data_obj)
-            self.proposals_key_list_index[ipfs_hash] = len(self.proposals_key_list)
+            self.proposals_key_list_index[ipfs_hash] = len(self.proposals_key_list) - 1
         else:
             revert(f"{TAG} : Proposal Hash Already Exists.")
 
@@ -2034,7 +2037,7 @@ class CPS_Score(IconScoreBase):
         self._validate_admins()
         for _ix in range(0, len(self.proposals_key_list)):
             _ipfs_hash = self.proposals_key_list[_ix]
-            self.proposals_key_list_index[_ipfs_hash] = _ix + 1
+            self.proposals_key_list_index[_ipfs_hash] = _ix
             proposalPrefix = self.proposal_prefix(_ipfs_hash)
             _prefix = self.proposals[proposalPrefix]
             _prefix.token.set(ICX)
