@@ -2096,12 +2096,17 @@ class CPS_Score(IconScoreBase):
                                  f'returned to CPF Treasury Address.')
 
     def _snapshot_delegations(self):
+        max_delegation: int = self.max_delegation.get()
+        old_max_delegation = max_delegation
+
         for preps in self.valid_preps:
             stake = self._get_stake(preps)
             self.delegation_snapshot[preps] = stake
-            max_delegation = self.max_delegation.get()
             if stake > max_delegation:
-                self.max_delegation.set(stake)
+                max_delegation = stake
+
+        if max_delegation > old_max_delegation:
+            self.max_delegation.set(max_delegation)
 
     def _get_max_cap_bnusd(self) -> int:
         cpf_treasury_score = self.create_interface_score(self.cpf_score.get(), CPF_TREASURY_INTERFACE)
