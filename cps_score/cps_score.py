@@ -1980,9 +1980,10 @@ class CPS_Score(IconScoreBase):
     @external
     def remove_denylist_preps(self):
         self._validate_admins()
-        for wallet in self.denylist:
+        size = len(self.denylist)
+        for _ in range(size):
+            wallet: Address = self.denylist.pop()
             self.preps_denylist_status[str(wallet)] = 0
-            self.denylist.pop()
 
     @external
     def claim_sponsor_bond(self) -> None:
