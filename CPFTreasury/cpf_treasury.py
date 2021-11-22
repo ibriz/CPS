@@ -5,7 +5,6 @@ MULTIPLIER = 10 ** 18
 TAG = "CPF_TREASURY"
 ICX = 'ICX'
 BNUSD = 'bnUSD'
-ZERO_WALLET = 'hx0000000000000000000000000000000000000000'
 
 
 class CPS_TREASURY_INTERFACE(InterfaceScore):
@@ -82,7 +81,6 @@ class CPF_TREASURY(IconScoreBase):
     def __init__(self, db: IconScoreDatabase) -> None:
         super().__init__(db)
         self._proposals_keys = ArrayDB(self._PROPOSALS_KEYS, db, value_type=str)
-        self._proposals_keys_index = DictDB(f'{self._PROPOSALS_KEYS}_index', db, value_type=int)
         self._proposal_budgets = DictDB(self._PROPOSAL_BUDGETS, db, value_type=int, depth=1)
 
         self.treasury_fund = VarDB(self.TREASURY_FUND, db, value_type=int)
@@ -109,6 +107,9 @@ class CPF_TREASURY(IconScoreBase):
         self.swap_count.set(0)
         self.treasury_fund_bnusd.set(400_000 * 10 ** 18)
 
+    def _proposal_exists(self, _ipfs_key: str) -> bool:
+        return _ipfs_key in self._proposal_budgets
+
     @external(readonly=True)
     def name(self) -> str:
         return "CPF_TREASURY_SCORE"
@@ -130,14 +131,16 @@ class CPF_TREASURY(IconScoreBase):
     def _validate_cps_score(self, _from: Address = None):
         if _from is None:
             _from = self.msg.sender
-        if _from != self._cps_score.get():
-            revert(f"{TAG} : Only CPS({self._cps_score.get()}) SCORE can send fund using this method.")
+        score_address = self._cps_score.get()
+        if _from != score_address:
+            revert(f"{TAG} : Only CPS({score_address}) SCORE can send fund using this method.")
 
     def _validate_cps_treasury_score(self, _from: Address = None):
         if _from is None:
             _from = self.msg.sender
-        if _from != self._cps_treasury_score.get():
-            revert(f"{TAG} : Only CPS Treasury({self._cps_treasury_score.get()}) "
+        score_address = self._cps_treasury_score.get()
+        if _from != score_address:
+            revert(f"{TAG} : Only CPS Treasury({score_address}) "
                    f"SCORE can send fund using this method.")
 
     @external
@@ -300,9 +303,12 @@ class CPF_TREASURY(IconScoreBase):
         Get total amount of fund on the SCORE
         :return: integer value of amount
         """
-        bnusd_score = self.create_interface_score(self.balanced_dollar.get(), TokenInterface)
         return {ICX: self.icx.get_balance(self.address),
-                BNUSD: bnusd_score.balanceOf(self.address)}
+                BNUSD: self._get_total_fund_bnusd()}
+
+    def _get_total_fund_bnusd(self) -> int:
+        bnusd_score = self.create_interface_score(self.balanced_dollar.get(), TokenInterface)
+        return bnusd_score.balanceOf(self.address)
 
     @external(readonly=True)
     def get_remaining_swap_amount(self) -> dict:
@@ -310,10 +316,9 @@ class CPF_TREASURY(IconScoreBase):
         Get total amount of fund on the SCORE
         :return: integer value of amount
         """
-        total_funds = self.get_total_funds()
         maxCap = self.treasury_fund_bnusd.get()
         return {'maxCap': maxCap,
-                'remainingToSwap': maxCap - total_funds.get(BNUSD)}
+                'remainingToSwap': maxCap - self._get_total_fund_bnusd()}
 
     @external
     @payable
@@ -348,8 +353,7 @@ class CPF_TREASURY(IconScoreBase):
         """
 
         self._validate_cps_score()
-        ix = self._proposals_keys_index[_ipfs_key]
-        if ix != 0:
+        if self._proposal_exists(_ipfs_key):
             revert(f'{TAG}: Project already exists. Invalid IPFS Hash.')
 
         # Calculating sponsor reward for sponsor(2%) and total budget for contributor
@@ -366,7 +370,6 @@ class CPF_TREASURY(IconScoreBase):
             revert(f'{TAG}: {token_flag} is not supported. Only {BNUSD} token available.')
 
         self._proposals_keys.put(_ipfs_key)
-        self._proposals_keys_index[_ipfs_key] = len(self._proposals_keys)
         self._proposal_budgets[_ipfs_key] = total_transfer
 
         # Required Params for the deposit_proposal_fund method for CPS_Treasury Score
@@ -395,6 +398,7 @@ class CPF_TREASURY(IconScoreBase):
         """
         Update the proposal fund after the budget adjustment voting is passed by majority of P-Reps
         :param _ipfs_key: Proposal IPFS Hash Key
+        :param _flag: Token Name
         :param _added_budget: New added Budget
         :param _total_installment_count: Added Month Count
         :return:
@@ -406,7 +410,7 @@ class CPF_TREASURY(IconScoreBase):
         _sponsor_reward = _added_budget * 2 // 100
         total_transfer = _added_budget + _sponsor_reward
 
-        if self._proposals_keys_index[_ipfs_key] == 0:
+        if not self._proposal_exists(_ipfs_key):
             revert(f"{TAG} : IPFS key doesn't exist")
 
         self._proposal_budgets[_ipfs_key] += total_transfer
@@ -452,7 +456,7 @@ class CPF_TREASURY(IconScoreBase):
         """
         self._validate_cps_treasury_score(_from)
 
-        if self._proposals_keys_index[_ipfs_key] == 0:
+        if not self._proposal_exists(_ipfs_key):
             revert(f"{TAG} : IPFS key doesn't exist")
 
         _budget = self._proposal_budgets[_ipfs_key]
@@ -539,12 +543,13 @@ class CPF_TREASURY(IconScoreBase):
             self.swap_state.set(2)
 
         try:
-            if self.swap_state.get() == 0:
+            swap_state = self.swap_state.get()
+            if swap_state == 0:
                 remainingSICXToSwap = (bnUSDRemainingToSwap // sicxBnusdPrice) * 10 ** 18 - sicxBalance
                 self._swap_icx_sicx(dex, remainingSICXToSwap, sicxBalance)
                 self.swap_state.set(1)
                 self.swap_count.set(0)
-            elif self.swap_state.get() == 1:
+            elif swap_state == 1:
                 count_swap = self.swap_count.get()
                 remainingSICXToSwap = (bnUSDRemainingToSwap // (sicxBnusdPrice * (_count - count_swap))) * 10 ** 18
 
@@ -591,7 +596,7 @@ class CPF_TREASURY(IconScoreBase):
                     _sponsor_address = Address.from_string(unpacked_data['params']['sponsor_address'])
                     self.return_fund_amount(_sponsor_address, _from, BNUSD, _value)
                 elif unpacked_data['method'] == 'burn_amount':
-                    self._swap_tokens(self.msg.sender, self.get_sicx_score(), _value)
+                    self._swap_tokens(self.msg.sender, staking, _value)
                 else:
                     revert(f"{TAG}: Not supported method {unpacked_data['method']}")
             if _from == self._cps_treasury_score.get():
@@ -608,10 +613,3 @@ class CPF_TREASURY(IconScoreBase):
 
         else:
             revert(f'{TAG}: Please send fund using add_fund().')
-
-    @external
-    def update_project_index(self):
-        self._validate_admins()
-        for _ix in range(0, len(self._proposals_keys)):
-            _ipfs_hash = self._proposals_keys[_ix]
-            self._proposals_keys_index[_ipfs_hash] = _ix + 1
