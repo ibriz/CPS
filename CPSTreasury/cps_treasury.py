@@ -101,6 +101,9 @@ class CPS_TREASURY(IconScoreBase):
     def on_update(self) -> None:
         super().on_update()
 
+    def _proposal_exists(self, _ipfs_key: str) -> bool:
+        return _ipfs_key in self.proposals_key_list_index
+
     @external(readonly=True)
     def name(self) -> str:
         """
@@ -148,11 +151,11 @@ class CPS_TREASURY(IconScoreBase):
     def _add_record(self, _proposal: ProposalAttributes) -> None:
         proposal_data_obj = createProposalDataObject(_proposal)
         ipfs_hash = proposal_data_obj.ipfs_hash
-        if self.proposals_key_list_index[ipfs_hash] == 0:
+        if not self._proposal_exists(ipfs_hash):
             self._proposals_keys.put(ipfs_hash)
             prefix = self.proposal_prefix(ipfs_hash)
             addDataToProposalDB(prefix, self.proposals, proposal_data_obj)
-            self.proposals_key_list_index[ipfs_hash] = len(self._proposals_keys)
+            self.proposals_key_list_index[ipfs_hash] = len(self._proposals_keys) - 1
 
         else:
             revert(f"{TAG} : Already have this project.")
@@ -255,13 +258,12 @@ class CPS_TREASURY(IconScoreBase):
                         else:
                             _total_amount_to_be_paid_bnusd += _total_budget // _total_installment
 
-        _withdraw_amount_icx = self.installment_fund_record[str(_wallet_address)][ICX]
-        _withdraw_amount_bnusd = self.installment_fund_record[str(_wallet_address)][bnUSD]
+        installment_fund_record = self.installment_fund_record[str(_wallet_address)]
         return {"data": project_details,
                 "project_count": len(project_details),
                 "total_amount": {ICX: _total_amount_to_be_paid_icx, bnUSD: _total_amount_to_be_paid_bnusd},
-                "withdraw_amount_icx": _withdraw_amount_icx,
-                "withdraw_amount_bnusd": _withdraw_amount_bnusd}
+                "withdraw_amount_icx": installment_fund_record[ICX],
+                "withdraw_amount_bnusd": installment_fund_record[bnUSD]}
 
     @external(readonly=True)
     def get_sponsor_projected_fund(self, _wallet_address: Address) -> dict:
@@ -301,14 +303,12 @@ class CPS_TREASURY(IconScoreBase):
                             _total_amount_to_be_paid_bnusd += _total_budget // _total_installment
                             _total_sponsor_bond_bnusd += _deposited_sponsor_bond
 
-        _withdraw_amount_icx = self.installment_fund_record[str(_wallet_address)][ICX]
-        _withdraw_amount_bnusd = self.installment_fund_record[str(_wallet_address)][bnUSD]
-
+        installment_fund_record = self.installment_fund_record[str(_wallet_address)]
         return {"data": projects_details,
                 "project_count": len(projects_details),
                 "total_amount": {ICX: _total_amount_to_be_paid_icx, bnUSD: _total_amount_to_be_paid_bnusd},
-                "withdraw_amount_icx": _withdraw_amount_icx,
-                "withdraw_amount_bnusd": _withdraw_amount_bnusd,
+                "withdraw_amount_icx": installment_fund_record[ICX],
+                "withdraw_amount_bnusd": installment_fund_record[bnUSD],
                 "total_sponsor_bond": {ICX: _total_sponsor_bond_icx, bnUSD: _total_sponsor_bond_bnusd}}
 
     def _deposit_proposal_fund(self, _proposals: ProposalAttributes, _value: int = 0) -> None:
@@ -345,8 +345,7 @@ class CPS_TREASURY(IconScoreBase):
         :return:
         """
 
-        ix = self.proposals_key_list_index[_ipfs_key]
-        if ix == 0:
+        if not self._proposal_exists(_ipfs_key):
             revert(f'{TAG}: Invalid IPFS Hash.')
         prefix = self.proposal_prefix(_ipfs_key)
         _proposal_prefix = self.proposals[prefix]
@@ -380,11 +379,10 @@ class CPS_TREASURY(IconScoreBase):
         """
         self._validate_cps_score()
 
-        ix = self.proposals_key_list_index[_ipfs_key]
-        if ix == 0:
+        if not self._proposal_exists(_ipfs_key):
             revert(f'{TAG}: Invalid IPFS Hash.')
 
-        prefix = self.proposal_prefix(self._proposals_keys[ix])
+        prefix = self.proposal_prefix(_ipfs_key)
         proposal = self.proposals[prefix]
 
         _installment_count: int = proposal.installment_count.get()
@@ -399,7 +397,8 @@ class CPS_TREASURY(IconScoreBase):
                 _installment_amount = remaining_amount
             else:
                 _installment_amount = remaining_amount // _installment_count
-            proposal.installment_count.set(_installment_count - 1)
+            new_installment_count = _installment_count - 1
+            proposal.installment_count.set(new_installment_count)
             proposal.remaining_amount.set(remaining_amount - _installment_amount)
             proposal.withdraw_amount.set(withdraw_amount + _installment_amount)
             self.installment_fund_record[str(contributor_address)][flag] += _installment_amount
@@ -407,7 +406,7 @@ class CPS_TREASURY(IconScoreBase):
             self.ProposalFundSent(contributor_address, f"New installment {_installment_amount} {flag} sent to "
                                                        f"contributors address.")
 
-            if proposal.installment_count.get() == 0:
+            if new_installment_count == 0:
                 proposal.status.set(self._COMPLETED)
 
         except Exception:
@@ -423,11 +422,10 @@ class CPS_TREASURY(IconScoreBase):
         """
         self._validate_cps_score()
 
-        ix = self.proposals_key_list_index[_ipfs_key]
-        if ix == 0:
+        if not self._proposal_exists(_ipfs_key):
             revert(f'{TAG}: Invalid IPFS Hash.')
 
-        prefix = self.proposal_prefix(self._proposals_keys[ix])
+        prefix = self.proposal_prefix(_ipfs_key)
         proposals = self.proposals[prefix]
 
         _sponsor_reward_count: int = proposals.sponsor_reward_count.get()
@@ -442,7 +440,8 @@ class CPS_TREASURY(IconScoreBase):
                 _installment_amount = _sponsor_remaining_amount
             else:
                 _installment_amount = _sponsor_remaining_amount // _sponsor_reward_count
-            proposals.sponsor_reward_count.set(_sponsor_reward_count - 1)
+            new_sponsor_reward_count = _sponsor_reward_count - 1
+            proposals.sponsor_reward_count.set(new_sponsor_reward_count)
             proposals.sponsor_withdraw_amount.set(_sponsor_withdraw_amount + _installment_amount)
             proposals.sponsor_remaining_amount.set(_sponsor_remaining_amount - _installment_amount)
             self.installment_fund_record[str(_sponsor_address)][flag] += _installment_amount
@@ -450,7 +449,7 @@ class CPS_TREASURY(IconScoreBase):
             self.ProposalFundSent(_sponsor_address, f"New installment {_installment_amount} {flag} sent to "
                                                     f"sponsor address.")
 
-            if proposals.sponsor_reward_count.get() == 0:
+            if new_sponsor_reward_count == 0:
                 proposals.status.set(self._COMPLETED)
         except Exception:
             revert(f"{TAG} : Network problem. Sending project funds to sponsor.")
@@ -464,11 +463,10 @@ class CPS_TREASURY(IconScoreBase):
         """
         self._validate_cps_score()
 
-        ix = self.proposals_key_list_index[_ipfs_key]
-        if ix == 0:
+        if not self._proposal_exists(_ipfs_key):
             revert(f'{TAG}: Project not found. Invalid IPFS Hash.')
 
-        prefix = self.proposal_prefix(self._proposals_keys[ix])
+        prefix = self.proposal_prefix(_ipfs_key)
         proposals = self.proposals[prefix]
 
         # Set Proposal status to disqualified
@@ -508,12 +506,13 @@ class CPS_TREASURY(IconScoreBase):
         """
         Claim he reward or the installment amount
         """
-        _available_amount_icx = self.installment_fund_record[str(self.msg.sender)][ICX]
-        _available_amount_bnusd = self.installment_fund_record[str(self.msg.sender)][bnUSD]
+        installment_fund_record = self.installment_fund_record[str(self.msg.sender)]
+        _available_amount_icx = installment_fund_record[ICX]
+        _available_amount_bnusd = installment_fund_record[bnUSD]
         if _available_amount_icx > 0:
             try:
                 # set the remaining fund 0
-                self.installment_fund_record[str(self.msg.sender)][ICX] = 0
+                installment_fund_record[ICX] = 0
 
                 self.icx.transfer(self.msg.sender, _available_amount_icx)
                 self.ProposalFundWithdrawn(self.msg.sender,
@@ -524,7 +523,7 @@ class CPS_TREASURY(IconScoreBase):
         elif _available_amount_bnusd > 0:
             try:
                 # set the remaining fund 0
-                self.installment_fund_record[str(self.msg.sender)][bnUSD] = 0
+                installment_fund_record[bnUSD] = 0
 
                 bnusd_score = self.create_interface_score(self.balanced_dollar.get(), TokenInterface)
                 bnusd_score.transfer(self.msg.sender, _available_amount_bnusd)
@@ -540,9 +539,9 @@ class CPS_TREASURY(IconScoreBase):
     @external
     def update_project_flag(self) -> None:
         self._validate_admins()
-        for _ix in range(0, len(self._proposals_keys)):
+        for _ix in range(len(self._proposals_keys)):
             _ipfs_hash = self._proposals_keys[_ix]
-            self.proposals_key_list_index[_ipfs_hash] = _ix + 1
+            self.proposals_key_list_index[_ipfs_hash] = _ix
             proposalPrefix = self.proposal_prefix(_ipfs_hash)
             _prefix = self.proposals[proposalPrefix]
             _prefix.token.set(ICX)
@@ -551,8 +550,10 @@ class CPS_TREASURY(IconScoreBase):
             sp_address = _prefix.sponsor_address.get()
             if self.installment_fund_record[str(_address)][ICX] == 0:
                 self.installment_fund_record[str(_address)][ICX] = self._fund_record[str(_address)]
+                del self._fund_record[str(_address)]
             if self.installment_fund_record[str(sp_address)][ICX] == 0:
                 self.installment_fund_record[str(sp_address)][ICX] = self._fund_record[str(sp_address)]
+                del self._fund_record[str(sp_address)]
 
     @external
     def tokenFallback(self, _from: Address, _value: int, _data: bytes):
@@ -560,11 +561,12 @@ class CPS_TREASURY(IconScoreBase):
             revert(f'{TAG}: Only Receiving from {self._cpf_treasury_score.get()}, {_from}')
 
         unpacked_data = json_loads(_data.decode('utf-8'))
+        method = unpacked_data["method"]
 
-        if unpacked_data["method"] == "deposit_proposal_fund":
+        if method == "deposit_proposal_fund":
             self._deposit_proposal_fund(unpacked_data["params"], _value)
 
-        elif unpacked_data["method"] == "budget_adjustment":
+        elif method == "budget_adjustment":
             _params = unpacked_data["params"]
             ipfs_key = _params['_ipfs_key']
             added_budget = _params['_added_budget']
@@ -573,4 +575,4 @@ class CPS_TREASURY(IconScoreBase):
 
             self.update_proposal_fund(ipfs_key, added_budget, added_sponsor_reward, added_installment_count)
         else:
-            revert(f'{TAG}: {unpacked_data["method"]} Not a valid method.')
+            revert(f'{TAG}: {method} Not a valid method.')
