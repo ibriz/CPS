@@ -522,6 +522,11 @@ class CPF_TREASURY(IconScoreBase):
         from_score.transfer(self.dex_score.get(), _amount, _data)
 
     @external
+    def swap_sicx_bnusd(self, _amount: int):
+        self._validate_admins()
+        self._swap_tokens(self.get_sicx_score(), self.get_bnusd_score(), _amount)
+
+    @external
     def swap_tokens(self, _count: int) -> None:
         self._validate_cps_score()
         dex = self.create_interface_score(self.dex_score.get(), DEX_INTERFACE)
