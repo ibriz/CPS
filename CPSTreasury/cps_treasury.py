@@ -25,7 +25,7 @@ class CPF_TREASURY_INTERFACE(InterfaceScore):
 
 class CPSScoreInterface(InterfaceScore):
     @interface
-    def get_admins(self) -> list:
+    def is_admin(self, _address: Address) -> bool:
         pass
 
 
@@ -124,8 +124,7 @@ class CPS_TREASURY(IconScoreBase):
 
     def _validate_admins(self):
         cps_score = self.create_interface_score(self._cps_score.get(), CPSScoreInterface)
-        admins = cps_score.get_admins()
-        if self.msg.sender not in admins:
+        if not cps_score.is_admin(self.msg.sender):
             revert(f"{TAG} : Only Admins can call this method.")
 
     def _validate_owner(self):
@@ -358,6 +357,7 @@ class CPS_TREASURY(IconScoreBase):
         _sponsor_remaining_amount: int = _proposal_prefix.sponsor_remaining_amount.get()
         installment_count: int = _proposal_prefix.installment_count.get()
         sponsor_reward_count: int = _proposal_prefix.sponsor_reward_count.get()
+        flag = _proposal_prefix.token.get()
 
         _proposal_prefix.total_budget.set(_total_budget + _added_budget)
         _proposal_prefix.sponsor_reward.set(_sponsor_reward + _added_sponsor_reward)
@@ -367,7 +367,7 @@ class CPS_TREASURY(IconScoreBase):
         _proposal_prefix.installment_count.set(installment_count + _added_installment_count)
         _proposal_prefix.sponsor_reward_count.set(sponsor_reward_count + _added_installment_count)
 
-        self.ProposalFundDeposited(_ipfs_key, f"{_ipfs_key} : Added Budget : {_added_budget} and Added Time: "
+        self.ProposalFundDeposited(_ipfs_key, f"{_ipfs_key} : Added Budget : {_added_budget} {flag} and Added Time: "
                                               f"{_added_installment_count} Successfully")
 
     @external
@@ -404,8 +404,8 @@ class CPS_TREASURY(IconScoreBase):
             proposal.withdraw_amount.set(withdraw_amount + _installment_amount)
             self.installment_fund_record[str(contributor_address)][flag] += _installment_amount
 
-            self.ProposalFundSent(contributor_address, _installment_amount,
-                                  f"New Installment sent to contributors address.")
+            self.ProposalFundSent(contributor_address, f"New installment {_installment_amount} {flag} sent to "
+                                                       f"contributors address.")
 
             if proposal.installment_count.get() == 0:
                 proposal.status.set(self._COMPLETED)
@@ -447,8 +447,8 @@ class CPS_TREASURY(IconScoreBase):
             proposals.sponsor_remaining_amount.set(_sponsor_remaining_amount - _installment_amount)
             self.installment_fund_record[str(_sponsor_address)][flag] += _installment_amount
 
-            self.ProposalFundSent(_sponsor_address, _installment_amount,
-                                  f"New Installment sent to sponsor address.")
+            self.ProposalFundSent(_sponsor_address, f"New installment {_installment_amount} {flag} sent to "
+                                                    f"sponsor address.")
 
             if proposals.sponsor_reward_count.get() == 0:
                 proposals.status.set(self._COMPLETED)
@@ -516,8 +516,9 @@ class CPS_TREASURY(IconScoreBase):
                 self.installment_fund_record[str(self.msg.sender)][ICX] = 0
 
                 self.icx.transfer(self.msg.sender, _available_amount_icx)
-                self.ProposalFundWithdrawn(self.msg.sender, f"{_available_amount_icx} withdrawn to {self.msg.sender}")
-            except Exception as e:
+                self.ProposalFundWithdrawn(self.msg.sender,
+                                           f"{_available_amount_icx} {ICX} withdrawn to {self.msg.sender}")
+            except Exception:
                 revert(f"{TAG} : Network problem while claiming Reward.")
 
         elif _available_amount_bnusd > 0:
@@ -527,7 +528,8 @@ class CPS_TREASURY(IconScoreBase):
 
                 bnusd_score = self.create_interface_score(self.balanced_dollar.get(), TokenInterface)
                 bnusd_score.transfer(self.msg.sender, _available_amount_bnusd)
-                self.ProposalFundWithdrawn(self.msg.sender, f"{_available_amount_bnusd} withdrawn to {self.msg.sender}")
+                self.ProposalFundWithdrawn(self.msg.sender,
+                                           f"{_available_amount_bnusd} {bnUSD} withdrawn to {self.msg.sender}")
             except Exception as e:
                 revert(f"{TAG} : Network problem while claiming Reward. {e}")
 

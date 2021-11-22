@@ -223,6 +223,10 @@ class CPS_Score(IconScoreBase):
         if self.maintenance.get():
             revert(f'{TAG}: Maintenance mode is on. Will resume soon.')
 
+    @external(readonly=True)
+    def is_admin(self, _address: Address) -> bool:
+        return True if _address in self.admins else False
+
     @external
     def toggle_maintenance(self):
         self._validate_admins()
@@ -959,7 +963,7 @@ class CPS_Score(IconScoreBase):
         self.registered_preps.put(_from)
         self.valid_preps.put(_from)
         self._burn(_value, self.balanced_dollar.get())
-        self.PRepPenalty(_from, f"{_value} Penalty Received. P-Rep removed from Denylist.")
+        self.PRepPenalty(_from, f"{_value} {bnUSD} Penalty Received. P-Rep removed from Denylist.")
 
     @external
     def set_initialBlock(self) -> None:
@@ -1672,6 +1676,9 @@ class CPS_Score(IconScoreBase):
                     cpf_treasury_score = self.create_interface_score(self.cpf_score.get(), CPF_TREASURY_INTERFACE)
                     cpf_treasury_score.reset_swap_state()
 
+                    ArrayDBUtils.array_db_clear(self.budget_approvals_list)
+                    ArrayDBUtils.array_db_clear(self.active_proposals)
+
     def _update_application_result(self):
         """
         While Updating from the application period check if there are enough preps (7)
@@ -1858,7 +1865,7 @@ class CPS_Score(IconScoreBase):
                     self.sponsor_bond_return[str(_sponsor_address)][flag] += _sponsor_deposit_amount
                     self.proposals[proposal_prefix].sponsor_deposit_status.set(BOND_RETURNED)
                     self.SponsorBondReturned(_sponsor_address,
-                                             f"{_sponsor_deposit_amount} returned to sponsor address.")
+                                             f"{_sponsor_deposit_amount} {flag} returned to sponsor address.")
 
                 elif _proposal_status == self._PAUSED:
                     self._update_proposal_status(_ipfs_hash, self._ACTIVE)
@@ -2005,7 +2012,7 @@ class CPS_Score(IconScoreBase):
 
                 self.icx.transfer(self.msg.sender, _available_amount_icx)
                 self.SponsorBondClaimed(self.msg.sender, _available_amount_icx,
-                                        f"{_available_amount_icx} withdrawn to {self.msg.sender}")
+                                        f"{_available_amount_icx} {ICX} withdrawn to {self.msg.sender}")
             except Exception as e:
                 revert(f"{TAG} : Network problem. Claiming sponsor bond. {e}")
 
@@ -2017,7 +2024,7 @@ class CPS_Score(IconScoreBase):
                 bnusd_score = self.create_interface_score(self.balanced_dollar.get(), TokenInterface)
                 bnusd_score.transfer(self.msg.sender, _available_amount_bnusd)
                 self.SponsorBondClaimed(self.msg.sender, _available_amount_bnusd,
-                                        f"{_available_amount_bnusd} withdrawn to {self.msg.sender}")
+                                        f"{_available_amount_bnusd} {bnUSD} withdrawn to {self.msg.sender}")
             except Exception as e:
                 revert(f"{TAG} : Network problem. Claiming sponsor bond. {e}")
 
@@ -2098,7 +2105,7 @@ class CPS_Score(IconScoreBase):
         else:
             revert(f'{TAG}: Not supported token {flag}. ')
         self.SponsorBondReturned(cpf_score_address,
-                                 f'Project Disqualified. {_sponsor_deposit_amount} '
+                                 f'Project Disqualified. {_sponsor_deposit_amount} {flag}'
                                  f'returned to CPF Treasury Address.')
 
     def _snapshot_delegations(self):
@@ -2132,3 +2139,13 @@ class CPS_Score(IconScoreBase):
 
         sponsor_deposit = details.get(SPONSOR_DEPOSIT_AMOUNT)
         self._sponsor_bond_return[str(self.msg.sender)] += sponsor_deposit
+
+    @external
+    def set_swap_count(self, _value: int):
+        self._validate_admins()
+        self.swap_count.set(_value)
+
+    @external
+    def update_next_block(self, _block_count: int):
+        self._validate_admins()
+        self.next_block.set(self.block_height + _block_count)

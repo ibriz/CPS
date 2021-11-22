@@ -19,7 +19,7 @@ class CPS_TREASURY_INTERFACE(InterfaceScore):
 
 class CPSScoreInterface(InterfaceScore):
     @interface
-    def get_admins(self) -> list:
+    def is_admin(self, _address:Address) -> bool:
         pass
 
 
@@ -115,8 +115,7 @@ class CPF_TREASURY(IconScoreBase):
 
     def _validate_admins(self):
         cps_score = self.create_interface_score(self._cps_score.get(), CPSScoreInterface)
-        admins = cps_score.get_admins()
-        if self.msg.sender not in admins:
+        if not cps_score.is_admin(self.msg.sender):
             revert(f"{TAG} : Only Admins can call this method.")
 
     def _validate_owner(self):
@@ -434,7 +433,7 @@ class CPF_TREASURY(IconScoreBase):
                 bnusd_score.transfer(self._cps_treasury_score.get(), total_transfer, _data)
             else:
                 revert(f'{TAG}: {_flag} is not supported.')
-            self.ProposalFundTransferred(_ipfs_key, f"Successfully transferred {total_transfer} to CPS Treasury")
+            self.ProposalFundTransferred(_ipfs_key, f"Successfully transferred {total_transfer} {_flag} to CPS Treasury")
         except BaseException as e:
             revert(f"{TAG} : Network problem. Sending proposal funds. {e}")
 
@@ -464,7 +463,7 @@ class CPF_TREASURY(IconScoreBase):
             self._proposal_budgets[_ipfs_key] = _budget - _value
 
         self._burn_extra_fund()
-        self.ProposalDisqualified(_ipfs_key, f"Proposal disqualified. {_value} returned back to Treasury")
+        self.ProposalDisqualified(_ipfs_key, f"Proposal disqualified. {_value} {_flag} is returned back to Treasury")
 
     @external
     @payable
@@ -474,7 +473,7 @@ class CPF_TREASURY(IconScoreBase):
         :return:
         """
         self._burn_extra_fund()
-        self.FundReceived(self.msg.sender, f"Treasury Fund {self.msg.value} Received.")
+        self.FundReceived(self.msg.sender, f"Treasury Fund {self.msg.value} {ICX} Received.")
 
     def _burn_extra_fund(self):
         """
@@ -521,6 +520,11 @@ class CPF_TREASURY(IconScoreBase):
         from_score = self.create_interface_score(_from, TokenInterface)
         _data = json_dumps({"method": "_swap", "params": {"toToken": str(_to)}}).encode("utf-8")
         from_score.transfer(self.dex_score.get(), _amount, _data)
+
+    @external
+    def swap_sicx_bnusd(self, _amount: int):
+        self._validate_admins()
+        self._swap_tokens(self.get_sicx_score(), self.get_bnusd_score(), _amount)
 
     @external
     def swap_tokens(self, _count: int) -> None:

@@ -10,7 +10,7 @@ class ProposalData(object):
         self.project_duration = VarDB('project_duration', db, value_type=int)
         self.sponsor_address = VarDB('sponsor_address', db, value_type=Address)
         self.contributor_address = VarDB('contributor_address', db, value_type=Address)
-        self.token = VarDB('token', db, str)
+        self.token = VarDB('token', db, value_type=str)
 
         self.withdraw_amount = VarDB('withdraw_amount', db, value_type=int)
         self.sponsor_withdraw_amount = VarDB('sponsor_withdraw_amount', db, value_type=int)
