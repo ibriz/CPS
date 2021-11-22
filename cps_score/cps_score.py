@@ -957,7 +957,7 @@ class CPS_Score(IconScoreBase):
         self.registered_preps.put(_from)
         self.valid_preps.put(_from)
         self._burn(_value, self.balanced_dollar.get())
-        self.PRepPenalty(_from, f"{_value} Penalty Received. P-Rep removed from Denylist.")
+        self.PRepPenalty(_from, f"{_value} {bnUSD} Penalty Received. P-Rep removed from Denylist.")
 
     @external
     def set_initialBlock(self) -> None:
@@ -1856,7 +1856,7 @@ class CPS_Score(IconScoreBase):
                     self.sponsor_bond_return[str(_sponsor_address)][flag] += _sponsor_deposit_amount
                     self.proposals[proposal_prefix].sponsor_deposit_status.set(BOND_RETURNED)
                     self.SponsorBondReturned(_sponsor_address,
-                                             f"{_sponsor_deposit_amount} returned to sponsor address.")
+                                             f"{_sponsor_deposit_amount} {flag} returned to sponsor address.")
 
                 elif _proposal_status == self._PAUSED:
                     self._update_proposal_status(_ipfs_hash, self._ACTIVE)
@@ -2003,7 +2003,7 @@ class CPS_Score(IconScoreBase):
 
                 self.icx.transfer(self.msg.sender, _available_amount_icx)
                 self.SponsorBondClaimed(self.msg.sender, _available_amount_icx,
-                                        f"{_available_amount_icx} withdrawn to {self.msg.sender}")
+                                        f"{_available_amount_icx} {ICX} withdrawn to {self.msg.sender}")
             except Exception as e:
                 revert(f"{TAG} : Network problem. Claiming sponsor bond. {e}")
 
@@ -2015,7 +2015,7 @@ class CPS_Score(IconScoreBase):
                 bnusd_score = self.create_interface_score(self.balanced_dollar.get(), TokenInterface)
                 bnusd_score.transfer(self.msg.sender, _available_amount_bnusd)
                 self.SponsorBondClaimed(self.msg.sender, _available_amount_bnusd,
-                                        f"{_available_amount_bnusd} withdrawn to {self.msg.sender}")
+                                        f"{_available_amount_bnusd} {bnUSD} withdrawn to {self.msg.sender}")
             except Exception as e:
                 revert(f"{TAG} : Network problem. Claiming sponsor bond. {e}")
 
@@ -2091,7 +2091,7 @@ class CPS_Score(IconScoreBase):
         else:
             revert(f'{TAG}: Not supported token {flag}. ')
         self.SponsorBondReturned(self.cpf_score.get(),
-                                 f'Project Disqualified. {_sponsor_deposit_amount} '
+                                 f'Project Disqualified. {_sponsor_deposit_amount} {flag}'
                                  f'returned to CPF Treasury Address.')
 
     def _snapshot_delegations(self):

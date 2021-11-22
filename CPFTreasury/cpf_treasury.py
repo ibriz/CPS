@@ -433,7 +433,7 @@ class CPF_TREASURY(IconScoreBase):
                 bnusd_score.transfer(self._cps_treasury_score.get(), total_transfer, _data)
             else:
                 revert(f'{TAG}: {_flag} is not supported.')
-            self.ProposalFundTransferred(_ipfs_key, f"Successfully transferred {total_transfer} to CPS Treasury")
+            self.ProposalFundTransferred(_ipfs_key, f"Successfully transferred {total_transfer} {_flag} to CPS Treasury")
         except BaseException as e:
             revert(f"{TAG} : Network problem. Sending proposal funds. {e}")
 
@@ -463,7 +463,7 @@ class CPF_TREASURY(IconScoreBase):
             self._proposal_budgets[_ipfs_key] = _budget - _value
 
         self._burn_extra_fund()
-        self.ProposalDisqualified(_ipfs_key, f"Proposal disqualified. {_value} returned back to Treasury")
+        self.ProposalDisqualified(_ipfs_key, f"Proposal disqualified. {_value} {_flag} is returned back to Treasury")
 
     @external
     @payable
@@ -473,7 +473,7 @@ class CPF_TREASURY(IconScoreBase):
         :return:
         """
         self._burn_extra_fund()
-        self.FundReceived(self.msg.sender, f"Treasury Fund {self.msg.value} Received.")
+        self.FundReceived(self.msg.sender, f"Treasury Fund {self.msg.value} {ICX} Received.")
 
     def _burn_extra_fund(self):
         """
