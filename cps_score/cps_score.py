@@ -1670,6 +1670,9 @@ class CPS_Score(IconScoreBase):
                     cpf_treasury_score = self.create_interface_score(self.cpf_score.get(), CPF_TREASURY_INTERFACE)
                     cpf_treasury_score.reset_swap_state()
 
+                    ArrayDBUtils.array_db_clear(self.budget_approvals_list)
+                    ArrayDBUtils.array_db_clear(self.active_proposals)
+
     def _update_application_result(self):
         """
         While Updating from the application period check if there are enough preps (7)
