@@ -334,7 +334,9 @@ class CPF_TREASURY(IconScoreBase):
 
         self._validate_cps_score(_from)
         self._burn_extra_fund()
-        self.FundReturned(_address, "Sponsor Bond Returned to Treasury.")
+        if _flag == ICX:
+            _value = self.msg.value
+        self.FundReturned(_address, f"Sponsor Bond amount {_value} {_flag} Returned to CPFTreasury.")
 
     @external
     def transfer_proposal_fund_to_cps_treasury(self, _ipfs_key: str, _total_installment_count: int,
