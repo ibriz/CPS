@@ -19,7 +19,7 @@ class CPS_TREASURY_INTERFACE(InterfaceScore):
 
 class CPSScoreInterface(InterfaceScore):
     @interface
-    def get_admins(self) -> list:
+    def is_admin(self, _address:Address) -> bool:
         pass
 
 
@@ -115,8 +115,7 @@ class CPF_TREASURY(IconScoreBase):
 
     def _validate_admins(self):
         cps_score = self.create_interface_score(self._cps_score.get(), CPSScoreInterface)
-        admins = cps_score.get_admins()
-        if self.msg.sender not in admins:
+        if not cps_score.is_admin(self.msg.sender):
             revert(f"{TAG} : Only Admins can call this method.")
 
     def _validate_owner(self):

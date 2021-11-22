@@ -217,6 +217,10 @@ class CPS_Score(IconScoreBase):
         if self.maintenance.get():
             revert(f'{TAG}: Maintenance mode is on. Will resume soon.')
 
+    @external(readonly=True)
+    def is_admin(self, _address: Address) -> bool:
+        return True if _address in self.admins else False
+
     @external
     def toggle_maintenance(self):
         self._validate_admins()
