@@ -343,8 +343,12 @@ class CPS_Score(IconScoreBase):
 
         _all_preps = self.system_score.getPRepTerm()['preps']
         for _prep in range(0, len(_all_preps)):
-            if _all_preps[_prep]['address'] == _address:
-                return _all_preps[_prep]['delegated']
+            prep_info = _all_preps[_prep]
+            if prep_info['address'] == _address:
+                if 'votingPower' in prep_info:
+                    return prep_info['votingPower']
+                else:
+                    return prep_info['delegated']
 
     def set_PReps(self) -> None:
         """
