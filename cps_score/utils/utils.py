@@ -4,7 +4,8 @@ from iconservice import *
 class ArrayDBUtils:
     @staticmethod
     def array_db_clear(array: ArrayDB) -> None:
-        while array:
+        size = len(array)
+        for _ in range(size):
             array.pop()
 
     @staticmethod

@@ -184,6 +184,12 @@ class CPS_Score(IconScoreBase):
         self.swap_block_height.set(self.block_height)
         self.swap_count.set(10)
 
+    def _proposal_key_exists(self, key: str) -> bool:
+        return key in self.proposals_key_list_index
+
+    def _progress_key_exists(self, key: str) -> bool:
+        return key in self.progress_key_list_index
+
     @external(readonly=True)
     def name(self) -> str:
         """
@@ -471,11 +477,11 @@ class CPS_Score(IconScoreBase):
     def _add_proposals(self, _proposal: ProposalAttributes) -> None:
         proposal_data_obj = createProposalDataObject(_proposal)
         ipfs_hash = proposal_data_obj.ipfs_hash
-        if self.proposals_key_list_index[ipfs_hash] == 0:
+        if not self._proposal_key_exists(ipfs_hash):
             self.proposals_key_list.put(ipfs_hash)
             prefix = self.proposal_prefix(ipfs_hash)
             addDataToProposalDB(prefix, self.proposals, proposal_data_obj)
-            self.proposals_key_list_index[ipfs_hash] = len(self.proposals_key_list)
+            self.proposals_key_list_index[ipfs_hash] = len(self.proposals_key_list) - 1
         else:
             revert(f"{TAG} : Proposal Hash Already Exists.")
 
@@ -487,7 +493,7 @@ class CPS_Score(IconScoreBase):
     def _add_new_progress_report_key(self, proposal_key: str, progress_key: str) -> None:
         self.progress_key_list.put(progress_key)
         prefix = self.proposal_prefix(proposal_key)
-        if proposal_key not in self.proposals[prefix].progress_reports:
+        if progress_key not in self.proposals[prefix].progress_reports:
             self.proposals[prefix].progress_reports.put(progress_key)
         else:
             revert(f"{TAG}: Progress report {progress_key} already exists.")
@@ -504,11 +510,11 @@ class CPS_Score(IconScoreBase):
     def _add_progress_report(self, _progress_report: ProgressReportAttributes) -> None:
         progress_report_obj = createProgressDataObject(_progress_report)
         report_hash = progress_report_obj.report_hash
-        if self.progress_key_list_index[report_hash] == 0:
+        if not self._progress_key_exists(report_hash):
             self._add_new_progress_report_key(progress_report_obj.ipfs_hash, report_hash)
             prefix = self.progress_report_prefix(report_hash)
             addDataToProgressReportDB(prefix, self.progress_reports, progress_report_obj)
-            self.progress_key_list_index[report_hash] = len(self.progress_key_list)
+            self.progress_key_list_index[report_hash] = len(self.progress_key_list) - 1
         else:
             revert(f"{TAG} : Report Hash Already Exists.")
 
@@ -772,10 +778,10 @@ class CPS_Score(IconScoreBase):
                 _index = voter_index_db['index']
                 vote_index = voter_index_db['vote']
                 proposals_prefix_.voters_reasons[_index - 1] = _vote_reason.encode()
-                if vote_index == 1:
+                if vote_index == APPROVE_:
                     ArrayDBUtils.remove_array_item(proposals_prefix_.approve_voters, self.msg.sender)
                     proposals_prefix_.approved_votes.set(_approved_votes - _voter_stake)
-                elif vote_index == 2:
+                elif vote_index == REJECT_:
                     ArrayDBUtils.remove_array_item(proposals_prefix_.reject_voters, self.msg.sender)
                     proposals_prefix_.rejected_votes.set(_rejected_votes - _voter_stake)
 
@@ -1354,7 +1360,7 @@ class CPS_Score(IconScoreBase):
         :return : List of all progress report with status
         :rtype : dict
         """
-        if self.progress_key_list_index[_report_key] == 0:
+        if not self._progress_key_exists(_report_key):
             return {"message": f"{TAG} : Not a valid IPFS Hash for Progress Report"}
 
         progressDetails = self._get_progress_reports_details(_report_key)
@@ -1896,7 +1902,6 @@ class CPS_Score(IconScoreBase):
         :return:
         """
         cps_treasury_score = self.create_interface_score(self.cps_treasury_score.get(), CPS_TREASURY_INTERFACE)
-        cpf_treasury_score = self.create_interface_score(self.cpf_score.get(), CPF_TREASURY_INTERFACE)
 
         for _ipfs_hash in self.active_proposals:
             proposalPrefix = self.proposal_prefix(_ipfs_hash)
@@ -1988,9 +1993,10 @@ class CPS_Score(IconScoreBase):
     @external
     def remove_denylist_preps(self):
         self._validate_admins()
-        for wallet in self.denylist:
+        size = len(self.denylist)
+        for _ in range(size):
+            wallet: Address = self.denylist.pop()
             self.preps_denylist_status[str(wallet)] = 0
-            self.denylist.pop()
 
     @external
     def claim_sponsor_bond(self) -> None:
@@ -2041,12 +2047,13 @@ class CPS_Score(IconScoreBase):
         self._validate_admins()
         for _ix in range(0, len(self.proposals_key_list)):
             _ipfs_hash = self.proposals_key_list[_ix]
-            self.proposals_key_list_index[_ipfs_hash] = _ix + 1
+            self.proposals_key_list_index[_ipfs_hash] = _ix
             proposalPrefix = self.proposal_prefix(_ipfs_hash)
             _prefix = self.proposals[proposalPrefix]
             _prefix.token.set(ICX)
             sponsor_ = _prefix.sponsor_address.get()
             self.sponsor_bond_return[str(sponsor_)][ICX] = self._sponsor_bond_return[str(sponsor_)]
+            del self._sponsor_bond_return[str(sponsor_)]
 
     @external
     def update_progress_report_index(self):
@@ -2057,7 +2064,7 @@ class CPS_Score(IconScoreBase):
         self._validate_admins()
         for _ix in range(0, len(self.progress_key_list)):
             _ipfs_hash = self.progress_key_list[_ix]
-            self.progress_key_list_index[_ipfs_hash] = _ix + 1
+            self.progress_key_list_index[_ipfs_hash] = _ix
 
     @external
     def tokenFallback(self, _from: Address, _value: int, _data: bytes):
@@ -2070,40 +2077,49 @@ class CPS_Score(IconScoreBase):
         if self.msg.sender != bnusd:
             revert(f'{TAG}: Only {bnusd} can send {bnUSD} tokens to this contract.')
 
-        if unpacked_data["method"] == "sponsor_vote":
-            _ipfs_hash = unpacked_data["params"][IPFS_HASH]
-            _vote = unpacked_data["params"][VOTE]
-            _vote_reason = unpacked_data["params"][VOTE_REASON]
+        method = unpacked_data["method"]
+        params = unpacked_data["params"]
+
+        if method == "sponsor_vote":
+            _ipfs_hash = params[IPFS_HASH]
+            _vote = params[VOTE]
+            _vote_reason = params[VOTE_REASON]
 
             self._sponsor_vote(_ipfs_hash, _vote, _vote_reason, _from, _value)
 
-        elif unpacked_data["method"] == "pay_prep_penalty":
+        elif method == "pay_prep_penalty":
             self._pay_prep_penalty(_from, _value)
         else:
             revert(f'{TAG}: Token not received.')
 
     def _disqualify_project(self, _sponsor_address: Address, _sponsor_deposit_amount: int, flag: str):
-        cpf_treasury_score = self.create_interface_score(self.cpf_score.get(), CPF_TREASURY_INTERFACE)
+        cpf_score_address: Address = self.cpf_score.get()
+        cpf_treasury_score = self.create_interface_score(cpf_score_address, CPF_TREASURY_INTERFACE)
         if flag == ICX:
             cpf_treasury_score.icx(_sponsor_deposit_amount).return_fund_amount(_sponsor_address)
         elif flag == bnUSD:
             _data = json_dumps({"method": "return_fund_amount",
                                 "params": {"sponsor_address": str(_sponsor_address)}}).encode()
             bnusd_score = self.create_interface_score(self.balanced_dollar.get(), TokenInterface)
-            bnusd_score.transfer(self.cpf_score.get(), _sponsor_deposit_amount, _data)
+            bnusd_score.transfer(cpf_score_address, _sponsor_deposit_amount, _data)
         else:
             revert(f'{TAG}: Not supported token {flag}. ')
-        self.SponsorBondReturned(self.cpf_score.get(),
+        self.SponsorBondReturned(cpf_score_address,
                                  f'Project Disqualified. {_sponsor_deposit_amount} {flag}'
                                  f'returned to CPF Treasury Address.')
 
     def _snapshot_delegations(self):
+        max_delegation: int = self.max_delegation.get()
+        old_max_delegation = max_delegation
+
         for preps in self.valid_preps:
             stake = self._get_stake(preps)
             self.delegation_snapshot[preps] = stake
-            max_delegation = self.max_delegation.get()
             if stake > max_delegation:
-                self.max_delegation.set(stake)
+                max_delegation = stake
+
+        if max_delegation > old_max_delegation:
+            self.max_delegation.set(max_delegation)
 
     def _get_max_cap_bnusd(self) -> int:
         cpf_treasury_score = self.create_interface_score(self.cpf_score.get(), CPF_TREASURY_INTERFACE)
