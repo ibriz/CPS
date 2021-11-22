@@ -2120,3 +2120,13 @@ class CPS_Score(IconScoreBase):
 
         sponsor_deposit = details.get(SPONSOR_DEPOSIT_AMOUNT)
         self._sponsor_bond_return[str(self.msg.sender)] += sponsor_deposit
+
+    @external
+    def set_swap_count(self, _value: int):
+        self._validate_admins()
+        self.swap_count.set(_value)
+
+    @external
+    def update_next_block(self, _block_count: int):
+        self._validate_admins()
+        self.next_block.set(self.block_height + _block_count)
