@@ -65,9 +65,9 @@ const HeaderComponents = ({
   }, [userDataSubmitSuccess, previousEmail, email]);
 
   useEffect(() => {
-    if (address && loginButtonClicked) {
-      history.push('/dashboard');
-    }
+    // if (address && loginButtonClicked) {
+    //   history.push('/dashboard');
+    // }
     if (address && loginButtonClicked && initialPromptRedux) {
       setLoginButtonClicked({
         click: false,
