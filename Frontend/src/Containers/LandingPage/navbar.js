@@ -13,8 +13,6 @@ import { withRouter } from 'react-router-dom';
 
 
 const Navbar = props => {
-    console.log(props);
-
     const [
         emailConfirmationModalShow,
         setEmailConfirmationModal,
@@ -92,71 +90,6 @@ const Navbar = props => {
     const [isOpened, setIsOpened] = useState(false);
     const [activeTabRight, setActiveTabRight] = useState('');
     const [clickedLogin, setClickedLogin] = useState(false);
-
-
-
-    const [visibleSection, setVisibleSection] = useState();
-
-
-    // useEffect(() => {
-    //     const scrollSection = document.querySelectorAll('.scrollSection')
-    //     console.log("Scroll", scrollSection);
-
-    //     const handleScroll = () => {
-    //         let current = '';
-    //         scrollSection.forEach((section, index) => {
-    //             const sectionTop = section.offsetTop;
-    //             const sectionHeight = section.clientHeight;
-    //             if (window.pageYOffset >= (sectionTop)) {
-    //                 console.log("Scroll", section)
-    //                 current = section.getAttribute("id");
-    //                 // break;
-    //             }
-    //         })
-    //         if (['description', 'grantProcess', 'faq', 'contact'].includes(current)) {
-    //             setActiveTabCenter(current);
-    //         }
-    //         console.log("Scroll test", current);
-    //     };
-
-    //     let options = {
-    //         root: document.querySelector('.landingPage'),
-    //         rootMargin: '0px',
-    //         threshold: 0
-    //     }
-
-    //     let callback = (entries, observer) => {
-    //         console.log("Scroll", entries);
-    //         setActiveTabCenter('')
-    //         entries.forEach(entry => {
-    //             if (entry.isIntersecting) {
-    //                 setActiveTabCenter(entry.target.id)
-    //             }
-
-    //             // Each entry describes an intersection change for one observed
-    //             // target element:
-    //             //   entry.boundingClientRect
-    //             //   entry.intersectionRatio
-    //             //   entry.intersectionRect
-    //             //   entry.isIntersecting
-    //             //   entry.rootBounds
-    //             //   entry.target
-    //             //   entry.time
-    //         });
-    //     };
-    //     let observer = new IntersectionObserver(callback, options);
-    //     let target = document.querySelector('#faq');
-    //     let target1 = document.querySelector('#description');
-    //     let target2 = document.querySelector('#grantProcess');
-    //     let target3 = document.querySelector('#footer');
-    //     observer.observe(target);
-    //     observer.observe(target1);
-    //     observer.observe(target2);
-    //     observer.observe(target3);
-    //     // document.querySelector('.landingPage').addEventListener('scroll', handleScroll);
-    //     // return () => document.querySelector('.landingPage').removeEventListener('scroll', handleScroll);
-
-    // }, [])
 
     if (clickedLogin && walletAddress) {
         return <Redirect to="/dashboard" />
