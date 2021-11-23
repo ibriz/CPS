@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { IconConverter } from 'icon-sdk-js';
 
 const initialState = {
-  cpfRemainingFunds: 0,
+  cpfRemainingFunds: { icx: 0, bnUSD: 0 },
   cpfScoreAddress: null,
 
   cpsTreasuryScoreAddress: null,
