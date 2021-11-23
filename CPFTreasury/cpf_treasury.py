@@ -598,6 +598,16 @@ class CPF_TREASURY(IconScoreBase):
         if sicxBalance < remainingSICXToSwap:
             self.icx.transfer(self.staking_score.get(), icxSicxBalance * 120 // 100)
 
+    @external(readonly=True)
+    def get_swap_state_status(self) -> dict:
+        """
+
+        :return: Swap state and swap count status of current running period
+        """
+
+        return {"state": self.swap_state.get(),
+                "count": self.swap_count.get()}
+
     @external
     def reset_swap_state(self):
         """
