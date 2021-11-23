@@ -39,22 +39,14 @@ const UpperCard = ({
     text = null;
     button = null;
   } else {
-    button = period !== 'VOTING' ? (
-      <Popup
-        component={
-          <Button style={{ 'pointer-events': 'none' }} title="New proposals disabled until ICON 2.0" disabled="disabled" variant='info' className={styles.createProposalButton} >
-            CREATE NEW PROPOSAL
-          </Button>
-        }
-        popOverText='New proposals disabled until ICON 2.0'
-        placement='left' />
-    ) : (
+    button = (
       <Link to='/newProposal'>
-        <Button style={{ cursor: 'pointer' }} variant='info' className={styles.createProposalButton}>
-          CREATE PROPOSAL DRAFT
+        <Button variant='info' className={styles.createProposalButton}>
+          {period !== 'VOTING'
+            ? 'CREATE NEW PROPOSAL'
+            : 'CREATE PROPOSAL DRAFT'}
         </Button>
       </Link>);
-
     // text = <span className={styles.proposalNumber}>{numberOfSubmittedProposals} Proposals submitted</span>
 
     text = (

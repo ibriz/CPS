@@ -16,6 +16,9 @@ const DescriptionTitle = styled.div`
 `;
 
 const Description = ({ description, title = 'DESCRIPTION' }) => {
+  description = description.replace('<a ', (match) => {
+    return match + ' target="_blank"';
+  })
   return (
     <>
       <DescriptionTitle>{title}</DescriptionTitle>

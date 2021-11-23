@@ -159,8 +159,8 @@ export function signTransaction(walletAddress) {
         });
         return;
       }
-    };    
-    
+    };
+
     interFunctionHandle = setInterval(interFunction, 100);
   });
 }

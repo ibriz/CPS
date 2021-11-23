@@ -65,9 +65,9 @@ const HeaderComponents = ({
   }, [userDataSubmitSuccess, previousEmail, email]);
 
   useEffect(() => {
-    if (address && loginButtonClicked) {
-      history.push('/dashboard');
-    }
+    // if (address && loginButtonClicked) {
+    //   history.push('/dashboard');
+    // }
     if (address && loginButtonClicked && initialPromptRedux) {
       setLoginButtonClicked({
         click: false,
@@ -135,7 +135,7 @@ const HeaderComponents = ({
             className={styles.button}
             style={{ marginRight: '5px', marginLeft: '3px' }}
           >
-            GO TO CONSOLE
+            GO TO DASHBOARD
           </Button>
         </Link>
       ) : null}

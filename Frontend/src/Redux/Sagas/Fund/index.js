@@ -5,3 +5,4 @@ export { default as fetchCPSTreasuryScoreAddressWorker } from './fetchCPSTreasur
 export { default as claimRewardWorker } from './claimRewardWorker';
 export { default as fetchSponsorBondWorker } from './fetchSponsorBondWorker';
 export { default as claimSponsorBondWorker } from './claimSponsorBondWorker ';
+export { default as fetchbnUSDAddressWorker } from './fetchbnUSDAddressWorker';

@@ -140,6 +140,8 @@ const initialState = {
   progressReportByProposal: [],
   remainingVotes: [],
   selectedProgressReport: {},
+  ipfsError: '',
+  changeVote: false
 };
 
 const proposalSlice = createSlice({
@@ -220,14 +222,15 @@ const proposalSlice = createSlice({
       state.progressReportDetail = action.payload.response;
     },
 
-    fetchProgressReportDetailFailure() {
-      return;
+    fetchProgressReportDetailFailure(state) {
+      state.ipfsError = true;
     },
     emptyProgressReportDetailRequest() {
       return;
     },
     emptyProgressReportDetailSuccess(state) {
       delete state.progressReportDetail;
+      state.ifpsError = '';
       state.selectedProgressReport = {};
     },
     emptyProposalReportDetailFailure() {
@@ -499,6 +502,22 @@ const proposalSlice = createSlice({
     fetchProgressReportByIpfsFailure(state) {
       return;
     },
+    fetchChangeVoteRequestProgressReport(state) {
+      return;
+    },
+    fetchChangeVoteSuccess(state, action) {
+      const status = Number(action.payload.response);
+      if (!status) {
+        state.changeVote = true;
+      }
+      else {
+        state.changeVote = false;
+      }
+    },
+    fetchChangeVoteFailure(state) {
+      state.changeVote = false;
+      return
+    }
   },
 });
 
@@ -537,5 +556,8 @@ export const {
   emptyProgressReportDetailRequest,
   emptyProgressReportDetailSuccess,
   emptyProposalReportDetailFailure,
+  fetchChangeVoteRequestProgressReport,
+  fetchChangeVoteSuccess,
+  fetchChangeVoteFailure
 } = proposalSlice.actions;
 export default proposalSlice.reducer;

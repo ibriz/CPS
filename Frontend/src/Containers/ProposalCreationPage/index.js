@@ -154,16 +154,16 @@ const ProposalCreationPage = ({
       document
         .getElementById('totalBudget')
         .setCustomValidity(
-          `Enter Total Budget between 0 and remaining CPF Fund (currently ${cpfRemainingFunds} ICX)`,
+          `Enter Total Budget between 0 and remaining CPF Fund (currently ${cpfRemainingFunds?.bnUSD?.toFixed(2)} bnUSD)`, 
         );
     } else if (
       proposal.totalBudget < 0 ||
-      proposal.totalBudget > parseInt(cpfRemainingFunds)
+      proposal.totalBudget > parseInt(cpfRemainingFunds?.bnUSD)
     ) {
       document
         .getElementById('totalBudget')
         .setCustomValidity(
-          `Total Budget should be between 0 and CPF remaining Fund (currently  ${cpfRemainingFunds} ICX)`,
+          `Total Budget should be between 0 and CPF remaining Fund (currently  ${cpfRemainingFunds?.bnUSD?.toFixed(2)} bnUSD)`,
         );
     } else {
       document.getElementById('totalBudget').setCustomValidity('');
@@ -276,7 +276,7 @@ const ProposalCreationPage = ({
 
   const handleSubmit = event => {
     event.preventDefault();
-    setSubmissionConfirmationShow(false);
+    setSubmissionConfirmationShow(true);
   };
 
   const onClickSaveDraft = () => {
@@ -424,7 +424,7 @@ const ProposalCreationPage = ({
               <Form.Label column sm='2' className={styles.labelSameLine}>
                 Project Duration
                 <span className={styles.required}></span>
-                {/* <InfoIcon description="The expected time (in months) to complete the project (can be upto 6 months)" /> */}
+                {/* <InfoIcon description="The expected time (in months) to complete the project (can be upto 12 months)" /> */}
               </Form.Label>
               <Col sm='4' className={styles.inputSameLine}>
                 <InputGroup size='md'>
@@ -436,7 +436,7 @@ const ProposalCreationPage = ({
                     id='projectDuration'
                     onChange={handleChange}
                     min={0}
-                    max={6}
+                    max={12}
                     required
                   />
                   <InputGroup.Append>
@@ -457,7 +457,7 @@ const ProposalCreationPage = ({
                   <FormControl
                     placeholder='Total Budget'
                     min={0}
-                    max={parseInt(cpfRemainingFunds)}
+                    max={parseInt(cpfRemainingFunds?.bnUSD)}
                     type='number'
                     value={proposal.totalBudget}
                     name='totalBudget'
@@ -467,7 +467,7 @@ const ProposalCreationPage = ({
                     required
                   />
                   <InputGroup.Append>
-                    <InputGroup.Text>ICX</InputGroup.Text>
+                    <InputGroup.Text>bnUSD</InputGroup.Text>
                   </InputGroup.Append>
                 </InputGroup>
               </Col>
@@ -697,14 +697,17 @@ const ProposalCreationPage = ({
               </Col>
               <Col className={styles.saveButton}>
                 {period !== 'VOTING' ? (
-                  <Popup
-                    component={
-                      <Button variant='info' disabled style={{ pointerEvents: 'none' }}>
-                        SUBMIT
-                      </Button>}
-                    popOverText='New proposals disabled until ICON 2.0'
-                    placement='left'
-                  />
+                  <Button variant='info'>
+                    SUBMIT
+                  </Button>
+                  // <Popup
+                  //   component={
+                  //     <Button variant='info' disabled style={{ pointerEvents: 'none' }}>
+                  //       SUBMIT
+                  //     </Button>}
+                  //   popOverText='New proposals disabled until ICON 2.0'
+                  //   placement='left'
+                  // />
                 ) : (
                   //     <OverlayTrigger trigger="hover" placement="left"
                   //     overlay={

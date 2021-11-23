@@ -14,9 +14,9 @@ const InfoCard = ({ bg = 'secondary', title, value, color = '#FF0000' }) => {
         style={{ color: color, border: `1px solid ${color}` }}
       >
         <Card.Title
-          style={{ textAlign: 'center', fontSize: '2rem', fontWeight: 700 }}
+          dangerouslySetInnerHTML={{ __html: value }}
+          style={{ textAlign: 'center', fontSize: '1.5rem', fontWeight: 700 }}
         >
-          {value}
         </Card.Title>
         <Card.Text
           style={{ fontSize: '0.875rem', textAlign: 'center', fontWeight: 500 }}

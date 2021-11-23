@@ -78,10 +78,9 @@ const Proposal = ({
                   Submitted on:{' '}
                   {new Date(proposal._timestamp / 1000).toLocaleDateString()}
                 </LowerCardInfo>
-
-                <Budget>Budget: {icxFormat(proposal.budget)} ICX</Budget>
-              </>
-            )}
+                  <Budget>Budget: {icxFormat(proposal.budget)} {proposal.token}</Budget>
+                </>
+              )}
 
             {['Active', 'Paused'].includes(
               proposalStatusMapping.find(

@@ -33,6 +33,7 @@ import {
   fetchSponsorMessageRequestWorker,
   fetchProposalByIpfsWorker,
   emptyProposalDetailWorker,
+  fetchChangeVoteWorker
 } from './Proposal/index';
 
 import {
@@ -48,6 +49,7 @@ import {
   fetchVoteResultBudgetChangeRequestWorker,
   fetchProgressReportByIpfsWorker,
   emptyProgressReportDetailWorker,
+  fetchChangeVoteWorkerProgressReport
 } from './ProgressReport';
 
 import {
@@ -58,6 +60,7 @@ import {
   claimRewardWorker,
   fetchSponsorBondWorker,
   claimSponsorBondWorker,
+  fetchbnUSDAddressWorker
 } from './Fund';
 
 import {
@@ -100,6 +103,7 @@ import {
   fetchSponsorMessageRequest,
   fetchProposalByIpfsRequest,
   emptyProposalDetailRequest,
+  fetchChangeVoteRequest
 } from '../Reducers/proposalSlice';
 import {
   submitProgressReportRequest,
@@ -114,6 +118,7 @@ import {
   fetchVoteResultBudgetChangeRequest,
   fetchProgressReportByIpfsRequest,
   emptyProgressReportDetailRequest,
+  fetchChangeVoteRequestProgressReport
 } from '../Reducers/progressReportSlice';
 import {
   fetchPeriodDetailsRequest,
@@ -134,6 +139,7 @@ import {
   claimReward,
   fetchSponsorBondRequest,
   claimSponsorBondReward,
+  fetchbnUSDAddressRequest
 } from '../Reducers/fundSlice';
 import {
   fetchUserDataRequest,
@@ -245,6 +251,7 @@ function* rootSaga() {
   yield takeEvery(registerPrep.type, registerPrepWorker);
 
   yield takeEvery(fetchCPFScoreAddressRequest.type, fetchCPFScoreAddressWorker);
+  yield takeEvery(fetchbnUSDAddressRequest.type, fetchbnUSDAddressWorker);
   yield takeEvery(
     fetchCPSTreasuryScoreAddressRequest.type,
     fetchCPSTreasuryScoreAddressWorker,
@@ -302,6 +309,15 @@ function* rootSaga() {
     emptyProgressReportDetailRequest.type,
     emptyProgressReportDetailWorker,
   );
+  yield takeEvery(
+    fetchChangeVoteRequest.type,
+    fetchChangeVoteWorker,
+  );
+  yield takeEvery(
+    fetchChangeVoteRequestProgressReport.type,
+    fetchChangeVoteWorkerProgressReport,
+  );
+
 }
 
 export default rootSaga;
