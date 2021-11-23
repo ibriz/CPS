@@ -69,7 +69,7 @@ class CPS_TREASURY(IconScoreBase):
         pass
 
     @eventlog(indexed=1)
-    def ProposalFundSent(self, _receiver_address: Address, _fund: int, note: str):
+    def ProposalFundSent(self, _receiver_address: Address, note: str):
         pass
 
     @eventlog(indexed=1)
