@@ -276,7 +276,7 @@ const ProposalCreationPage = ({
 
   const handleSubmit = event => {
     event.preventDefault();
-    setSubmissionConfirmationShow(false);
+    setSubmissionConfirmationShow(true);
   };
 
   const onClickSaveDraft = () => {
@@ -697,14 +697,17 @@ const ProposalCreationPage = ({
               </Col>
               <Col className={styles.saveButton}>
                 {period !== 'VOTING' ? (
-                  <Popup
-                    component={
-                      <Button variant='info' disabled style={{ pointerEvents: 'none' }}>
-                        SUBMIT
-                      </Button>}
-                    popOverText='New proposals disabled until ICON 2.0'
-                    placement='left'
-                  />
+                  <Button variant='info'>
+                    SUBMIT
+                  </Button>
+                  // <Popup
+                  //   component={
+                  //     <Button variant='info' disabled style={{ pointerEvents: 'none' }}>
+                  //       SUBMIT
+                  //     </Button>}
+                  //   popOverText='New proposals disabled until ICON 2.0'
+                  //   placement='left'
+                  // />
                 ) : (
                   //     <OverlayTrigger trigger="hover" placement="left"
                   //     overlay={
