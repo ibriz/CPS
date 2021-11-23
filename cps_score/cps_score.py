@@ -225,7 +225,7 @@ class CPS_Score(IconScoreBase):
 
     @external(readonly=True)
     def is_admin(self, _address: Address) -> bool:
-        return True if _address in self.admins else False
+        return _address in self.admins
 
     @external
     def toggle_maintenance(self):
