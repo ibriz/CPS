@@ -552,8 +552,6 @@ class CPS_TREASURY(IconScoreBase):
     def update_project_flag(self) -> None:
         """
         Update the proposal with the given ipfs hash with a key `token` : ICX, migrate sponsor_bond value to new dictDB.
-        :param _ipfs_hash: ipfs hash of the proposal
-        :type _ipfs_hash: str
         :return:
         """
         self._validate_admins()

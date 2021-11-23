@@ -18,7 +18,7 @@ class CPS_TREASURY_INTERFACE(InterfaceScore):
 
 class CPSScoreInterface(InterfaceScore):
     @interface
-    def is_admin(self, _address:Address) -> bool:
+    def is_admin(self, _address: Address) -> bool:
         pass
 
 
@@ -105,7 +105,7 @@ class CPF_TREASURY(IconScoreBase):
         super().on_update()
         self.swap_state.set(0)
         self.swap_count.set(0)
-        self.treasury_fund_bnusd.set(400_000 * 10 ** 18)
+        self.treasury_fund_bnusd.set(200_000 * 10 ** 18)
 
     def _proposal_exists(self, _ipfs_key: str) -> bool:
         return _ipfs_key in self._proposal_budgets
@@ -455,7 +455,8 @@ class CPF_TREASURY(IconScoreBase):
                 bnusd_score.transfer(self._cps_treasury_score.get(), total_transfer, _data)
             else:
                 revert(f'{TAG}: {_flag} is not supported.')
-            self.ProposalFundTransferred(_ipfs_key, f"Successfully transferred {total_transfer} {_flag} to CPS Treasury")
+            self.ProposalFundTransferred(_ipfs_key,
+                                         f"Successfully transferred {total_transfer} {_flag} to CPS Treasury")
         except BaseException as e:
             revert(f"{TAG} : Network problem. Sending proposal funds. {e}")
 
