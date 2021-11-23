@@ -1782,7 +1782,7 @@ class CPS_Score(IconScoreBase):
                     self.PeriodUpdate("4/4. Period Successfully Updated to Application Period.")
                     self.set_PReps()
 
-                    active_proposals = len(self.active_proposals) + len(self._waiting_progress_reports)
+                    active_proposals = len(self._active) + len(self._paused)
 
                     self.swap_count.set(active_proposals + active_proposals * len(self.valid_preps))
                     cpf_treasury_score = self.create_interface_score(self.cpf_score.get(), CPF_TREASURY_INTERFACE)
