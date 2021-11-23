@@ -2249,8 +2249,7 @@ class CPS_Score(IconScoreBase):
         snapshots the delegation of each preps
         :return:
         """
-        max_delegation: int = self.max_delegation.get()
-        old_max_delegation = max_delegation
+        max_delegation = 0
 
         for preps in self.valid_preps:
             stake = self._get_stake(preps)
@@ -2258,8 +2257,7 @@ class CPS_Score(IconScoreBase):
             if stake > max_delegation:
                 max_delegation = stake
 
-        if max_delegation > old_max_delegation:
-            self.max_delegation.set(max_delegation)
+        self.max_delegation.set(max_delegation)
 
     def _get_max_cap_bnusd(self) -> int:
         """
