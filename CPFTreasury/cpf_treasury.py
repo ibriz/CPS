@@ -562,6 +562,7 @@ class CPF_TREASURY(IconScoreBase):
         :type _count: int
         :return:
         """
+
         self._validate_cps_score()
         dex = self.create_interface_score(self.dex_score.get(), DEX_INTERFACE)
         sicx_score = self.create_interface_score(self.sicx_score.get(), TokenInterface)
@@ -569,7 +570,7 @@ class CPF_TREASURY(IconScoreBase):
         bnUSDRemainingToSwap = self.get_remaining_swap_amount().get('remainingToSwap')
         sicxBalance = sicx_score.balanceOf(self.address)
 
-        if bnUSDRemainingToSwap < 10 * 10 ** 18:
+        if bnUSDRemainingToSwap < 10 * 10 ** 18 or _count == 0:
             self.swap_state.set(2)
 
         try:
