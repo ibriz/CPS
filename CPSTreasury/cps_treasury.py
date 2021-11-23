@@ -5,6 +5,7 @@ PROPOSAL_DB_PREFIX = b'proposal'
 TAG = "CPS_TREASURY"
 ICX = "ICX"
 bnUSD = "bnUSD"
+TOKEN = "token"
 
 
 class ProposalAttributes(TypedDict):
@@ -256,11 +257,12 @@ class CPS_TREASURY(IconScoreBase):
                         _total_paid_amount = prefix_.withdraw_amount.get()
 
                         project_details.append({self._IPFS_HASH: _ipfs_key,
-                                                self._TOTAL_BUDGET: f'{_total_budget} {_flag}',
-                                                self._TOTAL_INSTALLMENT_PAID: f'{_total_paid_amount} {_flag}',
+                                                TOKEN: _flag,
+                                                self._TOTAL_BUDGET: _total_budget,
+                                                self._TOTAL_INSTALLMENT_PAID: _total_paid_amount,
                                                 self._TOTAL_INSTALLMENT_COUNT: _total_installment,
                                                 self._TOTAL_TIMES_INSTALLMENT_PAID: _total_paid_count,
-                                                self._INSTALLMENT_AMOUNT: f'{_total_budget // _total_installment} {_flag}'})
+                                                self._INSTALLMENT_AMOUNT: _total_budget // _total_installment})
                         if _flag == ICX:
                             _total_amount_to_be_paid_icx += _total_budget // _total_installment
                         else:
@@ -300,12 +302,13 @@ class CPS_TREASURY(IconScoreBase):
                         _deposited_sponsor_bond = prefix_.total_budget.get() // 10
 
                         projects_details.append({self._IPFS_HASH: _ipfs_key,
-                                                 self._TOTAL_BUDGET: f'{_total_budget} {_flag}',
-                                                 self._TOTAL_INSTALLMENT_PAID: f'{_total_paid_amount} {_flag}',
+                                                 TOKEN: _flag,
+                                                 self._TOTAL_BUDGET: _total_budget,
+                                                 self._TOTAL_INSTALLMENT_PAID: _total_paid_amount,
                                                  self._TOTAL_INSTALLMENT_COUNT: _total_installment,
                                                  self._TOTAL_TIMES_INSTALLMENT_PAID: _total_paid_count,
-                                                 self._INSTALLMENT_AMOUNT: f'{_total_budget // _total_installment} {_flag}',
-                                                 self._SPONSOR_BOND_AMOUNT: f'{_deposited_sponsor_bond} {_flag}'})
+                                                 self._INSTALLMENT_AMOUNT: _total_budget // _total_installment,
+                                                 self._SPONSOR_BOND_AMOUNT: _deposited_sponsor_bond})
                         if _flag == ICX:
                             _total_amount_to_be_paid_icx += _total_budget // _total_installment
                             _total_sponsor_bond_icx += _deposited_sponsor_bond
