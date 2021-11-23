@@ -149,6 +149,12 @@ class CPS_TREASURY(IconScoreBase):
                 f"{TAG} :Only CPF Treasury({self._cpf_treasury_score.get()}) SCORE can send fund using this method.")
 
     def _add_record(self, _proposal: ProposalAttributes) -> None:
+        """
+        adds record of proposal in proposalDB
+        :param _proposal: dict of ProposalAttributes
+        :type _proposal: dict
+        :return:
+        """
         proposal_data_obj = createProposalDataObject(_proposal)
         ipfs_hash = proposal_data_obj.ipfs_hash
         if not self._proposal_exists(ipfs_hash):
@@ -208,8 +214,8 @@ class CPS_TREASURY(IconScoreBase):
     @external
     def set_bnUSD_score(self, _score: Address) -> None:
         """
-        Sets the cps treasury score address. Only owner can set the address.
-        :param _score: Address of the cps treasury score address
+        Sets the Balanced Dollar score address. Only owner can set the address.
+        :param _score: Address of the bnUSD score address
         :type _score: :class:`iconservice.base.address.Address`
         :return:
         """
@@ -230,7 +236,9 @@ class CPS_TREASURY(IconScoreBase):
         """
         Return the projected amount to be obtained on the end of voting period
         :param _wallet_address: wallet address of the contributor
-        :return:
+        :type _wallet_address: Address
+        :return: dict of amount to be obtained at the end of voting period ICX and bnUSD
+        :rtype: dict
         """
         _total_amount_to_be_paid_icx = 0
         _total_amount_to_be_paid_bnusd = 0
@@ -270,7 +278,9 @@ class CPS_TREASURY(IconScoreBase):
         """
         Return the projected sponsor reward to be obtained on the end of voting period
         :param _wallet_address: wallet address of the sponsor p-rep
-        :return:
+        :type _wallet_address: Address
+        :return: dict of amount to be obtained at the end of voting period ICX and bnUSD
+        :rtype: dict
         """
         _total_amount_to_be_paid_icx = 0
         _total_amount_to_be_paid_bnusd = 0
@@ -313,13 +323,12 @@ class CPS_TREASURY(IconScoreBase):
 
     def _deposit_proposal_fund(self, _proposals: ProposalAttributes, _value: int = 0) -> None:
         """
-        Treasury Score sending the amount to the CPS Treasury Score
-        :ipfs_hash: Proposal IPFS HASH key
-        :project_duration: Total Duration month count
-        :sponsor_address: Sponsor P-Rep Address
-        :contributor_address: Contributor Address
-        :total_budget: Total Budget for the project (LOOP)
-        :sponsor_reward: Reward for the Sponsor (Loop)
+        Deposits the fund for the proposal with sponsor reward from CPF treasury
+        :param _proposals: dict of ProposalAttributes
+        :type _proposals: dict
+        :param _value: amount of bnUSD
+        :type _value: int
+        :return:
         """
 
         proposal_key = _proposals.copy()
@@ -375,6 +384,7 @@ class CPS_TREASURY(IconScoreBase):
         Installment of the Proposal is send to the contributor after the progress report is approved by majority
         registered P-Rep(s)
         :param _ipfs_key: Proposal IPFS HASH key
+        :type _ipfs_key: str
         :return:
         """
         self._validate_cps_score()
@@ -418,6 +428,7 @@ class CPS_TREASURY(IconScoreBase):
         Installment of the Sponsor Reward is send to the Sponsor P-Rep after the Proposal's progress report is
         approved by majority registered P-Rep(s)
         :param _ipfs_key: Proposal IPFS HASH key
+        :type _ipfs_key: str
         :return:
         """
         self._validate_cps_score()
@@ -457,9 +468,10 @@ class CPS_TREASURY(IconScoreBase):
     @external
     def disqualify_project(self, _ipfs_key: str) -> None:
         """
-        In case, Contributor fails to pass the progress report twice in a row, the project get disqualified.
-        The remaining amount of the project is sent back to the CPF.
+        In case, Contributor fails to pass the progress report or fails to submit progress report twice in a row,
+        the project get disqualified. The remaining amount of the project is sent back to the CPF.
         :param _ipfs_key: Proposal IPFS HASH key
+        :type _ipfs_key: str
         """
         self._validate_cps_score()
 
@@ -538,6 +550,12 @@ class CPS_TREASURY(IconScoreBase):
 
     @external
     def update_project_flag(self) -> None:
+        """
+        Update the proposal with the given ipfs hash with a key `token` : ICX, migrate sponsor_bond value to new dictDB.
+        :param _ipfs_hash: ipfs hash of the proposal
+        :type _ipfs_hash: str
+        :return:
+        """
         self._validate_admins()
         for _ix in range(len(self._proposals_keys)):
             _ipfs_hash = self._proposals_keys[_ix]

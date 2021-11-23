@@ -208,8 +208,8 @@ class CPF_TREASURY(IconScoreBase):
     @external
     def set_bnUSD_score(self, _score: Address) -> None:
         """
-        Sets the cps treasury score address. Only owner can set the address.
-        :param _score: Address of the cps treasury score address
+        Sets the Balanced Dollars score address. Only owner can set the address.
+        :param _score: Address of the Balanced Dollars score address
         :type _score: :class:`iconservice.base.address.Address`
         :return:
         """
@@ -219,8 +219,8 @@ class CPF_TREASURY(IconScoreBase):
     @external
     def set_staking_score(self, _score: Address) -> None:
         """
-        Sets the cps treasury score address. Only owner can set the address.
-        :param _score: Address of the cps treasury score address
+        Sets the staking score address. Only owner can set the address.
+        :param _score: Address of the staking score address
         :type _score: :class:`iconservice.base.address.Address`
         :return:
         """
@@ -230,8 +230,8 @@ class CPF_TREASURY(IconScoreBase):
     @external
     def set_sicx_score(self, _score: Address) -> None:
         """
-        Sets the cps treasury score address. Only owner can set the address.
-        :param _score: Address of the cps treasury score address
+        Sets the sicx score address. Only owner can set the address.
+        :param _score: Address of the sicx score address
         :type _score: :class:`iconservice.base.address.Address`
         :return:
         """
@@ -242,7 +242,7 @@ class CPF_TREASURY(IconScoreBase):
     def set_dex_score(self, _score: Address) -> None:
         """
         Sets the Balanced DEX score address. Only owner can set the address.
-        :param _score: Address of the cps treasury score address
+        :param _score: Address of the Balanced DEX score address
         :type _score: :class:`iconservice.base.address.Address`
         :return:
         """
@@ -262,7 +262,7 @@ class CPF_TREASURY(IconScoreBase):
     def get_bnusd_score(self) -> Address:
         """
         Returns the Balanced Dollars score address
-        :return: cps treasury score address
+        :return: Balanced Dollars score address
         :rtype: :class:`iconservice.base.address.Address`
         """
         return self.balanced_dollar.get()
@@ -301,7 +301,8 @@ class CPF_TREASURY(IconScoreBase):
     def get_total_funds(self) -> dict:
         """
         Get total amount of fund on the SCORE
-        :return: integer value of amount
+        :return: dict of ICX and bnUSD amount
+        :rtype: dict
         """
         return {ICX: self.icx.get_balance(self.address),
                 BNUSD: self._get_total_fund_bnusd()}
@@ -313,8 +314,9 @@ class CPF_TREASURY(IconScoreBase):
     @external(readonly=True)
     def get_remaining_swap_amount(self) -> dict:
         """
-        Get total amount of fund on the SCORE
-        :return: integer value of amount
+        Get total amount of bnUSD needed to be swapped to reach the maximum amount of bnUSD set on cpf treasury
+        :return: dict of maximum bnUSD that can be in cpf treasury and remaining amount to swap
+        :rtype: dict
         """
         maxCap = self.treasury_fund_bnusd.get()
         return {'maxCap': maxCap,
@@ -325,10 +327,14 @@ class CPF_TREASURY(IconScoreBase):
     def return_fund_amount(self, _address: Address, _from: Address = None, _flag: str = ICX, _value: int = 0) -> None:
         """
         After the Project is disqualified. The Sponsor bond deposit is transferred to CPF Treasury Fund.
-        :param _from:
+        :param _from: cps score address
+        :type _from: :class:`iconservice.base.address.Address`
         :param _value:
+        :type _value: int
         :param _flag: Token Name
+        :type _flag: str
         :param _address: Sponsor P-Rep Address
+        :type _address: Address
         :return: None
         """
 
@@ -346,11 +352,17 @@ class CPF_TREASURY(IconScoreBase):
         Sends the Allocated budget of a proposal after being passed from 2/3 of the  P-Rep to the CPF Treasury
         Score to a certain proposal key
         :param _ipfs_key: IPFS Hash key for the proposal
+        :type _ipfs_key: str
         :param _total_installment_count: Total Month count of the project
+        :type _total_installment_count: int
         :param _sponsor_address: Sponsor P-Rep Address
+        :type _sponsor_address: Address
         :param _contributor_address: Contributor Address
+        :type _contributor_address: Address
         :param token_flag: Token Name
+        :type token_flag: str
         :param _total_budget: Total Budget for the Project.
+        :type _total_budget: int
         :return:
         """
 
@@ -399,10 +411,14 @@ class CPF_TREASURY(IconScoreBase):
                              _total_installment_count: int = 0) -> None:
         """
         Update the proposal fund after the budget adjustment voting is passed by majority of P-Reps
+        :param _flag: Token name
+        :type _flag: str
         :param _ipfs_key: Proposal IPFS Hash Key
-        :param _flag: Token Name
+        :type _ipfs_key: str
         :param _added_budget: New added Budget
+        :type _added_budget: int
         :param _total_installment_count: Added Month Count
+        :type _total_installment_count: int
         :return:
         """
 
@@ -450,11 +466,15 @@ class CPF_TREASURY(IconScoreBase):
         """
         After being approved by the majority of the P-Rep votes, if the contributor failed to submit the progress
         report as their milestones, the project will be disqualified after being rejected the two progress reports.
-        :param _from:
-        :param _flag:
+        :param _from: cps treasury score address
+        :type _from: :class:`iconservice.base.address.Address`
+        :param _flag: Token name
+        :type _flag: str
         :param _value:
+        :type _value: int
         :param _ipfs_key: Proposal IPFS Hash
-        :return:
+        :type _ipfs_key: str
+        :return: None
         """
         self._validate_cps_treasury_score(_from)
 
@@ -501,7 +521,8 @@ class CPF_TREASURY(IconScoreBase):
     def get_proposals_details(self, _start_index: int = 0, _end_index: int = 20) -> dict:
         """
         Returns all Proposal fund records
-        :return: List of all _proposals_details
+        :return: Dict of all _proposals_details
+        :rtype: dict
         """
 
         _proposals_details_list = []
@@ -534,6 +555,12 @@ class CPF_TREASURY(IconScoreBase):
 
     @external
     def swap_tokens(self, _count: int) -> None:
+        """
+        swap sicx tokens with bnUSD tokens
+        :param _count:
+        :type _count: int
+        :return:
+        """
         self._validate_cps_score()
         dex = self.create_interface_score(self.dex_score.get(), DEX_INTERFACE)
         sicx_score = self.create_interface_score(self.sicx_score.get(), TokenInterface)
@@ -571,6 +598,10 @@ class CPF_TREASURY(IconScoreBase):
 
     @external
     def reset_swap_state(self):
+        """
+        resets the swap_state to zero
+        :return:
+        """
         self._validate_cps_score()
         self.swap_state.set(0)
 

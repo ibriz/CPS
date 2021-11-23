@@ -293,8 +293,8 @@ class CPS_Score(IconScoreBase):
     @external
     def set_cpf_treasury_score(self, _score: Address) -> None:
         """
-        Sets the cps treasury score address. Only owner can set the address.
-        :param _score: Address of the cps treasury score address
+        Sets the cpf treasury score address. Only owner can set the address.
+        :param _score: Address of the cpf treasury score address
         :type _score: :class:`iconservice.base.address.Address`
         :return:
         """
@@ -304,8 +304,8 @@ class CPS_Score(IconScoreBase):
     @external
     def set_bnUSD_score(self, _score: Address) -> None:
         """
-        Sets the cps treasury score address. Only owner can set the address.
-        :param _score: Address of the cps treasury score address
+        Sets the Balanced Dollar score address. Only owner can set the address.
+        :param _score: Address of the Balanced Dollar score address
         :type _score: :class:`iconservice.base.address.Address`
         :return:
         """
@@ -327,6 +327,8 @@ class CPS_Score(IconScoreBase):
     def _get_prep_name(self, _address: Address) -> str:
         """
         Returns the name of the given P-Rep
+        :param _address: P-Rep address
+        :type _address: Address
         :return: name of P-Rep
         """
         _all_preps = self.system_score.getPRepTerm()['preps']
@@ -338,7 +340,9 @@ class CPS_Score(IconScoreBase):
         """
         get the total stake weight of given address
         :param _address : P-Rep Address
+        :type _address: Address
         :return : total delegated amount (loop)
+        :rtype: int
         """
 
         _all_preps = self.system_score.getPRepTerm()['preps']
@@ -442,6 +446,7 @@ class CPS_Score(IconScoreBase):
         """
         Returns a list of proposal ipfs hash
         :return: list of proposal keys
+        :rtype: list
         """
         return [item for item in self.proposals_key_list]
 
@@ -449,6 +454,7 @@ class CPS_Score(IconScoreBase):
         """
         Return a list of progress reports ipfs hash
         :return: list of progress report ipfs hash
+        :rtype: list
         """
         return [item for item in self.progress_key_list]
 
@@ -457,7 +463,8 @@ class CPS_Score(IconScoreBase):
         Get a denylist payment amount for the given address.
         Amount Depends on how many time they have been on denylist.
         :param _address: Address of the Denied P-Rep
-        :return: integer ICX amount for Penalty
+        :type _address: Address
+        :return: integer bnUSD amount for Penalty
         """
         count = self.preps_denylist_status[str(_address)]
         if count == 0:
@@ -470,6 +477,14 @@ class CPS_Score(IconScoreBase):
         return penalty_amount
 
     def _update_proposal_status(self, _proposal_key: str, _status: str) -> None:
+        """
+        updates the status of proposals
+        :param _proposal_key: ipfs hash of the proposal
+        :type _proposal_key: str
+        :param _status: new status of the proposal
+        :type _status: str
+        :return:
+        """
         prefix = self.proposal_prefix(_proposal_key)
         _current_status = self.proposals[prefix].status.get()
         self.proposals[prefix].timestamp.set(self.now())
@@ -479,6 +494,12 @@ class CPS_Score(IconScoreBase):
         self.proposals_status[_status].put(_proposal_key)
 
     def _add_proposals(self, _proposal: ProposalAttributes) -> None:
+        """
+        adds proposals to proposalDB when proposal is submitted by the contributor
+        :param _proposal: dict of proposalAttributes
+        :type _proposal: ProposalAttributes
+        :return:
+        """
         proposal_data_obj = createProposalDataObject(_proposal)
         ipfs_hash = proposal_data_obj.ipfs_hash
         if not self._proposal_key_exists(ipfs_hash):
@@ -490,11 +511,25 @@ class CPS_Score(IconScoreBase):
             revert(f"{TAG} : Proposal Hash Already Exists.")
 
     def _get_proposal_details(self, _proposal_key: str) -> dict:
+        """
+        returns the details of a proposal of the given proposal key
+        :param _proposal_key: ipfs hash of the proposal
+        :type _proposal_key: str
+        :return:
+        """
         prefix = self.proposal_prefix(_proposal_key)
         _proposal_details = getDataFromProposalDB(prefix, self.proposals)
         return _proposal_details
 
     def _add_new_progress_report_key(self, proposal_key: str, progress_key: str) -> None:
+        """
+        puts new progress report key
+        :param proposal_key: ipfs hash of the proposal
+        :type proposal_key: str
+        :param progress_key: report hash of the progress report
+        :type progress_key: str
+        :return:
+        """
         self.progress_key_list.put(progress_key)
         prefix = self.proposal_prefix(proposal_key)
         if progress_key not in self.proposals[prefix].progress_reports:
@@ -503,6 +538,14 @@ class CPS_Score(IconScoreBase):
             revert(f"{TAG}: Progress report {progress_key} already exists.")
 
     def _update_progress_report_status(self, progress_report_key: str, _status: str) -> None:
+        """
+        Updates the status of progress reports
+        :param progress_report_key: Report hash of the progress report
+        :type progress_report_key: str
+        :param _status: new status of the progress report
+        :type _status: str
+        :return:
+        """
         prefix = self.progress_report_prefix(progress_report_key)
         _current_status = self.progress_reports[prefix].status.get()
         self.progress_reports[prefix].timestamp.set(self.now())
@@ -512,6 +555,12 @@ class CPS_Score(IconScoreBase):
         self.progress_report_status[_status].put(progress_report_key)
 
     def _add_progress_report(self, _progress_report: ProgressReportAttributes) -> None:
+        """
+        adds progress report once the progress report is submitted by the contributor
+        :param _progress_report: dict of progressReportAttributes
+        :type _progress_report: ProgressReportAttributes
+        :return: None
+        """
         progress_report_obj = createProgressDataObject(_progress_report)
         report_hash = progress_report_obj.report_hash
         if not self._progress_key_exists(report_hash):
@@ -523,6 +572,13 @@ class CPS_Score(IconScoreBase):
             revert(f"{TAG} : Report Hash Already Exists.")
 
     def _get_progress_reports_details(self, _progress_hash: str) -> dict:
+        """
+        returns the deatils of progress report of given progress report hash
+        :param _progress_hash: report hash of the progress report
+        :type _progress_hash: str
+        :return: progress reports details
+        :rtype: dict
+        """
         prefix = self.progress_report_prefix(_progress_hash)
         response = getDataFromProgressReportDB(prefix, self.progress_reports)
         return response
@@ -533,6 +589,7 @@ class CPS_Score(IconScoreBase):
         """
         Submits a proposal, with ipfs_hash
         :param _proposals: dict of the necessary params to be stored
+        :type _proposals: ProposalAttributes
         :return:
         """
         self._check_maintenance()
@@ -588,6 +645,7 @@ class CPS_Score(IconScoreBase):
         """
         Submits a progress report, with ipfs_hash and report hash
         :param _progress_report: TypedDict of the necessary params to be stored
+        :type _progress_report: ProgressReportAttributes
         :return:
         """
         self._check_maintenance()
@@ -660,6 +718,8 @@ class CPS_Score(IconScoreBase):
     def get_proposals_keys_by_status(self, _status: str) -> list:
         """
         Returns the proposal keys of proposal by status
+        :param _status: status in [_SPONSOR_PENDING, _PENDING, _ACTIVE, _PAUSED, _DISQUALIFIED, _REJECTED, _COMPLETED]
+        :type _status: str
         :return: list of keys of given status
         :rtype: list
         """
@@ -672,11 +732,15 @@ class CPS_Score(IconScoreBase):
         """
         Selected Sponsor P-Rep to approve the requested proposal for CPS
         :param _vote: Vote from Sponsor [_accept,_reject]
+        :type _vote: str
         :param _vote_reason : Reason behind the _vote
+        :type _vote_reason: str
         :param _ipfs_key : proposal ipfs hash
         :type _ipfs_key : str
         :param _from : Sponsor Address
+        :type _from: Address
         :param _value: bnUSD transferred
+        :type _value: int
         """
         self._check_maintenance()
         self.update_period()
@@ -931,7 +995,6 @@ class CPS_Score(IconScoreBase):
         Only owner can set the address.
         :param _penalty: Penalty Amount Lists
         :type _penalty: List of int
-
         :return:
         """
         self._check_maintenance()
@@ -946,7 +1009,11 @@ class CPS_Score(IconScoreBase):
 
     def _pay_prep_penalty(self, _from: Address, _value: int) -> None:
         """
-        To remove the address from denylist
+        to remove address from deny list
+        :param _from: prep address
+        :type _from: Address
+        :param _value: penalty amount
+        :type _value: int
         :return:
         """
         self._check_maintenance()
@@ -986,6 +1053,16 @@ class CPS_Score(IconScoreBase):
 
     @external(readonly=True)
     def check_change_vote(self, _address: Address, _ipfs_hash: str, _proposal_type: str) -> int:
+        """
+        returns if vote has been changed by the prep
+        :param _address: prep address
+        :type _address: Address
+        :param _ipfs_hash: ipfs hash of proposal or report hash of progress report
+        :type _ipfs_hash: str
+        :param _proposal_type: one of proposal or progress_report
+        :type _proposal_type: str
+        :return:
+        """
         if _proposal_type == "proposal":
             prefix = self.proposal_prefix(_ipfs_hash)
             prefix_ = self.proposals[prefix]
@@ -1001,7 +1078,8 @@ class CPS_Score(IconScoreBase):
     def login_prep(self, _address: Address) -> dict:
         """
         Checks the logged in user is P-Rep or not.
-        :return : dict of logged in information
+        :return: dict of logged in information
+        :rtype: dict
         """
 
         _login_dict = {}
@@ -1034,6 +1112,11 @@ class CPS_Score(IconScoreBase):
 
     @external(readonly=True)
     def get_admins(self) -> list:
+        """
+        returns admin address of the CPS
+        :return: list of admins
+        :rtype: list
+        """
         return [_address for _address in self.admins]
 
     @external(readonly=True)
@@ -1048,8 +1131,8 @@ class CPS_Score(IconScoreBase):
     @external(readonly=True)
     def get_cpf_treasury_score(self) -> Address:
         """
-        Returns the cps treasury score address
-        :return: cps treasury score address
+        Returns the cpf treasury score address
+        :return: cpf treasury score address
         :rtype: :class:`iconservice.base.address.Address`
         """
         return self.cpf_score.get()
@@ -1067,8 +1150,8 @@ class CPS_Score(IconScoreBase):
     def get_remaining_fund(self) -> dict:
         """
         Returns the remaining Treasury amount on CPF Score
-        :return: Return amount on CPF Treasury amount
-        :rtype: int
+        :return: Return amount on CPF Treasury amount ICX and bnUSD
+        :rtype: dict
         """
         cpf_treasury_score = self.create_interface_score(self.cpf_score.get(), CPF_TREASURY_INTERFACE)
         return cpf_treasury_score.get_total_funds()
@@ -1078,6 +1161,7 @@ class CPS_Score(IconScoreBase):
         """
         Returns the all P-Reps who can be active in this period
         :return: P-Rep address list
+        :rtype: list
         """
         _preps = []
         for prep in self.valid_preps:
@@ -1089,7 +1173,9 @@ class CPS_Score(IconScoreBase):
     @external(readonly=True)
     def get_denylist(self) -> list:
         """
+        Returns the P-Reps in deny list
         :return: list of P-Rep denylist
+        :rtype: list
         """
         return [_address for _address in self.denylist]
 
@@ -1098,6 +1184,7 @@ class CPS_Score(IconScoreBase):
         """
         To get the period status
         :return: dict of status
+        :rtype: dict
         """
         _remaining_time = (self.next_block.get() - self.block_height) * 2
         if _remaining_time < 0:
@@ -1115,7 +1202,9 @@ class CPS_Score(IconScoreBase):
     @external(readonly=True)
     def get_project_amounts(self) -> dict:
         """
+        Returns different amounts in the proposal according to status
         :return: A dict of amount with the proposal status
+        :rtype: dict
         """
         _status_list = [self._PENDING, self._ACTIVE, self._PAUSED, self._COMPLETED, self._DISQUALIFIED]
         _pending_amount_icx = 0
@@ -1172,7 +1261,12 @@ class CPS_Score(IconScoreBase):
     def get_contributors(self, _start_index: int = 0, _end_index: int = 50) -> list:
         """
         Returns the list of all contributors address who've submitted proposals to CPS
+        :param _start_index:
+        :type _start_index: int
+        :param _end_index:
+        :type _end_index: int
         :return: List of contributors
+        :rtype: list
         """
 
         _contributors_list = []
@@ -1194,8 +1288,8 @@ class CPS_Score(IconScoreBase):
     @external(readonly=True)
     def get_sponsors_record(self) -> dict:
         """
-
         :return: dict of P-Reps with their sponsored project counts
+        :rtype: dict
         """
         _proposals_keys = []
         _sponsors_list = []
@@ -1220,6 +1314,19 @@ class CPS_Score(IconScoreBase):
     @external(readonly=True)
     def get_proposal_details(self, _status: str, _wallet_address: Address = None, _start_index: int = 0,
                              _end_index: int = 20) -> dict:
+        """
+        Returns the proposal details of all the proposals of given status
+        :param _status: project status of the projects
+        :type _status: str
+        :param _wallet_address: contributor address
+        :type _wallet_address: Address
+        :param _start_index:
+        :type _start_index: int
+        :param _end_index:
+        :type _end_index: int
+        :return: dict of proposal details
+        :rtype: dict
+        """
         if _status not in self.STATUS_TYPE:
             return {"message": "Not a valid status."}
 
@@ -1264,8 +1371,9 @@ class CPS_Score(IconScoreBase):
     def get_active_proposals(self, _wallet_address: Address) -> list:
         """
         Returns the list of all all active or paused proposal from that address
-        :param _wallet_address : wallet address of the user
-        :return: list
+        :param _wallet_address : wallet address of the contributor
+        :type _wallet_address: Address
+        :return: list of active proposals of a contributor
         """
 
         _proposal_titles = []
@@ -1937,6 +2045,8 @@ class CPS_Score(IconScoreBase):
     def _update_budget_adjustments(self, _budget_key: str):
         """
         Update the budget amount and added month time if the budget adjustment application is approved by majority.
+        :param _budget_key: report hash of the progress report
+        :type _budget_key: str
         :return:
         """
 
@@ -1996,6 +2106,10 @@ class CPS_Score(IconScoreBase):
 
     @external
     def remove_denylist_preps(self):
+        """
+        Removes preps from deny list
+        :return:
+        """
         self._validate_admins()
         size = len(self.denylist)
         for _ in range(size):
@@ -2038,6 +2152,13 @@ class CPS_Score(IconScoreBase):
 
     @external(readonly=True)
     def check_claimable_sponsor_bond(self, _address: Address) -> dict:
+        """
+        Returns the sponsor bond claimable by the sponsor
+        :param _address: sponsor address
+        :type _address: Address
+        :return: dict of claimable sponsor bond. ICX and bnUSD
+        :rtype: dict
+        """
         return {ICX: self.sponsor_bond_return[str(_address)][ICX],
                 bnUSD: self.sponsor_bond_return[str(_address)][bnUSD]}
 
@@ -2097,6 +2218,17 @@ class CPS_Score(IconScoreBase):
             revert(f'{TAG}: Token not received.')
 
     def _disqualify_project(self, _sponsor_address: Address, _sponsor_deposit_amount: int, flag: str):
+        """
+        disqualifies project and returns the fund amount to sponsor address if the proposal is rejected by majority of
+        preps
+        :param _sponsor_address: wallet address of sponsor
+        :type _sponsor_address: Address
+        :param _sponsor_deposit_amount: sponsor deposit amount
+        :type _sponsor_deposit_amount: int
+        :param flag: Token name
+        :type flag: str
+        :return:
+        """
         cpf_score_address: Address = self.cpf_score.get()
         cpf_treasury_score = self.create_interface_score(cpf_score_address, CPF_TREASURY_INTERFACE)
         if flag == ICX:
@@ -2113,6 +2245,10 @@ class CPS_Score(IconScoreBase):
                                  f'returned to CPF Treasury Address.')
 
     def _snapshot_delegations(self):
+        """
+        snapshots the delegation of each preps
+        :return:
+        """
         max_delegation: int = self.max_delegation.get()
         old_max_delegation = max_delegation
 
@@ -2126,10 +2262,19 @@ class CPS_Score(IconScoreBase):
             self.max_delegation.set(max_delegation)
 
     def _get_max_cap_bnusd(self) -> int:
+        """
+        Returns the maximum amount of bnUSD that can be in cpf treasury
+        :return: maximum bnUSD amount that can be in cpf treasury
+        :rtype: int
+        """
         cpf_treasury_score = self.create_interface_score(self.cpf_score.get(), CPF_TREASURY_INTERFACE)
         return cpf_treasury_score.get_remaining_swap_amount().get('maxCap')
 
     def _swap_bnusd_token(self):
+        """
+        Swap sICX token with bnUSD after a certain block height in cpf treasury
+        :return:
+        """
         swapped_bh = self.swap_block_height.get()
         if swapped_bh < self.block_height:
             self.swap_block_height.set(swapped_bh + SWAP_BLOCK_DIFF)
@@ -2138,6 +2283,12 @@ class CPS_Score(IconScoreBase):
 
     @external
     def return_sponsor_bond(self, _ipfs_hash: str) -> None:
+        """
+        returns sponsor bond to the sponsor
+        :param _ipfs_hash: ipfs hash of the project
+        :type _ipfs_hash: str
+        :return:
+        """
         self._validate_admins()
         details = self._get_proposal_details(_ipfs_hash)
 
