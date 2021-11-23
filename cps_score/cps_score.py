@@ -182,7 +182,7 @@ class CPS_Score(IconScoreBase):
         super().on_update()
         self.maintenance.set(True)
         self.swap_block_height.set(self.block_height)
-        self.swap_count.set(10)
+        self.swap_count.set(150)
 
     def _proposal_key_exists(self, key: str) -> bool:
         return key in self.proposals_key_list_index
