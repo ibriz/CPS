@@ -40,7 +40,7 @@ const initialState = {
 
   numberOfPendingProposals: 235,
   totalPendingProposalBudge: 42900,
-  cpfRemainingFunds: 549300,
+  cpfRemainingFunds: { icx: 0, bnUSD: 0 },
   submittingProposal: false,
   proposalDetail: null,
   modalShowSponsorRequests: false,

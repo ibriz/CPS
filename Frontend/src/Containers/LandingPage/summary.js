@@ -13,7 +13,9 @@ import { icxFormat } from 'Helpers';
 var SI_SYMBOL = ["", "k", "M", "G", "T", "P", "E"];
 
 function abbreviateNumber(number) {
-
+    if (number == 0) {
+        return 0;
+    }
     // what tier? (determines SI symbol)
     var tier = Math.log10(Math.abs(number)) / 3 | 0;
 
@@ -68,19 +70,19 @@ const Summary = ({
     return (<div className="landingPage__Summary">
         <div className="description">
             <div>
-                <p>{totalCount.Active}</p>
+                <p>{projectAmounts.Active.count}</p>
                 <p>Active Projects</p>
             </div>
             <div>
-                <p>{totalCount.Completed}</p>
+                <p>{projectAmounts.Completed.count}</p>
                 <p>Projects Completed</p>
             </div>
             <div>
-                <p>{abbreviateNumber(!isNaN(cpfRemainingFunds.icx) ? cpfRemainingFunds.icx : 0)}<br /></p>
+                <p>{abbreviateNumber(cpfRemainingFunds.icx || 0)}<br /></p>
                 <p>ICX Treasury Value</p>
             </div>
             <div>
-                <p>{abbreviateNumber(!isNaN(cpfRemainingFunds.bnUSD) ? cpfRemainingFunds.bnUSD : 0)}<br /></p>
+                <p>{abbreviateNumber(cpfRemainingFunds.bnUSD || 0)}<br /></p>
                 <p>bnUSD Treasury Value</p>
             </div>
             <div>
