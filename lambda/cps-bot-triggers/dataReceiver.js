@@ -37,6 +37,7 @@ exports.handler = async (req) => {
                         throw { statusCode: 400, name: "IPFS url", message: "Invalid IPFS hash provided" };
                     }
 
+                    // TODO: Fetch unit of payment as well: bnUsd or ICX
                     const { projectName, teamName, sponserPrep, sponserPrepName, totalBudget} = proposalDetails;
                     const finalResponse = {
                         projectName,
@@ -141,7 +142,7 @@ exports.handler = async (req) => {
                         console.error("ERROR FETCHING PROPOSAL DATA");
                         throw { statusCode: 400, name: "IPFS url", message: "Invalid IPFS hash provided" };
                     }
-                    
+                    // TODO: check bnUSD or ICX with bnUSD flag
                     const finalResponse = {
                         proposalName: proposalDetails.projectName,
                         progressReportName: progressDetails.progressReportTitle,

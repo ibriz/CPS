@@ -24,7 +24,6 @@ exports.handler = async (req) => {
             switch (action) {
                 case userActions.subscribe: {
                     console.log("TRYING TO SUBSCRIBE: ", receivingUrl);
-                    // TODO: add username authentication when subscribing
                     // add the website info to redis
                     if (!receivingUrl) throw new ClientError("receivingUrl is required");
                     // check if the name already exists

@@ -84,6 +84,7 @@ async function formatProposalDetailsResponse(allProposals) {
 
 		const proposalRes = {
 			proposalName: proposal.project_title,
+			// TODO: Also send out "token" field (ICX or bnUSD)
 			totalBudget: proposal.total_budget,
 			teamName: teamName,
 			sponsorAddress: proposal.sponsor_address,

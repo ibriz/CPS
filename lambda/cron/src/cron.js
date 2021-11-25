@@ -50,9 +50,6 @@ async function execute() {
 		// transition is as : voting -> transition -> application
 		console.log('Period from Blockchain' + JSON.stringify(present_period));
 		
-		// TODO: Remove this
-		console.log(present_period.remaining_time);
-		
 		if (parseInt(present_period.remaining_time, 'hex') == 0) {
 			// if current period is "Voting Period" -> update_period moves it to transition period
 			// wait for 20 secs, then again trigger the update_period if the current period is transition period

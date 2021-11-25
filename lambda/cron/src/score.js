@@ -21,8 +21,6 @@ const { CallTransactionBuilder, CallBuilder } = IconBuilder;
 const httpProvider = new HttpProvider(provider);
 const iconService = new IconService(httpProvider);
 
-// TODO: uncomment
-// let wallet;
 const wallet = IconWallet.loadPrivateKey(priv_key);
 
 const timeout = instance => {
@@ -148,7 +146,7 @@ async function recursivelyUpdatePeriod(retry = 0) {
 			console.log('In transition period, should change to application period in 20 secs');
 			await update_period();
 			await sleep(2000);	// sleep for 2 secs
-			// todo: move to recursive func, max 10 calls
+
 			if(retry < 8) {
 				await recursivelyUpdatePeriod(++retry);
 			} else {

@@ -15,12 +15,22 @@ async function periodChangeNotifications(presentPeriod, periodEndingDate) {
     const votingPeriodStatsForBot = new Promise(async (resolve, reject) => {
       try {
         // Send out last voting period's stats
+        // TODO: GetRemainingFunds is changed on score
+        // {
+          // "ICX": "18 032 567 742 051 639 143 688",
+          // "bnUSD": "12 197 584 873 309 386 059 776"
+        // }
         const remainingFunds = await score.get_remaining_funds();
         const activeProjectAmt = await score.get_project_amounts_by_status(PROPOSAL_STATUS.ACTIVE);
         const votingPeriodStats = {
           remainingFunds: new BigNumber(remainingFunds).div(Math.pow(10,18)).toFixed(2),
           periodEndsOn: typeof periodEndingDate == 'number' ? periodEndingDate.toString() : periodEndingDate,	
           activeProjectsCount: new BigNumber(activeProjectAmt['_count']).toFixed(),
+          // TODO: _total_amount is changed
+          // "_total_amount": {
+          //    "ICX": "225 466 000 000 000 000 000 000",
+          //    "bnUSD": "0"
+          // }
           activeProjectsBudget: new BigNumber(activeProjectAmt['_total_amount']).div(Math.pow(10, 18)).toFixed(2)
         };
         await triggerWebhook(EVENT_TYPES.VOTING_PERIOD_STATS, votingPeriodStats);
@@ -89,6 +99,11 @@ async function periodChangeNotifications(presentPeriod, periodEndingDate) {
         const waitingProgressReports = await score.get_progress_reports_by_status(PROGRESS_REPORT_STATUS.WAITING);
         const applicationPeriodStats = {
           votingProposalsCount: new BigNumber(pendingProjectAmt['_count']).toFixed(),
+          // TODO: _total_amount is updated
+          // "_total_amount": {
+          //     "ICX": "225 466 000 000 000 000 000 000",
+          //     "bnUSD": "0"
+          // }
           votingProposalsBudget: new BigNumber(pendingProjectAmt['_total_amount']).div(Math.pow(10,18)).toFixed(),
           periodEndsOn: typeof periodEndingDate == 'number' ? periodEndingDate.toString() : periodEndingDate,	
           votingPRsCount: new BigNumber(waitingProgressReports.length).toFixed(),
