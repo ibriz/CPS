@@ -24,12 +24,14 @@ class ProgressReportData(object):
         self.approve_voters = ArrayDB("approve_voters", db, Address)
         self.reject_voters = ArrayDB("reject_voters", db, Address)
         self.total_voters = VarDB("total_voters", db, int)
+        self.voters_list_index = DictDB('voters_list_indexes', db, value_type=int, depth=2)
 
         self.budget_approved_votes = VarDB("budget_approved_votes", db, int)
         self.budget_rejected_votes = VarDB("budget_rejected_votes", db, int)
         self.budget_approve_voters = ArrayDB("budget_approve_voters", db, Address)
         self.budget_reject_voters = ArrayDB("budget_reject_voters", db, Address)
         self.budget_adjustment_status = VarDB("budget_adjustment_status", db, str)
+        self.budget_voters_list_index = DictDB('budget_voters_list_indexes', db, value_type=int, depth=2)
 
 
 class ProgressReportDataDB:
