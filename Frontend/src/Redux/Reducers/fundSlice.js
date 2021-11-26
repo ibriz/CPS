@@ -53,7 +53,13 @@ const fundSlice = createSlice({
         icx: IconConverter.toBigNumber(
           action.payload.response.ICX,
         ).dividedBy(10 ** 18), bnUSD: IconConverter.toBigNumber(
-          action.payload.response.bnUSD).dividedBy(10 ** 18)
+          action.payload.response.bnUSD).dividedBy(10 ** 18),
+        sicx: IconConverter.toBigNumber(
+          action.payload.response.sicx).dividedBy(10 ** 18),
+        sicxToICX: IconConverter.toBigNumber(
+          action.payload.response.sicxToICX).dividedBy(10 ** 18),
+        sicxTobnUSD: IconConverter.toBigNumber(
+          action.payload.response.sicxTobnUSD).dividedBy(10 ** 18)
       }
       // state.cpfScoreAddress = action.payload.response;
 
@@ -62,7 +68,6 @@ const fundSlice = createSlice({
     fetchCPFRemainingFundFailure() {
       return;
     },
-
     fetchExpectedGrantRequest() {
       return;
     },
