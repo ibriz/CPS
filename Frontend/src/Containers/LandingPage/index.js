@@ -112,7 +112,6 @@ const LandingPage = (props) => {
                     return scrollPosition > offsetTop && scrollPosition < offsetBottom;
                 }
             });
-            console.log('***', selected)
             if (selected && selected.id !== activeTabCenter) {
                 setActiveTabCenter(selected.id);
             } else if (!selected && activeTabCenter) {

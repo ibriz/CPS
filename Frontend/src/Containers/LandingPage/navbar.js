@@ -73,7 +73,6 @@ const Navbar = props => {
         logout();
         history.push('/');
     };
-
     const navbarCenterItem = [
         { title: 'Create a proposal', id: 'description', className: 'landingPage__Description', ref: createProposalRef },
         { title: 'Grant Process', id: 'grantProcess', className: 'grantProcessContainer', ref: grantProcessRef },
@@ -96,7 +95,7 @@ const Navbar = props => {
     }
 
     return (
-        <div ref={headerRef} className={`landingPage__Navbar ${isOpened && width <= 769 ? 'mobileNavbar' : ''}`} >
+        <div ref={headerRef} className={`landingPage__Navbar ${isOpened && window.innerWidth <= 1100 ? 'mobileNavbar' : ''}`} >
             <div className="navbarContainer">
                 <div className='navbarLeft'>
                     <div>
@@ -105,7 +104,7 @@ const Navbar = props => {
                 </div>
                 <div
                     className='navbarCenter'
-                    style={{ display: !isOpened && width <= 769 ? 'none' : 'flex', justifyContent: !walletAddress || width <= 769 ? 'center' : 'flex-end' }}
+                    style={{ display: !isOpened && window.innerWidth <= 1100 ? 'none' : 'flex', justifyContent: !walletAddress || window.innerWidth <= 1100 ? 'center' : 'flex-end' }}
                 >
                     <ul>
                         {navbarCenterItem.map((item, index) => (
@@ -125,11 +124,11 @@ const Navbar = props => {
                                     const section = document.querySelector(`.${item.className}`);
                                     const { height: headerHeight } = getDimensions(headerRef.current);
                                     const topPos = section.getBoundingClientRect().top + window.pageYOffset - headerHeight;
-                                    if (width < 768) {
+                                    if (window.innerWidth <= 1100) {
                                         section.scrollIntoView({
                                             behavior: 'smooth',
                                             block: 'start',
-                                            inline: 'center',
+                                            inline: 'start',
                                         });
                                     }
                                     else {
@@ -152,7 +151,7 @@ const Navbar = props => {
                 <div
                     className='navbarRight'
                     style={{
-                        display: !isOpened && width <= 769 ? 'none' : 'flex', flex: width < 1300 && (isPrep &&
+                        display: !isOpened && window.innerWidth <= 1100 ? 'none' : 'flex', flex: window.innerWidth < 1300 && (isPrep &&
                             isRegistered &&
                             !payPenalty &&
                             period === 'APPLICATION' &&
@@ -161,7 +160,7 @@ const Navbar = props => {
                 >
 
                     {!walletAddress ? (
-                        <p className="dashboardBtn" style={width > 769 ? { marginRight: 20 } : {}} onClick={async () => {
+                        <p className="dashboardBtn" style={window.innerWidth > 1100 ? { marginRight: 20 } : {}} onClick={async () => {
                             setClickedLogin(true);
                             onClickLogin();
                         }}>Dashboard</p>
@@ -173,23 +172,23 @@ const Navbar = props => {
                                     setActiveTabRight('username')
 
                                 }}
-                                style={(isPrep &&
-                                    isRegistered &&
-                                    !payPenalty &&
-                                    period === 'APPLICATION' &&
-                                    !isRemainingTimeZero) || (isPrep && !isRegistered && !payPenalty && !isRemainingTimeZero) ? { padding: '15px 15px 15px 15px' } : {}}
+                            // style={(isPrep &&
+                            //     isRegistered &&
+                            //     !payPenalty &&
+                            //     period === 'APPLICATION' &&
+                            //     !isRemainingTimeZero) || (isPrep && !isRegistered && !payPenalty && !isRemainingTimeZero) ? { padding: '15px 15px 15px 15px' } : {}}
                             > <span
                                 onClick={() => setModalShow(true)}
                                 style={landingPage ? { color: 'white' } : {}}
                             >
-                                    {firstName && lastName
-                                        ? `${firstName || lastName}`
+                                    {firstName || lastName
+                                        ? `${firstName?.slice(0, 6)}...` || `${lastName?.slice(0, 6)}...}`
                                         : `${address?.slice(0, 4)}...${address?.slice(
                                             address.length - 2,
                                         )}`}{' '}
                                     ({walletBalance?.toFixed(2)} ICX)
                                 </span>
-                                {isPrep &&
+                                {/* {isPrep &&
                                     isRegistered &&
                                     !payPenalty &&
                                     period === 'APPLICATION' &&
@@ -210,7 +209,7 @@ const Navbar = props => {
                                     >
                                         Register Prep
                                     </Button>
-                                )}
+                                )} */}
 
                                 <ConfirmationModal
                                     show={showUnregisterConfirmationModal}

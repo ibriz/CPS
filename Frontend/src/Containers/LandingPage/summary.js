@@ -66,6 +66,10 @@ const Summary = ({
         fetchCPFRemainingFundRequest();
     }, [fetchCPFRemainingFundRequest, cpfScoreAddress]);
 
+    const getTreasuryValue = () => {
+        const result = (Number(cpfRemainingFunds.icx || 0) * (1 / Number(cpfRemainingFunds.sicxToICX || 0)) + Number(cpfRemainingFunds.sicx || 0)) * (cpfRemainingFunds.sicxTobnUSD || 0) + Number(cpfRemainingFunds.bnUSD || 0);
+        return result || 0;
+    }
 
     return (<div className="landingPage__Summary">
         <div className="description">
@@ -78,12 +82,8 @@ const Summary = ({
                 <p>Projects Completed</p>
             </div>
             <div>
-                <p>{abbreviateNumber(cpfRemainingFunds.icx || 0)}<br /></p>
-                <p>ICX Treasury Value</p>
-            </div>
-            <div>
-                <p>{abbreviateNumber(cpfRemainingFunds.bnUSD || 0)}<br /></p>
-                <p>bnUSD Treasury Value</p>
+                <p>${abbreviateNumber(getTreasuryValue())}<br /></p>
+                <p> Treasury Value</p>
             </div>
             <div>
                 <p> {abbreviateNumber(projectAmounts.Active.amount.icx || 0 + projectAmounts.Paused.amount.icx || 0)}<br /> </p>

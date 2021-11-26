@@ -154,16 +154,16 @@ const ProposalCreationPage = ({
       document
         .getElementById('totalBudget')
         .setCustomValidity(
-          `Enter Total Budget between 0 and remaining CPF Fund (currently ${cpfRemainingFunds?.bnUSD?.toFixed(2)} bnUSD)`, 
+          `Enter Total Budget between 0 and remaining CPF Fund (200K bnUSD)`, 
         );
     } else if (
       proposal.totalBudget < 0 ||
-      proposal.totalBudget > parseInt(cpfRemainingFunds?.bnUSD)
-    ) {
+      proposal.totalBudget > 200000)
+      {
       document
         .getElementById('totalBudget')
         .setCustomValidity(
-          `Total Budget should be between 0 and CPF remaining Fund (currently  ${cpfRemainingFunds?.bnUSD?.toFixed(2)} bnUSD)`,
+          `Total Budget should be between 0 and CPF remaining Fund (200K bnUSD)`,
         );
     } else {
       document.getElementById('totalBudget').setCustomValidity('');
@@ -457,7 +457,7 @@ const ProposalCreationPage = ({
                   <FormControl
                     placeholder='Total Budget'
                     min={0}
-                    max={parseInt(cpfRemainingFunds?.bnUSD)}
+                    max={200000}
                     type='number'
                     value={proposal.totalBudget}
                     name='totalBudget'
