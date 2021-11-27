@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import {
     fetchProposalListRequest,
@@ -10,6 +10,7 @@ import {
     fetchCPFRemainingFundRequest,
 } from 'Redux/Reducers/fundSlice';
 import { icxFormat } from 'Helpers';
+import PRepListModal from 'Containers/Home/SlantedHeader/PRepListModal';
 var SI_SYMBOL = ["", "k", "M", "G", "T", "P", "E"];
 
 function abbreviateNumber(number) {
@@ -71,6 +72,8 @@ const Summary = ({
         return result || 0;
     }
 
+    const [prepListModalShow, setPrepListModalShow] = useState(false);
+
     return (<div className="landingPage__Summary">
         <div className="description">
             <div>
@@ -93,8 +96,17 @@ const Summary = ({
                 <p> {abbreviateNumber(projectAmounts.Active.amount.bnUSD || 0 + projectAmounts.Paused.amount.bnUSD || 0)}<br /></p>
                 <p>bnUSD Given Out</p>
             </div>
+            <div>
+                <p> {preps.length}<br /></p>
+                <p onClick={() => setPrepListModalShow(true)} style={{ textDecoration: 'underline', cursor: 'pointer' }}>Preps</p>
+            </div>
         </div>
-    </div>)
+        <PRepListModal
+            show={prepListModalShow}
+            onHide={() => setPrepListModalShow(false)}
+            preps={preps}
+        />
+    </div >)
 }
 
 const mapStateToProps = () => state => {

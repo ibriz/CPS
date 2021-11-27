@@ -10,7 +10,7 @@
       display: flex;
       position: absolute;
       right: 30px;
-      top: 17px;
+      top: 12px;
     }
     label {
       cursor: pointer;
@@ -38,6 +38,8 @@
       display: flex;
       justify-content: flex-start;
       flex: 0.3;
+      line-height: unset;
+      // transform: translate(0, -2px);
       div {
         display: flex;
         flex-direction: row;
@@ -50,12 +52,23 @@
           margin-bottom: 25px;
           cursor: pointer;
           transform: translate(5px, -5px);
-
+          @media screen and (max-width: 1300px) {
+            // width: 70px;
+          }
           @media screen and (max-width: 1100px) {
             margin-bottom: 0px;
             transform: translate(0px, 0px);
+            // height: unset;
+            // width: 55px;
           }
           // height: 50px;
+        }
+        @media screen and (max-width: 1100px) {
+          align-items: center;
+          // margin-bottom: 5px;
+        }
+        @media screen and (max-width: 500px) {
+          // margin-bottom: 2px;
         }
       }
       @media screen and (min-width: 1000px) {
@@ -65,7 +78,8 @@
         flex: 1;
         justify-content: center;
         align-items: center;
-        padding: 10px;
+        padding: 10px 0px 0px 0px;
+        transform: translate(0px, -5px);
       }
     }
 
@@ -148,8 +162,8 @@
           // margin-right: 15px;
           font-weight: 500;
           @media screen and (max-width: 1200px) {
-            padding:10px 10px 20px 10px;
-           }
+            padding: 10px 10px 20px 10px;
+          }
         }
         .activeTab::after {
           position: absolute;
@@ -162,11 +176,11 @@
           left: 0px;
         }
         @media screen and (max-width: 1200px) {
-         padding:10px 10px 20px 10px;
+          padding: 10px 10px 20px 10px;
         }
         @media screen and (max-width: 1160px) {
-          padding:0px 10px 0px 10px;
-         }
+          padding: 0px 10px 0px 10px;
+        }
         @media screen and (max-width: 1100px) {
           flex-direction: column;
           align-items: center;
@@ -341,7 +355,7 @@
           color: white;
         }
         @media (max-width: 1300px) {
-          padding:5px 0px 25px 0px;
+          padding: 5px 0px 25px 0px;
         }
         @media (max-width: 768px) {
           flex-direction: row-reverse;
@@ -548,10 +562,17 @@
         }
         @media screen and (max-width: 1300px) {
           // margin-bottom: 20px;
-          height: 160px;
-          width: 160px;
-          font-size: 16px;
-          margin: 10px 20px 10px 20px;
+          height: 145px;
+          width: 145px;
+          font-size: 15px;
+          margin: 10px 0px 10px 0px;
+        }
+        @media screen and (max-width: 1200px) {
+          // margin-bottom: 20px;
+          font-size: 13px;
+        }
+        @media screen and (max-width: 1100px) {
+          margin: 10px 15px 10px 15px;
         }
         @media screen and (max-width: 567px) {
           height: 160px;
@@ -1347,37 +1368,37 @@
       cursor: pointer;
       box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
       img {
-        border:2px solid #eee;
+        border: 2px solid #eee;
         border-radius: 10px;
         width: 80px;
-        height:80px;
+        height: 80px;
         object-fit: contain;
         object-position: center;
         @media screen and (max-width: 768px) {
           width: 60px;
+          height: 60px;
         }
       }
-      .winible
-      {
-        filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(125deg) brightness(103%) contrast(103%);
-        border:2px solid red;
+      .winible {
+        filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(125deg)
+          brightness(103%) contrast(103%);
+        border: 2px solid red;
       }
-      .tsf
-      {
-        background:#49B0B7;
+      .tsf {
+        background: #49b0b7;
       }
       .iconStudio {
-        background:#303030;
+        background: #303030;
       }
       .iconReview {
-        background:#222A42;
+        background: #222a42;
       }
       h5 {
         margin-top: 12px;
         font-size: 16px;
         line-height: 20px;
         font-weight: bold;
-        color:black;
+        color: black;
       }
       p {
         display: -webkit-box;
@@ -1392,18 +1413,16 @@
           font-size: 14px;
         }
       }
-      a
-      {
-        display:none;
+      a {
+        display: none;
       }
       &:hover {
         box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.3);
-        a{
-          display:block;
+        a {
+          display: block;
         }
-        h5
-        {
-          color:#1AAABA;
+        h5 {
+          color: #1aaaba;
         }
       }
       @media screen and (max-width: 768px) {
