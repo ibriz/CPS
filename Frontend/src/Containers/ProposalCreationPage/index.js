@@ -154,12 +154,11 @@ const ProposalCreationPage = ({
       document
         .getElementById('totalBudget')
         .setCustomValidity(
-          `Enter Total Budget between 0 and remaining CPF Fund (200K bnUSD)`, 
+          `Enter Total Budget between 0 and remaining CPF Fund (200K bnUSD)`,
         );
     } else if (
       proposal.totalBudget < 0 ||
-      proposal.totalBudget > 200000)
-      {
+      proposal.totalBudget > 200000) {
       document
         .getElementById('totalBudget')
         .setCustomValidity(
@@ -193,8 +192,7 @@ const ProposalCreationPage = ({
       document
         .getElementById('milestones')
         .setCustomValidity(
-          `The total duration in milestones should equal to the project duration (currently ${
-            proposal.projectDuration || 0
+          `The total duration in milestones should equal to the project duration (currently ${proposal.projectDuration || 0
           } months)`,
         );
     } else {
@@ -234,7 +232,7 @@ const ProposalCreationPage = ({
     document.getElementById('teamEmail').onfocus = () => {
       document.getElementById('teamEmail').onblur = () => {
         document.getElementById('teamEmail').reportValidity();
-        document.getElementById('teamEmail').onblur = () => {};
+        document.getElementById('teamEmail').onblur = () => { };
       };
     };
 
@@ -506,11 +504,10 @@ const ProposalCreationPage = ({
                   </option>
                   {prepList?.map(prep => {
                     return (
-                      <option value={prep?.address} key={prep?.address}>{`${
-                        prep?.name
-                      } (${prep?.address?.slice(0, 4)}...${prep?.address?.slice(
-                        prep.address.length - 2,
-                      )})`}</option>
+                      <option value={prep?.address} key={prep?.address}>{`${prep?.name
+                        } (${prep?.address?.slice(0, 4)}...${prep?.address?.slice(
+                          prep.address.length - 2,
+                        )})`}</option>
                     );
                   })}
                 </Form.Control>
@@ -697,7 +694,7 @@ const ProposalCreationPage = ({
               </Col>
               <Col className={styles.saveButton}>
                 {period !== 'VOTING' ? (
-                  <Button variant='info'>
+                  <Button variant='info' type='submit'>
                     SUBMIT
                   </Button>
                   // <Popup
