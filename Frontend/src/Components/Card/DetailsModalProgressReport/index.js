@@ -678,18 +678,18 @@ function DetailsModal(props) {
                               {voteOptions.map(voteOption => (
                                 <Button
                                   variant={
-                                    voteProjectTermRevision === voteOption
+                                    voteProjectTermRevision === voteOption.title
                                       ? 'success'
                                       : 'light'
                                   }
                                   onClick={() =>
-                                    setVoteProjectTermRevision(voteOption)
+                                    setVoteProjectTermRevision(voteOption.title)
                                   }
                                   style={{
                                     border: '1px solid rgba(0,0,0,0.7)',
                                   }}
                                 >
-                                  {voteOption}
+                                  {voteOption.title}
                                 </Button>
                               ))}
                             </ButtonGroup>
