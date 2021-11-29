@@ -141,7 +141,7 @@ const LandingPage = (props) => {
                     <DeveloperCommunity />
                 </div>
                 <Footer width={width} {...activeTabProps} />
-                <Modal show={walletModal} onHide={() => setWalletModal(false)}>
+                <Modal style={{ zIndex: 99999, marginTop:  50 }}show={walletModal} onHide={() => setWalletModal(false)}>
                     <Modal.Body style={{ textAlign: 'center' }}>Please download <a target="_blank" href="https://chrome.google.com/webstore/detail/iconex/flpiciilemghbmfalicajoolhkkenfel" style={{ textDecoration: 'underline' }}>ICONex Wallet</a> or <a target="_blank" href="https://chrome.google.com/webstore/detail/hana/jfdlamikmbghhapbgfoogdffldioobgl" style={{ textDecoration: 'underline' }}>Hana Wallet</a>.</Modal.Body>
                 </Modal>
             </div>

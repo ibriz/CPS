@@ -57,7 +57,8 @@ const grantReceipentList = [{
     "image": iconWebStudioImg,
     "title": "icon-cli",
     "description": "Command line tool for ICON",
-    "link": null
+    "link": null,
+    "className": "iconCli"
 },
 {
     "image": icon18nLogo,
