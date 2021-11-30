@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import iconCPSImg from '../../Assets/Images/iconCPS.png';
+import iconCPSImg from '../../Assets/Images/ICON CPS white.svg';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import { Link, Redirect } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
@@ -277,7 +277,7 @@ const Navbar = props => {
                 </div>
                 <div className='menuIcon'>
                     <label onClick={() => setIsOpened(prev => !prev)} htmlFor='menu'>
-                        {!isOpened ? <FaBars style={{ fontSize: 20 }} /> : <FaTimes style={{ fontSize: 20 }} />}
+                        {!isOpened ? <FaBars style={{ fontSize: 22 }} /> : <FaTimes style={{ fontSize: 22 }} />}
                     </label>
                 </div>
             </div>
