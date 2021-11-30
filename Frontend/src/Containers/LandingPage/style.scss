@@ -47,7 +47,7 @@
           text-align: center;
           position: relative;
           object-fit: contain;
-          width: 100px;
+          width: 130px;
           height: 100%;
           margin-bottom: 25px;
           cursor: pointer;
@@ -1331,6 +1331,7 @@
   &__GrantReceipent {
     display: flex;
     flex-direction: column;
+    overflow: hidden;
     // align-items: center;
     position: relative;
     padding: 70px 70px 80px 70px;
@@ -1373,7 +1374,7 @@
         width: 65%;
       }
       @media screen and (max-width: 768px) {
-        width: 90%;
+        width: 85%;
       }
     }
 
@@ -1448,6 +1449,8 @@
       }
       @media screen and (max-width: 768px) {
         height: 320px;
+        padding: 30px 10px;
+
       }
       @media screen and (max-width: 500px) {
         height: 300px;
