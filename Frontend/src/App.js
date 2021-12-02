@@ -56,7 +56,7 @@ function App({ address, fetchUserDataRequest, fetchUserPromptRequest, fetchbnUSD
         </Route>
 
         <Route path={process.env.PUBLIC_URL + '/'}>
-          <>{address ? <Layout /> : <Redirect to='/'></Redirect>}</>
+          <Layout />
         </Route>
       </Switch>
       <NotificationContainer />

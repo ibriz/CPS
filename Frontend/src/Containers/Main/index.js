@@ -45,12 +45,12 @@ const Main = ({
           paddingRight: 0,
         }}
       >
-        <div style={{ paddingLeft: '25px', paddingRight: '25px' }}>
+        <div style={{ paddingLeft: '25px', paddingRight: '25px', height: !address && window.location.pathname === '/dashboard' ? '100%' : "" }}>
           <div className="btn-toggle" onClick={() => handleToggleSidebar(true)}>
             <FaBars />
           </div>
 
-          <div className='block '>
+          <div className='block ' style={{ height: !address && window.location.pathname === '/dashboard' ? '100%' : "" }}>
             <Switch>
               <Route path='/dashboard'>
                 <Dashboard />
@@ -59,7 +59,9 @@ const Main = ({
                 </Helmet>
               </Route>
               <Route path={process.env.PUBLIC_URL + '/proposals/:id'}>
-                {address ? (
+                <Proposals />
+
+                {/* {address ? (
                   <Proposals />
                 ) : (
                   <>
@@ -70,7 +72,7 @@ const Main = ({
                       <title>CPS</title>
                     </Helmet>
                   </>
-                )}
+                )} */}
                 <Helmet>
                   <title>CPS - Proposals</title>
                 </Helmet>

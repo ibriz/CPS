@@ -161,8 +161,7 @@ const Navbar = props => {
 
                     {!walletAddress ? (
                         <p className="dashboardBtn" style={window.innerWidth > 1100 ? { marginRight: 20 } : {}} onClick={async () => {
-                            setClickedLogin(true);
-                            onClickLogin();
+                            history.push('/dashboard');
                         }}>Dashboard</p>
                     ) : (
                         <ul>

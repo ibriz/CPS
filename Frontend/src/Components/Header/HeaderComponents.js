@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Row } from 'react-bootstrap';
+import { Modal, Row } from 'react-bootstrap';
 import styles from './Header.module.css';
 import { Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
@@ -14,7 +14,7 @@ import EmailConfirmationModal from './EmailConfirmationModal';
 import useVerification from 'Hooks/useVerification';
 import { setUserDataSubmitSuccess } from 'Redux/Reducers/userSlice';
 import { withRouter } from 'react-router-dom';
-
+import { useLogin } from 'Hooks/useLogin';
 const HeaderComponents = ({
   address,
   logout,
@@ -54,6 +54,8 @@ const HeaderComponents = ({
     history.push('/');
   };
 
+  const { walletModal, setWalletModal, handleLogin } = useLogin();
+
   useEffect(() => {
     console.log('userDataSubmitSuccess', userDataSubmitSuccess);
     if (userDataSubmitSuccess && !verified && previousEmail !== email) {
@@ -91,18 +93,20 @@ const HeaderComponents = ({
 
   return (
     <>
-      <span
-        onClick={() => setModalShow(true)}
-        className={styles.address}
-        style={landingPage ? { color: 'white' } : {}}
-      >
-        {firstName || lastName
-          ? `${firstName || ''} ${lastName || ''}`
-          : `${address?.slice(0, 4)}...${address?.slice(
+      {address ?
+        <span
+          onClick={() => setModalShow(true)}
+          className={styles.address}
+          style={landingPage ? { color: 'white' } : {}}
+        >
+          {firstName || lastName
+            ? `${firstName || ''} ${lastName || ''}`
+            : `${address?.slice(0, 4)}...${address?.slice(
               address.length - 2,
             )}`}{' '}
-        ({walletBalance?.toFixed(2)} ICX)
-      </span>
+          ({walletBalance?.toFixed(2)} ICX)
+        </span>
+        : ''}
       {isPrep &&
         isRegistered &&
         !payPenalty &&
@@ -139,8 +143,8 @@ const HeaderComponents = ({
           </Button>
         </Link>
       ) : null}
-      <Button variant={landingPage ? 'light' : 'info'} onClick={onLogout}>
-        Logout
+      <Button variant={landingPage ? 'light' : 'info'} onClick={address ? onLogout : handleLogin}>
+        {address ? 'Logout' : 'Login'}
       </Button>
 
       <ConfirmationModal
@@ -193,6 +197,9 @@ const HeaderComponents = ({
         setModalShow={setEmailConfirmationModal}
         onHide={() => setEmailConfirmationModal(false)}
       />
+      <Modal style={{ zIndex: 99999, marginTop: 50 }} show={walletModal} onHide={() => setWalletModal(false)}>
+        <Modal.Body style={{ textAlign: 'center' }}>Please download <a target="_blank" href="https://chrome.google.com/webstore/detail/iconex/flpiciilemghbmfalicajoolhkkenfel" style={{ textDecoration: 'underline' }}>ICONex Wallet</a> or <a target="_blank" href="https://chrome.google.com/webstore/detail/hana/jfdlamikmbghhapbgfoogdffldioobgl" style={{ textDecoration: 'underline' }}>Hana Wallet</a>.</Modal.Body>
+      </Modal>
     </>
   );
 };
