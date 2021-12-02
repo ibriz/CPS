@@ -154,16 +154,15 @@ const ProposalCreationPage = ({
       document
         .getElementById('totalBudget')
         .setCustomValidity(
-          `Enter Total Budget between 0 and remaining CPF Fund (currently ${cpfRemainingFunds} ICX)`,
+          `Enter Total Budget between 0 and remaining CPF Fund (200K bnUSD)`,
         );
     } else if (
       proposal.totalBudget < 0 ||
-      proposal.totalBudget > parseInt(cpfRemainingFunds)
-    ) {
+      proposal.totalBudget > 200000) {
       document
         .getElementById('totalBudget')
         .setCustomValidity(
-          `Total Budget should be between 0 and CPF remaining Fund (currently  ${cpfRemainingFunds} ICX)`,
+          `Total Budget should be between 0 and CPF remaining Fund (200K bnUSD)`,
         );
     } else {
       document.getElementById('totalBudget').setCustomValidity('');
@@ -193,8 +192,7 @@ const ProposalCreationPage = ({
       document
         .getElementById('milestones')
         .setCustomValidity(
-          `The total duration in milestones should equal to the project duration (currently ${
-            proposal.projectDuration || 0
+          `The total duration in milestones should equal to the project duration (currently ${proposal.projectDuration || 0
           } months)`,
         );
     } else {
@@ -234,7 +232,7 @@ const ProposalCreationPage = ({
     document.getElementById('teamEmail').onfocus = () => {
       document.getElementById('teamEmail').onblur = () => {
         document.getElementById('teamEmail').reportValidity();
-        document.getElementById('teamEmail').onblur = () => {};
+        document.getElementById('teamEmail').onblur = () => { };
       };
     };
 
@@ -424,7 +422,7 @@ const ProposalCreationPage = ({
               <Form.Label column sm='2' className={styles.labelSameLine}>
                 Project Duration
                 <span className={styles.required}></span>
-                {/* <InfoIcon description="The expected time (in months) to complete the project (can be upto 6 months)" /> */}
+                {/* <InfoIcon description="The expected time (in months) to complete the project (can be upto 12 months)" /> */}
               </Form.Label>
               <Col sm='4' className={styles.inputSameLine}>
                 <InputGroup size='md'>
@@ -436,7 +434,7 @@ const ProposalCreationPage = ({
                     id='projectDuration'
                     onChange={handleChange}
                     min={0}
-                    max={6}
+                    max={12}
                     required
                   />
                   <InputGroup.Append>
@@ -457,7 +455,7 @@ const ProposalCreationPage = ({
                   <FormControl
                     placeholder='Total Budget'
                     min={0}
-                    max={parseInt(cpfRemainingFunds)}
+                    max={200000}
                     type='number'
                     value={proposal.totalBudget}
                     name='totalBudget'
@@ -467,7 +465,7 @@ const ProposalCreationPage = ({
                     required
                   />
                   <InputGroup.Append>
-                    <InputGroup.Text>ICX</InputGroup.Text>
+                    <InputGroup.Text>bnUSD</InputGroup.Text>
                   </InputGroup.Append>
                 </InputGroup>
               </Col>
@@ -506,11 +504,10 @@ const ProposalCreationPage = ({
                   </option>
                   {prepList?.map(prep => {
                     return (
-                      <option value={prep?.address} key={prep?.address}>{`${
-                        prep?.name
-                      } (${prep?.address?.slice(0, 4)}...${prep?.address?.slice(
-                        prep.address.length - 2,
-                      )})`}</option>
+                      <option value={prep?.address} key={prep?.address}>{`${prep?.name
+                        } (${prep?.address?.slice(0, 4)}...${prep?.address?.slice(
+                          prep.address.length - 2,
+                        )})`}</option>
                     );
                   })}
                 </Form.Control>
@@ -700,6 +697,14 @@ const ProposalCreationPage = ({
                   <Button variant='info' type='submit'>
                     SUBMIT
                   </Button>
+                  // <Popup
+                  //   component={
+                  //     <Button variant='info' disabled style={{ pointerEvents: 'none' }}>
+                  //       SUBMIT
+                  //     </Button>}
+                  //   popOverText='New proposals disabled until ICON 2.0'
+                  //   placement='left'
+                  // />
                 ) : (
                   //     <OverlayTrigger trigger="hover" placement="left"
                   //     overlay={

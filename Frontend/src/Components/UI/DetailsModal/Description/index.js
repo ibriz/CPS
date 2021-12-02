@@ -4,6 +4,7 @@ import styled from 'styled-components';
 const Description1 = styled.div`
   color: #262626;
   font-size: 0.9rem;
+  padding:0px 25px;
 `;
 
 const DescriptionTitle = styled.div`
@@ -13,9 +14,13 @@ const DescriptionTitle = styled.div`
   line-height: 17px;
   color: #262626;
   margin-bottom: 5px;
+  padding:0px 10px;
 `;
 
 const Description = ({ description, title = 'DESCRIPTION' }) => {
+  description = description.replace('<a ', (match) => {
+    return match + ' target="_blank"';
+  })
   return (
     <>
       <DescriptionTitle>{title}</DescriptionTitle>

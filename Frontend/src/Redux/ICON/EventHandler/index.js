@@ -97,7 +97,7 @@ async function getResult({ txHash,
 
 export default (event) => {
     const { type, payload } = event.detail;
-
+    window.icon = true;
 
     switch (type) {
         case 'RESPONSE_ADDRESS':

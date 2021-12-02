@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import useTimer from 'Hooks/useTimer';
 import { updatePeriod } from 'Redux/Reducers/periodSlice';
 import ConfirmationModal from 'Components/UI/ConfirmationModal';
+import Popup from 'Components/Popup';
 
 const UpperCard = ({
   numberOfSubmittedProposals,
@@ -45,9 +46,7 @@ const UpperCard = ({
             ? 'CREATE NEW PROPOSAL'
             : 'CREATE PROPOSAL DRAFT'}
         </Button>
-      </Link>
-    );
-
+      </Link>);
     // text = <span className={styles.proposalNumber}>{numberOfSubmittedProposals} Proposals submitted</span>
 
     text = (

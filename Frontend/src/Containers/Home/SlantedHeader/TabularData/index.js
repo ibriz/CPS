@@ -70,20 +70,26 @@ const TabularData = ({
     {
       key: 'Voting Proposals',
       value: `${projectAmounts.Voting.count} (${icxFormat(
-        projectAmounts.Voting.amount,
-      )} ICX)`,
+        projectAmounts.Voting.amount.bnUSD || 0,
+      )} bnUSD${projectAmounts.Voting.amount.icx > 0 ? ', ' +
+        icxFormat(
+          projectAmounts.Voting.amount.icx || 0,
+        ) + ' ICX)' : ')'}`,
     },
     {
       key: 'Approved Proposals',
-      value: `${
-        projectAmounts.Active.count + projectAmounts.Paused.count
-      } (${icxFormat(
-        projectAmounts.Active.amount + projectAmounts.Paused.amount,
-      )} ICX)`,
-    },
+      value: `${projectAmounts.Active.count + projectAmounts.Paused.count
+        }(${icxFormat(
+          projectAmounts.Active.amount.bnUSD || 0 + projectAmounts.Paused.amount.bnUSD || 0,
+        )
+        } bnUSD${projectAmounts.Active.amount.icx > 0 || projectAmounts.Paused.amount.icx > 0 ? ', ' + icxFormat(
+          projectAmounts.Active.amount.icx || 0 + projectAmounts.Paused.amount.icx || 0
+        ) + ' ICX)' : ')'}`
+    }
+    ,
     {
       key: 'CPF Remaining Funds',
-      value: `${icxFormat(cpfRemainingFunds, true)} ICX`,
+      value: `${icxFormat(cpfRemainingFunds?.bnUSD || 0, true)} bnUSD`,
     },
   ];
 

@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import Layout from './Containers/Layout';
-import Home from './Containers/Home';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { NotificationContainer } from 'react-notifications';
@@ -12,13 +11,19 @@ import Footer from 'Components/Footer';
 import { Helmet } from 'react-helmet';
 import UnsubscribePage from 'Containers/UnsubscribePage';
 import VerifiedPage from 'Containers/VerifiedPage';
+import { fetchbnUSDAddressRequest } from './Redux/Reducers/fundSlice'
+import LandingPage from './Containers/LandingPage';
 
-function App({ address, fetchUserDataRequest, fetchUserPromptRequest }) {
+
+function App({ address, fetchUserDataRequest, fetchUserPromptRequest, fetchbnUSDAddressRequest }) {
   useEffect(() => {
     address && fetchUserDataRequest();
     address && fetchUserPromptRequest();
   }, [address]);
 
+  useEffect(() => {
+    fetchbnUSDAddressRequest()
+  }, [])
   return (
     <>
       <Switch>
@@ -26,8 +31,7 @@ function App({ address, fetchUserDataRequest, fetchUserPromptRequest }) {
           <>
             {
               <>
-                <Home />
-                <Footer />
+                <LandingPage />
 
                 <Helmet>
                   <title>CPS</title>
@@ -52,7 +56,7 @@ function App({ address, fetchUserDataRequest, fetchUserPromptRequest }) {
         </Route>
 
         <Route path={process.env.PUBLIC_URL + '/'}>
-          <>{address ? <Layout /> : <Redirect to='/'></Redirect>}</>
+          <Layout />
         </Route>
       </Switch>
       <NotificationContainer />
@@ -69,6 +73,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = {
   fetchUserDataRequest,
   fetchUserPromptRequest,
+  fetchbnUSDAddressRequest
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

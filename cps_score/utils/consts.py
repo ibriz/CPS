@@ -1,5 +1,3 @@
-from iconservice import *
-
 # ================================================
 #  Consts
 # ================================================
@@ -10,7 +8,7 @@ MULTIPLIER = 10 ** 18
 # MINIMUM P-Reps Count
 MINIMUM_PREPS = 7
 # MAXIMUM PROJECT PERIOD
-MAX_PROJECT_PERIOD = 6
+MAX_PROJECT_PERIOD = 12
 
 # 2/3 Vot
 MAJORITY = 0.67
@@ -39,6 +37,7 @@ BOND_CANCELLED = "bond_cancelled"
 # SCOREs Constants
 CPS_TREASURY_SCORE = "_cps_treasury_score"
 CPF_SCORE = "_cpf_score"
+BALANCED_DOLLAR = 'balanced_dollar'
 
 # PERIOD CONSTANTS
 INITIAL_BLOCK = "initial_block"
@@ -61,9 +60,16 @@ REGISTERED_PREPS = "registered_preps"
 INACTIVE_PREPS = "inactive_preps"
 PREP_NAME = "prep_name"
 
+SUPPORTED_TOKENS = ['ICX', 'bnUSD']
+ICX = 'ICX'
+bnUSD = 'bnUSD'
+MAINTENANCE = 'maintenance'
+
 # VarDB/ArrayDB Params
 PROPOSALS_KEY_LIST = 'proposals_key_list'
+PROPOSALS_KEY_LIST_INDEX = 'proposals_key_list_index'
 PROGRESS_KEY_LIST = 'progress_key_list'
+PROGRESS_KEY_LIST_INDEX = "progress_key_list_index"
 CONTRIBUTORS = "contributors"
 SPONSORS = "sponsors"
 BUDGET_APPROVALS_LIST = "budget_approvals_list"
@@ -114,6 +120,12 @@ STATUS = "status"
 DATA = "data"
 COUNT = "count"
 
+DELEGATION_SNAPSHOT = "delegation_snapshot"
+MAX_DELEGATION = "max_delegation"
+PROPOSAL_FUND = "proposal_fund"
+SWAP_BLOCK_HEIGHT = 'swap_block_height'
+SWAP_COUNT = 'swap_count'
+
 # VOTE KEYS
 VOTE = "vote"
 VOTE_REASON = "vote_reason"
@@ -122,5 +134,13 @@ REJECT = "_reject"
 ABSTAIN = "_abstain"
 ACCEPT = "_accept"
 
+APPROVE_ = 1
+REJECT_ = 2
+ABSTAIN_ = 3
+
+VOTED = 1
+NOT_VOTED = 0
+
 # Sponsor Fee
 SPONSOR_FEE = 50
+SWAP_BLOCK_DIFF = 5

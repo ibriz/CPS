@@ -68,7 +68,7 @@ const links = [
   },
 ];
 
-const Footer = ({ console = false }) => {
+const Footer = ({ console = false, width = undefined, footerRef }) => {
   const linksStyle = console ? styles.linksConsole : styles.link;
   const firstRowStyle = console ? styles.firstRowConsole : styles.firstRow;
   const footerColumnStyles = console
@@ -79,12 +79,14 @@ const Footer = ({ console = false }) => {
   return (
     <Container
       fluid
-      className={ClassNames({ 'bg-info': !console })}
+      className={ClassNames({ 'bg-info': !console, 'footer': true })}
       style={{
         color: console ? consoleColor : '#FFFFFF',
-        marginTop: '40px',
+        marginTop: console ? '40px' : '0px',
         backgroundColor: console && 'rgba(38, 38, 38, 0.1)',
       }}
+      id="footer"
+      ref={footerRef}
     >
       <Row className={ClassNames(firstRowStyle)}>
         {/* <Col md="1"> </Col> */}
@@ -249,14 +251,24 @@ const Footer = ({ console = false }) => {
               target='_blank'
               style={{ color: console ? consoleColor : 'white' }}
             >
-              hello@icon.foundation
+              <Button
+                variant={console ? 'outline-dark' : 'outline-light'}
+                style={{
+                  marginLeft: '0px',
+                  paddingTop: '3px',
+                  paddingBottom: '3px',
+                }}
+              >
+                {' '}
+                Contact
+              </Button>{' '}
             </a>
           </div>
         </Col>
 
         <Col lg='1'> </Col>
 
-        <Col
+        {console && <Col
           lg='3'
           xs='12'
           className={ClassNames(footerColumnStyles, styles.socialColumn)}
@@ -264,7 +276,7 @@ const Footer = ({ console = false }) => {
         >
           <div style={{ marginTop: '15px' }}>Find us on:</div>
           <div
-            style={{ display: 'flex', marginTop: '15px', alignItems: 'center' }}
+            style={{ display: 'flex', marginTop: '15px', alignItems: 'center', gap: 5 }}
           >
             {socialLinks.map(socialLink => (
               <a
@@ -273,33 +285,24 @@ const Footer = ({ console = false }) => {
                 target='_blank'
                 style={{ zIndex: 1000 }}
               >
-                {console ? (
-                  <socialLink.icon
-                    style={{
-                      fontSize: socialLink.fontSize
-                        ? socialLink.fontSize
-                        : '35px',
-                      color: consoleColor,
-                    }}
-                  />
-                ) : (
-                  <span
-                    className={ClassNames(
-                      styles.socialLink,
-                      styles[socialLink.name],
-                    )}
-                  ></span>
-                )}
+                <socialLink.icon
+                  style={{
+                    fontSize: socialLink.fontSize
+                      ? socialLink.fontSize
+                      : '35px',
+                    color: console ? consoleColor : 'white'
+                  }}
+                />
               </a>
             ))}
           </div>
-        </Col>
+        </Col>}
         {!console && <Col lg='1'> </Col>}
 
         <Col
-          lg='3'
+          lg={console ? '3' : '5'}
           className={ClassNames(footerColumnStyles, linksStyle)}
-          style={{ paddingRight: 0 }}
+          style={{ paddingRight: 0, textAlign: width && width <= 767 ? 'left' : 'right' }}
         >
           {links.map(link => (
             <div style={{ marginTop: '10px' }}>

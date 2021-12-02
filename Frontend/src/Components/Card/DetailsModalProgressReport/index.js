@@ -22,6 +22,7 @@ import styles from './DetailsModal.module.css';
 import ProgressBar from '../../UI/ProgressBar';
 import ProgressText from '../../UI/ProgressText';
 import {
+  fetchChangeVoteRequestProgressReport,
   fetchProgressReportDetailRequest,
   // approveSponserRequest, rejectSponsorRequest, voteProposal
 } from 'Redux/Reducers/progressReportSlice';
@@ -60,6 +61,7 @@ import useTimer from 'Hooks/useTimer';
 import VoteProgressBar from 'Components/VoteProgressBar';
 import InfoIcon from 'Components/InfoIcon';
 import styled from 'styled-components';
+import { NotificationManager } from 'react-notifications';
 
 const LoadingDiv = styled.div`
   height: 50vh;
@@ -70,7 +72,7 @@ const LoadingDiv = styled.div`
 `;
 
 function DetailsModal(props) {
-  const voteOptions = ['Approve', 'Reject'];
+  const voteOptions = [{ title: 'Approve', bgColor: 'success' }, { title: 'Reject', bgColor: 'danger' }];
   const [vote, setVote] = useState('');
   const [voteProjectTermRevision, setVoteProjectTermRevision] = useState();
 
@@ -86,6 +88,7 @@ function DetailsModal(props) {
   const { remainingTime: remainingTimer } = useTimer();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
+  const [changeVoteButton, setChangeVoteButton] = useState(false);
 
   const {
     progressDetail,
@@ -113,6 +116,9 @@ function DetailsModal(props) {
     rejectedPercentageBudgetChange,
     rejectedVoterPercentageBudgetChange,
     isPrep,
+    ipfsError,
+    changeVote,
+    fetchChangeVoteRequest,
     ...remainingProps
   } = props;
 
@@ -124,9 +130,9 @@ function DetailsModal(props) {
     console.log(
       'voteReason',
       voting &&
-        period === 'VOTING' &&
-        remainingTime > 0 &&
-        !votesByProposal.some(vote => vote.sponsorAddress === walletAddress),
+      period === 'VOTING' &&
+      remainingTime > 0 &&
+      !votesByProposal.some(vote => vote.sponsorAddress === walletAddress),
     );
     if (
       voting &&
@@ -206,6 +212,10 @@ function DetailsModal(props) {
       });
   }, [props.progressReport, props.show]);
 
+  useEffect(() => {
+    props.progressReport && fetchChangeVoteRequest({ ipfs_key: props.progressReport.ipfsHash, address: walletAddress })
+  }, [props.progressReport])
+
   const onSubmitVote = () => {
     voteProgressReport({
       vote,
@@ -215,6 +225,7 @@ function DetailsModal(props) {
         : null,
       proposalKey: progressReport.proposalKey,
       reportKey: progressReport.reportKey,
+      vote_change: changeVoteButton ? "1" : "0"
     });
   };
 
@@ -233,6 +244,15 @@ function DetailsModal(props) {
     // props.onHide();
   };
 
+
+  useEffect(() => {
+    if (ipfsError) {
+      setLoading(false);
+      props.onHide();
+      NotificationManager.error("Error fetching ipfs data");
+    }
+  }, [ipfsError])
+
   return (
     <Modal
       {...remainingProps}
@@ -245,7 +265,7 @@ function DetailsModal(props) {
           <Spinner animation='border' variant='secondary' />
         </LoadingDiv>
       ) : (
-        <>
+        !ipfsError && <>
           <Modal.Header closeButton className={styles.modalHeader}>
             <Container fluid className={styles.container}>
               <Row>
@@ -518,8 +538,8 @@ function DetailsModal(props) {
                           key: 'Additional Budget',
                           value: progressDetail?.additionalBudget
                             ? `${icxFormat(
-                                progressDetail?.additionalBudget,
-                              )} ICX`
+                              progressDetail?.additionalBudget,
+                            )} ICX`
                             : 'N/A',
                         },
                         {
@@ -592,7 +612,7 @@ function DetailsModal(props) {
               <>
                 {!votesByProposal.some(
                   vote => vote.sponsorAddress === walletAddress,
-                ) ? (
+                ) || changeVoteButton ? (
                   <>
                     {progressDetail?.projectTermRevision && (
                       <Row>
@@ -615,13 +635,11 @@ function DetailsModal(props) {
                         <ButtonGroup aria-label='Basic example'>
                           {voteOptions.map(voteOption => (
                             <Button
-                              variant={
-                                vote === voteOption ? 'success' : 'light'
-                              }
-                              onClick={() => setVote(voteOption)}
+                              variant={vote === voteOption.title ? voteOption.bgColor : 'light'}
+                              onClick={() => setVote(voteOption.title)}
                               style={{ border: '1px solid rgba(0,0,0,0.7)' }}
                             >
-                              {voteOption}
+                              {voteOption.title}
                             </Button>
                           ))}
                         </ButtonGroup>
@@ -660,18 +678,18 @@ function DetailsModal(props) {
                               {voteOptions.map(voteOption => (
                                 <Button
                                   variant={
-                                    voteProjectTermRevision === voteOption
+                                    voteProjectTermRevision === voteOption.title
                                       ? 'success'
                                       : 'light'
                                   }
                                   onClick={() =>
-                                    setVoteProjectTermRevision(voteOption)
+                                    setVoteProjectTermRevision(voteOption.title)
                                   }
                                   style={{
                                     border: '1px solid rgba(0,0,0,0.7)',
                                   }}
                                 >
-                                  {voteOption}
+                                  {voteOption.title}
                                 </Button>
                               ))}
                             </ButtonGroup>
@@ -730,9 +748,13 @@ function DetailsModal(props) {
                   </>
                 ) : (
                   <>
-                    <p style={{ color: '#262626', textAlign: 'center' }}>
-                      You have already voted for this progress report
+                    {status === 'Voting' && <p style={{ color: '#262626', textAlign: 'center' }}>
+                      You have already voted for this progress report. <br /> {changeVote &&
+                        <ButtonGroup aria-label='Basic example'>
+                          <Button style={{ width: 200 }} onClick={() => setChangeVoteButton(true)} variant="primary">Change Vote</Button>
+                        </ButtonGroup>}
                     </p>
+                    }
                   </>
                 )}
               </>
@@ -838,6 +860,8 @@ const mapStateToProps = state => ({
   remainingTime: state.period.remainingTime,
   walletAddress: state.account.address,
   isPrep: state.account.isPrep,
+  ipfsError: state.progressReport.ipfsError,
+  changeVote: state.progressReport.changeVote
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -849,6 +873,8 @@ const mapDispatchToProps = dispatch => ({
   fetchVoteResultRequest: payload => dispatch(fetchVoteResultRequest(payload)),
   fetchVoteResultBudgetChangeRequest: payload =>
     dispatch(fetchVoteResultBudgetChangeRequest(payload)),
+  fetchChangeVoteRequest: (payload) => dispatch(fetchChangeVoteRequestProgressReport(payload))
+
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DetailsModal);

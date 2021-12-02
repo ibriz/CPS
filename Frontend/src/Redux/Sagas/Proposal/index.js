@@ -18,6 +18,7 @@ import fetchProjectAmountsWorker from './fetchProjectAmountsWorker';
 import fetchRemainingVotesRequestWorker from './fetchRemainingVotesRequestWorker';
 import fetchSponsorMessageRequestWorker from './fetchSponsorMessageRequestWorker';
 import fetchProposalByIpfsWorker from './fetchProposalByIpfsWorker';
+import fetchChangeVoteWorker from './fetchChangeVoteWorker';
 
 export {
     fetchProposalListWorker,
@@ -38,5 +39,6 @@ export {
     fetchProjectAmountsWorker,
     fetchRemainingVotesRequestWorker,
     fetchSponsorMessageRequestWorker,
-    fetchProposalByIpfsWorker
+    fetchProposalByIpfsWorker,
+    fetchChangeVoteWorker
 }
