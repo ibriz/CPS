@@ -300,7 +300,7 @@ const Footer = ({ console = false, width = undefined, footerRef }) => {
         {!console && <Col lg='1'> </Col>}
 
         <Col
-          lg={console ? '2' : '5'}
+          lg={console ? '3' : '5'}
           className={ClassNames(footerColumnStyles, linksStyle)}
           style={{ paddingRight: 0, textAlign: width && width <= 767 ? 'left' : 'right' }}
         >
