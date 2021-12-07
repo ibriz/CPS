@@ -13,16 +13,16 @@ import frontEndWallet from './FrontEndWallet';
 // var CPSScore = 'cx6bb0e6683dd326165d42289c12b6bd0eaa596cc9';
 // var CPSScore = 'cx9f4ab72f854d3ccdc59aa6f2c3e2215dd62e879f';
 // export const CPSScore = 'cx9f4ab72f854d3ccdc59aa6f2c3e2215dd62e879f';
-export const CPSScore = 'cxcedc4ab6d494638ca2f4ecec8dbca4fbad166419';
+export const CPSScore = 'cx46d04e7fca279190230efce0866356278326449b';
 
 var nid = 3;
 // export const provider = new HttpProvider('https://ctz.solidwallet.io/api/v3');
 export const provider = new HttpProvider(
-  'https://bicon.net.solidwallet.io/api/v3',
+  'https://sejong.net.solidwallet.io/api/v3',
 );
 
 export const iconService = new IconService(provider);
-export const trackerURL = "https://bicon.tracker.solidwallet.io/address";
+export const trackerURL = "https://sejong.tracker.solidwallet.io/address";
 
 // var testNet = "https://bicon.tracker.solidwallet.io/v3/address/info?address="
 // var mainNet = "https://tracker.icon.foundation/v3/address/info?address="

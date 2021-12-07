@@ -9,9 +9,9 @@ function* fetchCPFRemainingFundWorker({ payload }) {
   try {
     const getCPFScoreAddress = state => state.fund.cpfScoreAddress;
     const cpfScoreAddress = yield select(getCPFScoreAddress);
-    const dexScoreAddress = 'cxa0af3165c08318e988cb30993b3048335b94af6c';
-    const sicxScoreAddress = 'cx2609b924e33ef00b648a409245c7ea394c467824';
-    const cpfTreasuryAddress = 'cxdca1178010b5368aea929ad5c06abee64b91acc2';
+    const dexScoreAddress = 'cxf0276a2413b46d5660e09c4935eecbf401c5811a';
+    const sicxScoreAddress = 'cxcc57144332b23ca8f36d09d862bc202caa76dc30';
+    const cpfTreasuryAddress = 'cx075e342b9f7a295c7c672b7228ca6df156e2e360';
     let response = yield call(callKeyStoreWallet, {
       method: 'get_remaining_fund',
       // scoreAddress: cpfScoreAddress
