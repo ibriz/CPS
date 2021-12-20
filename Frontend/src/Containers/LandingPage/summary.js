@@ -98,7 +98,7 @@ const Summary = ({
                                 <>
                                     <span style={{ textAlign: 'center', fontSize: 18, color: '#1AAABA', fontWeight: 600 }}>{abbreviateNumber(Number(cpfRemainingFunds?.icx))} ICX</span>
                                     <br />
-                                    <span style={{ textAlign: 'center', fontSize: 18, color: '#1AAABA', fontWeight: 600 }}>{abbreviateNumber(Number(cpfRemainingFunds?.sicx || 0))} SICX</span>
+                                    <span style={{ textAlign: 'center', fontSize: 18, color: '#1AAABA', fontWeight: 600 }}>{abbreviateNumber(Number(cpfRemainingFunds?.sicx || 0))} sICX</span>
                                     <br />
                                     <span style={{ textAlign: 'center', fontSize: 18, color: '#1AAABA', fontWeight: 600 }}>{abbreviateNumber(Number(cpfRemainingFunds?.bnUSD || 0))} bnUSD</span>
                                 </>
