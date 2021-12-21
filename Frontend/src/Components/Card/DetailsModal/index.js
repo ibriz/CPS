@@ -890,6 +890,7 @@ function DetailsModal(props) {
               onHide={() => {
                 setLoading(false);
                 emptyProgressReportDetailRequest();
+                setModalShow(false)
               }}
               progressReport={selectedProgressReport}
             // status={selectedTab}
