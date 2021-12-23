@@ -349,8 +349,8 @@ class CPS_Score(IconScoreBase):
         for _prep in range(0, len(_all_preps)):
             prep_info = _all_preps[_prep]
             if prep_info['address'] == _address:
-                if 'votingPower' in prep_info:
-                    return prep_info['votingPower']
+                if 'power' in prep_info:
+                    return prep_info['power']
                 else:
                     return prep_info['delegated']
 
