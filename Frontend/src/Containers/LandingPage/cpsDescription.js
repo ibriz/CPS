@@ -7,7 +7,6 @@ import Summary from './summary';
 import { Waypoint } from 'react-waypoint';
 
 const CPSDescription = (props) => {
-    console.log("Desc", props)
     const { walletAddress, onClickLogin, setActiveTabCenter, createProposalRef } = props;
     const [clickedProposal, setClickedProposal] = useState(false);
 

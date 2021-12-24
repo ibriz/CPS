@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import iconCPSImg from '../../Assets/Images/iconCPS.png';
+import iconCPSImg from '../../Assets/Images/ICON CPS white.svg';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import { Link, Redirect } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
@@ -13,8 +13,6 @@ import { withRouter } from 'react-router-dom';
 
 
 const Navbar = props => {
-    console.log(props);
-
     const [
         emailConfirmationModalShow,
         setEmailConfirmationModal,
@@ -75,7 +73,6 @@ const Navbar = props => {
         logout();
         history.push('/');
     };
-
     const navbarCenterItem = [
         { title: 'Create a proposal', id: 'description', className: 'landingPage__Description', ref: createProposalRef },
         { title: 'Grant Process', id: 'grantProcess', className: 'grantProcessContainer', ref: grantProcessRef },
@@ -93,77 +90,12 @@ const Navbar = props => {
     const [activeTabRight, setActiveTabRight] = useState('');
     const [clickedLogin, setClickedLogin] = useState(false);
 
-
-
-    const [visibleSection, setVisibleSection] = useState();
-
-
-    // useEffect(() => {
-    //     const scrollSection = document.querySelectorAll('.scrollSection')
-    //     console.log("Scroll", scrollSection);
-
-    //     const handleScroll = () => {
-    //         let current = '';
-    //         scrollSection.forEach((section, index) => {
-    //             const sectionTop = section.offsetTop;
-    //             const sectionHeight = section.clientHeight;
-    //             if (window.pageYOffset >= (sectionTop)) {
-    //                 console.log("Scroll", section)
-    //                 current = section.getAttribute("id");
-    //                 // break;
-    //             }
-    //         })
-    //         if (['description', 'grantProcess', 'faq', 'contact'].includes(current)) {
-    //             setActiveTabCenter(current);
-    //         }
-    //         console.log("Scroll test", current);
-    //     };
-
-    //     let options = {
-    //         root: document.querySelector('.landingPage'),
-    //         rootMargin: '0px',
-    //         threshold: 0
-    //     }
-
-    //     let callback = (entries, observer) => {
-    //         console.log("Scroll", entries);
-    //         setActiveTabCenter('')
-    //         entries.forEach(entry => {
-    //             if (entry.isIntersecting) {
-    //                 setActiveTabCenter(entry.target.id)
-    //             }
-
-    //             // Each entry describes an intersection change for one observed
-    //             // target element:
-    //             //   entry.boundingClientRect
-    //             //   entry.intersectionRatio
-    //             //   entry.intersectionRect
-    //             //   entry.isIntersecting
-    //             //   entry.rootBounds
-    //             //   entry.target
-    //             //   entry.time
-    //         });
-    //     };
-    //     let observer = new IntersectionObserver(callback, options);
-    //     let target = document.querySelector('#faq');
-    //     let target1 = document.querySelector('#description');
-    //     let target2 = document.querySelector('#grantProcess');
-    //     let target3 = document.querySelector('#footer');
-    //     observer.observe(target);
-    //     observer.observe(target1);
-    //     observer.observe(target2);
-    //     observer.observe(target3);
-    //     // document.querySelector('.landingPage').addEventListener('scroll', handleScroll);
-    //     // return () => document.querySelector('.landingPage').removeEventListener('scroll', handleScroll);
-
-    // }, [])
-
     if (clickedLogin && walletAddress) {
         return <Redirect to="/dashboard" />
     }
 
     return (
-        <div ref={headerRef} className={`landingPage__Navbar ${isOpened && width <= 769 ? 'mobileNavbar' : ''}`} >
+        <div ref={headerRef} className={`landingPage__Navbar ${isOpened && window.innerWidth <= 1100 ? 'mobileNavbar' : ''}`} >
             <div className="navbarContainer">
                 <div className='navbarLeft'>
                     <div>
@@ -172,7 +104,7 @@ const Navbar = props => {
                 </div>
                 <div
                     className='navbarCenter'
-                    style={{ display: !isOpened && width <= 769 ? 'none' : 'flex', justifyContent: !walletAddress || width <= 769 ? 'center' : 'flex-end' }}
+                    style={{ display: !isOpened && window.innerWidth <= 1100 ? 'none' : 'flex', justifyContent: !walletAddress || window.innerWidth <= 1100 ? 'center' : 'flex-end' }}
                 >
                     <ul>
                         {navbarCenterItem.map((item, index) => (
@@ -192,11 +124,11 @@ const Navbar = props => {
                                     const section = document.querySelector(`.${item.className}`);
                                     const { height: headerHeight } = getDimensions(headerRef.current);
                                     const topPos = section.getBoundingClientRect().top + window.pageYOffset - headerHeight;
-                                    if (width < 768) {
+                                    if (window.innerWidth <= 1100) {
                                         section.scrollIntoView({
                                             behavior: 'smooth',
                                             block: 'start',
-                                            inline: 'center',
+                                            inline: 'start',
                                         });
                                     }
                                     else {
@@ -219,7 +151,7 @@ const Navbar = props => {
                 <div
                     className='navbarRight'
                     style={{
-                        display: !isOpened && width <= 769 ? 'none' : 'flex', flex: width < 1300 && (isPrep &&
+                        display: !isOpened && window.innerWidth <= 1100 ? 'none' : 'flex', flex: window.innerWidth < 1300 && (isPrep &&
                             isRegistered &&
                             !payPenalty &&
                             period === 'APPLICATION' &&
@@ -228,9 +160,8 @@ const Navbar = props => {
                 >
 
                     {!walletAddress ? (
-                        <p className="dashboardBtn" style={width > 769 ? { marginRight: 20 } : {}} onClick={async () => {
-                            setClickedLogin(true);
-                            onClickLogin();
+                        <p className="dashboardBtn" style={window.innerWidth > 1100 ? { marginRight: 20 } : {}} onClick={async () => {
+                            history.push('/dashboard');
                         }}>Dashboard</p>
                     ) : (
                         <ul>
@@ -240,23 +171,23 @@ const Navbar = props => {
                                     setActiveTabRight('username')
 
                                 }}
-                                style={(isPrep &&
-                                    isRegistered &&
-                                    !payPenalty &&
-                                    period === 'APPLICATION' &&
-                                    !isRemainingTimeZero) || (isPrep && !isRegistered && !payPenalty && !isRemainingTimeZero) ? { padding: '15px 15px 15px 15px' } : {}}
+                            // style={(isPrep &&
+                            //     isRegistered &&
+                            //     !payPenalty &&
+                            //     period === 'APPLICATION' &&
+                            //     !isRemainingTimeZero) || (isPrep && !isRegistered && !payPenalty && !isRemainingTimeZero) ? { padding: '15px 15px 15px 15px' } : {}}
                             > <span
                                 onClick={() => setModalShow(true)}
                                 style={landingPage ? { color: 'white' } : {}}
                             >
-                                    {firstName && lastName
-                                        ? `${firstName || lastName}`
+                                    {firstName || lastName
+                                        ? `${firstName?.slice(0, 6)}...` || `${lastName?.slice(0, 6)}...}`
                                         : `${address?.slice(0, 4)}...${address?.slice(
                                             address.length - 2,
                                         )}`}{' '}
                                     ({walletBalance?.toFixed(2)} ICX)
                                 </span>
-                                {isPrep &&
+                                {/* {isPrep &&
                                     isRegistered &&
                                     !payPenalty &&
                                     period === 'APPLICATION' &&
@@ -277,7 +208,7 @@ const Navbar = props => {
                                     >
                                         Register Prep
                                     </Button>
-                                )}
+                                )} */}
 
                                 <ConfirmationModal
                                     show={showUnregisterConfirmationModal}
@@ -345,7 +276,7 @@ const Navbar = props => {
                 </div>
                 <div className='menuIcon'>
                     <label onClick={() => setIsOpened(prev => !prev)} htmlFor='menu'>
-                        {!isOpened ? <FaBars style={{ fontSize: 20 }} /> : <FaTimes style={{ fontSize: 20 }} />}
+                        {!isOpened ? <FaBars style={{ fontSize: 22 }} /> : <FaTimes style={{ fontSize: 22 }} />}
                     </label>
                 </div>
             </div>

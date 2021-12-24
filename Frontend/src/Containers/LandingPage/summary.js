@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import {
     fetchProposalListRequest,
@@ -10,6 +10,8 @@ import {
     fetchCPFRemainingFundRequest,
 } from 'Redux/Reducers/fundSlice';
 import { icxFormat } from 'Helpers';
+import PRepListModal from 'Containers/Home/SlantedHeader/PRepListModal';
+import { OverlayTrigger, Popover } from 'react-bootstrap';
 var SI_SYMBOL = ["", "k", "M", "G", "T", "P", "E"];
 
 function abbreviateNumber(number) {
@@ -66,9 +68,17 @@ const Summary = ({
         fetchCPFRemainingFundRequest();
     }, [fetchCPFRemainingFundRequest, cpfScoreAddress]);
 
+    const getTreasuryValue = () => {
+        const result = (Number(cpfRemainingFunds.icx || 0) * (1 / Number(cpfRemainingFunds.sicxToICX || 0)) + Number(cpfRemainingFunds.sicx || 0)) * (cpfRemainingFunds.sicxTobnUSD || 0) + Number(cpfRemainingFunds.bnUSD || 0);
+        return result || 0;
+    }
+
+    const [prepListModalShow, setPrepListModalShow] = useState(false);
+    const [showPopover, setShowPopover] = useState(false);
+    const ref = useRef(null);
 
     return (<div className="landingPage__Summary">
-        <div className="description">
+        <div className="description" >
             <div>
                 <p>{projectAmounts.Active.count}</p>
                 <p>Active Projects</p>
@@ -78,23 +88,52 @@ const Summary = ({
                 <p>Projects Completed</p>
             </div>
             <div>
-                <p>{abbreviateNumber(cpfRemainingFunds.icx || 0)}<br /></p>
-                <p>ICX Treasury Value</p>
+                <OverlayTrigger
+                    trigger={['click']}
+                    delay={{ show: 250, hide: 200 }}
+                    placement={'top-start'}
+                    overlay={
+                        <Popover className={'balancePopover'} style={{ border: '2px solid #1AAABA', borderRadius: 10 }}>
+                            <Popover.Content style={{ padding: '10px 20px' }}>
+                                <>
+                                    <span style={{ textAlign: 'center', fontSize: 18, color: '#1AAABA', fontWeight: 600 }}>{abbreviateNumber(Number(cpfRemainingFunds?.icx))} ICX</span>
+                                    <br />
+                                    <span style={{ textAlign: 'center', fontSize: 18, color: '#1AAABA', fontWeight: 600 }}>{abbreviateNumber(Number(cpfRemainingFunds?.sicx || 0))} sICX</span>
+                                    <br />
+                                    <span style={{ textAlign: 'center', fontSize: 18, color: '#1AAABA', fontWeight: 600 }}>{abbreviateNumber(Number(cpfRemainingFunds?.bnUSD || 0))} bnUSD</span>
+                                </>
+                            </Popover.Content>
+                        </Popover>
+                    }
+                    rootClose
+                    transition
+                >
+                    <span className='d-inline-block' style={{ cursor: 'pointer' }}>
+                        <p>${abbreviateNumber(getTreasuryValue())}<br /></p>
+                        <p style={{ textDecoration: 'underline' }}> Treasury Value</p>
+                    </span>
+                </OverlayTrigger>
+                {/* <Button style={{ background: 'transparent', border: 'none', boxShadow: 'none' }} ref={target} onClick={handleClick}>  </Button> */}
             </div>
             <div>
-                <p>{abbreviateNumber(cpfRemainingFunds.bnUSD || 0)}<br /></p>
-                <p>bnUSD Treasury Value</p>
-            </div>
-            <div>
-                <p> {abbreviateNumber(projectAmounts.Active.amount.icx || 0 + projectAmounts.Paused.amount.icx || 0)}<br /> </p>
+                <p> {abbreviateNumber(projectAmounts.Completed.amount.icx || 0)}<br /> </p>
                 <p>ICX Given Out</p>
             </div>
             <div>
-                <p> {abbreviateNumber(projectAmounts.Active.amount.bnUSD || 0 + projectAmounts.Paused.amount.bnUSD || 0)}<br /></p>
+                <p> {abbreviateNumber(projectAmounts.Completed.amount.bnUSD || 0)}<br /></p>
                 <p>bnUSD Given Out</p>
             </div>
+            <div>
+                <p> {preps.length}<br /></p>
+                <p onClick={() => setPrepListModalShow(true)} style={{ textDecoration: 'underline', cursor: 'pointer' }}>Preps</p>
+            </div>
         </div>
-    </div>)
+        <PRepListModal
+            show={prepListModalShow}
+            onHide={() => setPrepListModalShow(false)}
+            preps={preps}
+        />
+    </div >)
 }
 
 const mapStateToProps = () => state => {

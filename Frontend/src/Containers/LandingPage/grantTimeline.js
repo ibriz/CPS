@@ -44,6 +44,7 @@ const GrantTimeline = props => {
                             Grants are received if the proposal and/or progress report are accepted by
                             67% stake and 67% of the participating P-Reps
                         </div>
+                        <p>Grant Decision</p>
                     </div>
                 </div>
                 <p style={{ textDecoration: 'underline' }}>

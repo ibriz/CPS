@@ -25,6 +25,7 @@ import { logout } from '../../Redux/Reducers/accountSlice';
 import { setUserDataSubmitSuccess } from 'Redux/Reducers/userSlice';
 import { unregisterPrep, registerPrep } from 'Redux/Reducers/prepsSlice';
 import { Modal } from 'react-bootstrap';
+import { useLogin } from 'Hooks/useLogin';
 const LandingPage = (props) => {
     const {
         loginRequest,
@@ -34,45 +35,7 @@ const LandingPage = (props) => {
         loginButtonClicked
     } = props;
 
-    const [walletModal, setWalletModal] = useState(false);
-    const onClickLogin = () => {
-        var isChromium = window.chrome;
-        var winNav = window.navigator;
-        var vendorName = winNav.vendor;
-        var isOpera = typeof window.opr !== 'undefined';
-        var isIEedge = winNav.userAgent.indexOf('Edge') > -1;
-        var isIOSChrome = winNav.userAgent.match('CriOS');
-
-        if (isIOSChrome) {
-            // is Google Chrome on IOS
-        } else if (
-            isChromium !== null &&
-            typeof isChromium !== 'undefined' &&
-            vendorName === 'Google Inc.' &&
-            isOpera === false &&
-            isIEedge === false
-        ) {
-            // is Google Chrome
-            window.dispatchEvent(customRequestHasAccount);
-            window.dispatchEvent(customRequestAddress);
-            setLoginButtonClicked({
-                click: true,
-            });
-            loginRequest();
-            setTimeout(() => {
-                if (!window.icon) {
-                    setWalletModal(true);
-                }
-                else {
-                    setWalletModal(false);
-                }
-            }, 1000)
-        } else {
-            NotificationManager.warning(
-                'Please Use Google Chrome or any other Chromium Browser',
-            );
-        }
-    };
+    const { handleLogin, walletModal, setWalletModal } = useLogin();
     const { targetRef } = props;
     const [activeTabCenter, setActiveTabCenter] = useState('');
 
@@ -112,7 +75,6 @@ const LandingPage = (props) => {
                     return scrollPosition > offsetTop && scrollPosition < offsetBottom;
                 }
             });
-            console.log('***', selected)
             if (selected && selected.id !== activeTabCenter) {
                 setActiveTabCenter(selected.id);
             } else if (!selected && activeTabCenter) {
@@ -129,8 +91,8 @@ const LandingPage = (props) => {
         <>
 
             <div className="landingPage" ref={targetRef} >
-                <Navbar headerRef={headerRef} {...refs} onClickLogin={onClickLogin}  {...props} {...activeTabProps} />
-                <CPSDescription createProposalRef={createProposalRef} walletAddress={walletAddress} onClickLogin={onClickLogin} {...activeTabProps} />
+                <Navbar headerRef={headerRef} {...refs} onClickLogin={handleLogin}  {...props} {...activeTabProps} />
+                <CPSDescription createProposalRef={createProposalRef} walletAddress={walletAddress} onClickLogin={handleLogin} {...activeTabProps} />
                 <Summary />
                 <BuildOn />
                 <GrantProcess grantProcessRef={grantProcessRef} {...activeTabProps} />
@@ -142,7 +104,7 @@ const LandingPage = (props) => {
                     <DeveloperCommunity />
                 </div>
                 <Footer width={width} {...activeTabProps} />
-                <Modal show={walletModal} onHide={() => setWalletModal(false)}>
+                <Modal style={{ zIndex: 99999, marginTop: 50 }} show={walletModal} onHide={() => setWalletModal(false)}>
                     <Modal.Body style={{ textAlign: 'center' }}>Please download <a target="_blank" href="https://chrome.google.com/webstore/detail/iconex/flpiciilemghbmfalicajoolhkkenfel" style={{ textDecoration: 'underline' }}>ICONex Wallet</a> or <a target="_blank" href="https://chrome.google.com/webstore/detail/hana/jfdlamikmbghhapbgfoogdffldioobgl" style={{ textDecoration: 'underline' }}>Hana Wallet</a>.</Modal.Body>
                 </Modal>
             </div>
