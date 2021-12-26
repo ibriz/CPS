@@ -160,7 +160,6 @@ class CPS_Score(IconScoreBase):
                                        self._APPROVED: self._approved_progress_reports,
                                        self._PROGRESS_REPORT_REJECTED: self._progress_rejected}
 
-        self._sponsor_bond_return = DictDB(self._SPONSOR_BOND_RETURN, db, value_type=int)
         self.sponsor_bond_return = DictDB(self.SPONSOR_BOND_RETURN, db, value_type=int, depth=2)
 
         self.delegation_snapshot = DictDB(DELEGATION_SNAPSHOT, db, value_type=int)
@@ -2161,35 +2160,6 @@ class CPS_Score(IconScoreBase):
         """
         return {ICX: self.sponsor_bond_return[str(_address)][ICX],
                 bnUSD: self.sponsor_bond_return[str(_address)][bnUSD]}
-
-    @external
-    def update_project_flag(self):
-        """
-        Update every existing projects with a key `token` : ICX, migrate sponsor_bond value to new dictDB.
-        Update the proposal index for setting up enumerableSetDB
-        :return:
-        """
-        self._validate_admins()
-        for _ix in range(0, len(self.proposals_key_list)):
-            _ipfs_hash = self.proposals_key_list[_ix]
-            self.proposals_key_list_index[_ipfs_hash] = _ix
-            proposalPrefix = self.proposal_prefix(_ipfs_hash)
-            _prefix = self.proposals[proposalPrefix]
-            _prefix.token.set(ICX)
-            sponsor_ = _prefix.sponsor_address.get()
-            self.sponsor_bond_return[str(sponsor_)][ICX] = self._sponsor_bond_return[str(sponsor_)]
-            del self._sponsor_bond_return[str(sponsor_)]
-
-    @external
-    def update_progress_report_index(self):
-        """
-        Update every existing progress reports key index on DB.
-        :return:
-        """
-        self._validate_admins()
-        for _ix in range(0, len(self.progress_key_list)):
-            _ipfs_hash = self.progress_key_list[_ix]
-            self.progress_key_list_index[_ipfs_hash] = _ix
 
     @external
     def tokenFallback(self, _from: Address, _value: int, _data: bytes):
