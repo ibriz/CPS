@@ -179,9 +179,7 @@ class CPS_Score(IconScoreBase):
 
     def on_update(self) -> None:
         super().on_update()
-        self.maintenance.set(True)
-        self.swap_block_height.set(self.block_height)
-        self.swap_count.set(150)
+        self.proposal_fund.set(40_000 * MULTIPLIER)
 
     def _proposal_key_exists(self, key: str) -> bool:
         return key in self.proposals_key_list_index
@@ -1749,6 +1747,7 @@ class CPS_Score(IconScoreBase):
                 self.next_block.set(self.next_block.get() + BLOCKS_DAY_COUNT * DAY_COUNT)
                 self._update_application_result()
                 self.update_period_index.set(0)
+                self.proposal_fund.set(0)
                 self.set_PReps()
                 self._snapshot_delegations()
 
