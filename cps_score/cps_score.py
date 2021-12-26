@@ -2260,7 +2260,8 @@ class CPS_Score(IconScoreBase):
         details = self._get_proposal_details(_ipfs_hash)
 
         sponsor_deposit = details.get(SPONSOR_DEPOSIT_AMOUNT)
-        self._sponsor_bond_return[str(self.msg.sender)] += sponsor_deposit
+        sponsor_address = details.get(SPONSOR_ADDRESS)
+        self.sponsor_bond_return[str(sponsor_address)][ICX] += sponsor_deposit
 
     @external
     def set_swap_count(self, _value: int):
