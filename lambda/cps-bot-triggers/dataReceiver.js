@@ -1,4 +1,3 @@
-const axios = require('axios');
 const { IconConverter } = require('icon-sdk-js');
 
 const { eventTypesMapping, resHeaders, scoreMethods } = require('./constants');
@@ -37,11 +36,18 @@ exports.handler = async (req) => {
                         throw { statusCode: 400, name: "IPFS url", message: "Invalid IPFS hash provided" };
                     }
 
-                    // TODO: Fetch unit of payment as well: bnUsd or ICX
+                    // Fetch unit of payment as well: bnUsd or ICX... IS THIS REQUIRED???
+                    const proposalDetailsScore = await contractMethodCallService(
+                        process.env['CPS_SCORE'],
+                        scoreMethods.getProposalDetailsByHash,
+                        { '_ipfs_key': proposalIpfsHash }
+                    );
+
                     const { projectName, teamName, sponserPrep, sponserPrepName, totalBudget} = proposalDetails;
                     const finalResponse = {
                         projectName,
                         teamName,
+                        token: proposalDetailsScore['token'],
                         sponsorPrepAddress: sponserPrep,
                         sponserPrepName: sponserPrepName,
                         totalBudgetIcx: totalBudget,
@@ -142,10 +148,18 @@ exports.handler = async (req) => {
                         console.error("ERROR FETCHING PROPOSAL DATA");
                         throw { statusCode: 400, name: "IPFS url", message: "Invalid IPFS hash provided" };
                     }
-                    // TODO: check bnUSD or ICX with bnUSD flag
+
+                    // Fetch unit of payment as well: bnUsd or ICX... IS THIS REQUIRED???
+                    const proposalDetailsScore = await contractMethodCallService(
+                        process.env['CPS_SCORE'],
+                        scoreMethods.getProposalDetailsByHash,
+                        { '_ipfs_key': proposalIpfsHash }
+                    );
+
                     const finalResponse = {
                         proposalName: proposalDetails.projectName,
                         progressReportName: progressDetails.progressReportTitle,
+                        token: proposalDetailsScore['token'],
                         teamName: proposalDetails.teamName,
                         percentageCompleted: progressDetails.percentageCompleted,
                         sponsorPrep: proposalDetails.sponserPrepName,
