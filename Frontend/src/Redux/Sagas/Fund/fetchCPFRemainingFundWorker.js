@@ -11,7 +11,7 @@ function* fetchCPFRemainingFundWorker({ payload }) {
     const cpfScoreAddress = yield select(getCPFScoreAddress);
     const dexScoreAddress = 'cxf0276a2413b46d5660e09c4935eecbf401c5811a';
     const sicxScoreAddress = 'cxcc57144332b23ca8f36d09d862bc202caa76dc30';
-    const cpfTreasuryAddress = 'cx075e342b9f7a295c7c672b7228ca6df156e2e360';
+    const cpfTreasuryAddress = 'cxa1e86a85b19f93c45d335709909f93afb4c40aac';
     let response = yield call(callKeyStoreWallet, {
       method: 'get_remaining_fund',
       // scoreAddress: cpfScoreAddress
