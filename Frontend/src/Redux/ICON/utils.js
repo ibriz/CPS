@@ -15,7 +15,7 @@ import frontEndWallet from './FrontEndWallet';
 // export const CPSScore = 'cx9f4ab72f854d3ccdc59aa6f2c3e2215dd62e879f';
 export const CPSScore = 'cxc32e5105c30d9bc41466779c6ca6869e2bcd6064';
 
-var nid = 3;
+var nid = 83;
 // export const provider = new HttpProvider('https://ctz.solidwallet.io/api/v3');
 export const provider = new HttpProvider(
   'https://sejong.net.solidwallet.io/api/v3',
