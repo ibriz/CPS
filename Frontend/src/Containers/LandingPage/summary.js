@@ -22,7 +22,7 @@ function abbreviateNumber(number) {
     var tier = Math.log10(Math.abs(number)) / 3 | 0;
 
     // if zero, we don't need a suffix
-    if (tier == 0) return number;
+    if (tier == 0) return number.toFixed(2);
 
     // get suffix and determine scale
     var suffix = SI_SYMBOL[tier];
