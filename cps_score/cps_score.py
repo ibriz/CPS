@@ -160,7 +160,6 @@ class CPS_Score(IconScoreBase):
                                        self._APPROVED: self._approved_progress_reports,
                                        self._PROGRESS_REPORT_REJECTED: self._progress_rejected}
 
-        self._sponsor_bond_return = DictDB(self._SPONSOR_BOND_RETURN, db, value_type=int)
         self.sponsor_bond_return = DictDB(self.SPONSOR_BOND_RETURN, db, value_type=int, depth=2)
 
         self.delegation_snapshot = DictDB(DELEGATION_SNAPSHOT, db, value_type=int)
@@ -180,9 +179,7 @@ class CPS_Score(IconScoreBase):
 
     def on_update(self) -> None:
         super().on_update()
-        self.maintenance.set(True)
-        self.swap_block_height.set(self.block_height)
-        self.swap_count.set(150)
+        self.proposal_fund.set(40_000 * MULTIPLIER)
 
     def _proposal_key_exists(self, key: str) -> bool:
         return key in self.proposals_key_list_index
@@ -349,10 +346,7 @@ class CPS_Score(IconScoreBase):
         for _prep in range(0, len(_all_preps)):
             prep_info = _all_preps[_prep]
             if prep_info['address'] == _address:
-                if 'votingPower' in prep_info:
-                    return prep_info['votingPower']
-                else:
-                    return prep_info['delegated']
+                return prep_info.get('power')
 
     def set_PReps(self) -> None:
         """
@@ -1750,6 +1744,7 @@ class CPS_Score(IconScoreBase):
                 self.next_block.set(self.next_block.get() + BLOCKS_DAY_COUNT * DAY_COUNT)
                 self._update_application_result()
                 self.update_period_index.set(0)
+                self.proposal_fund.set(0)
                 self.set_PReps()
                 self._snapshot_delegations()
 
@@ -2163,35 +2158,6 @@ class CPS_Score(IconScoreBase):
                 bnUSD: self.sponsor_bond_return[str(_address)][bnUSD]}
 
     @external
-    def update_project_flag(self):
-        """
-        Update every existing projects with a key `token` : ICX, migrate sponsor_bond value to new dictDB.
-        Update the proposal index for setting up enumerableSetDB
-        :return:
-        """
-        self._validate_admins()
-        for _ix in range(0, len(self.proposals_key_list)):
-            _ipfs_hash = self.proposals_key_list[_ix]
-            self.proposals_key_list_index[_ipfs_hash] = _ix
-            proposalPrefix = self.proposal_prefix(_ipfs_hash)
-            _prefix = self.proposals[proposalPrefix]
-            _prefix.token.set(ICX)
-            sponsor_ = _prefix.sponsor_address.get()
-            self.sponsor_bond_return[str(sponsor_)][ICX] = self._sponsor_bond_return[str(sponsor_)]
-            del self._sponsor_bond_return[str(sponsor_)]
-
-    @external
-    def update_progress_report_index(self):
-        """
-        Update every existing progress reports key index on DB.
-        :return:
-        """
-        self._validate_admins()
-        for _ix in range(0, len(self.progress_key_list)):
-            _ipfs_hash = self.progress_key_list[_ix]
-            self.progress_key_list_index[_ipfs_hash] = _ix
-
-    @external
     def tokenFallback(self, _from: Address, _value: int, _data: bytes):
         """
         _data = {'method':methodName,params:{'key1':'value1'}}
@@ -2291,7 +2257,8 @@ class CPS_Score(IconScoreBase):
         details = self._get_proposal_details(_ipfs_hash)
 
         sponsor_deposit = details.get(SPONSOR_DEPOSIT_AMOUNT)
-        self._sponsor_bond_return[str(self.msg.sender)] += sponsor_deposit
+        sponsor_address = details.get(SPONSOR_ADDRESS)
+        self.sponsor_bond_return[str(sponsor_address)][ICX] += sponsor_deposit
 
     @external
     def set_swap_count(self, _value: int):
