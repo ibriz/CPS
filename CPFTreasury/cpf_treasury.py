@@ -260,7 +260,7 @@ class CPF_TREASURY(IconScoreBase):
     def get_dex_score(self) -> Address:
         """
         Returns the Balanced DEX Score Address
-        :return: cps treasury score address
+        :return: Balanced Dex SCORE Address
         :rtype: :class:`iconservice.base.address.Address`
         """
         return self.dex_score.get()
