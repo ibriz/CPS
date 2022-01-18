@@ -22,6 +22,11 @@ class CPSScoreInterface(InterfaceScore):
         pass
 
 
+class RouteInterface(InterfaceScore):
+    @interface
+    def route(self, _path: List[Address], _minReceive: int = 0): pass
+
+
 class DEX_INTERFACE(InterfaceScore):
     @interface
     def getPrice(self, _id: int) -> int: pass
