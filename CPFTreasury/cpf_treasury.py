@@ -577,9 +577,16 @@ class CPF_TREASURY(IconScoreBase):
         from_score.transfer(self.dex_score.get(), _amount, _data)
 
     @external
-    def swap_sicx_bnusd(self, _amount: int):
-        self._validate_admins()
-        self._swap_tokens(self.get_sicx_score(), self.get_bnusd_score(), _amount)
+    def swap_icx_bnusd(self, _amount: int, _sicx: bool = False):
+        sicxContract = self.get_sicx_score()
+        if _sicx:
+            sicxScore = self.create_interface_score(sicxContract, TokenInterface)
+            _amount = sicxScore.balanceOf(self.address)
+            self._swap_tokens(sicxContract, self.get_bnusd_score(), _amount)
+        else:
+            router = self.create_interface_score(self.router_score.get(), RouteInterface)
+            path = [sicxContract, self.balanced_dollar.get()]
+            router.icx(_amount * 10 ** 18).route(path)
 
     @external
     def swap_tokens(self, _count: int) -> None:
