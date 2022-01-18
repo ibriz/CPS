@@ -592,24 +592,25 @@ class CPF_TREASURY(IconScoreBase):
 
         self._validate_cps_score()
         dex = self.create_interface_score(self.dex_score.get(), DEX_INTERFACE)
-        sicx_score = self.create_interface_score(self.sicx_score.get(), TokenInterface)
+        router = self.create_interface_score(self.router_score.get(), RouteInterface)
+        sicx = self.sicx_score.get()
+
+        sicxICXPrice: int = dex.getPrice(1)
         sicxBnusdPrice: int = dex.getPrice(2)
+        icxbnUSDPrice = int((sicxBnusdPrice / sicxICXPrice) * 10 ** 18)
         bnUSDRemainingToSwap = self.get_remaining_swap_amount().get('remainingToSwap')
-        sicxBalance = sicx_score.balanceOf(self.address)
 
         if bnUSDRemainingToSwap < 10 * 10 ** 18 or _count == 0:
-            self.swap_state.set(2)
+            self.swap_state.set(1)
 
         try:
             swap_state = self.swap_state.get()
             if swap_state == 0:
-                remainingSICXToSwap = (bnUSDRemainingToSwap // sicxBnusdPrice) * 10 ** 18 - sicxBalance
-                self._swap_icx_sicx(dex, remainingSICXToSwap, sicxBalance)
-                self.swap_state.set(1)
-                self.swap_count.set(0)
-            elif swap_state == 1:
                 count_swap = self.swap_count.get()
-                remainingSICXToSwap = (bnUSDRemainingToSwap // (sicxBnusdPrice * (_count - count_swap))) * 10 ** 18
+                remainingICXToSwap = (bnUSDRemainingToSwap // (icxbnUSDPrice * (_count - count_swap))) * 10 ** 18
+                icxBalance = self.icx.get_balance(self.address)
+                if remainingICXToSwap > icxBalance:
+                    remainingICXToSwap = icxBalance
 
                 self._swap_icx_sicx(dex, remainingSICXToSwap, sicxBalance)
                 self._swap_tokens(self.get_sicx_score(), self.get_bnusd_score(), remainingSICXToSwap)
