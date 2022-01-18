@@ -602,7 +602,7 @@ class CPF_TREASURY(IconScoreBase):
 
         sicxICXPrice: int = dex.getPrice(1)
         sicxBnusdPrice: int = dex.getPrice(2)
-        icxbnUSDPrice = int((sicxBnusdPrice / sicxICXPrice) * 10 ** 18)
+        icxbnUSDPrice = sicxBnusdPrice * 10 ** 18 // sicxICXPrice
         bnUSDRemainingToSwap = self.get_remaining_swap_amount().get('remainingToSwap')
 
         if bnUSDRemainingToSwap < 10 * 10 ** 18 or _count == 0:
@@ -641,8 +641,9 @@ class CPF_TREASURY(IconScoreBase):
         resets the swap_state to zero
         :return:
         """
-        cps_score = self.create_interface_score(self._cps_score.get(), CPSScoreInterface)
-        if cps_score.is_admin(self.msg.sender) or self.msg.sender == self._cps_score.get():
+        cps_score_address = self._cps_score.get()
+        cps_score = self.create_interface_score(cps_score_address, CPSScoreInterface)
+        if cps_score.is_admin(self.msg.sender) or self.msg.sender == cps_score_address:
             self.swap_state.set(0)
         else:
             revert(f'{TAG}: Only admin can call this method.')
