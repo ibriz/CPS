@@ -641,8 +641,11 @@ class CPF_TREASURY(IconScoreBase):
         resets the swap_state to zero
         :return:
         """
-        self._validate_cps_score()
-        self.swap_state.set(0)
+        cps_score = self.create_interface_score(self._cps_score.get(), CPSScoreInterface)
+        if cps_score.is_admin(self.msg.sender) or self.msg.sender == self._cps_score.get():
+            self.swap_state.set(0)
+        else:
+            revert(f'{TAG}: Only admin can call this method.')
 
     @external
     def tokenFallback(self, _from: Address, _value: int, _data: bytes):
