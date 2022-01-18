@@ -59,6 +59,7 @@ class CPF_TREASURY(IconScoreBase):
     DEX_SCORE = 'dex_score'
     SICX_SCORE = 'sicx_score'
     STAKING_SCORE = 'staking_score'
+    ROUTER_SCORE = "router_score"
 
     SWAP_STATE = "swap_state"
     SWAP_COUNT = "swap_count"
@@ -98,6 +99,7 @@ class CPF_TREASURY(IconScoreBase):
         self.dex_score = VarDB(self.DEX_SCORE, db, value_type=Address)
         self.staking_score = VarDB(self.STAKING_SCORE, db, value_type=Address)
         self.sicx_score = VarDB(self.SICX_SCORE, db, value_type=Address)
+        self.router_score = VarDB(self.ROUTER_SCORE, db, value_type=Address)
 
         self.swap_state = VarDB(self.SWAP_STATE, db, value_type=int)
         self.swap_count = VarDB(self.SWAP_COUNT, db, value_type=int)
@@ -262,6 +264,26 @@ class CPF_TREASURY(IconScoreBase):
         :rtype: :class:`iconservice.base.address.Address`
         """
         return self.dex_score.get()
+
+    @external
+    def set_router_score(self, _score: Address) -> None:
+        """
+        Sets the Balanced Router score address. Only owner can set the address.
+        :param _score: Address of the Balanced Router score address
+        :type _score: :class:`iconservice.base.address.Address`
+        :return:
+        """
+        self._validate_owner_score(_score)
+        self.router_score.set(_score)
+
+    @external(readonly=True)
+    def get_router_score(self) -> Address:
+        """
+        Returns the Balanced Router Score Address
+        :return: Balanced Router SCORE Address
+        :rtype: :class:`iconservice.base.address.Address`
+        """
+        return self.router_score.get()
 
     @external(readonly=True)
     def get_bnusd_score(self) -> Address:
