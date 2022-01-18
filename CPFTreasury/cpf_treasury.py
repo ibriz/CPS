@@ -618,14 +618,6 @@ class CPF_TREASURY(IconScoreBase):
         except Exception as e:
             revert(f'{TAG}: Error Swapping tokens. {e}')
 
-    def _swap_icx_sicx(self, dex, remainingSICXToSwap, sicxBalance):
-        sicxICXPrice: int = dex.getPrice(1)
-        icxSicxBalance = (remainingSICXToSwap * 10 ** 18) // sicxICXPrice
-        if self.icx.get_balance(self.address) < icxSicxBalance * 120 // 100:
-            revert(f'{TAG}: Not enough ICX.')
-        if sicxBalance < remainingSICXToSwap:
-            self.icx.transfer(self.staking_score.get(), icxSicxBalance * 120 // 100)
-
     @external(readonly=True)
     def get_swap_state_status(self) -> dict:
         """
