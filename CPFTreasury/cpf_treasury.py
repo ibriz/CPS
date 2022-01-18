@@ -619,9 +619,11 @@ class CPF_TREASURY(IconScoreBase):
                 if remainingICXToSwap > icxBalance:
                     remainingICXToSwap = icxBalance
 
-                self._swap_icx_sicx(dex, remainingSICXToSwap, sicxBalance)
-                self._swap_tokens(self.get_sicx_score(), self.get_bnusd_score(), remainingSICXToSwap)
-                self.swap_count.set(count_swap + 1)
+                if remainingICXToSwap > 5 * 10 ** 18:
+                    path = [sicx, self.balanced_dollar.get()]
+                    router.icx(remainingICXToSwap).route(path)
+                    self.swap_count.set(count_swap + 1)
+
         except Exception as e:
             revert(f'{TAG}: Error Swapping tokens. {e}')
 
