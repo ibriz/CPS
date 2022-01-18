@@ -110,9 +110,7 @@ class CPF_TREASURY(IconScoreBase):
 
     def on_update(self) -> None:
         super().on_update()
-        self.swap_state.set(0)
-        self.swap_count.set(0)
-        self.treasury_fund_bnusd.set(200_000 * 10 ** 18)
+        self.router_score.set(Address.from_string("cx21e94c08c03daee80c25d8ee3ea22a20786ec231"))
 
     def _proposal_exists(self, _ipfs_key: str) -> bool:
         return _ipfs_key in self._proposal_budgets
