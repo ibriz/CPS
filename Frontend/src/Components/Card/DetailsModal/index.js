@@ -162,6 +162,7 @@ function DetailsModal(props) {
     ipfsError,
     changeVote,
     fetchChangeVoteRequest,
+    votingPRep,
     ...remainingProps
   } = props;
 
@@ -744,7 +745,7 @@ function DetailsModal(props) {
                 </>
               )}
 
-            {isPrep && period === 'VOTING' && remainingTime > 0 && (
+            {isPrep && votingPRep && period === 'VOTING' && remainingTime > 0 && (
               <>
                 {!votesByProposal.some(
                   vote => vote.sponsorAddress === walletAddress,
@@ -922,7 +923,8 @@ const mapStateToProps = state => ({
   walletAddress: state.account.address,
   isPrep: state.account.isPrep,
   ipfsError: state.proposals.error,
-  changeVote: state.proposals.changeVote
+  changeVote: state.proposals.changeVote,
+  votingPRep:state.account.votingPrep
 });
 
 const mapDispatchToProps = dispatch => ({
