@@ -1559,13 +1559,22 @@ class CPS_Score(IconScoreBase):
 
         end = _end_index * (_start_index + 1)
         _range = range(start, count if end > count else end)
+        sponsor_amount_icx, sponsor_amount_bnusd = 0, 0
 
         for _keys in _range:
             _proposal_details = self._get_proposal_details(_proposals_keys[_keys])
             if _proposal_details[SPONSOR_ADDRESS] == _sponsor_address:
+                status = _proposal_details.get("sponsor_deposit_status")
+                if status == BOND_APPROVED:
+                    if _proposal_details.get("token") == ICX:
+                        sponsor_amount_icx += _proposal_details.get("sponsor_deposit_amount")
+                    elif _proposal_details.get("token") == bnUSD:
+                        sponsor_amount_bnusd += _proposal_details.get("sponsor_deposit_amount")
+
                 _sponsors_request.append(_proposal_details)
 
-        _sponsors_dict = {DATA: _sponsors_request, COUNT: len(_sponsors_request)}
+        _sponsors_dict = {DATA: _sponsors_request, COUNT: len(_sponsors_request),
+                          SPONSOR_DEPOSIT_AMOUNT: {ICX: sponsor_amount_icx, bnUSD: sponsor_amount_bnusd}}
 
         return _sponsors_dict
 
