@@ -603,10 +603,7 @@ class CPS_Score(IconScoreBase):
         budget_ = to_loop(proposal_key[TOTAL_BUDGET])
 
         total_fund = self.proposal_fund.get()
-        if (total_fund + budget_) < self._get_max_cap_bnusd():
-            # Add extra 2% for sponsor reward
-            self.proposal_fund.set(total_fund + (budget_ * 102) // 100)
-        else:
+        if (total_fund + (budget_ * 102) // 100) > self._get_max_cap_bnusd():
             revert(f'{TAG}: Max Cap fund already reached for this period.')
 
         if proposal_key[SPONSOR_ADDRESS] not in self.valid_preps:
@@ -678,8 +675,9 @@ class CPS_Score(IconScoreBase):
                 budget_added = _progress[ADDITIONAL_BUDGET]
                 if flag == bnUSD:
                     total_fund = self.proposal_fund.get()
-                    if total_fund + budget_added < self._get_max_cap_bnusd():
-                        self.proposal_fund.set(total_fund + (budget_added * 102) // 100)
+                    added_budget = (budget_added * 102) // 100
+                    if total_fund + added_budget < self._get_max_cap_bnusd():
+                        self.proposal_fund.set(total_fund + added_budget)
                     else:
                         revert(f'{TAG}: Max Cap fund already reached for this period.')
                 else:
@@ -766,6 +764,14 @@ class CPS_Score(IconScoreBase):
 
                 if _value != _budget // 10:
                     revert(f"{TAG} : Deposit 10% of the total budget of the project.")
+
+                total_fund = self.proposal_fund.get()
+                project_budget = total_fund + (_budget * 102) // 100
+                if project_budget < self._get_max_cap_bnusd():
+                    # Add extra 2% for sponsor reward
+                    self.proposal_fund.set(project_budget)
+                else:
+                    revert(f'{TAG}: Max Cap fund already reached for this period.')
 
                 self._update_proposal_status(_ipfs_key, self._PENDING)
 
