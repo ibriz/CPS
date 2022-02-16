@@ -1085,22 +1085,29 @@ class CPS_Score(IconScoreBase):
             if _address in self.unregistered_preps:
                 _login_dict["isRegistered"] = False
                 _login_dict["payPenalty"] = False
+                _login_dict["votingPRep"] = False
 
             if _address in self.denylist:
                 _login_dict["isRegistered"] = False
                 _login_dict["payPenalty"] = True
+                _login_dict["votingPRep"] = False
 
                 _login_dict["penaltyAmount"] = self._get_penalty_amount(_address)
 
             # If a P-Rep registers on Voting period, P-Rep status will be registered.
-            if _address in self.valid_preps or _address in self.registered_preps:
+            if _address in self.registered_preps:
                 _login_dict["isRegistered"] = True
                 _login_dict["payPenalty"] = False
+                _login_dict["votingPRep"] = False
+
+                if _address in self.valid_preps:
+                    _login_dict["votingPRep"] = True
 
         else:
             _login_dict["isPRep"] = False
             _login_dict["isRegistered"] = False
             _login_dict["payPenalty"] = False
+            _login_dict["votingPRep"] = False
 
         return _login_dict
 
