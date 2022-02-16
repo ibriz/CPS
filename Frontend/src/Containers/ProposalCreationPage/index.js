@@ -17,6 +17,7 @@ import styles from './ProposalCreationPage.module.css';
 import {
   fetchCPFScoreAddressRequest,
   fetchCPFRemainingFundRequest,
+  fetchAvailableFundRequest,
 } from 'Redux/Reducers/fundSlice';
 
 import {
@@ -91,6 +92,9 @@ const ProposalCreationPage = ({
   fetchCPFRemainingFundRequest,
   cpfScoreAddress,
   cpfRemainingFunds,
+  fetchAvailableFundRequest,
+  availableFund,
+  actualAvailableFund,
 }) => {
   const { draftProposal, isDraft } = location;
   const { period } = useTimer();
@@ -154,15 +158,15 @@ const ProposalCreationPage = ({
       document
         .getElementById('totalBudget')
         .setCustomValidity(
-          `Enter Total Budget between 0 and remaining CPF Fund (200K bnUSD)`,
+          `Enter Total Budget between 0 and ${actualAvailableFund} bnUSD`,
         );
     } else if (
       proposal.totalBudget < 0 ||
-      proposal.totalBudget > 200000) {
+      proposal.totalBudget > actualAvailableFund) {
       document
         .getElementById('totalBudget')
         .setCustomValidity(
-          `Total Budget should be between 0 and CPF remaining Fund (200K bnUSD)`,
+          `Total Budget should be between 0 and ${actualAvailableFund} bnUSD`,
         );
     } else {
       document.getElementById('totalBudget').setCustomValidity('');
@@ -359,6 +363,10 @@ const ProposalCreationPage = ({
     document.getElementById(name) &&
       document.getElementById(name).reportValidity();
   };
+
+  useEffect(() => {
+    fetchAvailableFundRequest();
+  },[])
   return (
     <div className={styles.proposalCreationPage}>
       <Header title='Create New Proposal' />
@@ -453,9 +461,9 @@ const ProposalCreationPage = ({
               <Col sm='4' className={styles.inputSameLine}>
                 <InputGroup size='md'>
                   <FormControl
-                    placeholder='Total Budget'
+                    placeholder={`Available Fund (${actualAvailableFund} bnUSD)`}
                     min={0}
-                    max={200000}
+                    max={actualAvailableFund}
                     type='number'
                     value={proposal.totalBudget}
                     name='totalBudget'
@@ -827,6 +835,9 @@ const mapDispatchToProps = dispatch => ({
     dispatch(fetchCPFScoreAddressRequest(payload)),
   fetchCPFRemainingFundRequest: payload =>
     dispatch(fetchCPFRemainingFundRequest(payload)),
+  fetchAvailableFundRequest: payload =>
+    dispatch(fetchAvailableFundRequest(payload)),
+
 });
 
 const mapStateToProps = state => ({
@@ -835,6 +846,8 @@ const mapStateToProps = state => ({
   walletAddress: state.account.address,
   cpfRemainingFunds: state.fund.cpfRemainingFunds,
   cpfScoreAddress: state.fund.cpfScoreAddress,
+  availableFund:state.fund.availableFund,
+  actualAvailableFund:0.98*state.fund.availableFund
 });
 
 export default withRouter(
