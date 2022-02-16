@@ -22,6 +22,11 @@ class CPSScoreInterface(InterfaceScore):
         pass
 
 
+class RouteInterface(InterfaceScore):
+    @interface
+    def route(self, _path: List[Address], _minReceive: int = 0): pass
+
+
 class DEX_INTERFACE(InterfaceScore):
     @interface
     def getPrice(self, _id: int) -> int: pass
@@ -54,6 +59,7 @@ class CPF_TREASURY(IconScoreBase):
     DEX_SCORE = 'dex_score'
     SICX_SCORE = 'sicx_score'
     STAKING_SCORE = 'staking_score'
+    ROUTER_SCORE = "router_score"
 
     SWAP_STATE = "swap_state"
     SWAP_COUNT = "swap_count"
@@ -93,6 +99,7 @@ class CPF_TREASURY(IconScoreBase):
         self.dex_score = VarDB(self.DEX_SCORE, db, value_type=Address)
         self.staking_score = VarDB(self.STAKING_SCORE, db, value_type=Address)
         self.sicx_score = VarDB(self.SICX_SCORE, db, value_type=Address)
+        self.router_score = VarDB(self.ROUTER_SCORE, db, value_type=Address)
 
         self.swap_state = VarDB(self.SWAP_STATE, db, value_type=int)
         self.swap_count = VarDB(self.SWAP_COUNT, db, value_type=int)
@@ -103,9 +110,7 @@ class CPF_TREASURY(IconScoreBase):
 
     def on_update(self) -> None:
         super().on_update()
-        self.swap_state.set(0)
-        self.swap_count.set(0)
-        self.treasury_fund_bnusd.set(200_000 * 10 ** 18)
+        self.router_score.set(Address.from_string("cx21e94c08c03daee80c25d8ee3ea22a20786ec231"))
 
     def _proposal_exists(self, _ipfs_key: str) -> bool:
         return _ipfs_key in self._proposal_budgets
@@ -253,10 +258,30 @@ class CPF_TREASURY(IconScoreBase):
     def get_dex_score(self) -> Address:
         """
         Returns the Balanced DEX Score Address
-        :return: cps treasury score address
+        :return: Balanced Dex SCORE Address
         :rtype: :class:`iconservice.base.address.Address`
         """
         return self.dex_score.get()
+
+    @external
+    def set_router_score(self, _score: Address) -> None:
+        """
+        Sets the Balanced Router score address. Only owner can set the address.
+        :param _score: Address of the Balanced Router score address
+        :type _score: :class:`iconservice.base.address.Address`
+        :return:
+        """
+        self._validate_owner_score(_score)
+        self.router_score.set(_score)
+
+    @external(readonly=True)
+    def get_router_score(self) -> Address:
+        """
+        Returns the Balanced Router Score Address
+        :return: Balanced Router SCORE Address
+        :rtype: :class:`iconservice.base.address.Address`
+        """
+        return self.router_score.get()
 
     @external(readonly=True)
     def get_bnusd_score(self) -> Address:
@@ -550,9 +575,16 @@ class CPF_TREASURY(IconScoreBase):
         from_score.transfer(self.dex_score.get(), _amount, _data)
 
     @external
-    def swap_sicx_bnusd(self, _amount: int):
-        self._validate_admins()
-        self._swap_tokens(self.get_sicx_score(), self.get_bnusd_score(), _amount)
+    def swap_icx_bnusd(self, _amount: int, _sicx: bool = False):
+        sicxContract = self.get_sicx_score()
+        if _sicx:
+            sicxScore = self.create_interface_score(sicxContract, TokenInterface)
+            _amount = sicxScore.balanceOf(self.address)
+            self._swap_tokens(sicxContract, self.get_bnusd_score(), _amount)
+        else:
+            router = self.create_interface_score(self.router_score.get(), RouteInterface)
+            path = [sicxContract, self.balanced_dollar.get()]
+            router.icx(_amount * 10 ** 18).route(path)
 
     @external
     def swap_tokens(self, _count: int) -> None:
@@ -565,38 +597,33 @@ class CPF_TREASURY(IconScoreBase):
 
         self._validate_cps_score()
         dex = self.create_interface_score(self.dex_score.get(), DEX_INTERFACE)
-        sicx_score = self.create_interface_score(self.sicx_score.get(), TokenInterface)
+        router = self.create_interface_score(self.router_score.get(), RouteInterface)
+        sicx = self.sicx_score.get()
+
+        sicxICXPrice: int = dex.getPrice(1)
         sicxBnusdPrice: int = dex.getPrice(2)
+        icxbnUSDPrice = sicxBnusdPrice * 10 ** 18 // sicxICXPrice
         bnUSDRemainingToSwap = self.get_remaining_swap_amount().get('remainingToSwap')
-        sicxBalance = sicx_score.balanceOf(self.address)
 
         if bnUSDRemainingToSwap < 10 * 10 ** 18 or _count == 0:
-            self.swap_state.set(2)
+            self.swap_state.set(1)
 
         try:
             swap_state = self.swap_state.get()
             if swap_state == 0:
-                remainingSICXToSwap = (bnUSDRemainingToSwap // sicxBnusdPrice) * 10 ** 18 - sicxBalance
-                self._swap_icx_sicx(dex, remainingSICXToSwap, sicxBalance)
-                self.swap_state.set(1)
-                self.swap_count.set(0)
-            elif swap_state == 1:
                 count_swap = self.swap_count.get()
-                remainingSICXToSwap = (bnUSDRemainingToSwap // (sicxBnusdPrice * (_count - count_swap))) * 10 ** 18
+                remainingICXToSwap = (bnUSDRemainingToSwap // (icxbnUSDPrice * (_count - count_swap))) * 10 ** 18
+                icxBalance = self.icx.get_balance(self.address)
+                if remainingICXToSwap > icxBalance:
+                    remainingICXToSwap = icxBalance
 
-                self._swap_icx_sicx(dex, remainingSICXToSwap, sicxBalance)
-                self._swap_tokens(self.get_sicx_score(), self.get_bnusd_score(), remainingSICXToSwap)
-                self.swap_count.set(count_swap + 1)
+                if remainingICXToSwap > 5 * 10 ** 18:
+                    path = [sicx, self.balanced_dollar.get()]
+                    router.icx(remainingICXToSwap).route(path)
+                    self.swap_count.set(count_swap + 1)
+
         except Exception as e:
             revert(f'{TAG}: Error Swapping tokens. {e}')
-
-    def _swap_icx_sicx(self, dex, remainingSICXToSwap, sicxBalance):
-        sicxICXPrice: int = dex.getPrice(1)
-        icxSicxBalance = (remainingSICXToSwap * 10 ** 18) // sicxICXPrice
-        if self.icx.get_balance(self.address) < icxSicxBalance * 120 // 100:
-            revert(f'{TAG}: Not enough ICX.')
-        if sicxBalance < remainingSICXToSwap:
-            self.icx.transfer(self.staking_score.get(), icxSicxBalance * 120 // 100)
 
     @external(readonly=True)
     def get_swap_state_status(self) -> dict:
@@ -614,8 +641,12 @@ class CPF_TREASURY(IconScoreBase):
         resets the swap_state to zero
         :return:
         """
-        self._validate_cps_score()
-        self.swap_state.set(0)
+        cps_score_address = self._cps_score.get()
+        cps_score = self.create_interface_score(cps_score_address, CPSScoreInterface)
+        if cps_score.is_admin(self.msg.sender) or self.msg.sender == cps_score_address:
+            self.swap_state.set(0)
+        else:
+            revert(f'{TAG}: Only admin can call this method.')
 
     @external
     def tokenFallback(self, _from: Address, _value: int, _data: bytes):
