@@ -179,7 +179,7 @@ class CPS_Score(IconScoreBase):
 
     def on_update(self) -> None:
         super().on_update()
-        self.proposal_fund.set(40_000 * MULTIPLIER)
+        self.proposal_fund.set(126_000 * 102 * MULTIPLIER // 100)
 
     def _proposal_key_exists(self, key: str) -> bool:
         return key in self.proposals_key_list_index
