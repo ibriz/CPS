@@ -863,7 +863,7 @@ const mapStateToProps = state => ({
   isPrep: state.account.isPrep,
   ipfsError: state.progressReport.ipfsError,
   changeVote: state.progressReport.changeVote,
-  votingPRep:state.account.votingPrep
+  votingPRep:state.account.votingPRep
 });
 
 const mapDispatchToProps = dispatch => ({

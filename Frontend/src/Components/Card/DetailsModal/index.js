@@ -924,7 +924,7 @@ const mapStateToProps = state => ({
   isPrep: state.account.isPrep,
   ipfsError: state.proposals.error,
   changeVote: state.proposals.changeVote,
-  votingPRep:state.account.votingPrep
+  votingPRep:state.account.votingPRep
 });
 
 const mapDispatchToProps = dispatch => ({
