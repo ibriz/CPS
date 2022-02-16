@@ -33,7 +33,7 @@ import {
   fetchSponsorMessageRequestWorker,
   fetchProposalByIpfsWorker,
   emptyProposalDetailWorker,
-  fetchChangeVoteWorker
+  fetchChangeVoteWorker,
 } from './Proposal/index';
 
 import {
@@ -49,7 +49,7 @@ import {
   fetchVoteResultBudgetChangeRequestWorker,
   fetchProgressReportByIpfsWorker,
   emptyProgressReportDetailWorker,
-  fetchChangeVoteWorkerProgressReport
+  fetchChangeVoteWorkerProgressReport,
 } from './ProgressReport';
 
 import {
@@ -60,7 +60,9 @@ import {
   claimRewardWorker,
   fetchSponsorBondWorker,
   claimSponsorBondWorker,
-  fetchbnUSDAddressWorker
+  fetchbnUSDAddressWorker,
+  fetchAvailableFundWorker,
+  fetchSponsorDepositAmountWorker,
 } from './Fund';
 
 import {
@@ -103,7 +105,7 @@ import {
   fetchSponsorMessageRequest,
   fetchProposalByIpfsRequest,
   emptyProposalDetailRequest,
-  fetchChangeVoteRequest
+  fetchChangeVoteRequest,
 } from '../Reducers/proposalSlice';
 import {
   submitProgressReportRequest,
@@ -118,7 +120,7 @@ import {
   fetchVoteResultBudgetChangeRequest,
   fetchProgressReportByIpfsRequest,
   emptyProgressReportDetailRequest,
-  fetchChangeVoteRequestProgressReport
+  fetchChangeVoteRequestProgressReport,
 } from '../Reducers/progressReportSlice';
 import {
   fetchPeriodDetailsRequest,
@@ -139,7 +141,9 @@ import {
   claimReward,
   fetchSponsorBondRequest,
   claimSponsorBondReward,
-  fetchbnUSDAddressRequest
+  fetchbnUSDAddressRequest,
+  fetchAvailableFundRequest,
+  fetchSponsorDepositAmountRequest,
 } from '../Reducers/fundSlice';
 import {
   fetchUserDataRequest,
@@ -309,15 +313,18 @@ function* rootSaga() {
     emptyProgressReportDetailRequest.type,
     emptyProgressReportDetailWorker,
   );
-  yield takeEvery(
-    fetchChangeVoteRequest.type,
-    fetchChangeVoteWorker,
-  );
+  yield takeEvery(fetchChangeVoteRequest.type, fetchChangeVoteWorker);
   yield takeEvery(
     fetchChangeVoteRequestProgressReport.type,
     fetchChangeVoteWorkerProgressReport,
   );
 
+  yield takeEvery(fetchAvailableFundRequest.type, fetchAvailableFundWorker);
+
+  yield takeEvery(
+    fetchSponsorDepositAmountRequest.type,
+    fetchSponsorDepositAmountWorker,
+  );
 }
 
 export default rootSaga;
