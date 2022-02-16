@@ -1306,6 +1306,13 @@ class CPS_Score(IconScoreBase):
         return sponsors_dict
 
     @external(readonly=True)
+    def get_proposal_fund(self) -> dict:
+        maxCap = self._get_max_cap_bnusd()
+        totalFund = self.proposal_fund.get()
+        return {"totalFund": totalFund,
+                "availableFund": maxCap - totalFund}
+
+    @external(readonly=True)
     def get_proposal_details(self, _status: str, _wallet_address: Address = None, _start_index: int = 0,
                              _end_index: int = 20) -> dict:
         """
