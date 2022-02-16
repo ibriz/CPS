@@ -2262,21 +2262,6 @@ class CPS_Score(IconScoreBase):
             cpf_treasury_score.swap_tokens(self.swap_count.get())
 
     @external
-    def return_sponsor_bond(self, _ipfs_hash: str) -> None:
-        """
-        returns sponsor bond to the sponsor
-        :param _ipfs_hash: ipfs hash of the project
-        :type _ipfs_hash: str
-        :return:
-        """
-        self._validate_admins()
-        details = self._get_proposal_details(_ipfs_hash)
-
-        sponsor_deposit = details.get(SPONSOR_DEPOSIT_AMOUNT)
-        sponsor_address = details.get(SPONSOR_ADDRESS)
-        self.sponsor_bond_return[str(sponsor_address)][ICX] += sponsor_deposit
-
-    @external
     def set_swap_count(self, _value: int):
         self._validate_admins()
         self.swap_count.set(_value)
