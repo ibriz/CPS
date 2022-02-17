@@ -179,7 +179,7 @@ class CPS_Score(IconScoreBase):
 
     def on_update(self) -> None:
         super().on_update()
-        self.proposal_fund.set(40_000 * MULTIPLIER)
+        self.proposal_fund.set(126_000 * 102 * MULTIPLIER // 100)
 
     def _proposal_key_exists(self, key: str) -> bool:
         return key in self.proposals_key_list_index
@@ -603,10 +603,7 @@ class CPS_Score(IconScoreBase):
         budget_ = to_loop(proposal_key[TOTAL_BUDGET])
 
         total_fund = self.proposal_fund.get()
-        if (total_fund + budget_) < self._get_max_cap_bnusd():
-            # Add extra 2% for sponsor reward
-            self.proposal_fund.set(total_fund + (budget_ * 102) // 100)
-        else:
+        if (total_fund + (budget_ * 102) // 100) > self._get_max_cap_bnusd():
             revert(f'{TAG}: Max Cap fund already reached for this period.')
 
         if proposal_key[SPONSOR_ADDRESS] not in self.valid_preps:
@@ -678,8 +675,9 @@ class CPS_Score(IconScoreBase):
                 budget_added = _progress[ADDITIONAL_BUDGET]
                 if flag == bnUSD:
                     total_fund = self.proposal_fund.get()
-                    if total_fund + budget_added < self._get_max_cap_bnusd():
-                        self.proposal_fund.set(total_fund + (budget_added * 102) // 100)
+                    added_budget = (budget_added * 102) // 100
+                    if total_fund + added_budget < self._get_max_cap_bnusd():
+                        self.proposal_fund.set(total_fund + added_budget)
                     else:
                         revert(f'{TAG}: Max Cap fund already reached for this period.')
                 else:
@@ -766,6 +764,14 @@ class CPS_Score(IconScoreBase):
 
                 if _value != _budget // 10:
                     revert(f"{TAG} : Deposit 10% of the total budget of the project.")
+
+                total_fund = self.proposal_fund.get()
+                project_budget = total_fund + (_budget * 102) // 100
+                if project_budget < self._get_max_cap_bnusd():
+                    # Add extra 2% for sponsor reward
+                    self.proposal_fund.set(project_budget)
+                else:
+                    revert(f'{TAG}: Max Cap fund already reached for this period.')
 
                 self._update_proposal_status(_ipfs_key, self._PENDING)
 
@@ -1085,22 +1091,29 @@ class CPS_Score(IconScoreBase):
             if _address in self.unregistered_preps:
                 _login_dict["isRegistered"] = False
                 _login_dict["payPenalty"] = False
+                _login_dict["votingPRep"] = False
 
             if _address in self.denylist:
                 _login_dict["isRegistered"] = False
                 _login_dict["payPenalty"] = True
+                _login_dict["votingPRep"] = False
 
                 _login_dict["penaltyAmount"] = self._get_penalty_amount(_address)
 
             # If a P-Rep registers on Voting period, P-Rep status will be registered.
-            if _address in self.valid_preps or _address in self.registered_preps:
+            if _address in self.registered_preps:
                 _login_dict["isRegistered"] = True
                 _login_dict["payPenalty"] = False
+                _login_dict["votingPRep"] = False
+
+                if _address in self.valid_preps:
+                    _login_dict["votingPRep"] = True
 
         else:
             _login_dict["isPRep"] = False
             _login_dict["isRegistered"] = False
             _login_dict["payPenalty"] = False
+            _login_dict["votingPRep"] = False
 
         return _login_dict
 
@@ -1304,6 +1317,13 @@ class CPS_Score(IconScoreBase):
             sponsors_dict[sponsor_address] = sponsors_dict.get(sponsor_address, 0) + 1
 
         return sponsors_dict
+
+    @external(readonly=True)
+    def get_proposal_fund(self) -> dict:
+        maxCap = self._get_max_cap_bnusd()
+        totalFund = self.proposal_fund.get()
+        return {"totalFund": totalFund,
+                "availableFund": maxCap - totalFund}
 
     @external(readonly=True)
     def get_proposal_details(self, _status: str, _wallet_address: Address = None, _start_index: int = 0,
@@ -1552,13 +1572,22 @@ class CPS_Score(IconScoreBase):
 
         end = _end_index * (_start_index + 1)
         _range = range(start, count if end > count else end)
+        sponsor_amount_icx, sponsor_amount_bnusd = 0, 0
 
         for _keys in _range:
             _proposal_details = self._get_proposal_details(_proposals_keys[_keys])
             if _proposal_details[SPONSOR_ADDRESS] == _sponsor_address:
+                status = _proposal_details.get("sponsor_deposit_status")
+                if status == BOND_APPROVED:
+                    if _proposal_details.get("token") == ICX:
+                        sponsor_amount_icx += _proposal_details.get("sponsor_deposit_amount")
+                    elif _proposal_details.get("token") == bnUSD:
+                        sponsor_amount_bnusd += _proposal_details.get("sponsor_deposit_amount")
+
                 _sponsors_request.append(_proposal_details)
 
-        _sponsors_dict = {DATA: _sponsors_request, COUNT: len(_sponsors_request)}
+        _sponsors_dict = {DATA: _sponsors_request, COUNT: len(_sponsors_request),
+                          SPONSOR_DEPOSIT_AMOUNT: {ICX: sponsor_amount_icx, bnUSD: sponsor_amount_bnusd}}
 
         return _sponsors_dict
 
@@ -2244,21 +2273,6 @@ class CPS_Score(IconScoreBase):
             self.swap_block_height.set(swapped_bh + SWAP_BLOCK_DIFF)
             cpf_treasury_score = self.create_interface_score(self.cpf_score.get(), CPF_TREASURY_INTERFACE)
             cpf_treasury_score.swap_tokens(self.swap_count.get())
-
-    @external
-    def return_sponsor_bond(self, _ipfs_hash: str) -> None:
-        """
-        returns sponsor bond to the sponsor
-        :param _ipfs_hash: ipfs hash of the project
-        :type _ipfs_hash: str
-        :return:
-        """
-        self._validate_admins()
-        details = self._get_proposal_details(_ipfs_hash)
-
-        sponsor_deposit = details.get(SPONSOR_DEPOSIT_AMOUNT)
-        sponsor_address = details.get(SPONSOR_ADDRESS)
-        self.sponsor_bond_return[str(sponsor_address)][ICX] += sponsor_deposit
 
     @external
     def set_swap_count(self, _value: int):
