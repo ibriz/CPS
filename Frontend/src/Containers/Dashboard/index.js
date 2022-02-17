@@ -14,6 +14,7 @@ import {
   claimReward,
   fetchSponsorBondRequest,
   claimSponsorBondReward,
+  fetchSponsorDepositAmountRequest,
 } from 'Redux/Reducers/fundSlice';
 import { fetchProjectAmountsRequest } from 'Redux/Reducers/proposalSlice';
 import styles from './Dashboard.module.scss';
@@ -58,7 +59,9 @@ const Dashboard = ({
   fetchSponsorBondRequest,
   claimSponsorBondReward,
   sponsorBondReward,
-  address
+  address,
+  sponsorDepositAmount,
+  fetchSponsorDepositAmountRequest
 }) => {
   const [
     showPayPenaltyConfirmationModal,
@@ -213,7 +216,7 @@ const Dashboard = ({
         color: '#1AAABA',
         title: 'My Sponsor Bond',
         // value={`${projectAmounts.Active.count + projectAmounts.Paused.count} (${icxFormat(projectAmounts.Active.amount + projectAmounts.Paused.amount)} ICX)`} />
-        value: getIcxbnUSDAmount(sponsorBond),
+        value: getIcxbnUSDAmount(sponsorDepositAmount),
       },
       {
         color: '#1AAABA',
@@ -317,6 +320,14 @@ const Dashboard = ({
     }
 
   }
+
+  useEffect(() => {
+    if(isPrep && isRegistered)
+    {
+      fetchSponsorDepositAmountRequest()
+    }
+  },[isPrep,isRegistered])
+
   return (
 
     address ?
@@ -554,7 +565,8 @@ const mapStateToProps = state => ({
   withDrawAmountSponsorReward: state.fund.withDrawAmountSponsorReward,
   withDrawAmountProposalGrant: state.fund.withDrawAmountProposalGrant,
   preps: state.preps.preps,
-  address: state.account.address
+  address: state.account.address,
+  sponsorDepositAmount: state.fund.sponsorDepositAmount
 });
 
 const mapDispatchToProps = {
@@ -567,6 +579,7 @@ const mapDispatchToProps = {
   claimReward,
   claimSponsorBondReward,
   fetchSponsorBondRequest,
+  fetchSponsorDepositAmountRequest
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);

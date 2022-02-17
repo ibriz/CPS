@@ -14,7 +14,9 @@ const initialState = {
   withDrawAmountSponsorReward: { icx: 0, bnUSD: 0 },
   withDrawAmountProposalGrant: { icx: 0, bnUSD: 0 },
   sponsorBondReward: { icx: 0, bnUSD: 0 },
-  bnUSDScoreAddress: null
+  bnUSDScoreAddress: null,
+  availableFund: 0,
+  sponsorDepositAmount: { icx: 0, bnUSD: 0 },
 };
 
 const fundSlice = createSlice({
@@ -180,6 +182,31 @@ const fundSlice = createSlice({
     fetchbnUSDAddressFailure() {
       return;
     },
+    fetchAvailableFundRequest(){
+      return
+    },
+    fetchAvailableFundSuccess(state,action){
+      state.availableFund=Number(IconConverter.toBigNumber(action?.payload?.availableFund || '0').dividedBy(10**18) || 0)
+    },
+    fetchAvailableFundFailure()
+    {
+      return
+    },
+    fetchSponsorDepositAmountRequest(state) {
+      return;
+    },
+    fetchSponsorDepositAmountSuccess(state,action)
+    {
+      const { ICX, bnUSD } = action.payload.response.sponsor_deposit_amount;
+      state.sponsorDepositAmount = {
+        icx: Number(IconConverter.toBigNumber(ICX || '0x0').dividedBy(10 ** 18)),
+        bnUSD: Number(IconConverter.toBigNumber(bnUSD || '0x0').dividedBy(10 ** 18)),
+      };
+    },
+    fetchSponsorDepositAmountFailure()
+    {
+      return;
+    }
   },
 
   extraReducers: {
@@ -212,6 +239,12 @@ export const {
   fetchSponsorBondFailure,
   fetchbnUSDAddressRequest,
   fetchbnUSDAddressSuccess,
-  fetchbnUSDAddressFailure
+  fetchbnUSDAddressFailure,
+  fetchAvailableFundRequest,
+  fetchAvailableFundSuccess,
+  fetchAvailableFundFailure,
+  fetchSponsorDepositAmountRequest,
+  fetchSponsorDepositAmountSuccess,
+  fetchSponsorDepositAmountFailure,
 } = fundSlice.actions;
 export default fundSlice.reducer;

@@ -27,6 +27,7 @@ export default function* loginPrepWorker() {
       IconConverter.toBigNumber(response.payPenalty),
     );
     const penaltyAmount = parseInt(response.penaltyAmount);
+    const votingPRep= parseInt(response.votingPRep);
     const walletBalance = yield iconService.getBalance(walletAddress).execute();
 
     yield put(
@@ -36,6 +37,7 @@ export default function* loginPrepWorker() {
         payPenalty,
         penaltyAmount,
         walletBalance,
+        votingPRep
       }),
     );
   } catch (error) {
