@@ -156,7 +156,7 @@ class CPF_TREASURY(IconScoreBase):
         :type _value : int
         :return:
         """
-        self._validate_owner()
+        self._validate_admins()
         self.treasury_fund.set(_value)
 
     @external
@@ -167,7 +167,7 @@ class CPF_TREASURY(IconScoreBase):
         :type _value : int
         :return:
         """
-        self._validate_owner()
+        self._validate_admins()
         self.treasury_fund_bnusd.set(_value)
 
     @external
