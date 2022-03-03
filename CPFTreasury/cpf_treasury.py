@@ -607,6 +607,7 @@ class CPF_TREASURY(IconScoreBase):
 
         if bnUSDRemainingToSwap < 10 * 10 ** 18 or _count == 0:
             self.swap_state.set(1)
+            self.swap_count.set(0)
 
         try:
             swap_state = self.swap_state.get()
@@ -644,6 +645,7 @@ class CPF_TREASURY(IconScoreBase):
         cps_score = self.create_interface_score(self._cps_score.get(), CPSScoreInterface)
         if cps_score.is_admin(self.msg.sender) or self.msg.sender == self._cps_score.get():
             self.swap_state.set(0)
+            self.swap_count.set(0)
         else:
             revert(f'{TAG}: Only admin can call this method.')
 
