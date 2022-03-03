@@ -687,4 +687,4 @@ class CPF_TREASURY(IconScoreBase):
             self._burn(self.msg.value)
 
         else:
-            revert(f'{TAG}: Please send fund using add_fund().')
+            self.add_fund()
