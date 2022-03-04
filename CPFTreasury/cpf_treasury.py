@@ -613,15 +613,20 @@ class CPF_TREASURY(IconScoreBase):
             swap_state = self.swap_state.get()
             if swap_state == 0:
                 count_swap = self.swap_count.get()
-                remainingICXToSwap = (bnUSDRemainingToSwap // (icxbnUSDPrice * (_count - count_swap))) * 10 ** 18
-                icxBalance = self.icx.get_balance(self.address)
-                if remainingICXToSwap > icxBalance:
-                    remainingICXToSwap = icxBalance
+                count = _count - count_swap
+                if count == 0:
+                    self.swap_state.set(1)
+                    self.swap_count.set(0)
+                else:
+                    remainingICXToSwap = bnUSDRemainingToSwap * 10 ** 18 // (icxbnUSDPrice * count)
+                    icxBalance = self.icx.get_balance(self.address)
+                    if remainingICXToSwap > icxBalance:
+                        remainingICXToSwap = icxBalance
 
-                if remainingICXToSwap > 5 * 10 ** 18:
-                    path = [sicx, self.balanced_dollar.get()]
-                    router.icx(remainingICXToSwap).route(path)
-                    self.swap_count.set(count_swap + 1)
+                    if remainingICXToSwap > 5 * 10 ** 18:
+                        path = [sicx, self.balanced_dollar.get()]
+                        router.icx(remainingICXToSwap).route(path)
+                        self.swap_count.set(count_swap + 1)
 
         except Exception as e:
             revert(f'{TAG}: Error Swapping tokens. {e}')
