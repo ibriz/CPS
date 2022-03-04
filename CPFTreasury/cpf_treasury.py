@@ -593,8 +593,6 @@ class CPF_TREASURY(IconScoreBase):
 
         self._validate_cps_score()
         dex = self.create_interface_score(self.dex_score.get(), DEX_INTERFACE)
-        router = self.create_interface_score(self.router_score.get(), RouteInterface)
-        sicx = self.sicx_score.get()
 
         sicxICXPrice: int = dex.getPrice(1)
         sicxBnusdPrice: int = dex.getPrice(2)
@@ -620,9 +618,7 @@ class CPF_TREASURY(IconScoreBase):
                         remainingICXToSwap = icxBalance
 
                     if remainingICXToSwap > 5 * 10 ** 18:
-                        path = [sicx, self.balanced_dollar.get()]
-                        router.icx(remainingICXToSwap).route(path)
-                        self.swap_count.set(count_swap + 1)
+                        self.swap_icx_bnusd(remainingICXToSwap)
 
         except Exception as e:
             revert(f'{TAG}: Error Swapping tokens. {e}')
