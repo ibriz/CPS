@@ -575,7 +575,7 @@ const mapStateToProps = state => ({
   preps: state.preps.preps,
   address: state.account.address,
   sponsorDepositAmount: state.fund.sponsorDepositAmount,
-  priorityVote: state.proposals.priorityVote
+  priorityVote: state.proposals.priorityVoting 
 });
 
 const mapDispatchToProps = {
