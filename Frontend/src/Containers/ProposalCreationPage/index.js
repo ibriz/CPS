@@ -158,9 +158,10 @@ const ProposalCreationPage = ({
       document
         .getElementById('totalBudget')
         .setCustomValidity(
-          `Enter Total Budget between 0 and ${actualAvailableFund} bnUSD`,
+          // `Enter Total Budget between 0 and ${actualAvailableFund} bnUSD`,
+          `Please enter total budget`,
         );
-    } else if (
+    }/* else if (
       proposal.totalBudget < 0 ||
       proposal.totalBudget > actualAvailableFund) {
       document
@@ -168,7 +169,7 @@ const ProposalCreationPage = ({
         .setCustomValidity(
           `Total Budget should be between 0 and ${actualAvailableFund} bnUSD`,
         );
-    } else {
+    } */ else {
       document.getElementById('totalBudget').setCustomValidity('');
     }
   }, [proposal.totalBudget]);
@@ -461,9 +462,9 @@ const ProposalCreationPage = ({
               <Col sm='4' className={styles.inputSameLine}>
                 <InputGroup size='md'>
                   <FormControl
-                    placeholder={`Available Fund (${actualAvailableFund} bnUSD)`}
+                    placeholder={'Total Budget' || `Available Fund (${actualAvailableFund} bnUSD)`}
                     min={0}
-                    max={actualAvailableFund}
+                    // max={actualAvailableFund}
                     type='number'
                     value={proposal.totalBudget}
                     name='totalBudget'
