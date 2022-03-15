@@ -16,7 +16,7 @@ import {
   claimSponsorBondReward,
   fetchSponsorDepositAmountRequest,
 } from 'Redux/Reducers/fundSlice';
-import { fetchProjectAmountsRequest } from 'Redux/Reducers/proposalSlice';
+import { fetchProjectAmountsRequest, fetchPriorityVotingRequest } from 'Redux/Reducers/proposalSlice';
 import styles from './Dashboard.module.scss';
 import MyProposalCard from 'Components/MyProposalCard';
 import ProposalPendingPRCard from 'Components/ProposalPendingPRCard';
@@ -61,7 +61,9 @@ const Dashboard = ({
   sponsorBondReward,
   address,
   sponsorDepositAmount,
-  fetchSponsorDepositAmountRequest
+  fetchSponsorDepositAmountRequest,
+  priorityVote,
+  fetchPriorityVotingRequest
 }) => {
   const [
     showPayPenaltyConfirmationModal,
@@ -328,6 +330,12 @@ const Dashboard = ({
     }
   },[isPrep,isRegistered])
 
+  useEffect(() => {
+    if (isPrep) {
+      fetchPriorityVotingRequest()
+    }
+  }, [isPrep])
+
   return (
 
     address ?
@@ -527,7 +535,7 @@ const Dashboard = ({
               <div className={styles.myProposalHeading}>Pending Votes</div>
 
               <VotingCard
-                proposalStatesList={['Proposals', 'Progress Reports']}
+                proposalStatesList={ priorityVote && period === 'VOTING' ? ['Proposals', 'Progress Reports','Priority Voting'] : ['Proposals', 'Progress Reports'] }
                 initialState={'Proposals'}
               />
             </>
@@ -566,7 +574,8 @@ const mapStateToProps = state => ({
   withDrawAmountProposalGrant: state.fund.withDrawAmountProposalGrant,
   preps: state.preps.preps,
   address: state.account.address,
-  sponsorDepositAmount: state.fund.sponsorDepositAmount
+  sponsorDepositAmount: state.fund.sponsorDepositAmount,
+  priorityVote: state.proposals.priorityVote
 });
 
 const mapDispatchToProps = {
@@ -579,7 +588,8 @@ const mapDispatchToProps = {
   claimReward,
   claimSponsorBondReward,
   fetchSponsorBondRequest,
-  fetchSponsorDepositAmountRequest
+  fetchSponsorDepositAmountRequest,
+  fetchPriorityVotingRequest
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);

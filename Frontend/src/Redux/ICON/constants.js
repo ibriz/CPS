@@ -12,4 +12,5 @@ export default {
   approve_sponsor: 32010,
   claim_reward: 32011,
   claim_sponsor_bond: 32012,
+  vote_priority:32013
 };

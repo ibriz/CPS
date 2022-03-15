@@ -19,6 +19,10 @@ import fetchRemainingVotesRequestWorker from './fetchRemainingVotesRequestWorker
 import fetchSponsorMessageRequestWorker from './fetchSponsorMessageRequestWorker';
 import fetchProposalByIpfsWorker from './fetchProposalByIpfsWorker';
 import fetchChangeVoteWorker from './fetchChangeVoteWorker';
+import submitPriorityVotingWorker from './submitPriorityVotingWorker';
+import fetchPriorityVotingStatusWorker from './fetchPriorityVotingStatusWorker';
+
+
 
 export {
     fetchProposalListWorker,
@@ -40,5 +44,7 @@ export {
     fetchRemainingVotesRequestWorker,
     fetchSponsorMessageRequestWorker,
     fetchProposalByIpfsWorker,
-    fetchChangeVoteWorker
+    fetchChangeVoteWorker,
+    submitPriorityVotingWorker,
+    fetchPriorityVotingStatusWorker
 }

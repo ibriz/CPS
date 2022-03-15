@@ -6,7 +6,7 @@ import { NotificationManager } from 'react-notifications';
 import constants from '../constants';
 import IconService from 'icon-sdk-js';
 import { HttpProvider } from 'icon-sdk-js';
-import { setModalShowSponsorRequests, setModalShowVoting, fetchProposalByAddressRequest } from 'Redux/Reducers/proposalSlice';
+import { setModalShowSponsorRequests, setModalShowVoting, fetchProposalByAddressRequest, submitPriorityVotingRequest } from 'Redux/Reducers/proposalSlice';
 import { setModalShowVotingPR } from 'Redux/Reducers/progressReportSlice';
 // import { fetchPeriodDetailsRequest } from 'Redux/Reducers/periodSlice';
 import { loginPrepRequest, setHasAddress } from 'Redux/Reducers/accountSlice';
@@ -473,7 +473,7 @@ export default (event) => {
                     NotificationManager.info("Prep Registration Request Sent");
                     break;
                 
-                    case pay_prep_penalty:
+                case pay_prep_penalty:
                         getResult({
                             txHash: payload.result,
                             failureMessage: "Prep Penalty Pay Failed",
@@ -489,7 +489,7 @@ export default (event) => {
                         NotificationManager.info("Prep Penalty Sent");
                         break;
 
-                        case claim_reward:
+                case claim_reward:
                             getResult({
                                 txHash: payload.result,
                                 failureMessage: "Reward Claim Failed",
@@ -513,6 +513,19 @@ export default (event) => {
                             // window.location.reload();
                             NotificationManager.info("Reward Claim Request Sent");
                             break;
+                
+                case 'vote_priority' :
+                    getResult({
+                        txHash: payload.result,
+                        failureMessage: "Priority Voting Request Failed",
+                        successMessage: "Priority Voting Set Successfully",
+    
+                    }, function(){
+                        store.dispatch(submitPriorityVotingRequest());
+                        return true;
+                    });
+                    NotificationManager.info("Priority Voting Request Sent");
+                    break;       
                 default:
                     break;
             }
