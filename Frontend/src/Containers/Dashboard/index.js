@@ -535,7 +535,7 @@ const Dashboard = ({
               <div className={styles.myProposalHeading}>Pending Votes</div>
 
               <VotingCard
-                proposalStatesList={ priorityVote && period === 'VOTING' ? ['Proposals', 'Progress Reports','Priority Voting'] : ['Proposals', 'Progress Reports'] }
+                proposalStatesList={ !priorityVote && period === 'VOTING' ? ['Proposals', 'Progress Reports','Priority Voting'] : ['Proposals', 'Progress Reports'] }
                 initialState={'Proposals'}
               />
             </>
