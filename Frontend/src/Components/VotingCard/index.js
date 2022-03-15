@@ -173,7 +173,7 @@ const VotingCard = ({ proposalList, fetchProposalListRequest, walletAddress, tot
                             onClickProgressReport = {onClickProgressReport}
 
                              />:<PriorityVoteCard
-                                proposals={proposalList?.['Rejected']?.[0] || []}
+                                proposals={proposalList?.['Voting']?.[0] || []}
                                 selectedTab={status}  
                                 searchText={searchText}
                                 emptyListMessage = 'No Priority Voting' />
