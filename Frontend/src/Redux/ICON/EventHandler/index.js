@@ -50,6 +50,7 @@ const {
   pay_prep_penalty,
   approve_sponsor,
   claim_reward,
+  votePriority,
 } = constants;
 
 function setTimeoutPromise () {
@@ -547,7 +548,7 @@ export default event => {
           NotificationManager.info('Reward Claim Request Sent');
           break;
 
-        case 'votePriority':
+        case votePriority:
           getResult(
             {
               txHash: payload.result,

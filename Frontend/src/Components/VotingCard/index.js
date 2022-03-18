@@ -20,7 +20,7 @@ import DetailsModalProgressReport from 'Components/Card/DetailsModalProgressRepo
 import PriorityVoteCard from 'Components/Card/PriorityVoteCard';
 
 
-const VotingCard = ({ proposalList, fetchProposalListRequest, walletAddress, totalPages, proposalStatesList, initialState, fetchProgressReport, progressReportList,modalShow, setModalShow, modalShowPR, setModalShowPR, fetchRemainingVotesRequest, remainingVotesProposal, remainingVotesPR }) => {
+const VotingCard = ({ proposalList, fetchProposalListRequest, walletAddress, totalPages, proposalStatesList, initialState, fetchProgressReport, progressReportList,modalShow, setModalShow, modalShowPR, setModalShowPR, fetchRemainingVotesRequest, remainingVotesProposal, remainingVotesPR,priorityVoting }) => {
 
     const [selectedTab, setSelectedTab] = useState(initialState);
     const [filteredProposalList, setFilteredProposalList] = useState(proposalList);
@@ -138,6 +138,10 @@ const VotingCard = ({ proposalList, fetchProposalListRequest, walletAddress, tot
         setFilteredProposalList(filteredProposals);
     }, [selectedTab, remainingVotesProposal, searchText, pageNumber]);
 
+    useEffect(()=>{
+      setSelectedTab('Proposals')
+    },[priorityVoting])
+
     return (
         <>
             <Row className={styles.proposalCard}>
@@ -223,6 +227,7 @@ const mapStateToProps = state => ({
 
   remainingVotesProposal: state.proposals.remainingVotes,
   remainingVotesPR: state.progressReport.remainingVotes,
+  priorityVoting: state.proposals.priorityVoting
 });
 
 const mapDispatchToProps = dispatch => ({

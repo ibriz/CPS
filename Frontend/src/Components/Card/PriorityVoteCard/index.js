@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, Button } from 'react-bootstrap';
+import { Container, Button, Alert } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { submitPriorityVotingRequest } from 'Redux/Reducers/proposalSlice';
 import styles from './PriorityVoteList.module.scss';
@@ -51,7 +51,9 @@ const PriorityVoteCard = ({
             {emptyListMessage || `No ${selectedTab} Proposals`}
           </span>
         )}
-        <br />
+        <Alert variant='info'>
+          Note: 1 = Best 2 = 2nd Best ... N = Least Best
+        </Alert>
         {priorityVoteList.length > 0 && (
           <div style={{ width: '100%', textAlign: 'end' }}>
             <Button
