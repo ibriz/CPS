@@ -521,7 +521,7 @@ class CPF_TREASURY(IconScoreBase):
 
         _extra_amount_bnusd = bnusd_amount - self.treasury_fund_bnusd.get()
         if _extra_amount_bnusd > 0:
-            self._swap_tokens(self.get_bnusd_score(), self.get_sicx_score(), _extra_amount_bnusd)
+            self._swap_tokens(self.get_bnusd_score(), _extra_amount_bnusd)
 
     @external(readonly=True)
     def get_proposals_details(self, _start_index: int = 0, _end_index: int = 20) -> dict:
@@ -549,10 +549,11 @@ class CPF_TREASURY(IconScoreBase):
         _proposals_dict_list = {"data": _proposals_details_list, "count": count}
         return _proposals_dict_list
 
-    def _swap_tokens(self, _from: Address, _to: Address, _amount: int):
+    def _swap_tokens(self, _from: Address, _amount: int):
         from_score = self.create_interface_score(_from, TokenInterface)
-        _data = json_dumps({"method": "_swap", "params": {"toToken": str(_to)}}).encode("utf-8")
-        from_score.transfer(self.dex_score.get(), _amount, _data)
+        _data = json_dumps({"method": "_swap", "params": {"toToken": str(ZERO_SCORE_ADDRESS),
+                                                          "path": []}}).encode("utf-8")
+        from_score.transfer(self.router_score.get(), _amount, _data)
 
     @external
     def swap_icx_bnusd(self, _amount: int):
@@ -665,7 +666,7 @@ class CPF_TREASURY(IconScoreBase):
 
     @payable
     def fallback(self):
-        if self.msg.sender == self.dex_score.get():
+        if self.msg.sender == self.router_score.get():
             self._burn(self.msg.value)
 
         else:
