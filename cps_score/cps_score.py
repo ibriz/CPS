@@ -49,7 +49,6 @@ class CPS_Score(IconScoreBase):
     _PROGRESS_REPORT_REJECTED = "_progress_report_rejected"
     PROGRESS_REPORT_STATUS_TYPE = [_APPROVED, _WAITING, _PROGRESS_REPORT_REJECTED]
 
-    _SPONSOR_BOND_RETURN = '_sponsor_bond_return'
     SPONSOR_BOND_RETURN = 'sponsor_bond_return'
 
     @eventlog(indexed=1)
@@ -166,7 +165,6 @@ class CPS_Score(IconScoreBase):
         self.max_delegation = VarDB(MAX_DELEGATION, db, value_type=int)
 
         self.proposal_fees = VarDB(PROPOSAL_FEES, db, value_type=int)
-        self.proposal_fund = VarDB(PROPOSAL_FUND, db, value_type=int)
         self.swap_block_height = VarDB(SWAP_BLOCK_HEIGHT, db, value_type=int)
         self.swap_count = VarDB(SWAP_COUNT, db, value_type=int)
 
