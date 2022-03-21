@@ -792,6 +792,44 @@ class CPS_Score(IconScoreBase):
             self.SponsorBondRejected(_from,
                                      f"Sponsor Bond Rejected for project {_proposal_details[PROJECT_TITLE]}.")
 
+    @external(readonly=True)
+    def checkPriorityVoting(self, _prep: Address) -> bool:
+        if _prep in self.priority_voted_preps:
+            return True
+        else:
+            return False
+
+    @external(readonly=True)
+    def sortPriorityProposals(self) -> list:
+        sorted_proposals = sorted(self.getPriorityVoteResult().items(), key=lambda item: item[1], reverse=True)
+        return [k for k, v in sorted_proposals]
+
+    @external(readonly=True)
+    def getPriorityVoteResult(self) -> dict:
+        proposalsPriority = {}
+        for _prop in self._pending:
+            proposalsPriority[_prop] = self.proposal_rank[_prop]
+        return proposalsPriority
+
+    @external
+    def votePriority(self, _proposals: List[str]):
+        if self.msg.sender not in self.valid_preps:
+            revert(f"{TAG} : Voting can only be done by registered P-Reps")
+        if self.checkPriorityVoting(self.msg.sender):
+            revert(f'{TAG}: Already voted for Priority Ranking.')
+
+        self.priority_voted_preps.put(self.msg.sender)
+        for proposal in range(0, len(_proposals)):
+            proposal_ = _proposals[proposal]
+            if proposal_ not in self._pending:
+                revert(f"{TAG}: {proposal_} not in pending state.")
+            self.proposal_rank[proposal_] += len(_proposals) - proposal
+
+    def _resetPriority(self):
+        for proposal in self.sortPriorityProposals():
+            self.proposal_rank.remove(proposal)
+        ArrayDBUtils.array_db_clear(self.priority_voted_preps)
+
     @external
     def vote_proposal(self, _ipfs_key: str, _vote: str, _vote_reason: str, _vote_change: bool = False) -> None:
         """
