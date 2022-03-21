@@ -1844,6 +1844,7 @@ class CPS_Score(IconScoreBase):
 
                     ArrayDBUtils.array_db_clear(self.budget_approvals_list)
                     ArrayDBUtils.array_db_clear(self.active_proposals)
+                    self._resetPriority()
 
                     # burn remaining proposal fees
                     self._burn(self.proposal_fees.get())
