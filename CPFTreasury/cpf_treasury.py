@@ -110,7 +110,7 @@ class CPF_TREASURY(IconScoreBase):
 
     def on_update(self) -> None:
         super().on_update()
-        self.router_score.set(Address.from_string("cx21e94c08c03daee80c25d8ee3ea22a20786ec231"))
+        self.staking_score.remove()
 
     def _proposal_exists(self, _ipfs_key: str) -> bool:
         return _ipfs_key in self._proposal_budgets
@@ -222,17 +222,6 @@ class CPF_TREASURY(IconScoreBase):
         self.balanced_dollar.set(_score)
 
     @external
-    def set_staking_score(self, _score: Address) -> None:
-        """
-        Sets the staking score address. Only owner can set the address.
-        :param _score: Address of the staking score address
-        :type _score: :class:`iconservice.base.address.Address`
-        :return:
-        """
-        self._validate_owner_score(_score)
-        self.staking_score.set(_score)
-
-    @external
     def set_sicx_score(self, _score: Address) -> None:
         """
         Sets the sicx score address. Only owner can set the address.
@@ -291,15 +280,6 @@ class CPF_TREASURY(IconScoreBase):
         :rtype: :class:`iconservice.base.address.Address`
         """
         return self.balanced_dollar.get()
-
-    @external(readonly=True)
-    def get_staking_score(self) -> Address:
-        """
-        Returns the Staking score address
-        :return: cps treasury score address
-        :rtype: :class:`iconservice.base.address.Address`
-        """
-        return self.staking_score.get()
 
     @external(readonly=True)
     def get_sicx_score(self) -> Address:
