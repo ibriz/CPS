@@ -1870,6 +1870,7 @@ class CPS_Score(IconScoreBase):
         Calculate the votes and update the proposals status on the end of the voting period.
         :return:
         """
+        distribution_amount = self.get_remaining_fund()[bnUSD]
 
         proposals = self.sortPriorityProposals()
         for proposal in range(0, len(proposals)):
@@ -1907,17 +1908,37 @@ class CPS_Score(IconScoreBase):
                 updated_status = self._REJECTED
 
             elif _approve_voters / _total_voters >= MAJORITY and _approved_votes / _total_votes >= MAJORITY:
-                self._update_proposal_status(_pending_proposals[proposal], self._ACTIVE)
-                updated_status = self._ACTIVE
-                self.sponsors.put(_sponsor_address)
-                self.proposals[prefix].sponsor_deposit_status.set(BOND_APPROVED)
+                if (_total_budget * 102 // 100) < distribution_amount:
+                    self._update_proposal_status(proposal_, self._ACTIVE)
+                    updated_status = self._ACTIVE
+                    self.sponsors.put(_sponsor_address)
+                    self.proposals[prefix].sponsor_deposit_status.set(BOND_APPROVED)
 
                     cpf_treasury_score = self.create_interface_score(self.cpf_score.get(), CPF_TREASURY_INTERFACE)
 
-                # After the proposal is being accepted, it requests CPF to send amount to CPS_Treasury
-                cpf_treasury_score.transfer_proposal_fund_to_cps_treasury(_pending_proposals[proposal], _period_count,
-                                                                          _sponsor_address, _contributor_address, flag,
-                                                                          _total_budget)
+                    # After the proposal is being accepted, it requests CPF to send amount to CPS_Treasury
+                    cpf_treasury_score.transfer_proposal_fund_to_cps_treasury(proposal_,
+                                                                              _period_count, _sponsor_address,
+                                                                              _contributor_address, flag, _total_budget)
+                    distribution_amount -= _total_budget
+                    self.proposal_rank.remove(proposal_)
+
+                else:
+                    updated_status = self._PENDING
+                    self.proposals[prefix].total_voters.set(0)
+                    self.proposals[prefix].total_votes.set(0)
+                    self.proposals[prefix].approved_votes.set(0)
+                    self.proposals[prefix].rejected_votes.set(0)
+
+                    ArrayDBUtils.array_db_clear(self.proposals[prefix].reject_voters)
+                    ArrayDBUtils.array_db_clear(self.proposals[prefix].approve_voters)
+                    ArrayDBUtils.array_db_clear(self.proposals[prefix].voters_list)
+                    ArrayDBUtils.array_db_clear(self.proposals[prefix].voters_reasons)
+                    for _prep in self.valid_preps:
+                        prepVoteChange = self.proposals[prefix].voters_list_index[_prep]
+                        prepVoteChange['vote'] = 0
+                        prepVoteChange['index'] = 0
+                        prepVoteChange['change_vote'] = 0
 
             else:
                 self._update_proposal_status(proposal_, self._REJECTED)
