@@ -611,8 +611,8 @@ class CPS_Score(IconScoreBase):
         if proposal_key[SPONSOR_ADDRESS] not in self.valid_preps:
             revert(f"{TAG} : Sponsor P-Rep not a Top 100 P-Rep.")
 
-        if self.msg.value != to_loop(SPONSOR_FEE):
-            revert(f"{TAG} : Deposit {SPONSOR_FEE} to submit a proposal.")
+        if self.msg.value != to_loop(APPLICATION_FEE):
+            revert(f"{TAG} : Deposit {APPLICATION_FEE} to submit a proposal.")
 
         _token_flag = proposal_key.get('token')
         if _token_flag != bnUSD:
