@@ -2143,6 +2143,19 @@ class CPS_Score(IconScoreBase):
         :return:
         """
 
+        # All voters for this Proposal
+        _voters_list = ArrayDBUtils.arraydb_to_list(self.priority_voted_preps)
+        # All valid P-Rep list
+        _valid_preps_list = ArrayDBUtils.arraydb_to_list(self.valid_preps)
+        # Getting the list of P-Rep who did not vote on.
+        _not_voters = [addr for addr in _valid_preps_list + _voters_list if
+                       addr not in _valid_preps_list or addr not in _voters_list]
+
+        # Adding the non voters to inactive P-Reps ArrayDB
+        for prep in _not_voters:
+            if prep not in self.inactive_preps:
+                self.inactive_preps.put(prep)
+
         for _prep in self.inactive_preps:
             ArrayDBUtils.remove_array_item(self.registered_preps, _prep)
 
