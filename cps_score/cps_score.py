@@ -631,7 +631,10 @@ class CPS_Score(IconScoreBase):
         self.contributors.put(self.msg.sender)
         self.ProposalSubmitted(self.msg.sender, "Successfully submitted a Proposal.")
         self._swap_bnusd_token()
-        self._burn(self.msg.value)
+
+        proposal_fee_burn = self.msg.value // 2
+        self.proposal_fees.set(self.proposal_fees.get() + proposal_fee_burn)
+        self._burn(proposal_fee_burn)
 
     @external
     def submit_progress_report(self, _progress_report: ProgressReportAttributes) -> None:
@@ -769,6 +772,9 @@ class CPS_Score(IconScoreBase):
         else:
             self._remove_contributor(_contributor_address)
             self._update_proposal_status(_ipfs_key, self._REJECTED)
+            # Return 50% of fees back to contributor
+            self.icx.transfer(_contributor_address, to_loop(APPLICATION_FEE // 2))
+
             self.SponsorBondRejected(_from,
                                      f"Sponsor Bond Rejected for project {_proposal_details[PROJECT_TITLE]}.")
 
@@ -1976,7 +1982,10 @@ class CPS_Score(IconScoreBase):
                 self._remove_contributor(_contributor_address)
                 self.proposals[prefix].sponsor_deposit_status.set(BOND_RETURNED)
 
-                # Returning back the Sponsor Bond to the sponsor address
+                # Return 50% of fees back to contributor
+                self.icx.transfer(_contributor_address, to_loop(APPLICATION_FEE // 2))
+
+                # Returning the Sponsor Bond to the sponsor address
                 self.sponsor_bond_return[str(_sponsor_address)][flag] += _sponsor_deposit_amount
                 self.SponsorBondReturned(_sponsor_address,
                                          f"{_sponsor_deposit_amount} returned to sponsor address.")
