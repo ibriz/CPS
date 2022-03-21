@@ -657,6 +657,9 @@ class CPS_Score(IconScoreBase):
         _prefix = self.proposals[prefix]
         flag: str = _prefix.token.get()
 
+        if flag == ICX:
+            revert(f'{TAG}: {ICX} Not supported anymore.')
+
         if self.msg.sender != _prefix.contributor_address.get():
             revert(f"{TAG} : Sorry, You are not the contributor for this project.")
 
