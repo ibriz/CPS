@@ -635,31 +635,23 @@ class CPF_TREASURY(IconScoreBase):
             unpacked_data = {}
 
         bnusd = self.balanced_dollar.get()
-        staking = self.sicx_score.get()
-        if self.msg.sender not in [staking, bnusd]:
-            revert(f'{TAG}: Only {bnusd} and sICX can send tokens to CPF Treasury.')
+        if self.msg.sender != bnusd:
+            revert(f'{TAG}: Only {bnusd} token is accepted on CPF Treasury.')
 
-        if self.msg.sender == staking:
-            if _from == self.get_dex_score():
-                from_score = self.create_interface_score(self.msg.sender, TokenInterface)
-                _data = json_dumps({"method": "_swap_icx"}).encode("utf-8")
-                from_score.transfer(self.dex_score.get(), _value, _data)
-
-        else:
-            if _from == self._cps_score.get():
-                if unpacked_data['method'] == 'return_fund_amount':
-                    _sponsor_address = Address.from_string(unpacked_data['params']['sponsor_address'])
-                    self.return_fund_amount(_sponsor_address, _from, BNUSD, _value)
-                elif unpacked_data['method'] == 'burn_amount':
-                    self._swap_tokens(self.msg.sender, staking, _value)
-                else:
-                    revert(f"{TAG}: Not supported method {unpacked_data['method']}")
-            if _from == self._cps_treasury_score.get():
-                if unpacked_data['method'] == 'disqualify_project':
-                    ipfs_key = unpacked_data['params']['ipfs_key']
-                    self.disqualify_proposal_fund(ipfs_key, _value, BNUSD, _from)
-                else:
-                    revert(f"{TAG}: Not supported method {unpacked_data['method']}")
+        if _from == self._cps_score.get():
+            if unpacked_data['method'] == 'return_fund_amount':
+                _sponsor_address = Address.from_string(unpacked_data['params']['sponsor_address'])
+                self.return_fund_amount(_sponsor_address, _from, BNUSD, _value)
+            elif unpacked_data['method'] == 'burn_amount':
+                self._swap_tokens(self.msg.sender, _value)
+            else:
+                revert(f"{TAG}: Not supported method {unpacked_data['method']}")
+        elif _from == self._cps_treasury_score.get():
+            if unpacked_data['method'] == 'disqualify_project':
+                ipfs_key = unpacked_data['params']['ipfs_key']
+                self.disqualify_proposal_fund(ipfs_key, _value, BNUSD, _from)
+            else:
+                revert(f"{TAG}: Not supported method {unpacked_data['method']}")
 
         elif _from == self.router_score.get():
             self._burn_extra_fund()
