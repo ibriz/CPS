@@ -180,7 +180,7 @@ class CPS_Score(IconScoreBase):
 
     def on_update(self) -> None:
         super().on_update()
-        self.proposal_fund.set(126_000 * 102 * MULTIPLIER // 100)
+        self.proposal_fees.set(0)
 
     def _proposal_key_exists(self, key: str) -> bool:
         return key in self.proposals_key_list_index
@@ -1347,13 +1347,6 @@ class CPS_Score(IconScoreBase):
         return sponsors_dict
 
     @external(readonly=True)
-    def get_proposal_fund(self) -> dict:
-        maxCap = self._get_max_cap_bnusd()
-        totalFund = self.proposal_fund.get()
-        return {"totalFund": totalFund,
-                "availableFund": maxCap - totalFund}
-
-    @external(readonly=True)
     def get_proposal_details(self, _status: str, _wallet_address: Address = None, _start_index: int = 0,
                              _end_index: int = 20) -> dict:
         """
@@ -1801,7 +1794,6 @@ class CPS_Score(IconScoreBase):
                 self.next_block.set(self.next_block.get() + BLOCKS_DAY_COUNT * DAY_COUNT)
                 self._update_application_result()
                 self.update_period_index.set(0)
-                self.proposal_fund.set(0)
                 self.set_PReps()
                 self._snapshot_delegations()
 
