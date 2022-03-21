@@ -604,9 +604,8 @@ class CPS_Score(IconScoreBase):
 
         budget_ = to_loop(proposal_key[TOTAL_BUDGET])
 
-        total_fund = self.proposal_fund.get()
-        if (total_fund + (budget_ * 102) // 100) > self._get_max_cap_bnusd():
-            revert(f'{TAG}: Max Cap fund already reached for this period.')
+        if budget_ > self._get_max_cap_bnusd():
+            revert(f'{TAG}: {budget_} is greater than MAX CAP {self._get_max_cap_bnusd()}')
 
         if proposal_key[SPONSOR_ADDRESS] not in self.valid_preps:
             revert(f"{TAG} : Sponsor P-Rep not a Top 100 P-Rep.")
@@ -674,18 +673,6 @@ class CPS_Score(IconScoreBase):
         if _progress[BUDGET_ADJUSTMENT]:
             # Check if budget adjustment is already submitted or not
             if not _prefix.budget_adjustment.get():
-                budget_added = _progress[ADDITIONAL_BUDGET]
-                if flag == bnUSD:
-                    total_fund = self.proposal_fund.get()
-                    added_budget = (budget_added * 102) // 100
-                    if total_fund + added_budget < self._get_max_cap_bnusd():
-                        self.proposal_fund.set(total_fund + added_budget)
-                    else:
-                        revert(f'{TAG}: Max Cap fund already reached for this period.')
-                else:
-                    if budget_added > self.get_remaining_fund()[ICX]:
-                        revert(f'{TAG}: Not enough ICX.')
-
                 if _progress[ADDITIONAL_DURATION] + _prefix.project_duration.get() > MAX_PROJECT_PERIOD:
                     revert(f'{TAG}: Maximum period for a project is {MAX_PROJECT_PERIOD} months.')
                 self.budget_approvals_list.put(_progress[REPORT_HASH])
@@ -766,14 +753,6 @@ class CPS_Score(IconScoreBase):
 
                 if _value != _budget // 10:
                     revert(f"{TAG} : Deposit 10% of the total budget of the project.")
-
-                total_fund = self.proposal_fund.get()
-                project_budget = total_fund + (_budget * 102) // 100
-                if project_budget < self._get_max_cap_bnusd():
-                    # Add extra 2% for sponsor reward
-                    self.proposal_fund.set(project_budget)
-                else:
-                    revert(f'{TAG}: Max Cap fund already reached for this period.')
 
                 self._update_proposal_status(_ipfs_key, self._PENDING)
 
