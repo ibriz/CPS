@@ -1189,6 +1189,10 @@ class CPS_Score(IconScoreBase):
         return [_address for _address in self.denylist]
 
     @external(readonly=True)
+    def get_maintenance_mode(self) -> bool:
+        return self.maintenance.get()
+
+    @external(readonly=True)
     def get_period_status(self) -> dict:
         """
         To get the period status
