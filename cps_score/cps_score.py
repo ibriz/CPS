@@ -1870,12 +1870,12 @@ class CPS_Score(IconScoreBase):
         Calculate the votes and update the proposals status on the end of the voting period.
         :return:
         """
-        _pending_proposals = []
-        for proposals in range(0, len(self._pending)):
-            _pending_proposals.append(self._pending[proposals])
-        for proposal in range(0, len(_pending_proposals)):
-            _proposal_details = self._get_proposal_details(_pending_proposals[proposal])
-            prefix = self.proposal_prefix(_pending_proposals[proposal])
+
+        proposals = self.sortPriorityProposals()
+        for proposal in range(0, len(proposals)):
+            proposal_ = proposals[proposal]
+            _proposal_details = self._get_proposal_details(proposal_)
+            prefix = self.proposal_prefix(proposal_)
 
             _title = _proposal_details[PROJECT_TITLE]
             _sponsor_address: 'Address' = _proposal_details[SPONSOR_ADDRESS]
@@ -1903,7 +1903,7 @@ class CPS_Score(IconScoreBase):
                     self.inactive_preps.put(prep)
 
             if _total_voters == 0 or _total_votes == 0 or len(self.valid_preps) < MINIMUM_PREPS:
-                self._update_proposal_status(_pending_proposals[proposal], self._REJECTED)
+                self._update_proposal_status(proposal_, self._REJECTED)
                 updated_status = self._REJECTED
 
             elif _approve_voters / _total_voters >= MAJORITY and _approved_votes / _total_votes >= MAJORITY:
@@ -1912,7 +1912,7 @@ class CPS_Score(IconScoreBase):
                 self.sponsors.put(_sponsor_address)
                 self.proposals[prefix].sponsor_deposit_status.set(BOND_APPROVED)
 
-                cpf_treasury_score = self.create_interface_score(self.cpf_score.get(), CPF_TREASURY_INTERFACE)
+                    cpf_treasury_score = self.create_interface_score(self.cpf_score.get(), CPF_TREASURY_INTERFACE)
 
                 # After the proposal is being accepted, it requests CPF to send amount to CPS_Treasury
                 cpf_treasury_score.transfer_proposal_fund_to_cps_treasury(_pending_proposals[proposal], _period_count,
@@ -1920,7 +1920,7 @@ class CPS_Score(IconScoreBase):
                                                                           _total_budget)
 
             else:
-                self._update_proposal_status(_pending_proposals[proposal], self._REJECTED)
+                self._update_proposal_status(proposal_, self._REJECTED)
                 updated_status = self._REJECTED
 
             if updated_status == self._REJECTED:
