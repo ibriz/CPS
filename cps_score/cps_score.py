@@ -171,6 +171,7 @@ class CPS_Score(IconScoreBase):
         self.proposal_rank = DictDB(PROPOSAL_RANK, db, value_type=int)
         self.priority_voted_preps = ArrayDB(PRIORITY_VOTED_PREPS, db, value_type=Address)
         self.maintenance = VarDB(MAINTENANCE, db, value_type=bool)
+        self.budgetAdjustment = VarDB(BUDGETADJUSTMENT, db, value_type=bool)
 
     def on_install(self) -> None:
         super().on_install()
@@ -181,6 +182,7 @@ class CPS_Score(IconScoreBase):
     def on_update(self) -> None:
         super().on_update()
         self.proposal_fees.set(0)
+        self.budgetAdjustment.set(False)
 
     def _proposal_key_exists(self, key: str) -> bool:
         return key in self.proposals_key_list_index
@@ -676,6 +678,8 @@ class CPS_Score(IconScoreBase):
         _progress[ADDITIONAL_BUDGET] = to_loop(_progress[ADDITIONAL_BUDGET])
 
         if _progress[BUDGET_ADJUSTMENT]:
+            if not self.getBudgetAdjustmentFeature():
+                revert(f"{TAG}: Budget Adjustment feature is disabled for the moment.")
             # Check if budget adjustment is already submitted or not
             if not _prefix.budget_adjustment.get():
                 if _progress[ADDITIONAL_DURATION] + _prefix.project_duration.get() > MAX_PROJECT_PERIOD:
@@ -778,6 +782,14 @@ class CPS_Score(IconScoreBase):
 
             self.SponsorBondRejected(_from,
                                      f"Sponsor Bond Rejected for project {_proposal_details[PROJECT_TITLE]}.")
+
+    @external(readonly=True)
+    def getBudgetAdjustmentFeature(self) -> bool:
+        return self.budgetAdjustment.get()
+
+    @external(readonly=True)
+    def toggleBudgetAdjustmentFeature(self):
+        self.budgetAdjustment.set(not self.budgetAdjustment.get())
 
     @external(readonly=True)
     def checkPriorityVoting(self, _prep: Address) -> bool:

@@ -107,6 +107,7 @@ PERCENTAGE_COMPLETED = 'percentage_completed'
 ADDITIONAL_BUDGET = 'additional_budget'
 ADDITIONAL_DURATION = 'additional_month'
 BUDGET_ADJUSTMENT = 'budget_adjustment'
+BUDGETADJUSTMENT = "budgetAdjustment"
 BUDGET_ADJUSTMENT_STATUS = "budget_adjustment_status"
 BUDGET_APPROVED_VOTES = 'budget_approved_votes'
 BUDGET_REJECTED_VOTES = 'budget_rejected_votes'
