@@ -169,6 +169,8 @@ class CPS_Score(IconScoreBase):
         self.swap_block_height = VarDB(SWAP_BLOCK_HEIGHT, db, value_type=int)
         self.swap_count = VarDB(SWAP_COUNT, db, value_type=int)
 
+        self.proposal_rank = DictDB(PROPOSAL_RANK, db, value_type=int)
+        self.priority_voted_preps = ArrayDB(PRIORITY_VOTED_PREPS, db, value_type=Address)
         self.maintenance = VarDB(MAINTENANCE, db, value_type=bool)
 
     def on_install(self) -> None:
