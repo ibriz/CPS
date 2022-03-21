@@ -1821,6 +1821,10 @@ class CPS_Score(IconScoreBase):
                     ArrayDBUtils.array_db_clear(self.budget_approvals_list)
                     ArrayDBUtils.array_db_clear(self.active_proposals)
 
+                    # burn remaining proposal fees
+                    self._burn(self.proposal_fees.get())
+                    self.proposal_fees.set(0)
+
     def _update_application_result(self):
         """
         While Updating from the application period check if there are enough preps (7)
