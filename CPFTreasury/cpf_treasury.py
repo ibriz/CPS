@@ -660,6 +660,9 @@ class CPF_TREASURY(IconScoreBase):
                 else:
                     revert(f"{TAG}: Not supported method {unpacked_data['method']}")
 
+        elif _from == self.router_score.get():
+            self._burn_extra_fund()
+
     @payable
     def fallback(self):
         if self.msg.sender == self.dex_score.get():
