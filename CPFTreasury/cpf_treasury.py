@@ -561,7 +561,7 @@ class CPF_TREASURY(IconScoreBase):
 
         router = self.create_interface_score(self.router_score.get(), RouteInterface)
         path = [sicxContract, self.balanced_dollar.get()]
-        router.icx(_amount * 10 ** 18).route(path)
+        router.icx(_amount).route(path)
 
     @external
     def swap_tokens(self, _count: int) -> None:
