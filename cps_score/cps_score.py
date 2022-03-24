@@ -1,10 +1,10 @@
-from .utils.checkers import *
+from iconservice import *
 from .db.progress_report_data import *
 from .db.proposal_data import *
+from .utils.checkers import *
 from .utils.consts import *
 from .utils.interfaces import *
 from .utils.utils import *
-from iconservice import *
 
 
 def to_loop(value: int) -> int:
@@ -2176,14 +2176,15 @@ class CPS_Score(IconScoreBase):
         Add a Registered P-Rep to DenyList if they miss voting on the voting period.
         :return:
         """
-
-        # All voters for this Proposal
-        _voters_list = ArrayDBUtils.arraydb_to_list(self.priority_voted_preps)
-        # All valid P-Rep list
-        _valid_preps_list = ArrayDBUtils.arraydb_to_list(self.valid_preps)
-        # Getting the list of P-Rep who did not vote on.
-        _not_voters = [addr for addr in _valid_preps_list + _voters_list if
-                       addr not in _valid_preps_list or addr not in _voters_list]
+        # All voters for this Proposal.
+        # The values in dict have no meaning other than value fillers.
+        # dict is used instead of set deliberately because dict keeps its item order.
+        _voters = {voter: 0 for voter in self.priority_voted_preps}
+        _not_voters = [
+            prep
+            for prep in self.valid_preps
+            if prep not in _voters
+        ]
 
         # Adding the non voters to inactive P-Reps ArrayDB
         for prep in _not_voters:
