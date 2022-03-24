@@ -95,6 +95,10 @@ class CPS_Score(IconScoreBase):
     def SponsorBondClaimed(self, _receiver_address: Address, _fund: int, note: str):
         pass
 
+    @eventlog(indexed=1)
+    def PriorityVote(self, _address: Address, note: str):
+        pass
+
     def __init__(self, db: IconScoreDatabase) -> None:
         super().__init__(db)
 
@@ -822,10 +826,7 @@ class CPS_Score(IconScoreBase):
                 revert(f"{TAG}: {proposal_} not in pending state.")
             self.proposal_rank[proposal_] += len(_proposals) - proposal
 
-    def _resetPriority(self):
-        for proposal in self._pending:
-            self.proposal_rank.remove(proposal)
-        ArrayDBUtils.array_db_clear(self.priority_voted_preps)
+        self.PriorityVote(self.msg.sender, "Priority voting done successfully.")
 
     @external
     def vote_proposal(self, _ipfs_key: str, _vote: str, _vote_reason: str, _vote_change: bool = False) -> None:
@@ -1847,7 +1848,7 @@ class CPS_Score(IconScoreBase):
 
                     ArrayDBUtils.array_db_clear(self.budget_approvals_list)
                     ArrayDBUtils.array_db_clear(self.active_proposals)
-                    self._resetPriority()
+                    ArrayDBUtils.array_db_clear(self.priority_voted_preps)
 
                     # burn remaining proposal fees
                     self._burn(self.proposal_fees.get())
@@ -1957,7 +1958,6 @@ class CPS_Score(IconScoreBase):
                                                                               _period_count, _sponsor_address,
                                                                               _contributor_address, flag, _total_budget)
                     distribution_amount -= _total_budget
-                    self.proposal_rank.remove(proposal_)
 
                 else:
                     updated_status = self._PENDING
@@ -1980,6 +1980,7 @@ class CPS_Score(IconScoreBase):
                 self._update_proposal_status(proposal_, self._REJECTED)
                 updated_status = self._REJECTED
 
+            self.proposal_rank.remove(proposal_)
             if updated_status == self._REJECTED:
                 self._remove_contributor(_contributor_address)
                 self.proposals[prefix].sponsor_deposit_status.set(BOND_RETURNED)
