@@ -1982,6 +1982,9 @@ class CPS_Score(IconScoreBase):
                 self.SponsorBondReturned(_sponsor_address,
                                          f"{_sponsor_deposit_amount} returned to sponsor address.")
 
+        if len(proposals) > 0:
+            self._checkInactivePreps(self.priority_voted_preps)
+
     def _update_progress_report_result(self):
         """
         Calculate votes for the progress reports and update the status and get the Installment and Sponsor
@@ -2155,7 +2158,6 @@ class CPS_Score(IconScoreBase):
         Add a Registered P-Rep to DenyList if they miss voting on the voting period.
         :return:
         """
-        self._checkInactivePreps(self.priority_voted_preps)
 
         for _prep in self.inactive_preps:
             ArrayDBUtils.remove_array_item(self.registered_preps, _prep)
