@@ -1929,18 +1929,7 @@ class CPS_Score(IconScoreBase):
             _total_voters: int = _proposal_details[TOTAL_VOTERS]
             flag: str = _proposal_details['token']
 
-            # All voters for this Proposal
-            _voters_list = ArrayDBUtils.arraydb_to_list(self.proposals[prefix].voters_list)
-            # All valid P-Rep list
-            _valid_preps_list = ArrayDBUtils.arraydb_to_list(self.valid_preps)
-            # Getting the list of P-Rep who did not vote on.
-            _not_voters = [addr for addr in _valid_preps_list + _voters_list if
-                           addr not in _valid_preps_list or addr not in _voters_list]
-
-            # Adding the non voters to inactive P-Reps ArrayDB
-            for prep in _not_voters:
-                if prep not in self.inactive_preps:
-                    self.inactive_preps.put(prep)
+            self._checkInactivePreps(self.proposals[prefix].voters_list)
 
             if _total_voters == 0 or _total_votes == 0 or len(self.valid_preps) < MINIMUM_PREPS:
                 self._update_proposal_status(proposal_, self._REJECTED)
@@ -2028,17 +2017,7 @@ class CPS_Score(IconScoreBase):
             _total_votes: int = _report_result[TOTAL_VOTES]
             _total_voters: int = _report_result[TOTAL_VOTERS]
 
-            # Getting all voters for this progress report
-            _voters_list = ArrayDBUtils.arraydb_to_list(self.progress_reports[progress_prefix].voters_list)
-            # Getting list of all valid-registered P-Reps
-            _main_preps_list = ArrayDBUtils.arraydb_to_list(self.valid_preps)
-            # Getting a list of non voters (_main_preps_list - _voters_list)
-            _not_voters = [addr for addr in _main_preps_list + _voters_list if
-                           addr not in _main_preps_list or addr not in _voters_list]
-
-            for prep in _not_voters:
-                if prep not in self.inactive_preps:
-                    self.inactive_preps.put(prep)
+            self._checkInactivePreps(self.progress_reports[progress_prefix].voters_list)
 
             # If a progress report have any budget_adjustment, then it checks the budget adjustment first
             if _budget_adjustment == 1:
@@ -2176,20 +2155,7 @@ class CPS_Score(IconScoreBase):
         Add a Registered P-Rep to DenyList if they miss voting on the voting period.
         :return:
         """
-        # All voters for this Proposal.
-        # The values in dict have no meaning other than value fillers.
-        # dict is used instead of set deliberately because dict keeps its item order.
-        _voters = {voter: 0 for voter in self.priority_voted_preps}
-        _not_voters = [
-            prep
-            for prep in self.valid_preps
-            if prep not in _voters
-        ]
-
-        # Adding the non voters to inactive P-Reps ArrayDB
-        for prep in _not_voters:
-            if prep not in self.inactive_preps:
-                self.inactive_preps.put(prep)
+        self._checkInactivePreps(self.priority_voted_preps)
 
         for _prep in self.inactive_preps:
             ArrayDBUtils.remove_array_item(self.registered_preps, _prep)
@@ -2202,6 +2168,21 @@ class CPS_Score(IconScoreBase):
 
         # Clear all data from the ArrayDB
         ArrayDBUtils.array_db_clear(self.inactive_preps)
+
+    def _checkInactivePreps(self, _list: ArrayDB):
+        # All voters for this Proposal.
+        # The values in dict have no meaning other than value fillers.
+        # dict is used instead of set deliberately because dict keeps its item order.
+        _voters = {voter: 0 for voter in _list}
+        _not_voters = [
+            prep
+            for prep in self.valid_preps
+            if prep not in _voters
+        ]
+        # Adding the non-voters to inactive P-Reps ArrayDB
+        for prep in _not_voters:
+            if prep not in self.inactive_preps:
+                self.inactive_preps.put(prep)
 
     @external
     def remove_denylist_preps(self):
