@@ -605,8 +605,9 @@ class CPS_Score(IconScoreBase):
 
         budget_ = to_loop(proposal_key[TOTAL_BUDGET])
 
-        if budget_ > self._get_max_cap_bnusd():
-            revert(f'{TAG}: {budget_} is greater than MAX CAP {self._get_max_cap_bnusd()}')
+        max_cap_bnusd: int = self._get_max_cap_bnusd()
+        if budget_ > max_cap_bnusd:
+            revert(f'{TAG}: {budget_} is greater than MAX CAP {max_cap_bnusd}')
 
         if proposal_key[SPONSOR_ADDRESS] not in self.valid_preps:
             revert(f"{TAG} : Sponsor P-Rep not a Top 100 P-Rep.")
@@ -632,9 +633,9 @@ class CPS_Score(IconScoreBase):
         self.ProposalSubmitted(self.msg.sender, "Successfully submitted a Proposal.")
         self._swap_bnusd_token()
 
-        proposal_fee_burn = self.msg.value // 2
-        self.proposal_fees.set(self.proposal_fees.get() + proposal_fee_burn)
-        self._burn(proposal_fee_burn)
+        half_of_proposal_fee = self.msg.value // 2
+        self.proposal_fees.set(self.proposal_fees.get() + half_of_proposal_fee)
+        self._burn(half_of_proposal_fee)
 
     @external
     def submit_progress_report(self, _progress_report: ProgressReportAttributes) -> None:
@@ -778,7 +779,7 @@ class CPS_Score(IconScoreBase):
             self._remove_contributor(_contributor_address)
             self._update_proposal_status(_ipfs_key, self._REJECTED)
             # Return 50% of fees back to contributor
-            self.icx.transfer(_contributor_address, to_loop(APPLICATION_FEE // 2))
+            self.icx.transfer(_contributor_address, to_loop(APPLICATION_FEE) // 2)
 
             self.SponsorBondRejected(_from,
                                      f"Sponsor Bond Rejected for project {_proposal_details[PROJECT_TITLE]}.")
@@ -787,16 +788,13 @@ class CPS_Score(IconScoreBase):
     def getBudgetAdjustmentFeature(self) -> bool:
         return self.budgetAdjustment.get()
 
-    @external(readonly=True)
+    @external
     def toggleBudgetAdjustmentFeature(self):
         self.budgetAdjustment.set(not self.budgetAdjustment.get())
 
     @external(readonly=True)
     def checkPriorityVoting(self, _prep: Address) -> bool:
-        if _prep in self.priority_voted_preps:
-            return True
-        else:
-            return False
+        return _prep in self.priority_voted_preps
 
     @external(readonly=True)
     def sortPriorityProposals(self) -> list:
@@ -805,10 +803,10 @@ class CPS_Score(IconScoreBase):
 
     @external(readonly=True)
     def getPriorityVoteResult(self) -> dict:
-        proposalsPriority = {}
-        for _prop in self._pending:
-            proposalsPriority[_prop] = self.proposal_rank[_prop]
-        return proposalsPriority
+        return {
+            _prop: self.proposal_rank[_prop]
+            for _prop in self._pending
+        }
 
     @external
     def votePriority(self, _proposals: List[str]):
@@ -818,14 +816,14 @@ class CPS_Score(IconScoreBase):
             revert(f'{TAG}: Already voted for Priority Ranking.')
 
         self.priority_voted_preps.put(self.msg.sender)
-        for proposal in range(0, len(_proposals)):
+        for proposal in range(len(_proposals)):
             proposal_ = _proposals[proposal]
             if proposal_ not in self._pending:
                 revert(f"{TAG}: {proposal_} not in pending state.")
             self.proposal_rank[proposal_] += len(_proposals) - proposal
 
     def _resetPriority(self):
-        for proposal in self.sortPriorityProposals():
+        for proposal in self._pending:
             self.proposal_rank.remove(proposal)
         ArrayDBUtils.array_db_clear(self.priority_voted_preps)
 
@@ -1910,11 +1908,11 @@ class CPS_Score(IconScoreBase):
         Calculate the votes and update the proposals status on the end of the voting period.
         :return:
         """
+        cpf_treasury_score = self.create_interface_score(self.cpf_score.get(), CPF_TREASURY_INTERFACE)
         distribution_amount = self.get_remaining_fund()[bnUSD]
 
         proposals = self.sortPriorityProposals()
-        for proposal in range(0, len(proposals)):
-            proposal_ = proposals[proposal]
+        for proposal_ in proposals:
             _proposal_details = self._get_proposal_details(proposal_)
             prefix = self.proposal_prefix(proposal_)
 
@@ -1954,8 +1952,6 @@ class CPS_Score(IconScoreBase):
                     self.sponsors.put(_sponsor_address)
                     self.proposals[prefix].sponsor_deposit_status.set(BOND_APPROVED)
 
-                    cpf_treasury_score = self.create_interface_score(self.cpf_score.get(), CPF_TREASURY_INTERFACE)
-
                     # After the proposal is being accepted, it requests CPF to send amount to CPS_Treasury
                     cpf_treasury_score.transfer_proposal_fund_to_cps_treasury(proposal_,
                                                                               _period_count, _sponsor_address,
@@ -1989,7 +1985,7 @@ class CPS_Score(IconScoreBase):
                 self.proposals[prefix].sponsor_deposit_status.set(BOND_RETURNED)
 
                 # Return 50% of fees back to contributor
-                self.icx.transfer(_contributor_address, to_loop(APPLICATION_FEE // 2))
+                self.icx.transfer(_contributor_address, to_loop(APPLICATION_FEE) // 2)
 
                 # Returning the Sponsor Bond to the sponsor address
                 self.sponsor_bond_return[str(_sponsor_address)][flag] += _sponsor_deposit_amount
@@ -2176,7 +2172,7 @@ class CPS_Score(IconScoreBase):
 
     def _update_denylist_preps(self):
         """
-        Add a Registered P-Rep to DenyList is they miss voting on the voting period.
+        Add a Registered P-Rep to DenyList if they miss voting on the voting period.
         :return:
         """
 
