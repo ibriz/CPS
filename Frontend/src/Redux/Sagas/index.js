@@ -34,6 +34,8 @@ import {
   fetchProposalByIpfsWorker,
   emptyProposalDetailWorker,
   fetchChangeVoteWorker,
+  submitPriorityVotingWorker,
+  fetchPriorityVotingStatusWorker
 } from './Proposal/index';
 
 import {
@@ -106,6 +108,8 @@ import {
   fetchProposalByIpfsRequest,
   emptyProposalDetailRequest,
   fetchChangeVoteRequest,
+  submitPriorityVotingRequest,
+  fetchPriorityVotingRequest,
 } from '../Reducers/proposalSlice';
 import {
   submitProgressReportRequest,
@@ -154,7 +158,7 @@ import {
 } from '../Reducers/userSlice';
 import { FiPrinter } from 'react-icons/fi';
 
-function* rootSaga() {
+function * rootSaga () {
   yield takeEvery(login.type, loginWorker);
   yield takeEvery(signTransaction.type, signTransactionWorker);
   yield takeEvery(logout.type, logoutWorker);
@@ -325,6 +329,14 @@ function* rootSaga() {
     fetchSponsorDepositAmountRequest.type,
     fetchSponsorDepositAmountWorker,
   );
+
+  yield takeEvery(submitPriorityVotingRequest.type, submitPriorityVotingWorker);
+
+  yield takeEvery(
+    fetchPriorityVotingRequest.type,
+    fetchPriorityVotingStatusWorker,
+  );
+
 }
 
 export default rootSaga;
