@@ -107,6 +107,7 @@ PERCENTAGE_COMPLETED = 'percentage_completed'
 ADDITIONAL_BUDGET = 'additional_budget'
 ADDITIONAL_DURATION = 'additional_month'
 BUDGET_ADJUSTMENT = 'budget_adjustment'
+BUDGETADJUSTMENT = "budgetAdjustment"
 BUDGET_ADJUSTMENT_STATUS = "budget_adjustment_status"
 BUDGET_APPROVED_VOTES = 'budget_approved_votes'
 BUDGET_REJECTED_VOTES = 'budget_rejected_votes'
@@ -123,8 +124,12 @@ COUNT = "count"
 DELEGATION_SNAPSHOT = "delegation_snapshot"
 MAX_DELEGATION = "max_delegation"
 PROPOSAL_FUND = "proposal_fund"
+PROPOSAL_FEES = "proposal_fees"
 SWAP_BLOCK_HEIGHT = 'swap_block_height'
 SWAP_COUNT = 'swap_count'
+
+PROPOSAL_RANK = "proposal_rank"
+PRIORITY_VOTED_PREPS = "priority_voted_preps"
 
 # VOTE KEYS
 VOTE = "vote"
@@ -142,5 +147,5 @@ VOTED = 1
 NOT_VOTED = 0
 
 # Sponsor Fee
-SPONSOR_FEE = 50
+APPLICATION_FEE = 50
 SWAP_BLOCK_DIFF = 5

@@ -1,10 +1,10 @@
-from .utils.checkers import *
+from iconservice import *
 from .db.progress_report_data import *
 from .db.proposal_data import *
+from .utils.checkers import *
 from .utils.consts import *
 from .utils.interfaces import *
 from .utils.utils import *
-from iconservice import *
 
 
 def to_loop(value: int) -> int:
@@ -49,7 +49,6 @@ class CPS_Score(IconScoreBase):
     _PROGRESS_REPORT_REJECTED = "_progress_report_rejected"
     PROGRESS_REPORT_STATUS_TYPE = [_APPROVED, _WAITING, _PROGRESS_REPORT_REJECTED]
 
-    _SPONSOR_BOND_RETURN = '_sponsor_bond_return'
     SPONSOR_BOND_RETURN = 'sponsor_bond_return'
 
     @eventlog(indexed=1)
@@ -94,6 +93,10 @@ class CPS_Score(IconScoreBase):
 
     @eventlog(indexed=1)
     def SponsorBondClaimed(self, _receiver_address: Address, _fund: int, note: str):
+        pass
+
+    @eventlog(indexed=1)
+    def PriorityVote(self, _address: Address, note: str):
         pass
 
     def __init__(self, db: IconScoreDatabase) -> None:
@@ -165,11 +168,14 @@ class CPS_Score(IconScoreBase):
         self.delegation_snapshot = DictDB(DELEGATION_SNAPSHOT, db, value_type=int)
         self.max_delegation = VarDB(MAX_DELEGATION, db, value_type=int)
 
-        self.proposal_fund = VarDB(PROPOSAL_FUND, db, value_type=int)
+        self.proposal_fees = VarDB(PROPOSAL_FEES, db, value_type=int)
         self.swap_block_height = VarDB(SWAP_BLOCK_HEIGHT, db, value_type=int)
         self.swap_count = VarDB(SWAP_COUNT, db, value_type=int)
 
+        self.proposal_rank = DictDB(PROPOSAL_RANK, db, value_type=int)
+        self.priority_voted_preps = ArrayDB(PRIORITY_VOTED_PREPS, db, value_type=Address)
         self.maintenance = VarDB(MAINTENANCE, db, value_type=bool)
+        self.budgetAdjustment = VarDB(BUDGETADJUSTMENT, db, value_type=bool)
 
     def on_install(self) -> None:
         super().on_install()
@@ -179,7 +185,8 @@ class CPS_Score(IconScoreBase):
 
     def on_update(self) -> None:
         super().on_update()
-        self.proposal_fund.set(126_000 * 102 * MULTIPLIER // 100)
+        self.proposal_fees.set(0)
+        self.budgetAdjustment.set(False)
 
     def _proposal_key_exists(self, key: str) -> bool:
         return key in self.proposals_key_list_index
@@ -602,15 +609,15 @@ class CPS_Score(IconScoreBase):
 
         budget_ = to_loop(proposal_key[TOTAL_BUDGET])
 
-        total_fund = self.proposal_fund.get()
-        if (total_fund + (budget_ * 102) // 100) > self._get_max_cap_bnusd():
-            revert(f'{TAG}: Max Cap fund already reached for this period.')
+        max_cap_bnusd: int = self._get_max_cap_bnusd()
+        if budget_ > max_cap_bnusd:
+            revert(f'{TAG}: {budget_} is greater than MAX CAP {max_cap_bnusd}')
 
         if proposal_key[SPONSOR_ADDRESS] not in self.valid_preps:
             revert(f"{TAG} : Sponsor P-Rep not a Top 100 P-Rep.")
 
-        if self.msg.value != to_loop(SPONSOR_FEE):
-            revert(f"{TAG} : Deposit {SPONSOR_FEE} to submit a proposal.")
+        if self.msg.value != to_loop(APPLICATION_FEE):
+            revert(f"{TAG} : Deposit {APPLICATION_FEE} to submit a proposal.")
 
         _token_flag = proposal_key.get('token')
         if _token_flag != bnUSD:
@@ -629,7 +636,10 @@ class CPS_Score(IconScoreBase):
         self.contributors.put(self.msg.sender)
         self.ProposalSubmitted(self.msg.sender, "Successfully submitted a Proposal.")
         self._swap_bnusd_token()
-        self._burn(self.msg.value)
+
+        half_of_proposal_fee = self.msg.value // 2
+        self.proposal_fees.set(self.proposal_fees.get() + half_of_proposal_fee)
+        self._burn(half_of_proposal_fee)
 
     @external
     def submit_progress_report(self, _progress_report: ProgressReportAttributes) -> None:
@@ -654,6 +664,9 @@ class CPS_Score(IconScoreBase):
         _prefix = self.proposals[prefix]
         flag: str = _prefix.token.get()
 
+        if flag == ICX:
+            revert(f'{TAG}: {ICX} Not supported anymore.')
+
         if self.msg.sender != _prefix.contributor_address.get():
             revert(f"{TAG} : Sorry, You are not the contributor for this project.")
 
@@ -670,20 +683,10 @@ class CPS_Score(IconScoreBase):
         _progress[ADDITIONAL_BUDGET] = to_loop(_progress[ADDITIONAL_BUDGET])
 
         if _progress[BUDGET_ADJUSTMENT]:
+            if not self.getBudgetAdjustmentFeature():
+                revert(f"{TAG}: Budget Adjustment feature is disabled for the moment.")
             # Check if budget adjustment is already submitted or not
             if not _prefix.budget_adjustment.get():
-                budget_added = _progress[ADDITIONAL_BUDGET]
-                if flag == bnUSD:
-                    total_fund = self.proposal_fund.get()
-                    added_budget = (budget_added * 102) // 100
-                    if total_fund + added_budget < self._get_max_cap_bnusd():
-                        self.proposal_fund.set(total_fund + added_budget)
-                    else:
-                        revert(f'{TAG}: Max Cap fund already reached for this period.')
-                else:
-                    if budget_added > self.get_remaining_fund()[ICX]:
-                        revert(f'{TAG}: Not enough ICX.')
-
                 if _progress[ADDITIONAL_DURATION] + _prefix.project_duration.get() > MAX_PROJECT_PERIOD:
                     revert(f'{TAG}: Maximum period for a project is {MAX_PROJECT_PERIOD} months.')
                 self.budget_approvals_list.put(_progress[REPORT_HASH])
@@ -765,14 +768,6 @@ class CPS_Score(IconScoreBase):
                 if _value != _budget // 10:
                     revert(f"{TAG} : Deposit 10% of the total budget of the project.")
 
-                total_fund = self.proposal_fund.get()
-                project_budget = total_fund + (_budget * 102) // 100
-                if project_budget < self._get_max_cap_bnusd():
-                    # Add extra 2% for sponsor reward
-                    self.proposal_fund.set(project_budget)
-                else:
-                    revert(f'{TAG}: Max Cap fund already reached for this period.')
-
                 self._update_proposal_status(_ipfs_key, self._PENDING)
 
                 prefix = self.proposal_prefix(_ipfs_key)
@@ -787,8 +782,51 @@ class CPS_Score(IconScoreBase):
         else:
             self._remove_contributor(_contributor_address)
             self._update_proposal_status(_ipfs_key, self._REJECTED)
+            # Return 50% of fees back to contributor
+            self.icx.transfer(_contributor_address, to_loop(APPLICATION_FEE) // 2)
+
             self.SponsorBondRejected(_from,
                                      f"Sponsor Bond Rejected for project {_proposal_details[PROJECT_TITLE]}.")
+
+    @external(readonly=True)
+    def getBudgetAdjustmentFeature(self) -> bool:
+        return self.budgetAdjustment.get()
+
+    @external
+    def toggleBudgetAdjustmentFeature(self):
+        self.budgetAdjustment.set(not self.budgetAdjustment.get())
+
+    @external(readonly=True)
+    def checkPriorityVoting(self, _prep: Address) -> bool:
+        return _prep in self.priority_voted_preps
+
+    @external(readonly=True)
+    def sortPriorityProposals(self) -> list:
+        sorted_proposals = sorted(self.getPriorityVoteResult().items(), key=lambda item: item[1], reverse=True)
+        return [k for k, v in sorted_proposals]
+
+    @external(readonly=True)
+    def getPriorityVoteResult(self) -> dict:
+        return {
+            _prop: self.proposal_rank[_prop]
+            for _prop in self._pending
+        }
+
+    @external
+    def votePriority(self, _proposals: List[str]):
+        if self.msg.sender not in self.valid_preps:
+            revert(f"{TAG} : Voting can only be done by registered P-Reps")
+        if self.checkPriorityVoting(self.msg.sender):
+            revert(f'{TAG}: Already voted for Priority Ranking.')
+
+        self.priority_voted_preps.put(self.msg.sender)
+        for proposal in range(len(_proposals)):
+            proposal_ = _proposals[proposal]
+            if proposal_ not in self._pending:
+                revert(f"{TAG}: {proposal_} not in pending state.")
+            self.proposal_rank[proposal_] += len(_proposals) - proposal
+
+        self.PriorityVote(self.msg.sender, "Priority voting done successfully.")
 
     @external
     def vote_proposal(self, _ipfs_key: str, _vote: str, _vote_reason: str, _vote_change: bool = False) -> None:
@@ -1187,6 +1225,10 @@ class CPS_Score(IconScoreBase):
         return [_address for _address in self.denylist]
 
     @external(readonly=True)
+    def get_maintenance_mode(self) -> bool:
+        return self.maintenance.get()
+
+    @external(readonly=True)
     def get_period_status(self) -> dict:
         """
         To get the period status
@@ -1317,13 +1359,6 @@ class CPS_Score(IconScoreBase):
             sponsors_dict[sponsor_address] = sponsors_dict.get(sponsor_address, 0) + 1
 
         return sponsors_dict
-
-    @external(readonly=True)
-    def get_proposal_fund(self) -> dict:
-        maxCap = self._get_max_cap_bnusd()
-        totalFund = self.proposal_fund.get()
-        return {"totalFund": totalFund,
-                "availableFund": maxCap - totalFund}
 
     @external(readonly=True)
     def get_proposal_details(self, _status: str, _wallet_address: Address = None, _start_index: int = 0,
@@ -1773,7 +1808,6 @@ class CPS_Score(IconScoreBase):
                 self.next_block.set(self.next_block.get() + BLOCKS_DAY_COUNT * DAY_COUNT)
                 self._update_application_result()
                 self.update_period_index.set(0)
-                self.proposal_fund.set(0)
                 self.set_PReps()
                 self._snapshot_delegations()
 
@@ -1814,6 +1848,11 @@ class CPS_Score(IconScoreBase):
 
                     ArrayDBUtils.array_db_clear(self.budget_approvals_list)
                     ArrayDBUtils.array_db_clear(self.active_proposals)
+                    ArrayDBUtils.array_db_clear(self.priority_voted_preps)
+
+                    # burn remaining proposal fees
+                    self._burn(self.proposal_fees.get())
+                    self.proposal_fees.set(0)
 
     def _update_application_result(self):
         """
@@ -1870,12 +1909,13 @@ class CPS_Score(IconScoreBase):
         Calculate the votes and update the proposals status on the end of the voting period.
         :return:
         """
-        _pending_proposals = []
-        for proposals in range(0, len(self._pending)):
-            _pending_proposals.append(self._pending[proposals])
-        for proposal in range(0, len(_pending_proposals)):
-            _proposal_details = self._get_proposal_details(_pending_proposals[proposal])
-            prefix = self.proposal_prefix(_pending_proposals[proposal])
+        cpf_treasury_score = self.create_interface_score(self.cpf_score.get(), CPF_TREASURY_INTERFACE)
+        distribution_amount = self.get_remaining_fund()[bnUSD]
+
+        proposals = self.sortPriorityProposals()
+        for proposal_ in proposals:
+            _proposal_details = self._get_proposal_details(proposal_)
+            prefix = self.proposal_prefix(proposal_)
 
             _title = _proposal_details[PROJECT_TITLE]
             _sponsor_address: 'Address' = _proposal_details[SPONSOR_ADDRESS]
@@ -1889,48 +1929,61 @@ class CPS_Score(IconScoreBase):
             _total_voters: int = _proposal_details[TOTAL_VOTERS]
             flag: str = _proposal_details['token']
 
-            # All voters for this Proposal
-            _voters_list = ArrayDBUtils.arraydb_to_list(self.proposals[prefix].voters_list)
-            # All valid P-Rep list
-            _valid_preps_list = ArrayDBUtils.arraydb_to_list(self.valid_preps)
-            # Getting the list of P-Rep who did not vote on.
-            _not_voters = [addr for addr in _valid_preps_list + _voters_list if
-                           addr not in _valid_preps_list or addr not in _voters_list]
-
-            # Adding the non voters to inactive P-Reps ArrayDB
-            for prep in _not_voters:
-                if prep not in self.inactive_preps:
-                    self.inactive_preps.put(prep)
+            self._checkInactivePreps(self.proposals[prefix].voters_list)
 
             if _total_voters == 0 or _total_votes == 0 or len(self.valid_preps) < MINIMUM_PREPS:
-                self._update_proposal_status(_pending_proposals[proposal], self._REJECTED)
+                self._update_proposal_status(proposal_, self._REJECTED)
                 updated_status = self._REJECTED
 
             elif _approve_voters / _total_voters >= MAJORITY and _approved_votes / _total_votes >= MAJORITY:
-                self._update_proposal_status(_pending_proposals[proposal], self._ACTIVE)
-                updated_status = self._ACTIVE
-                self.sponsors.put(_sponsor_address)
-                self.proposals[prefix].sponsor_deposit_status.set(BOND_APPROVED)
+                if (_total_budget * 102 // 100) < distribution_amount:
+                    self._update_proposal_status(proposal_, self._ACTIVE)
+                    updated_status = self._ACTIVE
+                    self.sponsors.put(_sponsor_address)
+                    self.proposals[prefix].sponsor_deposit_status.set(BOND_APPROVED)
 
-                cpf_treasury_score = self.create_interface_score(self.cpf_score.get(), CPF_TREASURY_INTERFACE)
+                    # After the proposal is being accepted, it requests CPF to send amount to CPS_Treasury
+                    cpf_treasury_score.transfer_proposal_fund_to_cps_treasury(proposal_,
+                                                                              _period_count, _sponsor_address,
+                                                                              _contributor_address, flag, _total_budget)
+                    distribution_amount -= _total_budget
 
-                # After the proposal is being accepted, it requests CPF to send amount to CPS_Treasury
-                cpf_treasury_score.transfer_proposal_fund_to_cps_treasury(_pending_proposals[proposal], _period_count,
-                                                                          _sponsor_address, _contributor_address, flag,
-                                                                          _total_budget)
+                else:
+                    updated_status = self._PENDING
+                    self.proposals[prefix].total_voters.set(0)
+                    self.proposals[prefix].total_votes.set(0)
+                    self.proposals[prefix].approved_votes.set(0)
+                    self.proposals[prefix].rejected_votes.set(0)
+
+                    ArrayDBUtils.array_db_clear(self.proposals[prefix].reject_voters)
+                    ArrayDBUtils.array_db_clear(self.proposals[prefix].approve_voters)
+                    ArrayDBUtils.array_db_clear(self.proposals[prefix].voters_list)
+                    ArrayDBUtils.array_db_clear(self.proposals[prefix].voters_reasons)
+                    for _prep in self.valid_preps:
+                        prepVoteChange = self.proposals[prefix].voters_list_index[_prep]
+                        prepVoteChange['vote'] = 0
+                        prepVoteChange['index'] = 0
+                        prepVoteChange['change_vote'] = 0
 
             else:
-                self._update_proposal_status(_pending_proposals[proposal], self._REJECTED)
+                self._update_proposal_status(proposal_, self._REJECTED)
                 updated_status = self._REJECTED
 
+            self.proposal_rank.remove(proposal_)
             if updated_status == self._REJECTED:
                 self._remove_contributor(_contributor_address)
                 self.proposals[prefix].sponsor_deposit_status.set(BOND_RETURNED)
 
-                # Returning back the Sponsor Bond to the sponsor address
+                # Return 50% of fees back to contributor
+                self.icx.transfer(_contributor_address, to_loop(APPLICATION_FEE) // 2)
+
+                # Returning the Sponsor Bond to the sponsor address
                 self.sponsor_bond_return[str(_sponsor_address)][flag] += _sponsor_deposit_amount
                 self.SponsorBondReturned(_sponsor_address,
                                          f"{_sponsor_deposit_amount} returned to sponsor address.")
+
+        if len(proposals) > 0:
+            self._checkInactivePreps(self.priority_voted_preps)
 
     def _update_progress_report_result(self):
         """
@@ -1967,17 +2020,7 @@ class CPS_Score(IconScoreBase):
             _total_votes: int = _report_result[TOTAL_VOTES]
             _total_voters: int = _report_result[TOTAL_VOTERS]
 
-            # Getting all voters for this progress report
-            _voters_list = ArrayDBUtils.arraydb_to_list(self.progress_reports[progress_prefix].voters_list)
-            # Getting list of all valid-registered P-Reps
-            _main_preps_list = ArrayDBUtils.arraydb_to_list(self.valid_preps)
-            # Getting a list of non voters (_main_preps_list - _voters_list)
-            _not_voters = [addr for addr in _main_preps_list + _voters_list if
-                           addr not in _main_preps_list or addr not in _voters_list]
-
-            for prep in _not_voters:
-                if prep not in self.inactive_preps:
-                    self.inactive_preps.put(prep)
+            self._checkInactivePreps(self.progress_reports[progress_prefix].voters_list)
 
             # If a progress report have any budget_adjustment, then it checks the budget adjustment first
             if _budget_adjustment == 1:
@@ -2112,7 +2155,7 @@ class CPS_Score(IconScoreBase):
 
     def _update_denylist_preps(self):
         """
-        Add a Registered P-Rep to DenyList is they miss voting on the voting period.
+        Add a Registered P-Rep to DenyList if they miss voting on the voting period.
         :return:
         """
 
@@ -2127,6 +2170,21 @@ class CPS_Score(IconScoreBase):
 
         # Clear all data from the ArrayDB
         ArrayDBUtils.array_db_clear(self.inactive_preps)
+
+    def _checkInactivePreps(self, _list: ArrayDB):
+        # All voters for this Proposal.
+        # The values in dict have no meaning other than value fillers.
+        # dict is used instead of set deliberately because dict keeps its item order.
+        _voters = {voter: 0 for voter in _list}
+        _not_voters = [
+            prep
+            for prep in self.valid_preps
+            if prep not in _voters
+        ]
+        # Adding the non-voters to inactive P-Reps ArrayDB
+        for prep in _not_voters:
+            if prep not in self.inactive_preps:
+                self.inactive_preps.put(prep)
 
     @external
     def remove_denylist_preps(self):
