@@ -156,7 +156,7 @@ class CPF_TREASURY(IconScoreBase):
         :type _value : int
         :return:
         """
-        self._validate_admins()
+        self._validate_owner()
         self.treasury_fund.set(_value)
 
     @external
@@ -167,7 +167,7 @@ class CPF_TREASURY(IconScoreBase):
         :type _value : int
         :return:
         """
-        self._validate_admins()
+        self._validate_owner()
         self.treasury_fund_bnusd.set(_value)
 
     @external
@@ -575,12 +575,16 @@ class CPF_TREASURY(IconScoreBase):
         from_score.transfer(self.dex_score.get(), _amount, _data)
 
     @external
-    def swap_icx_bnusd(self, _amount: int):
+    def swap_icx_bnusd(self, _amount: int, _sicx: bool = False):
         sicxContract = self.get_sicx_score()
-
-        router = self.create_interface_score(self.router_score.get(), RouteInterface)
-        path = [sicxContract, self.balanced_dollar.get()]
-        router.icx(_amount * 10 ** 18).route(path)
+        if _sicx:
+            sicxScore = self.create_interface_score(sicxContract, TokenInterface)
+            _amount = sicxScore.balanceOf(self.address)
+            self._swap_tokens(sicxContract, self.get_bnusd_score(), _amount)
+        else:
+            router = self.create_interface_score(self.router_score.get(), RouteInterface)
+            path = [sicxContract, self.balanced_dollar.get()]
+            router.icx(_amount * 10 ** 18).route(path)
 
     @external
     def swap_tokens(self, _count: int) -> None:
@@ -593,32 +597,30 @@ class CPF_TREASURY(IconScoreBase):
 
         self._validate_cps_score()
         dex = self.create_interface_score(self.dex_score.get(), DEX_INTERFACE)
+        router = self.create_interface_score(self.router_score.get(), RouteInterface)
+        sicx = self.sicx_score.get()
 
         sicxICXPrice: int = dex.getPrice(1)
         sicxBnusdPrice: int = dex.getPrice(2)
-        icxbnUSDPrice = int((sicxBnusdPrice / sicxICXPrice) * 10 ** 18)
+        icxbnUSDPrice = sicxBnusdPrice * 10 ** 18 // sicxICXPrice
         bnUSDRemainingToSwap = self.get_remaining_swap_amount().get('remainingToSwap')
 
         if bnUSDRemainingToSwap < 10 * 10 ** 18 or _count == 0:
             self.swap_state.set(1)
-            self.swap_count.set(0)
 
         try:
             swap_state = self.swap_state.get()
             if swap_state == 0:
                 count_swap = self.swap_count.get()
-                count = _count - count_swap
-                if count == 0:
-                    self.swap_state.set(1)
-                    self.swap_count.set(0)
-                else:
-                    remainingICXToSwap = bnUSDRemainingToSwap * 10 ** 18 // (icxbnUSDPrice * count)
-                    icxBalance = self.icx.get_balance(self.address)
-                    if remainingICXToSwap > icxBalance:
-                        remainingICXToSwap = icxBalance
+                remainingICXToSwap = (bnUSDRemainingToSwap // (icxbnUSDPrice * (_count - count_swap))) * 10 ** 18
+                icxBalance = self.icx.get_balance(self.address)
+                if remainingICXToSwap > icxBalance:
+                    remainingICXToSwap = icxBalance
 
-                    if remainingICXToSwap > 5 * 10 ** 18:
-                        self.swap_icx_bnusd(remainingICXToSwap)
+                if remainingICXToSwap > 5 * 10 ** 18:
+                    path = [sicx, self.balanced_dollar.get()]
+                    router.icx(remainingICXToSwap).route(path)
+                    self.swap_count.set(count_swap + 1)
 
         except Exception as e:
             revert(f'{TAG}: Error Swapping tokens. {e}')
@@ -639,10 +641,10 @@ class CPF_TREASURY(IconScoreBase):
         resets the swap_state to zero
         :return:
         """
-        cps_score = self.create_interface_score(self._cps_score.get(), CPSScoreInterface)
-        if cps_score.is_admin(self.msg.sender) or self.msg.sender == self._cps_score.get():
+        cps_score_address = self._cps_score.get()
+        cps_score = self.create_interface_score(cps_score_address, CPSScoreInterface)
+        if cps_score.is_admin(self.msg.sender) or self.msg.sender == cps_score_address:
             self.swap_state.set(0)
-            self.swap_count.set(0)
         else:
             revert(f'{TAG}: Only admin can call this method.')
 
@@ -686,4 +688,4 @@ class CPF_TREASURY(IconScoreBase):
             self._burn(self.msg.value)
 
         else:
-            self.add_fund()
+            revert(f'{TAG}: Please send fund using add_fund().')
