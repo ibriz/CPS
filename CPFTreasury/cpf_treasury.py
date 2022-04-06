@@ -662,7 +662,7 @@ class CPF_TREASURY(IconScoreBase):
                 else:
                     revert(f"{TAG}: Not supported method {unpacked_data['method']}")
 
-            elif _from == self.get_dex_score():
+            elif _from == self.get_dex_score() or _from == self.get_router_score():
                 self._burn_extra_fund()
 
     @payable
