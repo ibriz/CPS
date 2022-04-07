@@ -537,7 +537,7 @@ const ProgressReportCreationPage = ({
 
                         </Form.Group> */}
 
-            <Form.Group
+            {/* <Form.Group
               as={Row}
               controlId='formPlaintextPassword'
               className={styles.maxWidthLabelPTR}
@@ -567,7 +567,6 @@ const ProgressReportCreationPage = ({
                   <AppFormLabel column lg='2'>
                     Additional Budget
                     <span className={styles.required}></span>
-                    {/* <InfoIcon description = "Additional budget required (in ICX) for completion"/>   */}
                   </AppFormLabel>
                   <Col lg='4' className={styles.inputSameLine}>
                     <InputGroup size='md'>
@@ -590,7 +589,6 @@ const ProgressReportCreationPage = ({
                   <AppFormLabel column lg='2' className={styles.labelSameLine}>
                     Additional Time
                     <span className={styles.required}></span>
-                    {/* <InfoIcon description = "Additional time required (in months) for completion"/>   */}
                   </AppFormLabel>
                   <Col lg='4' className={styles.inputSameLine}>
                     <InputGroup size='md'>
@@ -645,7 +643,7 @@ const ProgressReportCreationPage = ({
                   </Col>
                 </Form.Group>
               </>
-            )}
+            )} */}
 
             <Alert variant={'info'}>{signingInfoMessage}</Alert>
 
