@@ -174,7 +174,7 @@ const ProposalCreationPage = ({
         // `Enter Total Budget between 0 and ${remainingSwapAmount} bnUSD`,
         `Please enter total budget`,
       );
-    } /* else if (
+    } else if (
       proposal.totalBudget < 0 ||
       proposal.totalBudget > remainingSwapAmount
     ) {
@@ -183,7 +183,7 @@ const ProposalCreationPage = ({
         .setCustomValidity(
           `Total Budget should be between 0 and ${remainingSwapAmount} bnUSD`,
         );
-    }*/ else {
+    } else {
       document.getElementById('totalBudget').setCustomValidity('');
     }
   }, [proposal.totalBudget, remainingSwapAmount]);
@@ -481,11 +481,11 @@ const ProposalCreationPage = ({
                       'Total Budget' ||
                       `Available Fund (${remainingSwapAmount} bnUSD)`
                     }
-                    onInvalid={e =>
-                      e.target.setCustomValidity(
-                        `Total Budget should be between 0 and ${remainingSwapAmount} bnUSD`,
-                      )
-                    }
+                    // onInvalid={e => {
+                    //   e.target.setCustomValidity(
+                    //     `Total Budget should be between 0 and ${remainingSwapAmount} bnUSD`,
+                    //   );
+                    // }}
                     min={0}
                     max={remainingSwapAmount}
                     type='number'
@@ -726,11 +726,7 @@ const ProposalCreationPage = ({
               </Col>
               <Col className={styles.saveButton}>
                 {period !== 'VOTING' && !isMaintenanceMode && (
-                  <Button
-                    variant='info'
-                    type='submit'
-                    disabled={!isMaintenanceMode}
-                  >
+                  <Button variant='info' type='submit'>
                     SUBMIT
                   </Button>
                 )}

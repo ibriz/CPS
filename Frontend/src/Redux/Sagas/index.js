@@ -17,6 +17,7 @@ import {
   submitProposalToIPFSWorker,
   submitProposalToScoreWorker,
   fetchProposalListWorker,
+  fetchSortPriorityProposalListWorker,
   fetchMyProposalListWorker,
   updateProposalStatusWorker,
   fetchProposalDetailWorker,
@@ -112,6 +113,7 @@ import {
   fetchChangeVoteRequest,
   submitPriorityVotingRequest,
   fetchPriorityVotingRequest,
+  fetchSortPriorityProposalListRequest,
 } from '../Reducers/proposalSlice';
 import {
   submitProgressReportRequest,
@@ -172,6 +174,10 @@ function* rootSaga() {
   yield takeEvery(submitProposalSuccess.type, submitProposalToScoreWorker);
 
   yield takeEvery(fetchProposalListRequest.type, fetchProposalListWorker);
+  yield takeEvery(
+    fetchSortPriorityProposalListRequest.type,
+    fetchSortPriorityProposalListWorker,
+  );
 
   yield takeEvery(fetchMyProposalListRequest.type, fetchMyProposalListWorker);
   yield takeEvery(fetchProposalByIpfsRequest.type, fetchProposalByIpfsWorker);

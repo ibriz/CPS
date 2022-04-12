@@ -151,28 +151,23 @@ const proposalSlice = createSlice({
   name: 'proposal',
   initialState,
   reducers: {
-    submitProposalRequest (state) {},
-    submitProposalSuccess (state) {
+    submitProposalRequest(state) {},
+    submitProposalSuccess(state) {
       state.submittingProposal = false;
     },
-    submitProposalFailure (state) {
+    submitProposalFailure(state) {
       state.submittingProposal = false;
     },
 
-    setSubmittingProposal (state) {
+    setSubmittingProposal(state) {
       state.submittingProposal = true;
     },
 
-    fetchProposalListRequest (state) {
+    fetchSortPriorityProposalListRequest(state) {
       return;
     },
-    fetchProposalListSuccess (state, action) {
-      // state.proposalList = action.payload
-      // state.proposalList.
-
-      state.proposalList[action.payload.status][
-        action.payload.pageNumber - 1
-      ] = action.payload.response.data
+    fetchSortPriorityProposalListSuccess(state, action) {
+      state.proposalList['Voting'][0] = action.payload.response
         .map(proposal => ({
           _status: proposal[PARAMS.status],
           _proposal_title: proposal[PARAMS.proposalTitle],
@@ -233,41 +228,115 @@ const proposalSlice = createSlice({
       state.totalCount[action.payload.status] = IconConverter.toNumber(
         action.payload.response.count,
       );
-
-      return;
     },
-    fetchProposalListFailure (state) {
-      return;
-    },
-    updateProposalStatus (state, action) {
+    fetchSortPriorityProposalListFailure(state) {
       return;
     },
 
-    fetchProposalDetailRequest () {
+    fetchProposalListRequest(state) {
+      return;
+    },
+    fetchProposalListSuccess(state, action) {
+      // state.proposalList = action.payload
+      // state.proposalList.
+
+      state.proposalList[action.payload.status][action.payload.pageNumber - 1] =
+        action.payload.response.data
+          .map(proposal => ({
+            _status: proposal[PARAMS.status],
+            _proposal_title: proposal[PARAMS.proposalTitle],
+            _contributor_address: proposal[PARAMS.contributorAddress],
+            // budget: parseInt(proposal[PARAMS.totalBudget]),
+            budget: IconConverter.toBigNumber(
+              proposal[PARAMS.totalBudget],
+            ).dividedBy(10 ** 18),
+            _timestamp: proposal[PARAMS.timestamp],
+            ipfsHash: proposal[PARAMS.proposalHash],
+            ipfsKey: proposal[PARAMS.proposalHash],
+            approvedVotes: IconConverter.toBigNumber(
+              proposal[PARAMS.approvedVotes],
+            ),
+            totalVotes: IconConverter.toBigNumber(proposal[PARAMS.totalVotes]),
+            projectDuration: IconConverter.toBigNumber(
+              proposal[PARAMS.projectDuration],
+            ),
+
+            sponsorVoteReason: proposal[PARAMS.sponsorVoteReason],
+            // approvedPercentage: (!proposal[PARAMS.totalVotes] || parseInt(proposal[PARAMS.totalVotes]) === 0) ? 0 : ((proposal[PARAMS.approvedVotes] / proposal[PARAMS.totalVotes]) * 100),
+
+            approvedPercentage: calculatePercentage({
+              total: proposal[PARAMS.totalVotes],
+              actual: proposal[PARAMS.approvedVotes],
+            }),
+            approvedVotesPercentageCount: calculatePercentage({
+              total: proposal[PARAMS.totalVoters],
+              actual: proposal[PARAMS.approvedVoters],
+            }),
+
+            rejectedPercentage: calculatePercentage({
+              total: proposal[PARAMS.totalVotes],
+              actual: proposal[PARAMS.rejectedVotes],
+            }),
+            rejectedVotesPercentageCount: calculatePercentage({
+              total: proposal[PARAMS.totalVoters],
+              actual: proposal[PARAMS.rejectedVoters],
+            }),
+
+            completedPercentage: parseInt(
+              IconConverter.toBigNumber(proposal[PARAMS.percentageCompleted]),
+            ),
+            token: proposal[PARAMS.token],
+            // if(parseInt(totalVoters) === 0) {
+            //     return 0;
+            //   }
+            //   return (approvedVoters/totalVoters) * 100;
+          }))
+          .sort((a, b) => b._timestamp - a._timestamp);
+      console.log(fetchProposalListSuccess);
+      // console.log(Math.ceil(IconConverter.toNumber(action.payload.response[0].count) / 10));
+      console.log(action.payload.status);
+      // state.totalPages[action.payload.status] = Math.ceil(IconConverter.toNumber(action.payload.response[0].count) / 10)
+      state.totalPages[action.payload.status] = Math.ceil(
+        IconConverter.toNumber(action.payload.response.count) / 10,
+      );
+      state.totalCount[action.payload.status] = IconConverter.toNumber(
+        action.payload.response.count,
+      );
+
+      return;
+    },
+    fetchProposalListFailure(state) {
+      return;
+    },
+    updateProposalStatus(state, action) {
       return;
     },
 
-    fetchProposalDetailSuccess (state, payload) {
+    fetchProposalDetailRequest() {
+      return;
+    },
+
+    fetchProposalDetailSuccess(state, payload) {
       state.proposalDetail = payload.payload.response;
     },
-    fetchProposalDetailFailure (state) {
+    fetchProposalDetailFailure(state) {
       state.error = true;
     },
-    emptyProposalDetailRequest () {
+    emptyProposalDetailRequest() {
       return;
     },
-    emptyProposalDetailSuccess (state) {
+    emptyProposalDetailSuccess(state) {
       delete state.proposalDetail;
       state.error = '';
       state.selectedProposal = {};
     },
-    emptyProposalDetailFailure () {
+    emptyProposalDetailFailure() {
       return;
     },
-    fetchSponsorRequestsListRequest (state) {
+    fetchSponsorRequestsListRequest(state) {
       return;
     },
-    fetchSponsorRequestsListSuccess (state, action) {
+    fetchSponsorRequestsListSuccess(state, action) {
       // state.proposalList[action.payload.status][action.payload.pageNumber - 1] = action.payload.response.data.map (
       //     proposal => (
       //         {
@@ -341,41 +410,40 @@ const proposalSlice = createSlice({
       state.totalPagesSponsorRequests[action.payload.status] = Math.ceil(
         IconConverter.toNumber(action.payload.response.count) / 10,
       );
-      state.totalCountSponsorRequests[
-        action.payload.status
-      ] = IconConverter.toNumber(action.payload.response.count);
+      state.totalCountSponsorRequests[action.payload.status] =
+        IconConverter.toNumber(action.payload.response.count);
 
       return;
     },
-    fetchSponsorRequestsListFailure (state) {
+    fetchSponsorRequestsListFailure(state) {
       return;
     },
 
-    approveSponserRequest (state) {
+    approveSponserRequest(state) {
       return;
     },
-    rejectSponsorRequest (state) {
-      return;
-    },
-
-    voteProposal (state) {
+    rejectSponsorRequest(state) {
       return;
     },
 
-    saveDraftRequest (state) {
-      return;
-    },
-    saveDraftSuccess (state) {
-      return;
-    },
-    saveDraftFailure (state) {
+    voteProposal(state) {
       return;
     },
 
-    fetchDraftsRequest (state) {
+    saveDraftRequest(state) {
       return;
     },
-    fetchDraftsSuccess (state, action) {
+    saveDraftSuccess(state) {
+      return;
+    },
+    saveDraftFailure(state) {
+      return;
+    },
+
+    fetchDraftsRequest(state) {
+      return;
+    },
+    fetchDraftsSuccess(state, action) {
       state.proposalList['Draft'] = action.payload.response.map(
         (proposal, index) => ({
           // projectName: proposal.proposalName,
@@ -400,15 +468,15 @@ const proposalSlice = createSlice({
         }),
       );
     },
-    fetchDraftsFailure (state) {
+    fetchDraftsFailure(state) {
       return;
     },
 
-    fetchProposalByAddressRequest (state) {
+    fetchProposalByAddressRequest(state) {
       return;
     },
 
-    fetchProposalByAddressSuccess (state, action) {
+    fetchProposalByAddressSuccess(state, action) {
       console.group('fetchProposalByAddressSuccess');
       console.log('fetchProposalByAddressSuccess');
       console.groupEnd();
@@ -421,20 +489,20 @@ const proposalSlice = createSlice({
       return;
     },
 
-    fetchProposalByAddressFailure (state) {
+    fetchProposalByAddressFailure(state) {
       return;
     },
-    setModalShowSponsorRequests (state, action) {
+    setModalShowSponsorRequests(state, action) {
       state.modalShowSponsorRequests = action.payload;
     },
-    setModalShowVoting (state, action) {
+    setModalShowVoting(state, action) {
       state.modalShowVoting = action.payload;
     },
 
-    fetchVoteResultRequest () {
+    fetchVoteResultRequest() {
       return;
     },
-    fetchVoteResultSuccess (state, action) {
+    fetchVoteResultSuccess(state, action) {
       state.votesByProposal = action.payload.response.data.map(vote => ({
         sponsorAddress: vote.address,
         status: proposalStatusMapping.find(
@@ -468,14 +536,14 @@ const proposalSlice = createSlice({
 
       return;
     },
-    fetchVoteResultFailure () {
+    fetchVoteResultFailure() {
       return;
     },
 
-    fetchProjectAmountsRequest (state) {
+    fetchProjectAmountsRequest(state) {
       return;
     },
-    fetchProjectAmountsSuccess (state, action) {
+    fetchProjectAmountsSuccess(state, action) {
       // state.proposalList = action.payload
       // state.proposalList.
       for (const proposalStatus of proposalStatusMapping) {
@@ -501,14 +569,14 @@ const proposalSlice = createSlice({
       }
       return;
     },
-    fetchProjectAmountsFailure (state) {
+    fetchProjectAmountsFailure(state) {
       return;
     },
 
-    fetchMyProposalListRequest (state) {
+    fetchMyProposalListRequest(state) {
       return;
     },
-    fetchMyProposalListSuccess (state, action) {
+    fetchMyProposalListSuccess(state, action) {
       // state.proposalList = action.payload
       // state.proposalList.
 
@@ -578,14 +646,14 @@ const proposalSlice = createSlice({
 
       return;
     },
-    fetchMyProposalListFailure (state) {
+    fetchMyProposalListFailure(state) {
       return;
     },
 
-    fetchRemainingVotesRequest (state) {
+    fetchRemainingVotesRequest(state) {
       return;
     },
-    fetchRemainingVotesProposalSuccess (state, action) {
+    fetchRemainingVotesProposalSuccess(state, action) {
       // state.proposalList = action.payload
       // state.proposalList.
 
@@ -643,38 +711,38 @@ const proposalSlice = createSlice({
 
       return;
     },
-    fetchRemainingVotesFailure (state) {
+    fetchRemainingVotesFailure(state) {
       return;
     },
-    fetchSponsorMessageRequest () {
+    fetchSponsorMessageRequest() {
       return;
     },
-    fetchSponsorMessageSuccess (state, action) {
+    fetchSponsorMessageSuccess(state, action) {
       state.sponsorMessage[action.payload.response.ipfsKey] =
         action.payload.response.message;
       return;
     },
-    fetchSponsorMessageFailure () {
+    fetchSponsorMessageFailure() {
       return;
     },
 
-    setSponsorRequestIPFSKey (state, action) {
+    setSponsorRequestIPFSKey(state, action) {
       state.sponsorRequestIPFSKey = action.payload.ipfsKey;
       return;
     },
 
-    setSponsorRequestProposalTitle (state, action) {
+    setSponsorRequestProposalTitle(state, action) {
       state.sponsorRequestProposalTitle = action.payload.proposalTitle;
       return;
     },
 
-    setSponsorRequestProposal (state, action) {
+    setSponsorRequestProposal(state, action) {
       state.sponsorRequestProposal = action.payload.proposal;
     },
-    fetchProposalByIpfsRequest (state) {
+    fetchProposalByIpfsRequest(state) {
       return;
     },
-    fetchProposalByIpfsSuccess (state, action) {
+    fetchProposalByIpfsSuccess(state, action) {
       console.log('Response', action.payload.response);
       let proposal = action.payload.response;
       state.selectedProposal = {
@@ -726,18 +794,18 @@ const proposalSlice = createSlice({
       };
       return;
     },
-    fetchProposalByIpfsFailure (state) {
+    fetchProposalByIpfsFailure(state) {
       return;
     },
 
-    setBackendTriggerData (state, action) {
+    setBackendTriggerData(state, action) {
       state.backendTriggerData = action.payload;
       return;
     },
-    fetchChangeVoteRequest (state) {
+    fetchChangeVoteRequest(state) {
       return;
     },
-    fetchChangeVoteSuccess (state, action) {
+    fetchChangeVoteSuccess(state, action) {
       const status = Number(action.payload.response);
       if (!status) {
         state.changeVote = true;
@@ -745,21 +813,21 @@ const proposalSlice = createSlice({
         state.changeVote = false;
       }
     },
-    fetchChangeVoteFailure (state) {
+    fetchChangeVoteFailure(state) {
       state.changeVote = false;
       return;
     },
-    submitPriorityVotingRequest (state) {
+    submitPriorityVotingRequest(state) {
       return;
     },
-    fetchPriorityVotingRequest (state) {
+    fetchPriorityVotingRequest(state) {
       return;
     },
-    fetchPriorityVotingSuccess (state, action) {
+    fetchPriorityVotingSuccess(state, action) {
       state.priorityVoting = action.payload;
       return;
     },
-    fetchPriorityVotingFailure (state, action) {
+    fetchPriorityVotingFailure(state, action) {
       state.priorityVoting = false;
       return;
     },
@@ -776,6 +844,9 @@ export const {
   submitProposalRequest,
   submitProposalSuccess,
   submitProposalFailure,
+  fetchSortPriorityProposalListRequest,
+  fetchSortPriorityProposalListSuccess,
+  fetchSortPriorityProposalListFailure,
   fetchProposalListRequest,
   fetchProposalListSuccess,
   fetchProposalListFailure,
@@ -832,6 +903,6 @@ export const {
   submitPriorityVotingRequest,
   fetchPriorityVotingRequest,
   fetchPriorityVotingSuccess,
-  fetchPriorityVotingFailure
+  fetchPriorityVotingFailure,
 } = proposalSlice.actions;
 export default proposalSlice.reducer;

@@ -713,11 +713,7 @@ const ProgressReportCreationPage = ({
               </Col>
               <Col className={styles.saveButton}>
                 {period !== 'VOTING' && !isMaintenanceMode && (
-                  <Button
-                    variant='info'
-                    type='submit'
-                    disabled={!isMaintenanceMode}
-                  >
+                  <Button variant='info' type='submit'>
                     SUBMIT
                   </Button>
                 )}

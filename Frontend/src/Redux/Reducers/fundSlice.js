@@ -44,7 +44,6 @@ const fundSlice = createSlice({
       state.isMaintenanceMode = Boolean(
         IconConverter.toNumber(action.payload.response),
       );
-      console.log('Fetched maintenance mode', state.isMaintenanceMode);
       return;
     },
     fetchMaintenanceModeFailure() {

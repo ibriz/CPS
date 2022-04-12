@@ -83,11 +83,7 @@ const UpperCard = ({
     } else {
       button = (
         <Link to='/newProgressReport'>
-          <Button
-            variant='info'
-            className={styles.createProposalButton}
-            disabled={isMaintenanceMode}
-          >
+          <Button variant='info' className={styles.createProposalButton}>
             {period !== 'VOTING' && !isMaintenanceMode
               ? 'CREATE NEW PROGRESS REPORT'
               : 'CREATE PROGRESS REPORT DRAFT'}

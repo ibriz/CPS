@@ -8,184 +8,206 @@ import {
   fetchProposalListRequest,
   setModalShowVoting,
   fetchRemainingVotesRequest,
+  fetchSortPriorityProposalListRequest,
 } from 'Redux/Reducers/proposalSlice';
 import Pagination from 'Components/Card/Pagination';
 import proposalStates from './proposalStates';
 // import { select } from 'redux-saga/effects';
-import wallet from 'Redux/ICON/FrontEndWallet'
+import wallet from 'Redux/ICON/FrontEndWallet';
 import DetailsModal from 'Components/Card/DetailsModal';
 import ProgressReportList from 'Components/Card/ProgressReportList';
-import {fetchProgressReportListRequest, setModalShowVotingPR} from 'Redux/Reducers/progressReportSlice';
+import {
+  fetchProgressReportListRequest,
+  setModalShowVotingPR,
+} from 'Redux/Reducers/progressReportSlice';
 import DetailsModalProgressReport from 'Components/Card/DetailsModalProgressReport';
 import PriorityVoteCard from 'Components/Card/PriorityVoteCard';
+import PriorityVoteStatusCard from 'Components/Card/PriorityVoteStatusCard';
 
+const VotingCard = ({
+  proposalList,
+  fetchProposalListRequest,
+  fetchSortPriorityProposalListRequest,
+  walletAddress,
+  totalPages,
+  proposalStatesList,
+  initialState,
+  priorityVote,
+  fetchProgressReport,
+  progressReportList,
+  modalShow,
+  setModalShow,
+  modalShowPR,
+  setModalShowPR,
+  fetchRemainingVotesRequest,
+  remainingVotesProposal,
+  remainingVotesPR,
+  priorityVoting,
+}) => {
+  const [selectedTab, setSelectedTab] = useState(initialState);
+  const [filteredProposalList, setFilteredProposalList] =
+    useState(proposalList);
+  let [searchText, setSearchText] = useState('');
+  const [pageNumber, setPageNumber] = useState();
+  // const [modalShow, setModalShow] = React.useState(false);
+  // const [modalShowPR, setModalShowPR] = React.useState(false);
 
-const VotingCard = ({ proposalList, fetchProposalListRequest, walletAddress, totalPages, proposalStatesList, initialState, fetchProgressReport, progressReportList,modalShow, setModalShow, modalShowPR, setModalShowPR, fetchRemainingVotesRequest, remainingVotesProposal, remainingVotesPR,priorityVoting }) => {
+  const [selectedProposal, setSelectedProposal] = React.useState();
+  const status = 'Voting';
+  const [filteredProgressReportList, setFilteredProgressReportList] =
+    useState(progressReportList);
+  const [selectedProgressReport, setSelectedProgressReport] = React.useState();
 
-    const [selectedTab, setSelectedTab] = useState(initialState);
-    const [filteredProposalList, setFilteredProposalList] = useState(proposalList);
-    let [searchText, setSearchText] = useState('');
-    const [pageNumber, setPageNumber] = useState();
-    // const [modalShow, setModalShow] = React.useState(false);
-    // const [modalShowPR, setModalShowPR] = React.useState(false);
+  const onClickProposal = proposal => {
+    setModalShow(true);
+    setSelectedProposal(proposal);
+  };
 
-    const [selectedProposal, setSelectedProposal] = React.useState();
-    const status = "Voting";
-    const [filteredProgressReportList, setFilteredProgressReportList] = useState(progressReportList);
-    const [selectedProgressReport, setSelectedProgressReport] = React.useState();
+  const onClickProposalDraft = proposal => {};
 
-    const onClickProposal = (proposal) => {
-        setModalShow(true);
-        setSelectedProposal(proposal);
+  const onClickProgressReport = progressReport => {
+    setModalShowPR(true);
+    setSelectedProgressReport(progressReport);
+  };
+
+  useEffect(() => {
+    console.log({ priorityVote });
+    fetchSortPriorityProposalListRequest();
+    if (selectedTab === 'Priority Voting') {
+      fetchProposalListRequest({ status, walletAddress });
     }
+  }, [selectedTab]);
 
-    const onClickProposalDraft = (proposal) => {
+  useEffect(() => {
+    // fetchProgressReport(
+    //     {
+    //         status: status,
+    //         walletAddress: walletAddress || wallet.getAddress(),
+    //         pageNumber: pageNumber?.[selectedTab] ?? 1
+    //     }
+    // );
+    fetchRemainingVotesRequest({
+      type: 'progress_report',
+    });
+  }, [selectedTab, pageNumber, fetchRemainingVotesRequest]);
 
-    }
+  useEffect(() => {
+    // const filteredProgressReports = (progressReportList[status][(pageNumber?.[selectedTab] - 1) || 0] || []).filter(
+    //     (proposal) => proposal.progressReportTitle.includes(searchText)
+    // );
 
-    const onClickProgressReport = (progressReport) => {
-        setModalShowPR(true);
-        setSelectedProgressReport(progressReport);
-    }
+    const filteredProgressReports = remainingVotesPR.filter(proposal =>
+      proposal.progressReportTitle
+        ?.toLowerCase()
+        .includes(searchText?.toLowerCase()),
+    );
 
-    useEffect(() => {
-      if(selectedTab==='Priority Voting')
-      {
-      fetchProposalListRequest({ status,walletAddress })
-      }
-    },[selectedTab])
+    // const filteredProgressReports = [];
 
-    useEffect (() => {
-        // fetchProgressReport(
-        //     {
-        //         status: status,
-        //         walletAddress: walletAddress || wallet.getAddress(),
-        //         pageNumber: pageNumber?.[selectedTab] ?? 1
-        //     }        
-        // );
-        fetchRemainingVotesRequest(
-            {
-                type: "progress_report"
-            }        
-        );
-    }, [selectedTab, pageNumber, fetchRemainingVotesRequest])
+    setFilteredProgressReportList(filteredProgressReports);
+  }, [selectedTab, remainingVotesPR, searchText, pageNumber]);
 
-    useEffect(() => {
+  useEffect(() => {
+    // fetchProposalListRequest(
+    //     {
+    //         status: status,
+    //         walletAddress: walletAddress || wallet.getAddress(),
+    //         pageNumber: pageNumber?.[selectedTab] ?? 1
+    //     }
+    // );
 
+    fetchRemainingVotesRequest({
+      type: 'proposal',
+    });
+  }, [selectedTab, pageNumber, fetchRemainingVotesRequest]);
 
-        // const filteredProgressReports = (progressReportList[status][(pageNumber?.[selectedTab] - 1) || 0] || []).filter(
-        //     (proposal) => proposal.progressReportTitle.includes(searchText)
-        // );
+  const setCurrentPages = (status, pageNumber) => {
+    setPageNumber(prevState => ({
+      ...prevState,
+      [status]: pageNumber,
+    }));
+  };
 
-        const filteredProgressReports = remainingVotesPR.filter(
-            (proposal) => proposal.progressReportTitle?.toLowerCase().includes(searchText?.toLowerCase())
-        );
+  useEffect(() => {
+    proposalStates.map(proposalState => {
+      setCurrentPages(proposalState, 1);
+    });
+  }, []);
 
-        // const filteredProgressReports = [];
+  useEffect(() => {
+    // const filteredProposals = (selectedTab !== 'All') ? proposalList.filter(
+    //     (proposal) => proposal._status === proposalStatusBySelectedTab[selectedTab]
+    // ) : proposalList;
 
+    // const filteredProposals = (proposalList[status][(pageNumber?.[selectedTab] - 1) || 0] || []).filter(
+    //     (proposal) => proposal._proposal_title.includes(searchText)
+    // );
 
-        setFilteredProgressReportList(filteredProgressReports);
-    }, [selectedTab, remainingVotesPR, searchText, pageNumber]);
+    const filteredProposals = remainingVotesProposal.filter(proposal =>
+      proposal._proposal_title.includes(searchText),
+    );
 
-    useEffect(() => {
-        // fetchProposalListRequest(
-        //     {
-        //         status: status,
-        //         walletAddress: walletAddress || wallet.getAddress(),
-        //         pageNumber: pageNumber?.[selectedTab] ?? 1
-        //     }
-        // );
+    setFilteredProposalList(filteredProposals);
+  }, [selectedTab, remainingVotesProposal, searchText, pageNumber]);
 
-        fetchRemainingVotesRequest(
-            {
-                type: "proposal"
-            }        
-        );
-    }, [selectedTab, pageNumber, fetchRemainingVotesRequest])
+  useEffect(() => {
+    setSelectedTab('Proposals');
+  }, [priorityVoting]);
 
-    const setCurrentPages = (status, pageNumber) => {
-        setPageNumber(prevState => (
-            {
-                ...prevState,
-                [status]: pageNumber
-            }
-        ))
-    }
+  return (
+    <>
+      <Row className={styles.proposalCard}>
+        <Col>
+          <Card>
+            <Card.Body>
+              <TabBar
+                selectedTab={selectedTab}
+                setSelectedTab={setSelectedTab}
+                searchText={searchText}
+                setSearchText={setSearchText}
+                tabs={proposalStatesList}
+                placeholder='Search Proposal'
+                newIndexList={!priorityVote ? [2] : []}
+              />
+              <hr style={{ marginTop: '-9px' }} />
+              {selectedTab === 'Proposals' ? (
+                <ProposalList
+                  proposals={filteredProposalList}
+                  selectedTab={status}
+                  searchText={searchText}
+                  modalShow={modalShow}
+                  setModalShow={setModalShow}
+                  selectedProposal={selectedProposal}
+                  setSelectedProposal={setSelectedProposal}
+                  onClickProposal={
+                    selectedTab === 'Draft'
+                      ? onClickProposalDraft
+                      : onClickProposal
+                  }
+                />
+              ) : selectedTab === 'Progress Reports' ? (
+                <ProgressReportList
+                  projectReports={filteredProgressReportList}
+                  selectedTab={status}
+                  onClickProgressReport={onClickProgressReport}
+                />
+              ) : priorityVote ? (
+                <PriorityVoteCard
+                  proposals={proposalList?.['Voting']?.[0] || []}
+                  selectedTab={status}
+                  searchText={searchText}
+                  emptyListMessage='No Priority Voting'
+                />
+              ) : (
+                <PriorityVoteStatusCard
+                  proposals={proposalList?.['Voting']?.[0] || []}
+                  selectedTab={status}
+                  searchText={searchText}
+                  emptyListMessage='No Priority Voting'
+                />
+              )}
 
-    useEffect(() => {
-        proposalStates.map(proposalState => {
-            setCurrentPages(proposalState, 1)
-        })
-    }, [])
-
-
-    useEffect(() => {
-
-
-
-        // const filteredProposals = (selectedTab !== 'All') ? proposalList.filter(
-        //     (proposal) => proposal._status === proposalStatusBySelectedTab[selectedTab]
-        // ) : proposalList;
-
-        // const filteredProposals = (proposalList[status][(pageNumber?.[selectedTab] - 1) || 0] || []).filter(
-        //     (proposal) => proposal._proposal_title.includes(searchText)
-        // );
-
-        const filteredProposals = remainingVotesProposal.filter(
-            (proposal) => proposal._proposal_title.includes(searchText)
-        );
-
-        setFilteredProposalList(filteredProposals);
-    }, [selectedTab, remainingVotesProposal, searchText, pageNumber]);
-
-    useEffect(()=>{
-      setSelectedTab('Proposals')
-    },[priorityVoting])
-
-    return (
-        <>
-            <Row className={styles.proposalCard}>
-                <Col>
-                    <Card>
-                        <Card.Body>
-                            <TabBar
-                                selectedTab={selectedTab}
-                                setSelectedTab={setSelectedTab}
-                                searchText={searchText}
-                                setSearchText={setSearchText}
-                                tabs={proposalStatesList}
-                                placeholder="Search Proposal"
-
-                            />
-                            <hr style={{ marginTop: '-9px' }} />
-                            {
-                                (selectedTab === 'Proposals' ? 
-                                <ProposalList
-                                proposals={filteredProposalList}
-                                selectedTab={status}
-                                searchText={searchText}
-                                modalShow={modalShow}
-                                setModalShow={setModalShow}
-                                selectedProposal={selectedProposal}
-                                setSelectedProposal={setSelectedProposal}
-                                onClickProposal={(selectedTab === 'Draft') ? onClickProposalDraft : onClickProposal}
-
-                            /> : (selectedTab === 'Progress Reports') ?
-                            <ProgressReportList
-                            projectReports = {filteredProgressReportList}
-                            selectedTab = {status}
-                            onClickProgressReport = {onClickProgressReport}
-
-                             />:<PriorityVoteCard
-                                proposals={proposalList?.['Voting']?.[0] || []}
-                                selectedTab={status}  
-                                searchText={searchText}
-                                emptyListMessage = 'No Priority Voting' />
-                            )
-                            }
-
-
-                            {/* <Pagination
+              {/* <Pagination
                                 currentPage={pageNumber?.[selectedTab]}
                                 setCurrentPage={(pageNumber) => setCurrentPages(selectedTab, pageNumber)}
                                 totalPages={totalPages[status]} /> */}
@@ -227,12 +249,14 @@ const mapStateToProps = state => ({
 
   remainingVotesProposal: state.proposals.remainingVotes,
   remainingVotesPR: state.progressReport.remainingVotes,
-  priorityVoting: state.proposals.priorityVoting
+  priorityVoting: state.proposals.priorityVoting,
 });
 
 const mapDispatchToProps = dispatch => ({
   fetchProposalListRequest: payload =>
     dispatch(fetchProposalListRequest(payload)),
+  fetchSortPriorityProposalListRequest: payload =>
+    dispatch(fetchSortPriorityProposalListRequest(payload)),
   fetchProgressReport: payload =>
     dispatch(fetchProgressReportListRequest(payload)),
   setModalShow: payload => dispatch(setModalShowVoting(payload)),
