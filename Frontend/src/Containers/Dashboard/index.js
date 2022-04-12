@@ -14,8 +14,9 @@ import {
   claimReward,
   fetchSponsorBondRequest,
   claimSponsorBondReward,
+  fetchSponsorDepositAmountRequest,
 } from 'Redux/Reducers/fundSlice';
-import { fetchProjectAmountsRequest } from 'Redux/Reducers/proposalSlice';
+import { fetchProjectAmountsRequest, fetchPriorityVotingRequest } from 'Redux/Reducers/proposalSlice';
 import styles from './Dashboard.module.scss';
 import MyProposalCard from 'Components/MyProposalCard';
 import ProposalPendingPRCard from 'Components/ProposalPendingPRCard';
@@ -58,7 +59,11 @@ const Dashboard = ({
   fetchSponsorBondRequest,
   claimSponsorBondReward,
   sponsorBondReward,
-  address
+  address,
+  sponsorDepositAmount,
+  fetchSponsorDepositAmountRequest,
+  priorityVote,
+  fetchPriorityVotingRequest
 }) => {
   const [
     showPayPenaltyConfirmationModal,
@@ -213,7 +218,7 @@ const Dashboard = ({
         color: '#1AAABA',
         title: 'My Sponsor Bond',
         // value={`${projectAmounts.Active.count + projectAmounts.Paused.count} (${icxFormat(projectAmounts.Active.amount + projectAmounts.Paused.amount)} ICX)`} />
-        value: getIcxbnUSDAmount(sponsorBond),
+        value: getIcxbnUSDAmount(sponsorDepositAmount),
       },
       {
         color: '#1AAABA',
@@ -317,6 +322,20 @@ const Dashboard = ({
     }
 
   }
+
+  useEffect(() => {
+    if(isPrep && isRegistered)
+    {
+      fetchSponsorDepositAmountRequest()
+    }
+  },[isPrep,isRegistered])
+
+  useEffect(() => {
+    if (isPrep) {
+      fetchPriorityVotingRequest()
+    }
+  }, [isPrep])
+
   return (
 
     address ?
@@ -516,7 +535,7 @@ const Dashboard = ({
               <div className={styles.myProposalHeading}>Pending Votes</div>
 
               <VotingCard
-                proposalStatesList={['Proposals', 'Progress Reports']}
+                proposalStatesList={ !priorityVote && period === 'VOTING' ? ['Proposals', 'Progress Reports','Priority Voting'] : ['Proposals', 'Progress Reports'] }
                 initialState={'Proposals'}
               />
             </>
@@ -554,7 +573,9 @@ const mapStateToProps = state => ({
   withDrawAmountSponsorReward: state.fund.withDrawAmountSponsorReward,
   withDrawAmountProposalGrant: state.fund.withDrawAmountProposalGrant,
   preps: state.preps.preps,
-  address: state.account.address
+  address: state.account.address,
+  sponsorDepositAmount: state.fund.sponsorDepositAmount,
+  priorityVote: state.proposals.priorityVoting 
 });
 
 const mapDispatchToProps = {
@@ -567,6 +588,8 @@ const mapDispatchToProps = {
   claimReward,
   claimSponsorBondReward,
   fetchSponsorBondRequest,
+  fetchSponsorDepositAmountRequest,
+  fetchPriorityVotingRequest
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);

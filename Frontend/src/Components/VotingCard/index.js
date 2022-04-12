@@ -17,9 +17,10 @@ import DetailsModal from 'Components/Card/DetailsModal';
 import ProgressReportList from 'Components/Card/ProgressReportList';
 import {fetchProgressReportListRequest, setModalShowVotingPR} from 'Redux/Reducers/progressReportSlice';
 import DetailsModalProgressReport from 'Components/Card/DetailsModalProgressReport';
+import PriorityVoteCard from 'Components/Card/PriorityVoteCard';
 
 
-const VotingCard = ({ proposalList, fetchProposalListRequest, walletAddress, totalPages, proposalStatesList, initialState, fetchProgressReport, progressReportList,modalShow, setModalShow, modalShowPR, setModalShowPR, fetchRemainingVotesRequest, remainingVotesProposal, remainingVotesPR }) => {
+const VotingCard = ({ proposalList, fetchProposalListRequest, walletAddress, totalPages, proposalStatesList, initialState, fetchProgressReport, progressReportList,modalShow, setModalShow, modalShowPR, setModalShowPR, fetchRemainingVotesRequest, remainingVotesProposal, remainingVotesPR,priorityVoting }) => {
 
     const [selectedTab, setSelectedTab] = useState(initialState);
     const [filteredProposalList, setFilteredProposalList] = useState(proposalList);
@@ -46,6 +47,13 @@ const VotingCard = ({ proposalList, fetchProposalListRequest, walletAddress, tot
         setModalShowPR(true);
         setSelectedProgressReport(progressReport);
     }
+
+    useEffect(() => {
+      if(selectedTab==='Priority Voting')
+      {
+      fetchProposalListRequest({ status,walletAddress })
+      }
+    },[selectedTab])
 
     useEffect (() => {
         // fetchProgressReport(
@@ -130,6 +138,10 @@ const VotingCard = ({ proposalList, fetchProposalListRequest, walletAddress, tot
         setFilteredProposalList(filteredProposals);
     }, [selectedTab, remainingVotesProposal, searchText, pageNumber]);
 
+    useEffect(()=>{
+      setSelectedTab('Proposals')
+    },[priorityVoting])
+
     return (
         <>
             <Row className={styles.proposalCard}>
@@ -158,13 +170,17 @@ const VotingCard = ({ proposalList, fetchProposalListRequest, walletAddress, tot
                                 setSelectedProposal={setSelectedProposal}
                                 onClickProposal={(selectedTab === 'Draft') ? onClickProposalDraft : onClickProposal}
 
-                            /> :
+                            /> : (selectedTab === 'Progress Reports') ?
                             <ProgressReportList
                             projectReports = {filteredProgressReportList}
                             selectedTab = {status}
                             onClickProgressReport = {onClickProgressReport}
 
-                             />
+                             />:<PriorityVoteCard
+                                proposals={proposalList?.['Voting']?.[0] || []}
+                                selectedTab={status}  
+                                searchText={searchText}
+                                emptyListMessage = 'No Priority Voting' />
                             )
                             }
 
@@ -211,6 +227,7 @@ const mapStateToProps = state => ({
 
   remainingVotesProposal: state.proposals.remainingVotes,
   remainingVotesPR: state.progressReport.remainingVotes,
+  priorityVoting: state.proposals.priorityVoting
 });
 
 const mapDispatchToProps = dispatch => ({

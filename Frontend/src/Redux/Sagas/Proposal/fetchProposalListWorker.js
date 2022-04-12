@@ -26,8 +26,8 @@ function* fetchProposalListWorker({ payload }) {
       params: {
         _status: proposalListStatusMapping[payload.status],
         _wallet_address: payload.walletAddress,
-        _end_index: `${payload.pageNumber * 10}`,
-        _start_index: `${payload.pageNumber * 10 - 10}`,
+        _end_index: `${(payload.pageNumber || 3) * 10}`,
+        _start_index: `${(payload.pageNumber || 1) * 10 - 10}`,
       },
     });
 
@@ -52,7 +52,7 @@ function* fetchProposalListWorker({ payload }) {
       fetchProposalListSuccess({
         response,
         status: payload.status,
-        pageNumber: payload.pageNumber,
+        pageNumber: payload.pageNumber || 1,
       }),
     );
   } catch (error) {
