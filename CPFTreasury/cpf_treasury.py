@@ -110,7 +110,7 @@ class CPF_TREASURY(IconScoreBase):
 
     def on_update(self) -> None:
         super().on_update()
-        self.staking_score.remove()
+        self.router_score.set(Address.from_string("cx21e94c08c03daee80c25d8ee3ea22a20786ec231"))
 
     def _proposal_exists(self, _ipfs_key: str) -> bool:
         return _ipfs_key in self._proposal_budgets
@@ -156,7 +156,7 @@ class CPF_TREASURY(IconScoreBase):
         :type _value : int
         :return:
         """
-        self._validate_admins()
+        self._validate_owner()
         self.treasury_fund.set(_value)
 
     @external
@@ -167,7 +167,7 @@ class CPF_TREASURY(IconScoreBase):
         :type _value : int
         :return:
         """
-        self._validate_admins()
+        self._validate_owner()
         self.treasury_fund_bnusd.set(_value)
 
     @external
@@ -220,6 +220,17 @@ class CPF_TREASURY(IconScoreBase):
         """
         self._validate_owner_score(_score)
         self.balanced_dollar.set(_score)
+
+    @external
+    def set_staking_score(self, _score: Address) -> None:
+        """
+        Sets the staking score address. Only owner can set the address.
+        :param _score: Address of the staking score address
+        :type _score: :class:`iconservice.base.address.Address`
+        :return:
+        """
+        self._validate_owner_score(_score)
+        self.staking_score.set(_score)
 
     @external
     def set_sicx_score(self, _score: Address) -> None:
@@ -280,6 +291,15 @@ class CPF_TREASURY(IconScoreBase):
         :rtype: :class:`iconservice.base.address.Address`
         """
         return self.balanced_dollar.get()
+
+    @external(readonly=True)
+    def get_staking_score(self) -> Address:
+        """
+        Returns the Staking score address
+        :return: cps treasury score address
+        :rtype: :class:`iconservice.base.address.Address`
+        """
+        return self.staking_score.get()
 
     @external(readonly=True)
     def get_sicx_score(self) -> Address:
@@ -555,12 +575,16 @@ class CPF_TREASURY(IconScoreBase):
         from_score.transfer(self.dex_score.get(), _amount, _data)
 
     @external
-    def swap_icx_bnusd(self, _amount: int):
+    def swap_icx_bnusd(self, _amount: int, _sicx: bool = False):
         sicxContract = self.get_sicx_score()
-
-        router = self.create_interface_score(self.router_score.get(), RouteInterface)
-        path = [sicxContract, self.balanced_dollar.get()]
-        router.icx(_amount).route(path)
+        if _sicx:
+            sicxScore = self.create_interface_score(sicxContract, TokenInterface)
+            _amount = sicxScore.balanceOf(self.address)
+            self._swap_tokens(sicxContract, self.get_bnusd_score(), _amount)
+        else:
+            router = self.create_interface_score(self.router_score.get(), RouteInterface)
+            path = [sicxContract, self.balanced_dollar.get()]
+            router.icx(_amount * 10 ** 18).route(path)
 
     @external
     def swap_tokens(self, _count: int) -> None:
@@ -573,6 +597,8 @@ class CPF_TREASURY(IconScoreBase):
 
         self._validate_cps_score()
         dex = self.create_interface_score(self.dex_score.get(), DEX_INTERFACE)
+        router = self.create_interface_score(self.router_score.get(), RouteInterface)
+        sicx = self.sicx_score.get()
 
         sicxICXPrice: int = dex.getPrice(1)
         sicxBnusdPrice: int = dex.getPrice(2)
@@ -581,25 +607,20 @@ class CPF_TREASURY(IconScoreBase):
 
         if bnUSDRemainingToSwap < 10 * 10 ** 18 or _count == 0:
             self.swap_state.set(1)
-            self.swap_count.set(0)
 
         try:
             swap_state = self.swap_state.get()
             if swap_state == 0:
                 count_swap = self.swap_count.get()
-                count = _count - count_swap
-                if count == 0:
-                    self.swap_state.set(1)
-                    self.swap_count.set(0)
-                else:
-                    remainingICXToSwap = bnUSDRemainingToSwap * 10 ** 18 // (icxbnUSDPrice * count)
-                    icxBalance = self.icx.get_balance(self.address)
-                    if remainingICXToSwap > icxBalance:
-                        remainingICXToSwap = icxBalance
+                remainingICXToSwap = (bnUSDRemainingToSwap // (icxbnUSDPrice * (_count - count_swap))) * 10 ** 18
+                icxBalance = self.icx.get_balance(self.address)
+                if remainingICXToSwap > icxBalance:
+                    remainingICXToSwap = icxBalance
 
-                    if remainingICXToSwap > 5 * 10 ** 18:
-                        self.swap_icx_bnusd(remainingICXToSwap)
-                        self.swap_count.set(count_swap + 1)
+                if remainingICXToSwap > 5 * 10 ** 18:
+                    path = [sicx, self.balanced_dollar.get()]
+                    router.icx(remainingICXToSwap).route(path)
+                    self.swap_count.set(count_swap + 1)
 
         except Exception as e:
             revert(f'{TAG}: Error Swapping tokens. {e}')
@@ -622,9 +643,8 @@ class CPF_TREASURY(IconScoreBase):
         """
         cps_score_address = self._cps_score.get()
         cps_score = self.create_interface_score(cps_score_address, CPSScoreInterface)
-        if self.msg.sender == cps_score_address or cps_score.is_admin(self.msg.sender):
+        if cps_score.is_admin(self.msg.sender) or self.msg.sender == cps_score_address:
             self.swap_state.set(0)
-            self.swap_count.set(0)
         else:
             revert(f'{TAG}: Only admin can call this method.')
 
@@ -655,15 +675,12 @@ class CPF_TREASURY(IconScoreBase):
                     self._swap_tokens(self.msg.sender, staking, _value)
                 else:
                     revert(f"{TAG}: Not supported method {unpacked_data['method']}")
-            elif _from == self._cps_treasury_score.get():
+            if _from == self._cps_treasury_score.get():
                 if unpacked_data['method'] == 'disqualify_project':
                     ipfs_key = unpacked_data['params']['ipfs_key']
                     self.disqualify_proposal_fund(ipfs_key, _value, BNUSD, _from)
                 else:
                     revert(f"{TAG}: Not supported method {unpacked_data['method']}")
-
-            elif _from == self.get_dex_score() or _from == self.get_router_score():
-                self._burn_extra_fund()
 
     @payable
     def fallback(self):
