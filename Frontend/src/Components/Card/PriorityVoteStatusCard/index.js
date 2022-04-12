@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { Container, Button, Alert } from 'react-bootstrap';
+import React from 'react';
+import { Container, Alert, Row } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import Proposal from './Proposal';
+
 const PriorityVoteStatusCard = ({
   proposals,
   selectedTab,
@@ -23,26 +24,38 @@ const PriorityVoteStatusCard = ({
             }
       }
     >
-      <>
-        {proposals.length ? (
-          proposals.map((proposal, index) => (
-            <Proposal key={proposal} proposal={proposal} index={index} />
-          ))
-        ) : (
-          <span
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              fontSize: '27px',
-            }}
-          >
-            {emptyListMessage || `No ${selectedTab} Proposals`}
-          </span>
-        )}
-        <Alert variant='info'>
-          Note: 1 = Best 2 = 2nd Best ... N = Least Best
-        </Alert>
-      </>
+      <Row
+        style={{
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '1rem',
+          fontWeight: 600,
+          fontStyle: 'normal',
+          paddingBottom: '16px',
+          wordWrap: 'break-word',
+          color: '#262626',
+        }}
+      >
+        Current Ranking
+      </Row>
+      {proposals.length ? (
+        proposals.map((proposal, index) => (
+          <Proposal key={proposal} proposal={proposal} index={index} />
+        ))
+      ) : (
+        <span
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            fontSize: '27px',
+          }}
+        >
+          {emptyListMessage || `No ${selectedTab} Proposals`}
+        </span>
+      )}
+      <Alert variant='info'>
+        Note: 1 = Highest Priority ... N = Lowest Priority
+      </Alert>
     </Container>
   );
 };

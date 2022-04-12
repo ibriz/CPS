@@ -71,9 +71,9 @@ const VotingCard = ({
   };
 
   useEffect(() => {
-    console.log({ priorityVote });
-    fetchSortPriorityProposalListRequest();
     if (selectedTab === 'Priority Voting') {
+      fetchSortPriorityProposalListRequest();
+    } else if (selectedTab === 'Proposals') {
       fetchProposalListRequest({ status, walletAddress });
     }
   }, [selectedTab]);
@@ -150,9 +150,9 @@ const VotingCard = ({
     setFilteredProposalList(filteredProposals);
   }, [selectedTab, remainingVotesProposal, searchText, pageNumber]);
 
-  useEffect(() => {
-    setSelectedTab('Proposals');
-  }, [priorityVoting]);
+  // useEffect(() => {
+  //   setSelectedTab('Proposals');
+  // }, [priorityVoting]);
 
   return (
     <>
@@ -167,7 +167,11 @@ const VotingCard = ({
                 setSearchText={setSearchText}
                 tabs={proposalStatesList}
                 placeholder='Search Proposal'
-                newIndexList={!priorityVote ? [2] : []}
+                newIndexList={
+                  priorityVote && proposalStatesList.includes('Priority Voting')
+                    ? [proposalStatesList.indexOf('Priority Voting')]
+                    : []
+                }
               />
               <hr style={{ marginTop: '-9px' }} />
               {selectedTab === 'Proposals' ? (
@@ -191,7 +195,7 @@ const VotingCard = ({
                   selectedTab={status}
                   onClickProgressReport={onClickProgressReport}
                 />
-              ) : priorityVote ? (
+              ) : !priorityVote ? (
                 <PriorityVoteCard
                   proposals={proposalList?.['Voting']?.[0] || []}
                   selectedTab={status}

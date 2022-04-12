@@ -205,11 +205,14 @@ const Dashboard = ({
         value:
           period === 'APPLICATION'
             ? totalCountSponsorRequests.Pending
-            : remainingVotesProposal.length + remainingVotesPR.length,
+            : priorityVote
+            ? remainingVotesProposal.length + remainingVotesPR.length
+            : remainingVotesProposal.length + remainingVotesPR.length + 1,
       },
       {
-        title: `Remaining Time in ${period !== 'VOTING' ? 'Application Period' : 'Voting Period'
-          }`,
+        title: `Remaining Time in ${
+          period !== 'VOTING' ? 'Application Period' : 'Voting Period'
+        }`,
         color: '#1AAABA',
         // value={period === "APPLICATION" ? 'Application Period' : 'Voting Period'} />
         value: ` ${highestSignificantTime.value} ${highestSignificantTime.text}`,
@@ -535,9 +538,11 @@ const Dashboard = ({
               <div className={styles.myProposalHeading}>Pending Votes</div>
 
               <VotingCard
-                proposalStatesList={period === 'VOTING' ? ['Proposals', 'Progress Reports','Priority Voting'] : ['Proposals', 'Progress Reports'] }
-                initialState={'Proposals'}
-								priorityVote={priorityVote}
+                proposalStatesList={period === 'VOTING' ?
+                  ['Priority Voting', 'Proposals', 'Progress Reports']
+                  : ['Proposals', 'Progress Reports']}
+                initialState={period === 'VOTING' ? 'Priority Voting': 'Proposals'}
+                priorityVote={priorityVote}
               />
             </>
           )
