@@ -90,9 +90,9 @@ def getDataFromProposalDB(prefix: bytes, _proposals: 'ProposalDataDB') -> dict:
 
 def createProposalDataObject(proposal_data: dict) -> 'ProposalDataObject':
     return ProposalDataObject(ipfs_hash=proposal_data['ipfs_hash'],
-                              total_budget=proposal_data['total_budget'],
-                              sponsor_reward=proposal_data['sponsor_reward'],
-                              project_duration=proposal_data['project_duration'],
+                              total_budget=int(proposal_data['total_budget'], 16),
+                              sponsor_reward=int(proposal_data['sponsor_reward'], 16),
+                              project_duration=int(proposal_data['project_duration']),
                               sponsor_address=proposal_data['sponsor_address'],
                               contributor_address=proposal_data['contributor_address'],
                               token=proposal_data['token'])
