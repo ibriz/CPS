@@ -9,7 +9,7 @@ import useTimer from 'Hooks/useTimer';
 import InfoCard from './InfoCard';
 import { icxFormat } from 'Helpers';
 import {
-  fetchCPFScoreAddressRequest,
+  fetchCPFTreasuryScoreAddressRequest,
   fetchCPFRemainingFundRequest,
   claimReward,
   fetchSponsorBondRequest,
@@ -35,7 +35,7 @@ const Dashboard = ({
   projectAmounts,
   cpfRemainingFunds,
   cpfScoreAddress,
-  fetchCPFScoreAddressRequest,
+  fetchCPFTreasuryScoreAddressRequest,
   fetchCPFRemainingFundRequest,
   fetchProjectAmountsRequest,
   isPrep,
@@ -243,11 +243,11 @@ const Dashboard = ({
   }
 
   useEffect(() => {
-    fetchCPFScoreAddressRequest();
+    fetchCPFTreasuryScoreAddressRequest();
     fetchProjectAmountsRequest();
     fetchCPSTreasuryScoreAddressRequest();
   }, [
-    fetchCPFScoreAddressRequest,
+    fetchCPFTreasuryScoreAddressRequest,
     fetchProjectAmountsRequest,
     fetchExpectedGrantRequest,
   ]);
@@ -580,7 +580,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   payPenaltyRequest: payPenalty,
-  fetchCPFScoreAddressRequest,
+  fetchCPFTreasuryScoreAddressRequest,
   fetchCPFRemainingFundRequest,
   fetchProjectAmountsRequest,
   fetchExpectedGrantRequest,

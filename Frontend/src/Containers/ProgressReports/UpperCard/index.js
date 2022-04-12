@@ -9,6 +9,7 @@ import ConfirmationModal from 'Components/UI/ConfirmationModal';
 import { getNewProgressReportInfo } from 'Selectors';
 import { fetchProposalByAddressRequest } from 'Redux/Reducers/proposalSlice';
 import { FaDraft2Digital } from 'react-icons/fa';
+import { fetchMaintenanceModeRequest } from 'Redux/Reducers/fundSlice';
 
 const UpperCard = ({
   numberOfSubmittedProposals,
@@ -20,11 +21,12 @@ const UpperCard = ({
   walletAddress,
   fetchProposalByAddressRequest,
   newProgressReportInfo,
+  isMaintenanceMode,
+  fetchMaintenanceModeRequest,
 }) => {
   const { period, remainingTime, remainingTimeSecond } = useTimer();
-  let [periodConfirmationShow, setPeriodConfirmationShow] = React.useState(
-    false,
-  );
+  let [periodConfirmationShow, setPeriodConfirmationShow] =
+    React.useState(false);
 
   let button;
   let text;
@@ -34,6 +36,10 @@ const UpperCard = ({
       walletAddress,
     });
   }, [fetchProposalByAddressRequest, walletAddress]);
+
+  useEffect(() => {
+    fetchMaintenanceModeRequest();
+  }, [fetchMaintenanceModeRequest]);
 
   const onClickUpdatePeriod = () => {
     setPeriodConfirmationShow(true);
@@ -58,7 +64,7 @@ const UpperCard = ({
       button = (
         <span className={styles.proposalNumber}>
           You need to have active or paused proposal to{' '}
-          {period !== 'VOTING'
+          {period !== 'VOTING' && !isMaintenanceMode
             ? 'create new progress report'
             : 'create progress report draft'}
         </span>
@@ -77,25 +83,39 @@ const UpperCard = ({
     } else {
       button = (
         <Link to='/newProgressReport'>
-          <Button variant='info' className={styles.createProposalButton}>
-            {period !== 'VOTING'
+          <Button
+            variant='info'
+            className={styles.createProposalButton}
+            disabled={isMaintenanceMode}
+          >
+            {period !== 'VOTING' && !isMaintenanceMode
               ? 'CREATE NEW PROGRESS REPORT'
               : 'CREATE PROGRESS REPORT DRAFT'}
           </Button>
         </Link>
       );
       if (period !== 'VOTING') {
-        text = (
-          <span className={styles.proposalNumber}>
-            You have created progress report for{' '}
-            <b>
-              {newProgressReportInfo.totalProgressReportCount -
-                newProgressReportInfo.canCreateNewProgressReportCount}
-            </b>{' '}
-            out of <b>{newProgressReportInfo.totalProgressReportCount}</b>{' '}
-            active proposals.{' '}
-          </span>
-        );
+        if (isMaintenanceMode) {
+          text = (
+            <span className={styles.proposalNumber}>
+              {' '}
+              Currently in maintenance mode. You can still create a proposal
+              draft{' '}
+            </span>
+          );
+        } else {
+          text = (
+            <span className={styles.proposalNumber}>
+              You have created progress report for{' '}
+              <b>
+                {newProgressReportInfo.totalProgressReportCount -
+                  newProgressReportInfo.canCreateNewProgressReportCount}
+              </b>{' '}
+              out of <b>{newProgressReportInfo.totalProgressReportCount}</b>{' '}
+              active proposals.{' '}
+            </span>
+          );
+        }
       } else {
         text = (
           <span className={styles.proposalNumber}>
@@ -211,6 +231,7 @@ const mapStateToProps = () => state => {
     isRegistered: state.account.isRegistered,
     newProgressReportInfo: getNewProgressReportInfo(state),
     walletAddress: state.account.address,
+    isMaintenanceMode: state.fund.isMaintenanceMode,
   };
 };
 
@@ -218,6 +239,7 @@ const mapDispatchToProps = dispatch => ({
   updatePeriod: payload => dispatch(updatePeriod(payload)),
   fetchProposalByAddressRequest: payload =>
     dispatch(fetchProposalByAddressRequest(payload)),
+  fetchMaintenanceModeRequest: () => dispatch(fetchMaintenanceModeRequest()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(UpperCard);

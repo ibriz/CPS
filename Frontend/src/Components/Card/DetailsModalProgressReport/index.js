@@ -62,6 +62,8 @@ import VoteProgressBar from 'Components/VoteProgressBar';
 import InfoIcon from 'Components/InfoIcon';
 import styled from 'styled-components';
 import { NotificationManager } from 'react-notifications';
+import Popup from 'Components/Popup';
+import { fetchMaintenanceModeRequest } from 'Redux/Reducers/fundSlice';
 
 const LoadingDiv = styled.div`
   height: 50vh;
@@ -120,6 +122,8 @@ function DetailsModal(props) {
     changeVote,
     fetchChangeVoteRequest,
     votingPRep,
+		isMaintenanceMode,
+		fetchMaintenanceModeRequest,
     ...remainingProps
   } = props;
 
@@ -199,6 +203,10 @@ function DetailsModal(props) {
     let description = formatDescription(progressDetail?.revisionDescription);
     setRevisionDescription(description);
   }, [progressDetail?.revisionDescription]);
+
+	useEffect(() => {
+    fetchMaintenanceModeRequest();
+  }, [fetchMaintenanceModeRequest]);
 
   useEffect(() => {
     // alert("Voting");
@@ -738,13 +746,33 @@ function DetailsModal(props) {
                     )}
 
                     <Row style={{ justifyContent: 'center' }}>
-                      <Button
+										{!isMaintenanceMode ? (
+											<Button
                         variant='primary'
                         onClick={() => handleVoteSubmission()}
                         style={{ marginTop: '10px', width: '150px' }}
                       >
                         Submit Vote
                       </Button>
+										): 
+										( 
+											<Popup
+											component={
+												<span className='d-inline-block'>
+													<Button
+														variant='info'
+														type='submit'
+														disabled
+														style={{ pointerEvents: 'none' }}
+													>
+														SUBMIT
+													</Button>
+												</span>
+											}
+											popOverText='You can submit a vote after the maintenance period is over.'
+											placement='left'
+                  		/>
+										)}
                     </Row>
                   </>
                 ) : (
@@ -863,7 +891,8 @@ const mapStateToProps = state => ({
   isPrep: state.account.isPrep,
   ipfsError: state.progressReport.ipfsError,
   changeVote: state.progressReport.changeVote,
-  votingPRep:state.account.votingPRep
+  votingPRep:state.account.votingPRep,
+	isMaintenanceMode: state.fund.isMaintenanceMode,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -875,7 +904,8 @@ const mapDispatchToProps = dispatch => ({
   fetchVoteResultRequest: payload => dispatch(fetchVoteResultRequest(payload)),
   fetchVoteResultBudgetChangeRequest: payload =>
     dispatch(fetchVoteResultBudgetChangeRequest(payload)),
-  fetchChangeVoteRequest: (payload) => dispatch(fetchChangeVoteRequestProgressReport(payload))
+  fetchChangeVoteRequest: (payload) => dispatch(fetchChangeVoteRequestProgressReport(payload)),
+	fetchMaintenanceModeRequest: () => dispatch(fetchMaintenanceModeRequest()),
 
 });
 

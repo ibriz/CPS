@@ -35,7 +35,7 @@ import {
   emptyProposalDetailWorker,
   fetchChangeVoteWorker,
   submitPriorityVotingWorker,
-  fetchPriorityVotingStatusWorker
+  fetchPriorityVotingStatusWorker,
 } from './Proposal/index';
 
 import {
@@ -55,8 +55,9 @@ import {
 } from './ProgressReport';
 
 import {
-  fetchCPFScoreAddressWorker,
+  fetchCPFTreasuryScoreAddressWorker,
   fetchCPFRemainingFundWorker,
+  fetchMaintenanceModeWorker,
   fetchExpectedGrantRequestWorker,
   fetchCPSTreasuryScoreAddressWorker,
   claimRewardWorker,
@@ -65,6 +66,7 @@ import {
   fetchbnUSDAddressWorker,
   fetchAvailableFundWorker,
   fetchSponsorDepositAmountWorker,
+  fetchRemainingSwapAmountWorker,
 } from './Fund';
 
 import {
@@ -138,7 +140,7 @@ import {
   payPenalty,
 } from '../Reducers/prepsSlice';
 import {
-  fetchCPFScoreAddressRequest,
+  fetchCPFTreasuryScoreAddressRequest,
   fetchCPFRemainingFundRequest,
   fetchExpectedGrantRequest,
   fetchCPSTreasuryScoreAddressRequest,
@@ -148,6 +150,8 @@ import {
   fetchbnUSDAddressRequest,
   fetchAvailableFundRequest,
   fetchSponsorDepositAmountRequest,
+  fetchMaintenanceModeRequest,
+  fetchRemainingSwapAmountRequest,
 } from '../Reducers/fundSlice';
 import {
   fetchUserDataRequest,
@@ -158,7 +162,7 @@ import {
 } from '../Reducers/userSlice';
 import { FiPrinter } from 'react-icons/fi';
 
-function * rootSaga () {
+function* rootSaga() {
   yield takeEvery(login.type, loginWorker);
   yield takeEvery(signTransaction.type, signTransactionWorker);
   yield takeEvery(logout.type, logoutWorker);
@@ -258,7 +262,10 @@ function * rootSaga () {
 
   yield takeEvery(registerPrep.type, registerPrepWorker);
 
-  yield takeEvery(fetchCPFScoreAddressRequest.type, fetchCPFScoreAddressWorker);
+  yield takeEvery(
+    fetchCPFTreasuryScoreAddressRequest.type,
+    fetchCPFTreasuryScoreAddressWorker,
+  );
   yield takeEvery(fetchbnUSDAddressRequest.type, fetchbnUSDAddressWorker);
   yield takeEvery(
     fetchCPSTreasuryScoreAddressRequest.type,
@@ -266,8 +273,20 @@ function * rootSaga () {
   );
 
   yield takeEvery(
+    fetchCPFTreasuryScoreAddressRequest.type,
+    fetchCPFTreasuryScoreAddressWorker,
+  );
+
+  yield takeEvery(
     fetchCPFRemainingFundRequest.type,
     fetchCPFRemainingFundWorker,
+  );
+
+  yield takeEvery(fetchMaintenanceModeRequest.type, fetchMaintenanceModeWorker);
+
+  yield takeEvery(
+    fetchRemainingSwapAmountRequest.type,
+    fetchRemainingSwapAmountWorker,
   );
 
   yield takeEvery(fetchProjectAmountsRequest.type, fetchProjectAmountsWorker);
@@ -336,7 +355,6 @@ function * rootSaga () {
     fetchPriorityVotingRequest.type,
     fetchPriorityVotingStatusWorker,
   );
-
 }
 
 export default rootSaga;
