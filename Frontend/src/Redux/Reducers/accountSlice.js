@@ -37,6 +37,7 @@ const accountSlice = createSlice({
     loginSuccess(state, action) {
       state.isPrep = action.payload.isPrep;
       state.isRegistered = action.payload.isRegistered;
+      state.votingPRep=action.payload.votingPRep;
       state.payPenalty = action.payload.payPenalty;
       state.penaltyAmount = IconConverter.toBigNumber(
         action.payload.penaltyAmount,

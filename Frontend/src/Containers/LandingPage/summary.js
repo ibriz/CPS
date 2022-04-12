@@ -80,12 +80,56 @@ const Summary = ({
     return (<div className="landingPage__Summary">
         <div className="description" >
             <div>
-                <p>{projectAmounts.Active.count}</p>
-                <p>Active Projects</p>
+                <OverlayTrigger
+                    trigger={['click']}
+                    delay={{ show: 250, hide: 200 }}
+                    placement={'top-start'}
+                    overlay={
+                        <Popover className={'balancePopover'} style={{ border: '2px solid #1AAABA', borderRadius: 10 }}>
+                            <Popover.Content style={{ padding: '10px 20px' }}>
+                                <>
+                                    <span style={{ textAlign: 'center', fontSize: 18, color: '#1AAABA', fontWeight: 600 }}>{abbreviateNumber(Number(projectAmounts.Active?.amount?.icx || 0))} ICX</span>
+                                    <br />
+                                    <span style={{ textAlign: 'center', fontSize: 18, color: '#1AAABA', fontWeight: 600 }}>{abbreviateNumber(Number(projectAmounts.Active?.amount?.bnUSD || 0))} bnUSD</span>
+                                </>
+                            </Popover.Content>
+                        </Popover>
+                    }
+                    rootClose
+                    transition
+                >
+                    <span className='d-inline-block' style={{ cursor: 'pointer' }}>
+                        <p>{projectAmounts.Active.count}<br /></p>
+                        <p style={{ textDecoration: 'underline' }}>Active Projects</p>
+                    </span>
+                </OverlayTrigger>
             </div>
             <div>
-                <p>{projectAmounts.Completed.count}</p>
-                <p>Projects Completed</p>
+                {/* <p>{projectAmounts.Completed.count}</p>
+                <p>Projects Completed</p> */}
+                <OverlayTrigger
+                    trigger={['click']}
+                    delay={{ show: 250, hide: 200 }}
+                    placement={'top-start'}
+                    overlay={
+                        <Popover className={'balancePopover'} style={{ border: '2px solid #1AAABA', borderRadius: 10 }}>
+                            <Popover.Content style={{ padding: '10px 20px' }}>
+                                <>
+                                    <span style={{ textAlign: 'center', fontSize: 18, color: '#1AAABA', fontWeight: 600 }}>{abbreviateNumber(Number(projectAmounts.Completed?.amount?.icx || 0))} ICX</span>
+                                    <br />
+                                    <span style={{ textAlign: 'center', fontSize: 18, color: '#1AAABA', fontWeight: 600 }}>{abbreviateNumber(Number(projectAmounts.Completed?.amount?.bnUSD || 0))} bnUSD</span>
+                                </>
+                            </Popover.Content>
+                        </Popover>
+                    }
+                    rootClose
+                    transition
+                >
+                    <span className='d-inline-block' style={{ cursor: 'pointer' }}>
+                        <p>{projectAmounts.Completed.count}<br /></p>
+                        <p style={{ textDecoration: 'underline' }}>Projects Completed</p>
+                    </span>
+                </OverlayTrigger>
             </div>
             <div>
                 <OverlayTrigger
@@ -96,9 +140,7 @@ const Summary = ({
                         <Popover className={'balancePopover'} style={{ border: '2px solid #1AAABA', borderRadius: 10 }}>
                             <Popover.Content style={{ padding: '10px 20px' }}>
                                 <>
-                                    <span style={{ textAlign: 'center', fontSize: 18, color: '#1AAABA', fontWeight: 600 }}>{abbreviateNumber(Number(cpfRemainingFunds?.icx))} ICX</span>
-                                    <br />
-                                    <span style={{ textAlign: 'center', fontSize: 18, color: '#1AAABA', fontWeight: 600 }}>{abbreviateNumber(Number(cpfRemainingFunds?.sicx || 0))} sICX</span>
+                                    <span style={{ textAlign: 'center', fontSize: 18, color: '#1AAABA', fontWeight: 600 }}>{abbreviateNumber(Number(cpfRemainingFunds?.icx || 0))} ICX</span>
                                     <br />
                                     <span style={{ textAlign: 'center', fontSize: 18, color: '#1AAABA', fontWeight: 600 }}>{abbreviateNumber(Number(cpfRemainingFunds?.bnUSD || 0))} bnUSD</span>
                                 </>
@@ -117,15 +159,15 @@ const Summary = ({
             </div>
             <div>
                 <p> {abbreviateNumber(projectAmounts.Completed.amount.icx || 0)}<br /> </p>
-                <p>ICX Given Out</p>
+                <p>ICX Distribution</p>
             </div>
             <div>
                 <p> {abbreviateNumber(projectAmounts.Completed.amount.bnUSD || 0)}<br /></p>
-                <p>bnUSD Given Out</p>
+                <p>bnUSD Distribution</p>
             </div>
             <div>
                 <p> {preps.length}<br /></p>
-                <p onClick={() => setPrepListModalShow(true)} style={{ textDecoration: 'underline', cursor: 'pointer' }}>Preps</p>
+                <p onClick={() => setPrepListModalShow(true)} style={{ textDecoration: 'underline', cursor: 'pointer' }}>P-Reps</p>
             </div>
         </div>
         <PRepListModal

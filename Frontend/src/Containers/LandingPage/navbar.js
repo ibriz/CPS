@@ -162,7 +162,7 @@ const Navbar = props => {
                     {!walletAddress ? (
                         <p className="dashboardBtn" style={window.innerWidth > 1100 ? { marginRight: 20 } : {}} onClick={async () => {
                             history.push('/dashboard');
-                        }}>Dashboard</p>
+                        }}>Launch App</p>
                     ) : (
                         <ul>
                             <li
@@ -263,7 +263,7 @@ const Navbar = props => {
                             </li>
                             {/* <Link to="/dashboard" style={{ textDecoration: 'none', color: 'white' }}> */}
                             <li onClick={() => history.push('/dashboard')}>
-                                Dashboard
+                                Launch App
                             </li>
                             {/* </Link> */}
                             <li

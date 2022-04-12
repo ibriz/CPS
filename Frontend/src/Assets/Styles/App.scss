@@ -343,3 +343,11 @@ a.sidebarHeader:hover {
 .intendation {
   padding-left: 15px !important;
 }
+
+.ck.ck-editor__editable_inline {
+  padding-left: 10px;
+  ul,
+  ol {
+    padding-left: 15px;
+  }
+}
