@@ -11,8 +11,9 @@ import {
 } from 'react-bootstrap';
 import styles from './ProposalCreationPage.module.css';
 import {
-  fetchCPFScoreAddressRequest,
+  fetchCPFTreasuryScoreAddressRequest,
   fetchCPFRemainingFundRequest,
+  fetchMaintenanceModeRequest,
 } from 'Redux/Reducers/fundSlice';
 
 import {
@@ -71,12 +72,14 @@ const ProgressReportCreationPage = ({
   location,
   walletAddress,
   fetchProposalByAddressRequest,
-  fetchCPFScoreAddressRequest,
+  fetchCPFTreasuryScoreAddressRequest,
   fetchCPFRemainingFundRequest,
-  cpfScoreAddress,
+  cpfTreasuryScoreAddress,
   cpfRemainingFunds,
   selectedProposal,
-  fetchProposalByIpfsRequest
+  fetchProposalByIpfsRequest,
+  isMaintenanceMode,
+  fetchMaintenanceModeRequest,
 }) => {
   const { draftProgressReport, isDraft, ipfsKey } = location;
   const [progressReport, setProposal] = useState({
@@ -109,23 +112,23 @@ const ProgressReportCreationPage = ({
   const [descriptionWords, setDescriptionWords] = React.useState(0);
   const [descriptionCharacters, setDescriptionCharacters] = React.useState(0);
 
-  const [
-    revisionDescriptionWords,
-    setRevisionDescriptionWords,
-  ] = React.useState(0);
-  const [
-    revisionDescriptionCharacters,
-    setRevisionDescriptionCharacters,
-  ] = React.useState(0);
+  const [revisionDescriptionWords, setRevisionDescriptionWords] =
+    React.useState(0);
+  const [revisionDescriptionCharacters, setRevisionDescriptionCharacters] =
+    React.useState(0);
 
   useEffect(() => {
     fetchCPFRemainingFundRequest();
-    fetchCPFScoreAddressRequest();
+    fetchCPFTreasuryScoreAddressRequest();
   }, [
     fetchCPFRemainingFundRequest,
-    cpfScoreAddress,
-    fetchCPFScoreAddressRequest,
+    cpfTreasuryScoreAddress,
+    fetchCPFTreasuryScoreAddressRequest,
   ]);
+
+  useEffect(() => {
+    fetchMaintenanceModeRequest();
+  }, [fetchMaintenanceModeRequest]);
 
   useEffect(() => {
     setProposal(prevState => ({
@@ -190,10 +193,8 @@ const ProgressReportCreationPage = ({
     setDraftConfirmationShow(true);
   };
 
-  let [
-    submissionConfirmationShow,
-    setSubmissionConfirmationShow,
-  ] = React.useState(false);
+  let [submissionConfirmationShow, setSubmissionConfirmationShow] =
+    React.useState(false);
 
   async function fetchDraft() {
     const progressReportIPFS = await requestIPFS({
@@ -306,15 +307,23 @@ const ProgressReportCreationPage = ({
 
   useEffect(() => {
     if (progressReport.projectName) {
-      fetchProposalByIpfsRequest({ ipfs_key: progressReport.projectName })
+      fetchProposalByIpfsRequest({ ipfs_key: progressReport.projectName });
     }
-  }, [progressReport.projectName])
+  }, [progressReport.projectName]);
 
   useEffect(() => {
-    if (selectedProposal?.approvedReports && selectedProposal?.projectDuration) {
-      setProposal((prevState) => ({ ...prevState, timeRemainingToCompletion: Number(selectedProposal?.projectDuration) - Number(selectedProposal?.approvedReports) }))
+    if (
+      selectedProposal?.approvedReports &&
+      selectedProposal?.projectDuration
+    ) {
+      setProposal(prevState => ({
+        ...prevState,
+        timeRemainingToCompletion:
+          Number(selectedProposal?.projectDuration) -
+          Number(selectedProposal?.approvedReports),
+      }));
     }
-  }, [selectedProposal])
+  }, [selectedProposal]);
   const handleCheckedChange = event => {
     let name = event.target.name;
     let value = event.target.checked;
@@ -484,7 +493,7 @@ const ProgressReportCreationPage = ({
                     min={0}
                     max={6}
                     disabled
-                    style={{backgroundColor:'white'}}
+                    style={{ backgroundColor: 'white' }}
                     required
                   />
                   <InputGroup.Append>
@@ -682,7 +691,7 @@ const ProgressReportCreationPage = ({
               isTimeRemainingNotZero &&
               progressReport.projectTermRevision &&
               progressReport.timeRemainingToCompletion !==
-              progressReport.additionalTime && (
+                progressReport.additionalTime && (
                 <Alert variant='primary'>
                   Note: Recommended additional time:{' '}
                   {progressReport.timeRemainingToCompletion} month (The time
@@ -703,11 +712,12 @@ const ProgressReportCreationPage = ({
                 />
               </Col>
               <Col className={styles.saveButton}>
-                {period !== 'VOTING' ? (
+                {period !== 'VOTING' && !isMaintenanceMode && (
                   <Button variant='info' type='submit'>
                     SUBMIT
                   </Button>
-                ) : (
+                )}
+                {period === 'VOTING' && (
                   <Popup
                     component={
                       <span className='d-inline-block'>
@@ -722,6 +732,24 @@ const ProgressReportCreationPage = ({
                       </span>
                     }
                     popOverText='You can submit in the next application period.'
+                    placement='left'
+                  />
+                )}
+                {isMaintenanceMode && period !== 'VOTING' && (
+                  <Popup
+                    component={
+                      <span className='d-inline-block'>
+                        <Button
+                          variant='info'
+                          type='submit'
+                          disabled
+                          style={{ pointerEvents: 'none' }}
+                        >
+                          SUBMIT
+                        </Button>
+                      </span>
+                    }
+                    popOverText='You can submit after maintenance mode is over.'
                     placement='left'
                   />
                 )}
@@ -768,7 +796,6 @@ const ProgressReportCreationPage = ({
       </ConfirmationModal>
     </div>
   );
-
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -781,11 +808,13 @@ const mapDispatchToProps = dispatch => ({
   fetchProposalByAddressRequest: payload =>
     dispatch(fetchProposalByAddressRequest(payload)),
 
-  fetchCPFScoreAddressRequest: payload =>
-    dispatch(fetchCPFScoreAddressRequest(payload)),
+  fetchCPFTreasuryScoreAddressRequest: payload =>
+    dispatch(fetchCPFTreasuryScoreAddressRequest(payload)),
   fetchCPFRemainingFundRequest: payload =>
     dispatch(fetchCPFRemainingFundRequest(payload)),
-  fetchProposalByIpfsRequest: payload => dispatch(fetchProposalByIpfsRequest(payload))
+  fetchProposalByIpfsRequest: payload =>
+    dispatch(fetchProposalByIpfsRequest(payload)),
+  fetchMaintenanceModeRequest: () => dispatch(fetchMaintenanceModeRequest()),
 });
 
 const mapStateToProps = state => ({
@@ -800,8 +829,9 @@ const mapStateToProps = state => ({
   walletAddress: state.account.address,
 
   cpfRemainingFunds: state.fund.cpfRemainingFunds,
-  cpfScoreAddress: state.fund.cpfScoreAddress,
-  selectedProposal: state.proposals.selectedProposal
+  cpfTreasuryScoreAddress: state.fund.cpfTreasuryScoreAddress,
+  selectedProposal: state.proposals.selectedProposal,
+  isMaintenanceMode: state.fund.isMaintenanceMode,
 });
 
 export default withRouter(

@@ -8,9 +8,22 @@ const ProjectReportList = ({
   selectedTab,
   onClickProgressReport,
   isModal = false,
+  minHeight = '100px',
 }) => {
   return (
-    <Container fluid>
+    <Container
+      fluid
+      style={
+        projectReports.length
+          ? {}
+          : {
+              minHeight: minHeight,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }
+      }
+    >
       {projectReports.length ? (
         projectReports.map(progressReport => (
           <ProgressReport

@@ -12,6 +12,7 @@ const TabBar = ({
   tabs,
   placeholder,
   maxWidth,
+  newIndexList = [],
 }) => {
   return (
     <div className={styles.proposalNavBar}>
@@ -44,7 +45,10 @@ const TabBar = ({
               onClick={() => setSelectedTab(tab)}
               activeCondition={selectedTab === tab}
             >
-              {tab}
+              {tab}{' '}
+              {newIndexList.includes(index) && (
+                <sup style={{ color: 'red', fontWeight: 'normal' }}>New</sup>
+              )}
             </NavBarTitle>
           </Nav.Item>
         ))}

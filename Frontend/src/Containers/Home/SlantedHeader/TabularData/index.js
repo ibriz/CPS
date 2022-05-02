@@ -7,7 +7,7 @@ import {
 } from 'Redux/Reducers/proposalSlice';
 import wallet from 'Redux/ICON/FrontEndWallet';
 import {
-  fetchCPFScoreAddressRequest,
+  fetchCPFTreasuryScoreAddressRequest,
   fetchCPFRemainingFundRequest,
 } from 'Redux/Reducers/fundSlice';
 import { icxFormat } from 'Helpers';
@@ -26,9 +26,9 @@ const TabularData = ({
   fetchProposalListRequest,
   walletAddress,
   totalCount,
-  fetchCPFScoreAddressRequest,
+  fetchCPFTreasuryScoreAddressRequest,
   fetchCPFRemainingFundRequest,
-  cpfScoreAddress,
+  cpfTreasuryScoreAddress,
   fetchProjectAmountsRequest,
   projectAmounts,
   fetchPrepsRequest,
@@ -36,18 +36,18 @@ const TabularData = ({
 }) => {
   const { period } = useTimer();
   useEffect(() => {
-    fetchCPFScoreAddressRequest();
+    fetchCPFTreasuryScoreAddressRequest();
     fetchProjectAmountsRequest();
     fetchPrepsRequest();
   }, [
-    fetchCPFScoreAddressRequest,
+    fetchCPFTreasuryScoreAddressRequest,
     fetchProjectAmountsRequest,
     fetchPrepsRequest,
   ]);
 
   useEffect(() => {
     fetchCPFRemainingFundRequest();
-  }, [fetchCPFRemainingFundRequest, cpfScoreAddress]);
+  }, [fetchCPFRemainingFundRequest, cpfTreasuryScoreAddress]);
 
   const [prepListModalShow, setPrepListModalShow] = React.useState(false);
 
@@ -71,22 +71,33 @@ const TabularData = ({
       key: 'Voting Proposals',
       value: `${projectAmounts.Voting.count} (${icxFormat(
         projectAmounts.Voting.amount.bnUSD || 0,
-      )} bnUSD${projectAmounts.Voting.amount.icx > 0 ? ', ' +
-        icxFormat(
-          projectAmounts.Voting.amount.icx || 0,
-        ) + ' ICX)' : ')'}`,
+      )} bnUSD${
+        projectAmounts.Voting.amount.icx > 0
+          ? ', ' + icxFormat(projectAmounts.Voting.amount.icx || 0) + ' ICX)'
+          : ')'
+      }`,
     },
     {
       key: 'Approved Proposals',
-      value: `${projectAmounts.Active.count + projectAmounts.Paused.count
-        }(${icxFormat(
-          projectAmounts.Active.amount.bnUSD || 0 + projectAmounts.Paused.amount.bnUSD || 0,
-        )
-        } bnUSD${projectAmounts.Active.amount.icx > 0 || projectAmounts.Paused.amount.icx > 0 ? ', ' + icxFormat(
-          projectAmounts.Active.amount.icx || 0 + projectAmounts.Paused.amount.icx || 0
-        ) + ' ICX)' : ')'}`
-    }
-    ,
+      value: `${
+        projectAmounts.Active.count + projectAmounts.Paused.count
+      }(${icxFormat(
+        projectAmounts.Active.amount.bnUSD ||
+          0 + projectAmounts.Paused.amount.bnUSD ||
+          0,
+      )} bnUSD${
+        projectAmounts.Active.amount.icx > 0 ||
+        projectAmounts.Paused.amount.icx > 0
+          ? ', ' +
+            icxFormat(
+              projectAmounts.Active.amount.icx ||
+                0 + projectAmounts.Paused.amount.icx ||
+                0,
+            ) +
+            ' ICX)'
+          : ')'
+      }`,
+    },
     {
       key: 'CPF Remaining Funds',
       value: `${icxFormat(cpfRemainingFunds?.bnUSD || 0, true)} bnUSD`,
@@ -135,7 +146,7 @@ const mapStateToProps = () => state => {
     totalApprovedProposalBudget: state.proposals.totalApprovedProposalBudget,
 
     cpfRemainingFunds: state.fund.cpfRemainingFunds,
-    cpfScoreAddress: state.fund.cpfScoreAddress,
+    cpfTreasuryScoreAddress: state.fund.cpfTreasuryScoreAddress,
 
     walletAddress: state.account.address,
     totalCount: state.proposals.totalCount,
@@ -148,8 +159,8 @@ const mapStateToProps = () => state => {
 const mapDispatchToProps = dispatch => ({
   fetchProposalListRequest: payload =>
     dispatch(fetchProposalListRequest(payload)),
-  fetchCPFScoreAddressRequest: payload =>
-    dispatch(fetchCPFScoreAddressRequest(payload)),
+  fetchCPFTreasuryScoreAddressRequest: payload =>
+    dispatch(fetchCPFTreasuryScoreAddressRequest(payload)),
   fetchCPFRemainingFundRequest: payload =>
     dispatch(fetchCPFRemainingFundRequest(payload)),
   fetchProjectAmountsRequest: payload =>

@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from './UpperCard.module.scss';
 import { Row, Col, Card, Button, Container } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import useTimer from 'Hooks/useTimer';
 import { updatePeriod } from 'Redux/Reducers/periodSlice';
+import { fetchMaintenanceModeRequest } from 'Redux/Reducers/fundSlice';
+
 import ConfirmationModal from 'Components/UI/ConfirmationModal';
 import Popup from 'Components/Popup';
 
@@ -17,11 +19,12 @@ const UpperCard = ({
   isRegistered,
   projectAmounts,
   homePage,
+  isMaintenanceMode,
+  fetchMaintenanceModeRequest,
 }) => {
   const { period, remainingTime, remainingTimeSecond } = useTimer();
-  let [periodConfirmationShow, setPeriodConfirmationShow] = React.useState(
-    false,
-  );
+  let [periodConfirmationShow, setPeriodConfirmationShow] =
+    React.useState(false);
 
   let button;
   let text;
@@ -30,6 +33,9 @@ const UpperCard = ({
     setPeriodConfirmationShow(true);
   };
 
+  useEffect(() => {
+    fetchMaintenanceModeRequest();
+  }, [fetchMaintenanceModeRequest]);
   // if (remainingTimeSecond === 0) {
   //     button = <Button variant="primary" className={styles.createProposalButton} onClick={onClickUpdatePeriod}>UPDATE PERIOD </Button>
   //     text = <span className={styles.proposalNumber}>Click button to trigger {period === 'APPLICATION' ? 'Voting' : 'Application'} Period</span>
@@ -42,20 +48,25 @@ const UpperCard = ({
     button = (
       <Link to='/newProposal'>
         <Button variant='info' className={styles.createProposalButton}>
-          {period !== 'VOTING'
+          {period !== 'VOTING' && !isMaintenanceMode
             ? 'CREATE NEW PROPOSAL'
             : 'CREATE PROPOSAL DRAFT'}
         </Button>
-      </Link>);
+      </Link>
+    );
     // text = <span className={styles.proposalNumber}>{numberOfSubmittedProposals} Proposals submitted</span>
 
-    text = (
-      <span className={styles.proposalNumber}>
-        {period !== 'VOTING'
-          ? 'Create a New Proposal'
-          : 'This is voting period. You can still create a proposal draft'}
-      </span>
-    );
+    let spanText = 'Create a New Proposal';
+    if (period === 'VOTING')
+      spanText = 'This is voting period. You can still create a proposal draft';
+    else {
+      if (isMaintenanceMode)
+        spanText =
+          'Currently in maintenance mode. You can still create a proposal draft';
+      else spanText = 'Create a New Proposal';
+    }
+
+    text = <span className={styles.proposalNumber}>{spanText}</span>;
   }
   // else {
   //     button = null;
@@ -204,13 +215,14 @@ const mapStateToProps = state => {
     numberOfSubmittedProposals: state.proposals.numberOfSubmittedProposals,
     isPrep: state.account.isPrep,
     isRegistered: state.account.isRegistered,
-
+    isMaintenanceMode: state.fund.isMaintenanceMode,
     projectAmounts: state.proposals.projectAmounts,
   };
 };
 
 const mapDispatchToProps = dispatch => ({
   updatePeriod: payload => dispatch(updatePeriod(payload)),
+  fetchMaintenanceModeRequest: () => dispatch(fetchMaintenanceModeRequest()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(UpperCard);

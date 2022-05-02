@@ -15,9 +15,11 @@ import {
 } from 'react-bootstrap';
 import styles from './ProposalCreationPage.module.css';
 import {
-  fetchCPFScoreAddressRequest,
+  fetchCPFTreasuryScoreAddressRequest,
   fetchCPFRemainingFundRequest,
   fetchAvailableFundRequest,
+  fetchRemainingSwapAmountRequest,
+  fetchMaintenanceModeRequest,
 } from 'Redux/Reducers/fundSlice';
 
 import {
@@ -88,21 +90,23 @@ const ProposalCreationPage = ({
   saveDraftRequest,
   walletAddress,
   location,
-  fetchCPFScoreAddressRequest,
+  fetchCPFTreasuryScoreAddressRequest,
   fetchCPFRemainingFundRequest,
-  cpfScoreAddress,
+  cpfTreasuryScoreAddress,
   cpfRemainingFunds,
   fetchAvailableFundRequest,
+  fetchRemainingSwapAmountRequest,
   availableFund,
   actualAvailableFund,
+  isMaintenanceMode,
+  fetchMaintenanceModeRequest,
+  remainingSwapAmount,
 }) => {
   const { draftProposal, isDraft } = location;
   const { period } = useTimer();
   const [modalShow, setModalShow] = React.useState(false);
-  let [
-    submissionConfirmationShow,
-    setSubmissionConfirmationShow,
-  ] = React.useState(false);
+  let [submissionConfirmationShow, setSubmissionConfirmationShow] =
+    React.useState(false);
   let [draftConfirmationShow, setDraftConfirmationShow] = React.useState(false);
 
   const [editModalShow, setEditModalShow] = React.useState(false);
@@ -111,15 +115,26 @@ const ProposalCreationPage = ({
 
   const [descriptionWords, setDescriptionWords] = React.useState(0);
   const [descriptionCharacters, setDescriptionCharacters] = React.useState(0);
-  const [
-    totalNumberOfMonthsInMilestone,
-    setTotalNumberOfMonthsInMilestone,
-  ] = React.useState(0);
+  const [totalNumberOfMonthsInMilestone, setTotalNumberOfMonthsInMilestone] =
+    React.useState(0);
   let [prepList, setPrepList] = React.useState([]);
 
   useEffect(() => {
     fetchCPFRemainingFundRequest();
-  }, [fetchCPFRemainingFundRequest, cpfScoreAddress]);
+  }, [fetchCPFRemainingFundRequest]);
+
+  useEffect(() => {
+    fetchCPFTreasuryScoreAddressRequest();
+    fetchRemainingSwapAmountRequest();
+  }, [
+    cpfTreasuryScoreAddress,
+    fetchRemainingSwapAmountRequest,
+    fetchCPFTreasuryScoreAddressRequest,
+  ]);
+
+  useEffect(() => {
+    fetchMaintenanceModeRequest();
+  }, [fetchMaintenanceModeRequest]);
 
   useEffect(() => {
     let prepList = preps?.slice();
@@ -155,24 +170,23 @@ const ProposalCreationPage = ({
 
   useEffect(() => {
     if (proposal.totalBudget == null) {
-      document
-        .getElementById('totalBudget')
-        .setCustomValidity(
-          // `Enter Total Budget between 0 and ${actualAvailableFund} bnUSD`,
-          `Please enter total budget`,
-        );
-    }/* else if (
+      document.getElementById('totalBudget').setCustomValidity(
+        // `Enter Total Budget between 0 and ${remainingSwapAmount} bnUSD`,
+        `Please enter total budget`,
+      );
+    } else if (
       proposal.totalBudget < 0 ||
-      proposal.totalBudget > actualAvailableFund) {
+      proposal.totalBudget > remainingSwapAmount
+    ) {
       document
         .getElementById('totalBudget')
         .setCustomValidity(
-          `Total Budget should be between 0 and ${actualAvailableFund} bnUSD`,
+          `Total Budget should be between 0 and ${remainingSwapAmount} bnUSD`,
         );
-    } */ else {
+    } else {
       document.getElementById('totalBudget').setCustomValidity('');
     }
-  }, [proposal.totalBudget]);
+  }, [proposal.totalBudget, remainingSwapAmount]);
 
   useEffect(() => {
     const minimumNumberOfWords = 2;
@@ -197,7 +211,8 @@ const ProposalCreationPage = ({
       document
         .getElementById('milestones')
         .setCustomValidity(
-          `The total duration in milestones should equal to the project duration (currently ${proposal.projectDuration || 0
+          `The total duration in milestones should equal to the project duration (currently ${
+            proposal.projectDuration || 0
           } months)`,
         );
     } else {
@@ -237,12 +252,12 @@ const ProposalCreationPage = ({
     document.getElementById('teamEmail').onfocus = () => {
       document.getElementById('teamEmail').onblur = () => {
         document.getElementById('teamEmail').reportValidity();
-        document.getElementById('teamEmail').onblur = () => { };
+        document.getElementById('teamEmail').onblur = () => {};
       };
     };
 
     fetchPrepsRequest();
-    fetchCPFScoreAddressRequest();
+    fetchCPFTreasuryScoreAddressRequest();
   }, []);
 
   useEffect(() => {
@@ -367,7 +382,7 @@ const ProposalCreationPage = ({
 
   useEffect(() => {
     fetchAvailableFundRequest();
-  },[])
+  }, []);
   return (
     <div className={styles.proposalCreationPage}>
       <Header title='Create New Proposal' />
@@ -462,15 +477,22 @@ const ProposalCreationPage = ({
               <Col sm='4' className={styles.inputSameLine}>
                 <InputGroup size='md'>
                   <FormControl
-                    placeholder={'Total Budget' || `Available Fund (${actualAvailableFund} bnUSD)`}
+                    placeholder={
+                      'Total Budget' ||
+                      `Available Fund (${remainingSwapAmount} bnUSD)`
+                    }
+                    // onInvalid={e => {
+                    //   e.target.setCustomValidity(
+                    //     `Total Budget should be between 0 and ${remainingSwapAmount} bnUSD`,
+                    //   );
+                    // }}
                     min={0}
-                    // max={actualAvailableFund}
+                    max={remainingSwapAmount}
                     type='number'
                     value={proposal.totalBudget}
                     name='totalBudget'
                     id='totalBudget'
                     onChange={handleChange}
-                    id='totalBudget'
                     required
                   />
                   <InputGroup.Append>
@@ -513,10 +535,11 @@ const ProposalCreationPage = ({
                   </option>
                   {prepList?.map(prep => {
                     return (
-                      <option value={prep?.address} key={prep?.address}>{`${prep?.name
-                        } (${prep?.address?.slice(0, 4)}...${prep?.address?.slice(
-                          prep.address.length - 2,
-                        )})`}</option>
+                      <option value={prep?.address} key={prep?.address}>{`${
+                        prep?.name
+                      } (${prep?.address?.slice(0, 4)}...${prep?.address?.slice(
+                        prep.address.length - 2,
+                      )})`}</option>
                     );
                   })}
                 </Form.Control>
@@ -702,38 +725,12 @@ const ProposalCreationPage = ({
                 />
               </Col>
               <Col className={styles.saveButton}>
-                {period !== 'VOTING' ? (
+                {period !== 'VOTING' && !isMaintenanceMode && (
                   <Button variant='info' type='submit'>
                     SUBMIT
                   </Button>
-                  // <Popup
-                  //   component={
-                  //     <Button variant='info' disabled style={{ pointerEvents: 'none' }}>
-                  //       SUBMIT
-                  //     </Button>}
-                  //   popOverText='New proposals disabled until ICON 2.0'
-                  //   placement='left'
-                  // />
-                ) : (
-                  //     <OverlayTrigger trigger="hover" placement="left"
-                  //     overlay={
-                  //         <Popover id="popover-basic" >
-                  //             <Popover.Content>
-                  //                 <span style = {{textAlign: 'center'}}>
-                  //                     You can submit in the next application period.
-                  //                 </span>
-                  //             </Popover.Content>
-                  //         </Popover>
-
-                  //     }
-                  // >
-                  //         <span className="d-inline-block">
-
-                  //             <Button variant="info" type="submit" disabled style={{ pointerEvents: 'none' }}>SUBMIT</Button>
-                  //         </span>
-
-                  //     </OverlayTrigger>
-
+                )}
+                {period === 'VOTING' && (
                   <Popup
                     component={
                       <span className='d-inline-block'>
@@ -748,6 +745,24 @@ const ProposalCreationPage = ({
                       </span>
                     }
                     popOverText='You can submit in the next application period.'
+                    placement='left'
+                  />
+                )}
+                {isMaintenanceMode && period !== 'VOTING' && (
+                  <Popup
+                    component={
+                      <span className='d-inline-block'>
+                        <Button
+                          variant='info'
+                          type='submit'
+                          disabled
+                          style={{ pointerEvents: 'none' }}
+                        >
+                          SUBMIT
+                        </Button>
+                      </span>
+                    }
+                    popOverText='You can submit after maintenance mode is over.'
                     placement='left'
                   />
                 )}
@@ -832,13 +847,15 @@ const mapDispatchToProps = dispatch => ({
   fetchPrepsRequest: payload => dispatch(fetchPrepsRequest(payload)),
   saveDraftRequest: payload => dispatch(saveDraftRequest(payload)),
 
-  fetchCPFScoreAddressRequest: payload =>
-    dispatch(fetchCPFScoreAddressRequest(payload)),
+  fetchCPFTreasuryScoreAddressRequest: () =>
+    dispatch(fetchCPFTreasuryScoreAddressRequest()),
   fetchCPFRemainingFundRequest: payload =>
     dispatch(fetchCPFRemainingFundRequest(payload)),
   fetchAvailableFundRequest: payload =>
     dispatch(fetchAvailableFundRequest(payload)),
-
+  fetchRemainingSwapAmountRequest: () =>
+    dispatch(fetchRemainingSwapAmountRequest()),
+  fetchMaintenanceModeRequest: () => dispatch(fetchMaintenanceModeRequest()),
 });
 
 const mapStateToProps = state => ({
@@ -846,9 +863,11 @@ const mapStateToProps = state => ({
   preps: state.preps.preps,
   walletAddress: state.account.address,
   cpfRemainingFunds: state.fund.cpfRemainingFunds,
-  cpfScoreAddress: state.fund.cpfScoreAddress,
-  availableFund:state.fund.availableFund,
-  actualAvailableFund:0.98*state.fund.availableFund
+  cpfTreasuryScoreAddress: state.fund.cpfTreasuryScoreAddress,
+  availableFund: state.fund.availableFund,
+  actualAvailableFund: 0.98 * state.fund.availableFund,
+  isMaintenanceMode: state.fund.isMaintenanceMode,
+  remainingSwapAmount: 0.98 * state.fund.remainingSwapAmount,
 });
 
 export default withRouter(

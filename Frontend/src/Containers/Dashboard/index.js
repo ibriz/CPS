@@ -9,7 +9,7 @@ import useTimer from 'Hooks/useTimer';
 import InfoCard from './InfoCard';
 import { icxFormat } from 'Helpers';
 import {
-  fetchCPFScoreAddressRequest,
+  fetchCPFTreasuryScoreAddressRequest,
   fetchCPFRemainingFundRequest,
   claimReward,
   fetchSponsorBondRequest,
@@ -35,7 +35,7 @@ const Dashboard = ({
   projectAmounts,
   cpfRemainingFunds,
   cpfScoreAddress,
-  fetchCPFScoreAddressRequest,
+  fetchCPFTreasuryScoreAddressRequest,
   fetchCPFRemainingFundRequest,
   fetchProjectAmountsRequest,
   isPrep,
@@ -205,11 +205,14 @@ const Dashboard = ({
         value:
           period === 'APPLICATION'
             ? totalCountSponsorRequests.Pending
-            : remainingVotesProposal.length + remainingVotesPR.length,
+            : priorityVote
+            ? remainingVotesProposal.length + remainingVotesPR.length
+            : remainingVotesProposal.length + remainingVotesPR.length + 1,
       },
       {
-        title: `Remaining Time in ${period !== 'VOTING' ? 'Application Period' : 'Voting Period'
-          }`,
+        title: `Remaining Time in ${
+          period !== 'VOTING' ? 'Application Period' : 'Voting Period'
+        }`,
         color: '#1AAABA',
         // value={period === "APPLICATION" ? 'Application Period' : 'Voting Period'} />
         value: ` ${highestSignificantTime.value} ${highestSignificantTime.text}`,
@@ -243,11 +246,11 @@ const Dashboard = ({
   }
 
   useEffect(() => {
-    fetchCPFScoreAddressRequest();
+    fetchCPFTreasuryScoreAddressRequest();
     fetchProjectAmountsRequest();
     fetchCPSTreasuryScoreAddressRequest();
   }, [
-    fetchCPFScoreAddressRequest,
+    fetchCPFTreasuryScoreAddressRequest,
     fetchProjectAmountsRequest,
     fetchExpectedGrantRequest,
   ]);
@@ -535,8 +538,11 @@ const Dashboard = ({
               <div className={styles.myProposalHeading}>Pending Votes</div>
 
               <VotingCard
-                proposalStatesList={ !priorityVote && period === 'VOTING' ? ['Proposals', 'Progress Reports','Priority Voting'] : ['Proposals', 'Progress Reports'] }
-                initialState={'Proposals'}
+                proposalStatesList={period === 'VOTING' ?
+                  ['Priority Voting', 'Proposals', 'Progress Reports']
+                  : ['Proposals', 'Progress Reports']}
+                initialState={period === 'VOTING' ? 'Priority Voting': 'Proposals'}
+                priorityVote={priorityVote}
               />
             </>
           )
@@ -580,7 +586,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   payPenaltyRequest: payPenalty,
-  fetchCPFScoreAddressRequest,
+  fetchCPFTreasuryScoreAddressRequest,
   fetchCPFRemainingFundRequest,
   fetchProjectAmountsRequest,
   fetchExpectedGrantRequest,

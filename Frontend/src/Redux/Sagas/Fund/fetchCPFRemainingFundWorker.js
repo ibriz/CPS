@@ -7,37 +7,49 @@ import { callKeyStoreWallet } from '../../ICON/utils';
 
 function* fetchCPFRemainingFundWorker({ payload }) {
   try {
-    const getCPFScoreAddress = state => state.fund.cpfScoreAddress;
-    const cpfScoreAddress = yield select(getCPFScoreAddress);
-    const dexScoreAddress = 'cxa0af3165c08318e988cb30993b3048335b94af6c';
-    const sicxScoreAddress = 'cx2609b924e33ef00b648a409245c7ea394c467824';
-    const cpfTreasuryAddress = 'cxdca1178010b5368aea929ad5c06abee64b91acc2';
+    const getCPFTreasuryScoreAddress = state =>
+      state.fund.cpfTreasuryScoreAddress;
+    const cpfTreasuryAddress = yield select(getCPFTreasuryScoreAddress);
+
+    const dexScoreAddress = yield call(callKeyStoreWallet, {
+      method: 'get_dex_score',
+      scoreAddress: cpfTreasuryAddress,
+    });
+    const sicxScoreAddress = yield call(callKeyStoreWallet, {
+      method: 'get_sicx_score',
+      scoreAddress: cpfTreasuryAddress,
+    });
+    console.log({ cpfTreasuryAddress });
+    console.log({ sicxScoreAddress, dexScoreAddress });
+
     let response = yield call(callKeyStoreWallet, {
       method: 'get_remaining_fund',
-      // scoreAddress: cpfScoreAddress
+      // scoreAddress: cpfTreasuryScoreAddress
     });
 
     response.sicx = yield call(callKeyStoreWallet, {
       method: 'balanceOf',
       scoreAddress: sicxScoreAddress,
-      params: { _owner: cpfTreasuryAddress }
-    })
+      params: { _owner: cpfTreasuryAddress },
+    });
 
     response.sicxToICX = yield call(callKeyStoreWallet, {
       scoreAddress: dexScoreAddress,
       method: 'getPrice',
-      params: { _id: '1' }
+      params: { _id: '1' },
     });
 
     response.sicxTobnUSD = yield call(callKeyStoreWallet, {
       scoreAddress: dexScoreAddress,
       method: 'getPrice',
-      params: { _id: '2' }
+      params: { _id: '2' },
     });
+
+    console.log({ response });
 
     yield put(
       fetchCPFRemainingFundSuccess({
-        response
+        response,
       }),
     );
   } catch (error) {

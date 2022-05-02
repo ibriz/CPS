@@ -3,9 +3,11 @@ import { IconConverter } from 'icon-sdk-js';
 
 const initialState = {
   cpfRemainingFunds: { icx: 0, bnUSD: 0 },
-  cpfScoreAddress: null,
+  isMaintenanceMode: false,
+  remainingSwapAmount: 0,
 
   cpsTreasuryScoreAddress: null,
+  cpfTreasuryScoreAddress: null,
 
   expectedGrant: { icx: 0, bnUSD: 0 },
   sponsorReward: { icx: 0, bnUSD: 0 },
@@ -23,15 +25,42 @@ const fundSlice = createSlice({
   name: 'fund',
   initialState,
   reducers: {
-    fetchCPFScoreAddressRequest() {
+    fetchCPFTreasuryScoreAddressRequest() {
       return;
     },
-    fetchCPFScoreAddressSuccess(state, action) {
-      state.cpfScoreAddress = action.payload.response;
+    fetchCPFTreasuryScoreAddressSuccess(state, action) {
+      state.cpfTreasuryScoreAddress = action.payload.response;
 
       return;
     },
-    fetchCPFScoreAddressFailure() {
+    fetchCPFTreasuryScoreAddressFailure() {
+      return;
+    },
+
+    fetchMaintenanceModeRequest() {
+      return;
+    },
+    fetchMaintenanceModeSuccess(state, action) {
+      state.isMaintenanceMode = Boolean(
+        IconConverter.toNumber(action.payload.response),
+      );
+      return;
+    },
+    fetchMaintenanceModeFailure() {
+      return;
+    },
+
+    fetchRemainingSwapAmountRequest() {
+      return;
+    },
+
+    fetchRemainingSwapAmountSuccess(state, action) {
+      state.remainingSwapAmount = IconConverter.toBigNumber(
+        action.payload.response.maxCap,
+      ).dividedBy(10 ** 18);
+      return;
+    },
+    fetchRemainingSwapAmountFailure() {
       return;
     },
 
@@ -52,18 +81,23 @@ const fundSlice = createSlice({
     },
     fetchCPFRemainingFundSuccess(state, action) {
       state.cpfRemainingFunds = {
-        icx: IconConverter.toBigNumber(
-          action.payload.response.ICX,
-        ).dividedBy(10 ** 18), bnUSD: IconConverter.toBigNumber(
-          action.payload.response.bnUSD).dividedBy(10 ** 18),
-        sicx: IconConverter.toBigNumber(
-          action.payload.response.sicx).dividedBy(10 ** 18),
+        icx: IconConverter.toBigNumber(action.payload.response.ICX).dividedBy(
+          10 ** 18,
+        ),
+        bnUSD: IconConverter.toBigNumber(
+          action.payload.response.bnUSD,
+        ).dividedBy(10 ** 18),
+        sicx: IconConverter.toBigNumber(action.payload.response.sicx).dividedBy(
+          10 ** 18,
+        ),
         sicxToICX: IconConverter.toBigNumber(
-          action.payload.response.sicxToICX).dividedBy(10 ** 18),
+          action.payload.response.sicxToICX,
+        ).dividedBy(10 ** 18),
         sicxTobnUSD: IconConverter.toBigNumber(
-          action.payload.response.sicxTobnUSD).dividedBy(10 ** 18)
-      }
-      // state.cpfScoreAddress = action.payload.response;
+          action.payload.response.sicxTobnUSD,
+        ).dividedBy(10 ** 18),
+      };
+      // state.cpfTreasuryScoreAddress = action.payload.response;
 
       return;
     },
@@ -78,71 +112,67 @@ const fundSlice = createSlice({
         state.expectedGrant = {
           icx: action.payload.response.total_amount.ICX
             ? IconConverter.toBigNumber(
-              action.payload.response.total_amount.ICX,
-            ).dividedBy(10 ** 18)
+                action.payload.response.total_amount.ICX,
+              ).dividedBy(10 ** 18)
             : 0,
           bnUSD: action.payload.response.total_amount.bnUSD
             ? IconConverter.toBigNumber(
-              action.payload.response.total_amount.bnUSD,
-            ).dividedBy(10 ** 18)
-            : 0
+                action.payload.response.total_amount.bnUSD,
+              ).dividedBy(10 ** 18)
+            : 0,
         };
         state.withDrawAmountProposalGrant = {
-          icx: action.payload.response
-            .withdraw_amount_icx
+          icx: action.payload.response.withdraw_amount_icx
             ? IconConverter.toBigNumber(
-              action.payload.response.withdraw_amount_icx,
-            ).dividedBy(10 ** 18)
+                action.payload.response.withdraw_amount_icx,
+              ).dividedBy(10 ** 18)
             : 0,
-          bnUSD: action.payload.response
-            .withdraw_amount_bnusd
+          bnUSD: action.payload.response.withdraw_amount_bnusd
             ? IconConverter.toBigNumber(
-              action.payload.response.withdraw_amount_bnusd,
-            ).dividedBy(10 ** 18)
-            : 0
+                action.payload.response.withdraw_amount_bnusd,
+              ).dividedBy(10 ** 18)
+            : 0,
         };
       } else {
         state.sponsorReward = {
           icx: action.payload.response.total_amount.ICX
             ? IconConverter.toBigNumber(
-              action.payload.response.total_amount.ICX,
-            ).dividedBy(10 ** 18)
+                action.payload.response.total_amount.ICX,
+              ).dividedBy(10 ** 18)
             : 0,
           bnUSD: action.payload.response.total_amount.bnUSD
             ? IconConverter.toBigNumber(
-              action.payload.response.total_amount.bnUSD,
-            ).dividedBy(10 ** 18)
-            : 0
-        }
+                action.payload.response.total_amount.bnUSD,
+              ).dividedBy(10 ** 18)
+            : 0,
+        };
         state.sponsorBond = {
           icx: action.payload.response.total_sponsor_bond.ICX
             ? IconConverter.toBigNumber(
-              action.payload.response.total_sponsor_bond.ICX,
-            ).dividedBy(10 ** 18)
+                action.payload.response.total_sponsor_bond.ICX,
+              ).dividedBy(10 ** 18)
             : 0,
           bnUSD: action.payload.response.total_sponsor_bond.bnUSD
             ? IconConverter.toBigNumber(
-              action.payload.response.total_sponsor_bond.bnUSD,
-            ).dividedBy(10 ** 18)
-            : 0
-        }
-        state.withDrawAmountSponsorReward = {
-          icx: action.payload.response
-            .withdraw_amount_icx
-            ? IconConverter.toBigNumber(
-              action.payload.response.withdraw_amount_icx,
-            ).dividedBy(10 ** 18)
+                action.payload.response.total_sponsor_bond.bnUSD,
+              ).dividedBy(10 ** 18)
             : 0,
-          bnUSD: action.payload.response
-            .withdraw_amount_bnusd
+        };
+        state.withDrawAmountSponsorReward = {
+          icx: action.payload.response.withdraw_amount_icx
             ? IconConverter.toBigNumber(
-              action.payload.response.withdraw_amount_bnusd,
-            ).dividedBy(10 ** 18)
-            : 0
+                action.payload.response.withdraw_amount_icx,
+              ).dividedBy(10 ** 18)
+            : 0,
+          bnUSD: action.payload.response.withdraw_amount_bnusd
+            ? IconConverter.toBigNumber(
+                action.payload.response.withdraw_amount_bnusd,
+              ).dividedBy(10 ** 18)
+            : 0,
         };
       }
 
-      // state.cpfScoreAddress = action.payload.response;
+      // state.cpfTreasuryScoreAddress = action.payload.response;
 
       return;
     },
@@ -166,7 +196,7 @@ const fundSlice = createSlice({
           : 0,
         bnUSD: action.payload.bnUSD
           ? IconConverter.toBigNumber(action.payload.bnUSD).dividedBy(10 ** 18)
-          : 0
+          : 0,
       };
     },
     fetchSponsorBondFailure() {
@@ -177,52 +207,62 @@ const fundSlice = createSlice({
     },
     fetchbnUSDAddressSuccess(state, action) {
       console.log('bnUSD Score', action);
-      state.bnUSDScoreAddress = action.payload
+      state.bnUSDScoreAddress = action.payload;
     },
     fetchbnUSDAddressFailure() {
       return;
     },
-    fetchAvailableFundRequest(){
-      return
+    fetchAvailableFundRequest() {
+      return;
     },
-    fetchAvailableFundSuccess(state,action){
-      state.availableFund=Number(IconConverter.toBigNumber(action?.payload?.availableFund || '0').dividedBy(10**18) || 0)
+    fetchAvailableFundSuccess(state, action) {
+      state.availableFund = Number(
+        IconConverter.toBigNumber(
+          action?.payload?.availableFund || '0',
+        ).dividedBy(10 ** 18) || 0,
+      );
     },
-    fetchAvailableFundFailure()
-    {
-      return
+    fetchAvailableFundFailure() {
+      return;
     },
     fetchSponsorDepositAmountRequest(state) {
       return;
     },
-    fetchSponsorDepositAmountSuccess(state,action)
-    {
+    fetchSponsorDepositAmountSuccess(state, action) {
       const { ICX, bnUSD } = action.payload.response.sponsor_deposit_amount;
       state.sponsorDepositAmount = {
-        icx: Number(IconConverter.toBigNumber(ICX || '0x0').dividedBy(10 ** 18)),
-        bnUSD: Number(IconConverter.toBigNumber(bnUSD || '0x0').dividedBy(10 ** 18)),
+        icx: Number(
+          IconConverter.toBigNumber(ICX || '0x0').dividedBy(10 ** 18),
+        ),
+        bnUSD: Number(
+          IconConverter.toBigNumber(bnUSD || '0x0').dividedBy(10 ** 18),
+        ),
       };
     },
-    fetchSponsorDepositAmountFailure()
-    {
+    fetchSponsorDepositAmountFailure() {
       return;
-    }
+    },
   },
 
   extraReducers: {
     'account/logout': (state, action) => {
       state.expectedGrant = 0;
       state.sponsorBond = 0;
-      state.sponsorBondReward = { icx: 0, bnUSD: 0 }
-
+      state.sponsorBondReward = { icx: 0, bnUSD: 0 };
     },
   },
 });
 
 export const {
-  fetchCPFScoreAddressRequest,
-  fetchCPFScoreAddressSuccess,
-  fetchCPFScoreAddressFailure,
+  fetchCPFTreasuryScoreAddressRequest,
+  fetchCPFTreasuryScoreAddressSuccess,
+  fetchCPFTreasuryScoreAddressFailure,
+  fetchMaintenanceModeRequest,
+  fetchMaintenanceModeSuccess,
+  fetchMaintenanceModeFailure,
+  fetchRemainingSwapAmountRequest,
+  fetchRemainingSwapAmountSuccess,
+  fetchRemainingSwapAmountFailure,
   fetchCPFRemainingFundRequest,
   fetchCPFRemainingFundSuccess,
   fetchCPFRemainingFundFailure,

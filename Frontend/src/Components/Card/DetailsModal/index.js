@@ -59,6 +59,8 @@ import InfoIcon from 'Components/InfoIcon';
 import VoteProgressBar from 'Components/VoteProgressBar';
 import { trackerURL } from 'Redux/ICON/utils';
 import { NotificationManager } from 'react-notifications';
+import Popup from 'Components/Popup';
+import { fetchMaintenanceModeRequest } from 'Redux/Reducers/fundSlice';
 
 const DescriptionTitle = styled.div`
   font-style: normal;
@@ -163,6 +165,8 @@ function DetailsModal(props) {
     changeVote,
     fetchChangeVoteRequest,
     votingPRep,
+    isMaintenanceMode,
+		fetchMaintenanceModeRequest,
     ...remainingProps
   } = props;
 
@@ -190,6 +194,10 @@ function DetailsModal(props) {
   useEffect(() => {
     fetchPrepsRequest();
   }, []);
+
+	useEffect(() => {
+    fetchMaintenanceModeRequest();
+  }, [fetchMaintenanceModeRequest]);
 
   useEffect(() => {
     console.log(
@@ -796,13 +804,30 @@ function DetailsModal(props) {
                     </Row>
 
                     <Row style={{ justifyContent: 'center' }}>
-                      <Button
+											{!isMaintenanceMode ? (  <Button
                         variant='primary'
                         onClick={() => handleVoteSubmission()}
                         style={{ marginTop: '10px', width: '150px' }}
                       >
                         Submit Vote
-                      </Button>
+                      </Button>): (
+                  <Popup
+                    component={
+                      <span className='d-inline-block'>
+                        <Button
+                          variant='info'
+                          type='submit'
+                          disabled
+                          style={{ pointerEvents: 'none' }}
+                        >
+                          SUBMIT
+                        </Button>
+                      </span>
+                    }
+                    popOverText='You can submit a vote after the maintenance period is over.'
+                    placement='left'
+                  />)}
+                    
                     </Row>
                   </>
                 ) : (
@@ -924,7 +949,8 @@ const mapStateToProps = state => ({
   isPrep: state.account.isPrep,
   ipfsError: state.proposals.error,
   changeVote: state.proposals.changeVote,
-  votingPRep:state.account.votingPRep
+  votingPRep:state.account.votingPRep,
+	isMaintenanceMode: state.fund.isMaintenanceMode,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -940,7 +966,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(fetchSponsorMessageRequest(payload)),
   emptyProgressReportDetailRequest: (payload) =>
     dispatch(emptyProgressReportDetailRequest()),
-  fetchChangeVoteRequest: (payload) => dispatch(fetchChangeVoteRequest(payload))
+  fetchChangeVoteRequest: (payload) => dispatch(fetchChangeVoteRequest(payload)),
+	fetchMaintenanceModeRequest: () => dispatch(fetchMaintenanceModeRequest()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DetailsModal);

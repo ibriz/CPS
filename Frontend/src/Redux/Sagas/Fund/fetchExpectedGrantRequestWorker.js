@@ -5,7 +5,7 @@ import {
 } from '../../Reducers/fundSlice';
 import { callKeyStoreWallet } from '../../ICON/utils';
 
-function* fetchCPFScoreAddressWorker({ payload }) {
+function* fetchCPFTreasuryScoreAddressWorker({ payload }) {
   try {
     const getAddress = state => state.account.address;
     const walletAddress = yield select(getAddress);
@@ -54,4 +54,4 @@ function* fetchCPFScoreAddressWorker({ payload }) {
   }
 }
 
-export default fetchCPFScoreAddressWorker;
+export default fetchCPFTreasuryScoreAddressWorker;

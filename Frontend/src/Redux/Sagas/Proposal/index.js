@@ -21,6 +21,8 @@ import fetchProposalByIpfsWorker from './fetchProposalByIpfsWorker';
 import fetchChangeVoteWorker from './fetchChangeVoteWorker';
 import submitPriorityVotingWorker from './submitPriorityVotingWorker';
 import fetchPriorityVotingStatusWorker from './fetchPriorityVotingStatusWorker';
+import fetchSortPriorityProposalListWorker from './fetchSortPriorityProposalListWorker';
+
 
 
 
@@ -46,5 +48,6 @@ export {
     fetchProposalByIpfsWorker,
     fetchChangeVoteWorker,
     submitPriorityVotingWorker,
-    fetchPriorityVotingStatusWorker
+    fetchPriorityVotingStatusWorker,
+		fetchSortPriorityProposalListWorker
 }
