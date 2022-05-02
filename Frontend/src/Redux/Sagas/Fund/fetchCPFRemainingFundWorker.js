@@ -12,11 +12,11 @@ function* fetchCPFRemainingFundWorker({ payload }) {
     const cpfTreasuryAddress = yield select(getCPFTreasuryScoreAddress);
 
     const dexScoreAddress = yield call(callKeyStoreWallet, {
-      method: 'get_dex_score',
+      method: 'getDexScore',
       scoreAddress: cpfTreasuryAddress,
     });
     const sicxScoreAddress = yield call(callKeyStoreWallet, {
-      method: 'get_sicx_score',
+      method: 'getSicxScore',
       scoreAddress: cpfTreasuryAddress,
     });
     console.log({ cpfTreasuryAddress });
@@ -53,6 +53,7 @@ function* fetchCPFRemainingFundWorker({ payload }) {
       }),
     );
   } catch (error) {
+    console.log(error)
     yield put(fetchCPFRemainingFundFailure(error));
   }
 }
