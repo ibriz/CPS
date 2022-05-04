@@ -151,7 +151,7 @@ const proposalSlice = createSlice({
   name: 'proposal',
   initialState,
   reducers: {
-    submitProposalRequest(state) {},
+    submitProposalRequest(state) { },
     submitProposalSuccess(state) {
       state.submittingProposal = false;
     },
@@ -217,9 +217,6 @@ const proposalSlice = createSlice({
           //   }
           //   return (approvedVoters/totalVoters) * 100;
         }))
-        .sort((a, b) => b._timestamp - a._timestamp);
-      console.log(fetchProposalListSuccess);
-      // console.log(Math.ceil(IconConverter.toNumber(action.payload.response[0].count) / 10));
       console.log(action.payload.status);
       // state.totalPages[action.payload.status] = Math.ceil(IconConverter.toNumber(action.payload.response[0].count) / 10)
       state.totalPages[action.payload.status] = Math.ceil(

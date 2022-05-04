@@ -63,7 +63,7 @@ const VotingCard = ({
     setSelectedProposal(proposal);
   };
 
-  const onClickProposalDraft = proposal => {};
+  const onClickProposalDraft = proposal => { };
 
   const onClickProgressReport = progressReport => {
     setModalShowPR(true);
@@ -72,11 +72,13 @@ const VotingCard = ({
 
   useEffect(() => {
     if (selectedTab === 'Priority Voting') {
-      fetchSortPriorityProposalListRequest();
-    } else if (selectedTab === 'Proposals') {
-      fetchProposalListRequest({ status, walletAddress });
+      if (!priorityVote) {
+        fetchProposalListRequest({ status, walletAddress })
+      } else {
+        fetchSortPriorityProposalListRequest();
+      }
     }
-  }, [selectedTab]);
+  }, [selectedTab, priorityVote]);
 
   useEffect(() => {
     // fetchProgressReport(
@@ -168,7 +170,7 @@ const VotingCard = ({
                 tabs={proposalStatesList}
                 placeholder='Search Proposal'
                 newIndexList={
-                  priorityVote && proposalStatesList.includes('Priority Voting')
+                  !priorityVote && proposalStatesList.includes('Priority Voting')
                     ? [proposalStatesList.indexOf('Priority Voting')]
                     : []
                 }
