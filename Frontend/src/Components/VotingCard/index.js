@@ -63,7 +63,7 @@ const VotingCard = ({
     setSelectedProposal(proposal);
   };
 
-  const onClickProposalDraft = proposal => {};
+  const onClickProposalDraft = proposal => { };
 
   const onClickProgressReport = progressReport => {
     setModalShowPR(true);
@@ -168,7 +168,7 @@ const VotingCard = ({
                 tabs={proposalStatesList}
                 placeholder='Search Proposal'
                 newIndexList={
-                  priorityVote && proposalStatesList.includes('Priority Voting')
+                  !priorityVote && proposalStatesList.includes('Priority Voting')
                     ? [proposalStatesList.indexOf('Priority Voting')]
                     : []
                 }
