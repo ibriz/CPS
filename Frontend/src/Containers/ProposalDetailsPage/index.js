@@ -514,94 +514,89 @@ function ProposalDetailsPage(props) {
                       </Row>
                     )}
 
-                    <Container
-                      fluid
-                      style={{
-                        marginTop: '12px',
-                        backgroundColor: 'white',
-                        padding: '12px',
-                      }}
-                    >
-                      {proposalDetail?.sponserPrep === walletAddress &&
-                        status === 'Pending' &&
-                        period === 'APPLICATION' &&
-                        remainingTime > 0 && (
-                          <>
-                            <Row
-                              style={{
-                                justifyContent: 'center',
-                                flexDirection: 'row',
-                              }}
+                    {proposalDetail?.sponserPrep === walletAddress &&
+                      status === 'Pending' &&
+                      period === 'APPLICATION' &&
+                      remainingTime > 0 && (
+                        <Container
+                          fluid
+                          style={{
+                            marginTop: '12px',
+                            backgroundColor: 'white',
+                            padding: '12px',
+                          }}
+                        >
+                          <Row
+                            style={{
+                              justifyContent: 'center',
+                              flexDirection: 'row',
+                            }}
+                          >
+                            <ButtonGroup aria-label='Basic example'>
+                              {sponsorVoteOptions.map(sponsorVoteOption => (
+                                <Button
+                                  variant={
+                                    sponsorVote === sponsorVoteOption.title
+                                      ? sponsorVoteOption.bgColor
+                                      : 'light'
+                                  }
+                                  onClick={() =>
+                                    setSponsorVote(sponsorVoteOption.title)
+                                  }
+                                  style={{
+                                    border: '1px solid rgba(0,0,0,0.7)',
+                                  }}
+                                >
+                                  {sponsorVoteOption.title}
+                                </Button>
+                              ))}
+                            </ButtonGroup>
+                            <Col
+                              xs={12}
+                              style={{ textAlign: 'center', color: 'red' }}
                             >
-                              <ButtonGroup aria-label='Basic example'>
-                                {sponsorVoteOptions.map(sponsorVoteOption => (
-                                  <Button
-                                    variant={
-                                      sponsorVote === sponsorVoteOption.title
-                                        ? sponsorVoteOption.bgColor
-                                        : 'light'
-                                    }
-                                    onClick={() =>
-                                      setSponsorVote(sponsorVoteOption.title)
-                                    }
-                                    style={{
-                                      border: '1px solid rgba(0,0,0,0.7)',
-                                    }}
-                                  >
-                                    {sponsorVoteOption.title}
-                                  </Button>
-                                ))}
-                              </ButtonGroup>
-                              <Col
-                                xs={12}
-                                style={{ textAlign: 'center', color: 'red' }}
-                              >
-                                {error}
-                              </Col>
-                            </Row>
-                            <Row>
-                              <Col xs='12' style={{ padding: '12px' }}>
-                                <span>
-                                  Explain in brief the reason behind your
-                                  decision
-                                </span>
-                                <InfoIcon
-                                  description={specialCharacterMessage()}
-                                />
-                              </Col>
+                              {error}
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col xs='12' style={{ padding: '12px' }}>
+                              <span>
+                                Explain in brief the reason behind your decision
+                              </span>
+                              <InfoIcon
+                                description={specialCharacterMessage()}
+                              />
+                            </Col>
 
-                              <Col xs='12'>
-                                <RichTextEditor
-                                  required
-                                  initialData={sponsorVoteReason}
-                                  onChange={data => setSponsorVoteReason(data)}
-                                />
-                                <input
-                                  className={styles.fakeInput}
-                                  style={{ left: '15px' }}
-                                  id='sponsorVoteReason'
-                                />
-                              </Col>
-                            </Row>
+                            <Col xs='12'>
+                              <RichTextEditor
+                                required
+                                initialData={sponsorVoteReason}
+                                onChange={data => setSponsorVoteReason(data)}
+                              />
+                              <input
+                                className={styles.fakeInput}
+                                style={{ left: '15px' }}
+                                id='sponsorVoteReason'
+                              />
+                            </Col>
+                          </Row>
 
-                            <Alert
-                              variant={'info'}
-                              style={{ marginTop: '15px' }}
+                          <Alert variant={'info'} style={{ marginTop: '15px' }}>
+                            {sponsorNote}
+                          </Alert>
+
+                          <Row style={{ justifyContent: 'center' }}>
+                            <Button
+                              variant='primary'
+                              onClick={() => handleSponsorVoteSubmission()}
+                              style={{ marginTop: '10px', width: '199px' }}
                             >
-                              {sponsorNote}
-                            </Alert>
+                              Submit Sponsor Vote
+                            </Button>
+                          </Row>
 
-                            <Row style={{ justifyContent: 'center' }}>
-                              <Button
-                                variant='primary'
-                                onClick={() => handleSponsorVoteSubmission()}
-                                style={{ marginTop: '10px', width: '199px' }}
-                              >
-                                Submit Sponsor Vote
-                              </Button>
-                            </Row>
-
-                            {/* <Row style={{ justifyContent: 'center' }}>
+                          {/* <Row style={{ justifyContent: 'center' }}>
             <Button variant="success" onClick={onClickApproveSponsorRequest}
             onClick={() => {
                 setSponsorConfirmationShow(true);
@@ -614,187 +609,195 @@ function ProposalDetailsPage(props) {
             }}>Deny</Button>
               
           </Row> */}
-                          </>
-                        )}
+                        </Container>
+                      )}
 
-                      {isPrep &&
-                        votingPRep &&
-                        period === 'VOTING' &&
-                        remainingTime > 0 && (
-                          <>
-                            {!votesByProposal.some(
-                              vote => vote.sponsorAddress === walletAddress,
-                            ) || changeVoteButton ? (
-                              <>
-                                <Row
-                                  style={{
-                                    justifyContent: 'center',
-                                    flexDirection: 'row',
-                                  }}
-                                >
-                                  <ButtonGroup aria-label='Basic example'>
-                                    {voteOptions.map(voteOption => (
-                                      <Button
-                                        variant={
-                                          vote === voteOption.title
-                                            ? voteOption.bgColor
-                                            : 'light'
-                                        }
-                                        onClick={() =>
-                                          setVote(voteOption.title)
-                                        }
-                                        style={{
-                                          border: '1px solid rgba(0,0,0,0.7)',
-                                        }}
-                                      >
-                                        {voteOption.title}
-                                      </Button>
-                                    ))}
-                                  </ButtonGroup>
-                                  <Col
-                                    xs={12}
-                                    style={{
-                                      textAlign: 'center',
-                                      color: 'red',
-                                    }}
-                                  >
-                                    {error}
-                                  </Col>
-                                </Row>
-                                <Row>
-                                  <Col xs='12 ' style={{ padding: '12px' }}>
-                                    <span>
-                                      Explain in brief the reason behind your
-                                      decision
-                                    </span>
-                                    <InfoIcon
-                                      description={specialCharacterMessage()}
-                                    />
-                                  </Col>
-
-                                  <Col xs='12'>
-                                    <RichTextEditor
-                                      initialData={voteReason}
-                                      required
-                                      onChange={data => setVoteReason(data)}
-                                    />
-
-                                    <input
-                                      className={styles.fakeInput}
-                                      style={{ left: '15px' }}
-                                      id='voteReason'
-                                    />
-                                  </Col>
-                                </Row>
-
-                                <Row style={{ justifyContent: 'center' }}>
-                                  {!isMaintenanceMode ? (
+                    {isPrep &&
+                      votingPRep &&
+                      period === 'VOTING' &&
+                      remainingTime > 0 && (
+                        <>
+                          {!votesByProposal.some(
+                            vote => vote.sponsorAddress === walletAddress,
+                          ) || changeVoteButton ? (
+                            <Container
+                              fluid
+                              style={{
+                                marginTop: '12px',
+                                backgroundColor: 'white',
+                                padding: '12px',
+                              }}
+                            >
+                              <Row
+                                style={{
+                                  justifyContent: 'center',
+                                  flexDirection: 'row',
+                                }}
+                              >
+                                <ButtonGroup aria-label='Basic example'>
+                                  {voteOptions.map(voteOption => (
                                     <Button
-                                      variant='primary'
-                                      onClick={() => handleVoteSubmission()}
+                                      variant={
+                                        vote === voteOption.title
+                                          ? voteOption.bgColor
+                                          : 'light'
+                                      }
+                                      onClick={() => setVote(voteOption.title)}
                                       style={{
-                                        marginTop: '10px',
-                                        width: '150px',
+                                        border: '1px solid rgba(0,0,0,0.7)',
                                       }}
                                     >
-                                      Submit Vote
+                                      {voteOption.title}
                                     </Button>
-                                  ) : (
-                                    <Popup
-                                      component={
-                                        <span className='d-inline-block'>
-                                          <Button
-                                            variant='info'
-                                            type='submit'
-                                            disabled
-                                            style={{ pointerEvents: 'none' }}
-                                          >
-                                            SUBMIT
-                                          </Button>
-                                        </span>
-                                      }
-                                      popOverText='You can submit a vote after the maintenance period is over.'
-                                      placement='left'
-                                    />
-                                  )}
-                                </Row>
-                              </>
-                            ) : (
-                              <>
-                                {status === 'Voting' && (
-                                  <p
+                                  ))}
+                                </ButtonGroup>
+                                <Col
+                                  xs={12}
+                                  style={{
+                                    textAlign: 'center',
+                                    color: 'red',
+                                  }}
+                                >
+                                  {error}
+                                </Col>
+                              </Row>
+                              <Row>
+                                <Col xs='12 ' style={{ padding: '12px' }}>
+                                  <span>
+                                    Explain in brief the reason behind your
+                                    decision
+                                  </span>
+                                  <InfoIcon
+                                    description={specialCharacterMessage()}
+                                  />
+                                </Col>
+
+                                <Col xs='12'>
+                                  <RichTextEditor
+                                    initialData={voteReason}
+                                    required
+                                    onChange={data => setVoteReason(data)}
+                                  />
+
+                                  <input
+                                    className={styles.fakeInput}
+                                    style={{ left: '15px' }}
+                                    id='voteReason'
+                                  />
+                                </Col>
+                              </Row>
+
+                              <Row style={{ justifyContent: 'center' }}>
+                                {!isMaintenanceMode ? (
+                                  <Button
+                                    variant='primary'
+                                    onClick={() => handleVoteSubmission()}
                                     style={{
-                                      color: '#262626',
-                                      textAlign: 'center',
+                                      marginTop: '10px',
+                                      width: '150px',
                                     }}
                                   >
-                                    You have already voted for this proposal.{' '}
-                                    <br />{' '}
-                                    {changeVote && (
-                                      <ButtonGroup aria-label='Basic example'>
+                                    Submit Vote
+                                  </Button>
+                                ) : (
+                                  <Popup
+                                    component={
+                                      <span className='d-inline-block'>
                                         <Button
-                                          style={{ width: 200 }}
-                                          onClick={() =>
-                                            setChangeVoteButton(true)
-                                          }
-                                          variant='primary'
+                                          variant='info'
+                                          type='submit'
+                                          disabled
+                                          style={{ pointerEvents: 'none' }}
                                         >
-                                          Change Vote
+                                          SUBMIT
                                         </Button>
-                                      </ButtonGroup>
-                                    )}
-                                  </p>
+                                      </span>
+                                    }
+                                    popOverText='You can submit a vote after the maintenance period is over.'
+                                    placement='left'
+                                  />
                                 )}
-                              </>
-                            )}
-                          </>
-                        )}
-                    </Container>
+                              </Row>
+                            </Container>
+                          ) : (
+                            <Container
+                              fluid
+                              style={{
+                                marginTop: '12px',
+                                backgroundColor: 'white',
+                                padding: '12px',
+                              }}
+                            >
+                              {status === 'Voting' && (
+                                <p
+                                  style={{
+                                    color: '#262626',
+                                    textAlign: 'center',
+                                  }}
+                                >
+                                  You have already voted for this proposal.{' '}
+                                  <br />{' '}
+                                  {changeVote && (
+                                    <ButtonGroup aria-label='Basic example'>
+                                      <Button
+                                        style={{ width: 200 }}
+                                        onClick={() =>
+                                          setChangeVoteButton(true)
+                                        }
+                                        variant='primary'
+                                      >
+                                        Change Vote
+                                      </Button>
+                                    </ButtonGroup>
+                                  )}
+                                </p>
+                              )}
+                            </Container>
+                          )}
+                        </>
+                      )}
 
                     {
                       // !sponsorRequest &&
-                      <Row
-                        style={{ paddingLeft: '15px', paddingRight: '15px' }}
-                      >
-                        <Col
-                          xs='12'
-                          style={{
-                            backgroundColor: 'white',
-                            marginTop: '12px',
-                            padding: '12px',
-                          }}
-                        >
-                          {status === 'Voting' ||
-                          status === 'Active' ||
-                          status === 'Completed' ||
-                          status === 'Paused' ||
-                          status === 'Disqualified' ||
-                          (status === 'Rejected' && votesByProposal?.length) ? (
-                            <>
+                      <Row>
+                        <Col xs='12'>
+                          {(status === 'Voting' ||
+                            status === 'Active' ||
+                            status === 'Completed' ||
+                            status === 'Paused' ||
+                            status === 'Disqualified' ||
+                            status === 'Rejected') &&
+                          votesByProposal?.length ? (
+                            <div
+                              style={{
+                                backgroundColor: 'white',
+                                marginTop: '12px',
+                                padding: '12px',
+                              }}
+                            >
                               <ListTitle>VOTES</ListTitle>
                               <VoteList votes={votesByProposal} />
-                            </>
+                            </div>
                           ) : null}
                         </Col>
-                        <Col
-                          xs='12'
-                          style={{
-                            backgroundColor: 'white',
-                            marginTop: '12px',
-                            padding: '12px',
-                          }}
-                        >
+                        <Col xs='12'>
                           {(status === 'Active' ||
                             status === 'Completed' ||
                             status === 'Paused') && (
-                            <>
+                            <div
+                              style={{
+                                backgroundColor: 'white',
+                                marginTop: '12px',
+                                padding: '12px',
+                              }}
+                            >
                               <ListTitle>PROGRESS REPORTS</ListTitle>
                               <ProgressReportList
                                 projectReports={progressReportByProposal}
                                 onClickProgressReport={onClickProgressReport}
                                 isModal={false}
                               />
-                            </>
+                            </div>
                           )}
                         </Col>
                       </Row>
@@ -841,7 +844,7 @@ function ProposalDetailsPage(props) {
                   </Col>
 
                   {/* <Col lg="4" className = "d-none d-lg-block"> */}
-                  <Col style={{ maxWidth: '348px', minWidth: '200px' }}>
+                  <Col style={{ maxWidth: '360px', minWidth: '260px' }}>
                     <Col
                       xs='12'
                       style={{

@@ -4,6 +4,7 @@
   
   .container {
     padding-left: 0px !important;
+    margin-bottom: 24px !important;
   }
   
   @media screen and (min-width: 992px) {
@@ -17,7 +18,9 @@
     border: 1px solid rgba(219, 219, 219, 0.5);
     border-radius: 5px;
     padding: 16px;
+    flex: 1;
 }
+
   
   .modalBody img {
     max-width: 100%;
