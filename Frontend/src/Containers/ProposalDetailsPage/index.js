@@ -419,7 +419,6 @@ function ProposalDetailsPage(props) {
     <Container fluid>
       {loading ? (
         <Container>
-          <BackButton onClick={history.goBack}></BackButton>
           <LoadingDiv>
             <Spinner animation='border' variant='secondary' />
           </LoadingDiv>
@@ -457,7 +456,7 @@ function ProposalDetailsPage(props) {
 
               <Container fluid className={styles.modalBody}>
                 <Row>
-                  <Col>
+                  <Col style={{ padding: '0px' }}>
                     <Col className={styles.description}>
                       {/* <div dangerouslySetInnerHTML={{ __html: description }} /> */}
                       <Description
