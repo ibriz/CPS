@@ -22,7 +22,7 @@ const MilestonesTimeline = ({ milestones = [] }) => {
             backgroundColor: 'white',
             boxShadow: 'none',
             paddingLeft: '0px',
-            marginLeft: '-23px',
+            marginLeft: '-21px',
             marginBottom: '-8px',
             marginTop: '3.5px',
           }}

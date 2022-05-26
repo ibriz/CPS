@@ -19,6 +19,11 @@ const Vote = ({ vote, budgetChange = false }) => {
     <>
       <Row
         className={styles.proposalContainer}
+        style={
+          showSponsorMessage
+            ? { backgroundColor: 'rgba(237, 237, 237, 0.4)' }
+            : {}
+        }
         onClick={() => setShowSponsorMessage(prevState => !prevState)}
       >
         <Col sm='12' className={styles.infos}>

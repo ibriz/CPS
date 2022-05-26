@@ -14,6 +14,10 @@ import Footer from 'Components/Footer';
 import { Helmet } from 'react-helmet';
 import useTimer from 'Hooks/useTimer';
 import Home from 'Containers/Home';
+import Header from '../../Components/Header';
+import DetailsModal from '../../Components/Card/DetailsModal';
+import ProposalDetailsPage from 'Containers/ProposalDetailsPage';
+import ProgressReportDetailsPage from 'Containers/ProgressReportDetailsPage';
 
 const Main = ({
   handleToggleSidebar,
@@ -30,8 +34,8 @@ const Main = ({
   const userRoute = component =>
     !isPrep || !isRegistered ? component : <Redirect to='/' />;
 
-  const applicationPeriodRoute = (component) =>
-    period !== 'VOTING' ? component : <Redirect to="/" />;
+  const applicationPeriodRoute = component =>
+    period !== 'VOTING' ? component : <Redirect to='/' />;
   // component
 
   return (
@@ -45,12 +49,30 @@ const Main = ({
           paddingRight: 0,
         }}
       >
-        <div style={{ paddingLeft: '25px', paddingRight: '25px', height: !address && window.location.pathname === '/dashboard' ? '100%' : "" }}>
-          <div className="btn-toggle" onClick={() => handleToggleSidebar(true)}>
+        <Header />
+        <div
+          style={{
+            paddingLeft: '25px',
+            paddingRight: '25px',
+            height:
+              !address && window.location.pathname === '/dashboard'
+                ? '100%'
+                : '',
+          }}
+        >
+          <div className='btn-toggle' onClick={() => handleToggleSidebar(true)}>
             <FaBars />
           </div>
 
-          <div className='block ' style={{ height: !address && window.location.pathname === '/dashboard' ? '100%' : "" }}>
+          <div
+            className='block '
+            style={{
+              height:
+                !address && window.location.pathname === '/dashboard'
+                  ? '100%'
+                  : '',
+            }}
+          >
             <Switch>
               <Route path='/dashboard'>
                 <Dashboard />
@@ -59,7 +81,9 @@ const Main = ({
                 </Helmet>
               </Route>
               <Route path={process.env.PUBLIC_URL + '/proposals/:id'}>
-                <Proposals />
+                {/* <Proposals /> */}
+
+                {<ProposalDetailsPage show={true} />}
 
                 {/* {address ? (
                   <Proposals />
@@ -83,13 +107,14 @@ const Main = ({
                   <title>CPS - Proposals</title>
                 </Helmet>
               </Route>
-              <Route path="/progress-reports/:id">
-                {<ProgressReports />}
+              <Route path='/progress-reports/:id'>
+                {/* {<ProgressReports />} */}
+                <ProgressReportDetailsPage />
                 <Helmet>
                   <title>CPS - Progress Reports</title>
                 </Helmet>
               </Route>
-              <Route path="/progress-reports">
+              <Route path='/progress-reports'>
                 {<ProgressReports />}
                 <Helmet>
                   <title>CPS - Progress Reports</title>

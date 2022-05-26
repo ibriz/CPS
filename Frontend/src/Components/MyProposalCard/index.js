@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Card, Col } from 'react-bootstrap';
+import { Row, Card, Col, Container } from 'react-bootstrap';
 import styles from './ProposalCard.module.scss';
 import TabBar from 'Components/Card/TabBar';
 import ProposalList from 'Components/Card/ProposalList';
@@ -129,17 +129,21 @@ const MyProposalCard = ({
         <Col>
           <Card>
             <Card.Body className={styles.cardBody}>
-              {/* <div className = {styles.myProposalHeading}>My Proposals</div> */}
 
-              <TabBar
-                selectedTab={selectedTab}
-                setSelectedTab={setSelectedTab}
-                searchText={searchText}
-                setSearchText={setSearchText}
-                tabs={[]}
-                placeholder='Search Proposal'
-                maxWidth
-              />
+              <Container style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0px 0px 10px 0px" }}>
+                <div>My Proposals</div>
+
+                <TabBar
+
+                  selectedTab={selectedTab}
+                  setSelectedTab={setSelectedTab}
+                  searchText={searchText}
+                  setSearchText={setSearchText}
+                  tabs={[]}
+                  placeholder='Search Proposal'
+                  maxWidth
+                />
+              </Container>
               <hr style={{ marginTop: '-9px' }} />
 
               <ProposalList

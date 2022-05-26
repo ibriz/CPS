@@ -33,9 +33,8 @@ const ProposalCard = ({
   emptyProposalDetailRequest,
 }) => {
   const [selectedTab, setSelectedTab] = useState(initialState);
-  const [filteredProposalList, setFilteredProposalList] = useState(
-    proposalList,
-  );
+  const [filteredProposalList, setFilteredProposalList] =
+    useState(proposalList);
   let [searchText, setSearchText] = useState('');
   const [pageNumber, setPageNumber] = useState();
   const [modalShow, setModalShow] = React.useState(false);
@@ -43,6 +42,7 @@ const ProposalCard = ({
   const proposalIpfsKey = useParams().id;
   const location = useLocation();
   const onClickProposal = proposal => {
+    console.log('Here', { proposal });
     setModalShow(true);
     setSelectedProposal(proposal);
     if (location.pathname !== '/') {
@@ -168,7 +168,7 @@ const ProposalCard = ({
                 }
                 totalPages={totalPages[selectedTab] ?? 1}
               />
-              {modalShow && (
+              {/* {modalShow && (
                 <DetailsModal
                   show={modalShow}
                   onHide={() => {
@@ -181,7 +181,7 @@ const ProposalCard = ({
                   proposal={selectedProposal}
                   status={selectedTab}
                 />
-              )}
+              )} */}
             </Card.Body>
           </Card>
         </Col>

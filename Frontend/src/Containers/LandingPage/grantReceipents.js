@@ -184,7 +184,7 @@ const GrantReceipent = (props) => {
                     <img src={result.image} className={result.className} />
                     <h5>{result.title}</h5>
                     <p>{result.description}</p>
-                    <a href={result.link} target={result.link ? "_blank" : ''} style={{ color: '#1AAABA', fontSize: 14, fontWeight: 'bold', position: 'absolute', textDecoration: 'none', bottom: 30 }}> Learn more <FaArrowRight /></a>
+                    <a href={result.link} target={result.link ? "_blank" : ''} style={{ color: '#27AAB9', fontSize: 14, fontWeight: 'bold', position: 'absolute', textDecoration: 'none', bottom: 30 }}> Learn more <FaArrowRight /></a>
                 </div>
             })}
         </Slider >

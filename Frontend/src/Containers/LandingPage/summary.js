@@ -92,7 +92,7 @@ const Summary = ({
             overlay={
               <Popover
                 className={'balancePopover'}
-                style={{ border: '2px solid #1AAABA', borderRadius: 10 }}
+                style={{ border: '2px solid #27AAB9', borderRadius: 10 }}
               >
                 <Popover.Content style={{ padding: '10px 20px' }}>
                   <>
@@ -100,7 +100,7 @@ const Summary = ({
                       style={{
                         textAlign: 'center',
                         fontSize: 18,
-                        color: '#1AAABA',
+                        color: '#27AAB9',
                         fontWeight: 600,
                       }}
                     >
@@ -114,7 +114,7 @@ const Summary = ({
                       style={{
                         textAlign: 'center',
                         fontSize: 18,
-                        color: '#1AAABA',
+                        color: '#27AAB9',
                         fontWeight: 600,
                       }}
                     >
@@ -149,7 +149,7 @@ const Summary = ({
             overlay={
               <Popover
                 className={'balancePopover'}
-                style={{ border: '2px solid #1AAABA', borderRadius: 10 }}
+                style={{ border: '2px solid #27AAB9', borderRadius: 10 }}
               >
                 <Popover.Content style={{ padding: '10px 20px' }}>
                   <>
@@ -157,7 +157,7 @@ const Summary = ({
                       style={{
                         textAlign: 'center',
                         fontSize: 18,
-                        color: '#1AAABA',
+                        color: '#27AAB9',
                         fontWeight: 600,
                       }}
                     >
@@ -171,7 +171,7 @@ const Summary = ({
                       style={{
                         textAlign: 'center',
                         fontSize: 18,
-                        color: '#1AAABA',
+                        color: '#27AAB9',
                         fontWeight: 600,
                       }}
                     >
@@ -204,7 +204,7 @@ const Summary = ({
             overlay={
               <Popover
                 className={'balancePopover'}
-                style={{ border: '2px solid #1AAABA', borderRadius: 10 }}
+                style={{ border: '2px solid #27AAB9', borderRadius: 10 }}
               >
                 <Popover.Content style={{ padding: '10px 20px' }}>
                   <>
@@ -212,7 +212,7 @@ const Summary = ({
                       style={{
                         textAlign: 'center',
                         fontSize: 18,
-                        color: '#1AAABA',
+                        color: '#27AAB9',
                         fontWeight: 600,
                       }}
                     >
@@ -224,7 +224,7 @@ const Summary = ({
                       style={{
                         textAlign: 'center',
                         fontSize: 18,
-                        color: '#1AAABA',
+                        color: '#27AAB9',
                         fontWeight: 600,
                       }}
                     >

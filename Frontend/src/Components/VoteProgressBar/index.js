@@ -21,7 +21,7 @@ const VoteProgressBar = ({
     type = 'progress report';
   }
 
-  const progressText = `${voterCount ? 'Voter count ' : 'Stake '}- ${
+  const progressText = `${
     approvedPercentage ? approvedPercentage.toFixed() : 0
   }% approved, ${
     rejectedPercentage ? rejectedPercentage.toFixed() : 0

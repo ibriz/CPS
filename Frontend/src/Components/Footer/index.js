@@ -100,7 +100,7 @@ const Footer = ({ console = false, width = undefined, footerRef }) => {
               fill='none'
               xmlns='http://www.w3.org/2000/svg'
             >
-              <g clip-path='url(#clip0)'>
+              <g clipPath='url(#clip0)'>
                 <path
                   d='M3.76715 8.60669H0.529053V21.9308H3.76715V8.60669Z'
                   fill='#262626'

@@ -13,10 +13,14 @@
 }
 
 .account {
-  position: absolute;
   right: 0;
   display: flex;
   align-items: center;
+  width: 100%;
+  justify-content: flex-end;
+  height: 70px;
+  padding: 24px;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 .address {
@@ -24,7 +28,7 @@
   font-size: 16px;
   line-height: 20px;
 
-  color: #1aaaba;
+  color: #27AAB9;
   cursor: pointer;
   margin-right: 5px;
 }
@@ -45,7 +49,7 @@
     align-items: center;
   }
 
-  .account > * {
+  .account>* {
     flex-basis: 100%;
     margin-top: 5px;
   }
@@ -58,6 +62,9 @@
 @media screen and (max-width: 767px) {
   .headerContainer {
     margin-top: -30px;
+    background: #FFFFFF;
+  
+   
   }
 }
 
@@ -66,7 +73,7 @@
     display: none !important;
   }
 
-  .headerComp1 > * {
+  .headerComp1>* {
     margin-top: 5px;
   }
 

@@ -20,7 +20,7 @@ const InfoIcon = ({ description, placement = 'right' }) => {
           marginLeft: '1px',
           cursor: 'help',
           fontSize: '1.1rem',
-          color: '#1AAABA',
+          color: '#27AAB9',
         }}
         variant='info'
       />

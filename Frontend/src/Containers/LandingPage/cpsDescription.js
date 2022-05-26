@@ -35,7 +35,7 @@ const CPSDescription = (props) => {
                                 onClickLogin();
                             }
                         }} className="active">Create a proposal</p>
-                        <p><a style={{ color: '#1AAABA', textDecoration: 'none' }} href="mailto:tj@icon.foundation" target="_blank">Get in touch</a></p>
+                        <p><a style={{ color: '#27AAB9', textDecoration: 'none' }} href="mailto:tj@icon.foundation" target="_blank">Get in touch</a></p>
                     </div>
                 </div>
             </div>

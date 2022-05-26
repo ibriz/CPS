@@ -382,7 +382,7 @@ const ProgressReportCreationPage = ({
 
   return (
     <div className={styles.proposalCreationPage}>
-      <Header title='Create New Progress Report' />
+      {/* <Header title='Create New Progress Report' /> */}
 
       <Row className={styles.cardContainer}>
         <Card className={styles.card}>

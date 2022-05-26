@@ -19,3 +19,26 @@
   font-weight: 600;
   font-size: 1.15rem;
 }
+
+.container {
+  background: white !important;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  @media screen and (max-width: 1100px) {
+    flex-direction: column;
+    padding-bottom: 12px;
+  }
+}
+
+.claimButton {
+  // border-radius: 20px !important;
+  white-space: nowrap;
+  text-align: center;
+  margin-right: 12px;
+
+  @media screen and (max-width: 1100px) {
+    margin-right: 0px;
+  }
+}

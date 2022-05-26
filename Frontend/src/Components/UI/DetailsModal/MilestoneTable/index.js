@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 const MilestoneTable = ({ milestones, title = 'Milestones' }) => {
   const TableHeader = styled.th`
-    background: #1aaaba !important;
+    background: #27AAB9 !important;
     font-style: normal;
     font-weight: 600;
     font-size: 14px;

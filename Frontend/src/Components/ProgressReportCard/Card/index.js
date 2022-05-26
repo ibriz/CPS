@@ -23,9 +23,8 @@ const ProgressReportCard = ({
   emptyProgressReportDetailRequest,
 }) => {
   const [selectedTab, setSelectedTab] = useState('Voting');
-  const [filteredProgressReportList, setFilteredProgressReportList] = useState(
-    progressReportList,
-  );
+  const [filteredProgressReportList, setFilteredProgressReportList] =
+    useState(progressReportList);
   let [searchText, setSearchText] = useState('');
   const [pageNumber, setPageNumber] = useState();
   const [modalShow, setModalShow] = React.useState(false);
@@ -154,7 +153,7 @@ const ProgressReportCard = ({
               }
               totalPages={totalPages?.[selectedTab]}
             />
-
+            {/* 
             {modalShow && (
               <DetailsModal
                 show={modalShow}
@@ -166,7 +165,7 @@ const ProgressReportCard = ({
                 progressReport={selectedProgressReport}
                 status={selectedTab}
               />
-            )}
+            )} */}
           </Card.Body>
         </Card>
       </Col>
