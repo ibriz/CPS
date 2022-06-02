@@ -158,6 +158,7 @@ function ProposalDetailsPage(props) {
   const [modalShow, setModalShow] = React.useState(false);
   const onClickProgressReport = porgressReport => {
     setModalShow(true);
+    history.push(`/progress-reports/${porgressReport.ipfsHash}`);
     setSelectedProgressReport(porgressReport);
   };
 
@@ -912,137 +913,77 @@ function ProposalDetailsPage(props) {
                             value: `${proposalDetail?.teamSize}` || 'N/A',
                           },
                           {
-                            key: ['Active', 'Paused'].includes(status)
-                              ? 'Completed'
-                              : `Stake &
-                              Voter Count`,
+                            key: 'Completed',
+                            value: '',
+                          },
+                          {
+                            key: 'Stake',
                             value: (
-                              <Container fluid>
-                                <Row
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  flexDirection: 'column',
+                                  justifyContent: 'space-between',
+                                }}
+                              >
+                                {/* <ProgressBar
+              percentage={approvedPercentage} /> */}
+                                <ProgressBarCombined
+                                  approvedPercentage={approvedPercentage}
+                                  rejectedPercentage={rejectedPercentage}
+                                />
+
+                                {
+                                  // <ProgressText>
+                                  //    Stake- {approvedPercentage ? `${approvedPercentage.toFixed()}` : 0}% approved, {rejectedPercentage ? `${rejectedPercentage.toFixed()}` : 0}% rejected
+                                  //   </ProgressText>
+
+                                  <Container
+                                    style={{
+                                      display: 'flex',
+                                      flexDirection: 'row',
+                                    }}
+                                  >
+                                    <VoteProgressBar
+                                      approvedPercentage={approvedPercentage}
+                                      rejectedPercentage={rejectedPercentage}
+                                      noProgressBar
+                                      placement='bottom'
+                                    />
+                                  </Container>
+                                }
+                              </div>
+                            ),
+                          },
+                          {
+                            key: 'Voter count',
+                            value: (
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  flexDirection: 'column',
+                                  justifyContent: 'space-between',
+                                }}
+                              >
+                                <ProgressBarCombined
+                                  approvedPercentage={approvedVoterPercentage}
+                                  rejectedPercentage={rejectedVoterPercentage}
+                                />
+
+                                <Container
                                   style={{
-                                    alignItems: 'center',
-                                    flexDirection: 'column',
-                                    marginLeft: '-20px',
+                                    display: 'flex',
+                                    flexDirection: 'row',
                                   }}
                                 >
-                                  {(selectedTab => {
-                                    // console.log(props.selectedTab);
-                                    if (['Active', 'Paused'].includes(status))
-                                      return (
-                                        <>
-                                          <Col>
-                                            <ProgressBar
-                                              percentage={
-                                                proposal?.completedPercentage
-                                              }
-                                            />
-                                          </Col>
-
-                                          <Col
-                                            className={
-                                              styles.progressTextContainer
-                                            }
-                                          >
-                                            {
-                                              <ProgressText>
-                                                {proposal?.completedPercentage
-                                                  ? `${proposal?.completedPercentage.toFixed()}`
-                                                  : 0}
-                                                % Completed
-                                              </ProgressText>
-                                            }
-                                          </Col>
-                                        </>
-                                      );
-                                    if (['Voting'].includes(status))
-                                      return (
-                                        <>
-                                          {/* <Col xs="12"> */}
-                                          <Col>
-                                            {/* <ProgressBar
-                                percentage={approvedPercentage} /> */}
-
-                                            <ProgressBarCombined
-                                              approvedPercentage={
-                                                approvedPercentage
-                                              }
-                                              rejectedPercentage={
-                                                rejectedPercentage
-                                              }
-                                            />
-                                          </Col>
-
-                                          <Col
-                                            className={
-                                              styles.progressTextContainer
-                                            }
-                                          >
-                                            {
-                                              // <ProgressText>
-                                              //   Stake- {approvedPercentage ? `${approvedPercentage.toFixed()}` : 0}% approved, {rejectedPercentage ? `${rejectedPercentage.toFixed()}` : 0}% rejected
-                                              //   <InfoIcon description="The category the project falls into" />
-
-                                              //   </ProgressText>
-
-                                              <VoteProgressBar
-                                                approvedPercentage={
-                                                  approvedPercentage
-                                                }
-                                                rejectedPercentage={
-                                                  rejectedPercentage
-                                                }
-                                                noProgressBar
-                                                proposal
-                                                placement='bottom'
-                                              />
-                                            }
-                                          </Col>
-                                          {/* </Col> */}
-                                          <Col></Col>
-                                          <Col>
-                                            {/* <ProgressBar
-                                percentage={approvedVoterPercentage} /> */}
-
-                                            <ProgressBarCombined
-                                              approvedPercentage={
-                                                approvedVoterPercentage
-                                              }
-                                              rejectedPercentage={
-                                                rejectedVoterPercentage
-                                              }
-                                            />
-                                          </Col>
-
-                                          <Col
-                                            className={
-                                              styles.progressTextContainer
-                                            }
-                                          >
-                                            {
-                                              // <ProgressText>
-                                              //   Voter count- {approvedVoterPercentage ? `${approvedVoterPercentage.toFixed()}` : 0}% approved, {rejectedVoterPercentage ? `${rejectedVoterPercentage.toFixed()}` : 0}% rejected
-                                              // </ProgressText>
-
-                                              <VoteProgressBar
-                                                approvedPercentage={
-                                                  approvedVoterPercentage
-                                                }
-                                                rejectedPercentage={
-                                                  rejectedVoterPercentage
-                                                }
-                                                noProgressBar
-                                                proposal
-                                                voterCount
-                                                placement='bottom'
-                                              />
-                                            }
-                                          </Col>
-                                        </>
-                                      );
-                                    else return null;
-                                  })()}
-                                </Row>
-                              </Container>
+                                  <VoteProgressBar
+                                    approvedPercentage={approvedVoterPercentage}
+                                    rejectedPercentage={rejectedVoterPercentage}
+                                    noProgressBar
+                                    voterCount
+                                  />
+                                </Container>
+                              </div>
                             ),
                           },
                         ]}
