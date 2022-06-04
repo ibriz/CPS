@@ -29,7 +29,7 @@ const ProgressReportCard = ({
   const [pageNumber, setPageNumber] = useState();
   const [modalShow, setModalShow] = React.useState(false);
   const [selectedProgressReport, setSelectedProgressReport] = React.useState();
-
+  const [pageLength, setPageLength] = useState(1);
   const progressReportIpfsKey = useParams()?.id;
 
   const onClickProgressReport = porgressReport => {
@@ -52,17 +52,22 @@ const ProgressReportCard = ({
 
   useEffect(() => {
     if (selectedTab !== 'Draft') {
-      fetchProgressReport({
-        status: selectedTab,
-        walletAddress: walletAddress || wallet.getAddress(),
-        pageNumber: pageNumber?.[selectedTab] ?? 1,
-      });
+      let length = totalPages[selectedTab] || 1;
+      console.log({ length });
+      for (let i = 0; i < length; i++) {
+        fetchProgressReport({
+          status: selectedTab,
+          walletAddress: walletAddress || wallet.getAddress(),
+          // pageNumber: pageNumber?.[selectedTab] ?? 1,
+          pageNumber: i + 1,
+        });
+      }
     } else {
       fetchDraftsRequest({
         walletAddress,
       });
     }
-  }, [selectedTab, pageNumber]);
+  }, [selectedTab, pageNumber, totalPages]);
 
   const setCurrentPages = (status, pageNumber) => {
     setPageNumber(prevState => ({
@@ -82,15 +87,37 @@ const ProgressReportCard = ({
   }, []);
 
   useEffect(() => {
+    setCurrentPages(selectedTab, 1);
+  }, [searchText]);
+
+  const paginate = (array, page_size, page_number) => {
+    return array.slice((page_number - 1) * page_size, page_number * page_size);
+  };
+
+  useEffect(() => {
     let filteredProgressReports;
     if (selectedTab !== 'Draft') {
-      filteredProgressReports = (
-        progressReportList[selectedTab][pageNumber?.[selectedTab] - 1 || 0] ||
-        []
-      ).filter(proposal =>
-        proposal.progressReportTitle
-          ?.toLowerCase()
-          .includes(searchText?.toLowerCase()),
+      // filteredProgressReports = (
+      //   progressReportList[selectedTab][pageNumber?.[selectedTab] - 1 || 0] ||
+      //   []
+      // ).filter(proposal =>
+      //   proposal.progressReportTitle
+      //     ?.toLowerCase()
+      //     .includes(searchText?.toLowerCase()),
+      // );
+      const flattenedProgressReports =
+        [].concat.apply([], progressReportList[selectedTab]) || [];
+      const searchFilteredProgressReports = flattenedProgressReports.filter(
+        proposal =>
+          proposal?.progressReportTitle
+            ?.toLowerCase()
+            .includes(searchText?.toLowerCase()),
+      );
+      setPageLength(Math.ceil(searchFilteredProgressReports.length / 10) || 1);
+      filteredProgressReports = paginate(
+        searchFilteredProgressReports,
+        10,
+        pageNumber?.[selectedTab] || 1,
       );
     } else {
       filteredProgressReports = progressReportList[selectedTab].map(
@@ -98,10 +125,11 @@ const ProgressReportCard = ({
           ...progressReport,
         }),
       );
+      setPageLength(Math.ceil(filteredProgressReports / 10) || 1);
     }
 
     setFilteredProgressReportList(filteredProgressReports);
-  }, [selectedTab, progressReportList, searchText]);
+  }, [selectedTab, progressReportList, searchText, pageNumber]);
 
   useEffect(() => {
     if (progressReportIpfsKey) {
@@ -151,7 +179,8 @@ const ProgressReportCard = ({
               setCurrentPage={pageNumber =>
                 setCurrentPages(selectedTab, pageNumber)
               }
-              totalPages={totalPages?.[selectedTab]}
+              // totalPages={totalPages?.[selectedTab]}
+              totalPages={pageLength}
             />
             {/* 
             {modalShow && (

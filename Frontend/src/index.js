@@ -13,12 +13,14 @@ import store from './Redux/Store/';
 import { initialSetup } from './Redux/ICON';
 
 import history from './Router/history';
+import ScrollToTop from './Helpers/scrollToTop';
 
 initialSetup();
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <Router history={history}>
+        <ScrollToTop />
         <App />
       </Router>
     </Provider>

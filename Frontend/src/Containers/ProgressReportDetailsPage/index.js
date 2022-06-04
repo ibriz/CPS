@@ -570,7 +570,7 @@ function ProgressReportDetailsPage(props) {
 
               <Container fluid className={styles.modalBody}>
                 <Row>
-                  <Col style={{ padding: '0px' }}>
+                  <Col style={{ padding: '0px', wordBreak: 'break-word' }}>
                     <Col
                       // lg='8'
                       // xs='12'

@@ -22,9 +22,9 @@ const VoteProgressBar = ({
   }
 
   const progressText = `${
-    approvedPercentage ? approvedPercentage.toFixed() : 0
+    approvedPercentage ? approvedPercentage.toFixed() : '0'
   }% approved, ${
-    rejectedPercentage ? rejectedPercentage.toFixed() : 0
+    rejectedPercentage ? rejectedPercentage.toFixed() : '0'
   }% rejected${budgetAdjustment ? ' (Budget Change Request)' : ''}`;
   const description = !voterCount
     ? `Percentage of total stakes of the voters that have approved / rejected the ${type} (calculated based on the total P-Reps that have already participated in the voting for this ${type}).`

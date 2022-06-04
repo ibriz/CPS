@@ -11,7 +11,7 @@ import {
 } from 'react-icons/ai';
 import { FaDiscord } from 'react-icons/fa';
 import { SiFacebook } from 'react-icons/si';
-import iconCPSImg from '../../Assets/Images/ICON CPS white.svg';
+import iconCPSImg from '../../Assets/Images/FundedByICONCPSBlack.svg';
 
 const socialLinks = [
   {
