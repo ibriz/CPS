@@ -912,80 +912,142 @@ function ProposalDetailsPage(props) {
                             key: 'Team Size',
                             value: `${proposalDetail?.teamSize}` || 'N/A',
                           },
-                          {
-                            key: 'Completed',
-                            value: '',
-                          },
-                          {
-                            key: 'Stake',
-                            value: (
-                              <div
-                                style={{
-                                  display: 'flex',
-                                  flexDirection: 'column',
-                                  justifyContent: 'space-between',
-                                }}
-                              >
-                                {/* <ProgressBar
-              percentage={approvedPercentage} /> */}
-                                <ProgressBarCombined
-                                  approvedPercentage={approvedPercentage}
-                                  rejectedPercentage={rejectedPercentage}
-                                />
 
+                          ...(['Active', 'Paused'].includes(status)
+                            ? [
                                 {
-                                  // <ProgressText>
-                                  //    Stake- {approvedPercentage ? `${approvedPercentage.toFixed()}` : 0}% approved, {rejectedPercentage ? `${rejectedPercentage.toFixed()}` : 0}% rejected
-                                  //   </ProgressText>
+                                  key: 'Completed',
+                                  value: (
+                                    <div
+                                      style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        justifyContent: 'space-between',
+                                      }}
+                                    >
+                                      {/* <ProgressBar
+          percentage={approvedPercentage} /> */}
+                                      <ProgressBar
+                                        percentage={
+                                          proposal?.completedPercentage
+                                        }
+                                      />
 
-                                  <Container
-                                    style={{
-                                      display: 'flex',
-                                      flexDirection: 'row',
-                                    }}
-                                  >
-                                    <VoteProgressBar
-                                      approvedPercentage={approvedPercentage}
-                                      rejectedPercentage={rejectedPercentage}
-                                      noProgressBar
-                                      placement='bottom'
-                                    />
-                                  </Container>
-                                }
-                              </div>
-                            ),
-                          },
-                          {
-                            key: 'Voter count',
-                            value: (
-                              <div
-                                style={{
-                                  display: 'flex',
-                                  flexDirection: 'column',
-                                  justifyContent: 'space-between',
-                                }}
-                              >
-                                <ProgressBarCombined
-                                  approvedPercentage={approvedVoterPercentage}
-                                  rejectedPercentage={rejectedVoterPercentage}
-                                />
+                                      {
+                                        // <ProgressText>
+                                        //    Stake- {approvedPercentage ? `${approvedPercentage.toFixed()}` : 0}% approved, {rejectedPercentage ? `${rejectedPercentage.toFixed()}` : 0}% rejected
+                                        //   </ProgressText>
 
-                                <Container
-                                  style={{
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                  }}
-                                >
-                                  <VoteProgressBar
-                                    approvedPercentage={approvedVoterPercentage}
-                                    rejectedPercentage={rejectedVoterPercentage}
-                                    noProgressBar
-                                    voterCount
-                                  />
-                                </Container>
-                              </div>
-                            ),
-                          },
+                                        <Container
+                                          style={{
+                                            display: 'flex',
+                                            flexDirection: 'row',
+                                          }}
+                                        >
+                                          <ProgressText>
+                                            {proposal?.completedPercentage
+                                              ? `${proposal?.completedPercentage.toFixed()}`
+                                              : 0}
+                                            % Completed
+                                          </ProgressText>
+                                        </Container>
+                                      }
+                                    </div>
+                                  ),
+                                },
+                              ]
+                            : []),
+
+                          ...(['Voting'].includes(status)
+                            ? [
+                                {
+                                  key: 'Stake',
+                                  value: (
+                                    <div
+                                      style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        justifyContent: 'space-between',
+                                      }}
+                                    >
+                                      {/* <ProgressBar
+                percentage={approvedPercentage} /> */}
+                                      <ProgressBarCombined
+                                        approvedPercentage={approvedPercentage}
+                                        rejectedPercentage={rejectedPercentage}
+                                      />
+
+                                      {
+                                        // <ProgressText>
+                                        //    Stake- {approvedPercentage ? `${approvedPercentage.toFixed()}` : 0}% approved, {rejectedPercentage ? `${rejectedPercentage.toFixed()}` : 0}% rejected
+                                        //   </ProgressText>
+
+                                        <Container
+                                          style={{
+                                            display: 'flex',
+                                            flexDirection: 'row',
+                                          }}
+                                        >
+                                          <VoteProgressBar
+                                            approvedPercentage={
+                                              approvedPercentage
+                                            }
+                                            rejectedPercentage={
+                                              rejectedPercentage
+                                            }
+                                            noProgressBar
+                                            placement='bottom'
+                                          />
+                                        </Container>
+                                      }
+                                    </div>
+                                  ),
+                                },
+                              ]
+                            : []),
+                          ...(['Voting'].includes(status)
+                            ? [
+                                {
+                                  key: 'Voter count',
+                                  value: (
+                                    <div
+                                      style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        justifyContent: 'space-between',
+                                      }}
+                                    >
+                                      <ProgressBarCombined
+                                        approvedPercentage={
+                                          approvedVoterPercentage
+                                        }
+                                        rejectedPercentage={
+                                          rejectedVoterPercentage
+                                        }
+                                      />
+
+                                      <Container
+                                        style={{
+                                          display: 'flex',
+                                          flexDirection: 'row',
+                                        }}
+                                      >
+                                        <VoteProgressBar
+                                          approvedPercentage={
+                                            approvedVoterPercentage
+                                          }
+                                          rejectedPercentage={
+                                            rejectedVoterPercentage
+                                          }
+                                          noProgressBar
+                                          voterCount
+                                        />
+                                      </Container>
+                                    </div>
+                                  ),
+                                },
+                              ]
+                            : []),
                         ]}
                       />
                     </Col>
