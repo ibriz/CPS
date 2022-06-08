@@ -8,7 +8,12 @@ const VoteList = ({ votes, progressReport, budgetChange = false }) => {
     <Container fluid>
       {votes.length ? (
         votes.map((vote, index) => (
-          <Vote key={index} vote={vote} budgetChange={budgetChange} />
+          <Vote
+            key={index}
+            vote={vote}
+            budgetChange={budgetChange}
+            isOpen={index === 0}
+          />
         ))
       ) : (
         <span className={styles.noProposals}>

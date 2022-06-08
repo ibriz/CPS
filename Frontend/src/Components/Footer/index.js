@@ -11,7 +11,7 @@ import {
 } from 'react-icons/ai';
 import { FaDiscord } from 'react-icons/fa';
 import { SiFacebook } from 'react-icons/si';
-import iconCPSImg from '../../Assets/Images/FundedByICONCPSBlack.svg';
+import iconCPSImg from '../../Assets/Images/FundedByICONCPSBlack.png';
 
 const socialLinks = [
   {
@@ -207,7 +207,7 @@ const Footer = ({ console = false, width = undefined, footerRef }) => {
               </defs>
             </svg>
           )} */}
-          <img src={iconCPSImg} style={{ width: '65%' }} />
+          <img src={iconCPSImg} style={{ width: '45%' }} />
 
           <div style={{ marginTop: '20px' }}>Built by:</div>
           <div style={{}}>

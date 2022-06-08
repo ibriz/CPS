@@ -222,6 +222,7 @@ const Dashboard = ({
         title: 'My Sponsor Bond',
         // value={`${projectAmounts.Active.count + projectAmounts.Paused.count} (${icxFormat(projectAmounts.Active.amount + projectAmounts.Paused.amount)} ICX)`} />
         value: getIcxbnUSDAmount(sponsorDepositAmount),
+        hoverText: "Only active projects are counted"
       },
       {
         color: '#27AAB9',
@@ -537,6 +538,7 @@ const Dashboard = ({
                 title={info.title}
                 // value={`${ projectAmounts.Voting.count } (${ icxFormat(projectAmounts.Voting.amount) } ICX)`}
                 value={info.value}
+                hoverText = {info.hoverText}
               />
             </Col>
           ))}

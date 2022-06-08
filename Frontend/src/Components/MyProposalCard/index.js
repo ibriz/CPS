@@ -33,9 +33,8 @@ const MyProposalCard = ({
   fetchProposalByAddressRequest,
 }) => {
   const [selectedTab, setSelectedTab] = useState();
-  const [filteredProposalList, setFilteredProposalList] = useState(
-    myProposalList,
-  );
+  const [filteredProposalList, setFilteredProposalList] =
+    useState(myProposalList);
   let [searchText, setSearchText] = useState('');
   const [pageNumber, setPageNumber] = useState();
   const [modalShow, setModalShow] = React.useState(false);
@@ -46,8 +45,9 @@ const MyProposalCard = ({
   );
 
   const onClickProposal = proposal => {
-    setModalShow(true);
+    // setModalShow(true);
     setSelectedProposal(proposal);
+    history.push(`/proposals/${proposal.ipfsHash}`);
   };
 
   const onClickProposalDraft = proposal => {
@@ -129,12 +129,19 @@ const MyProposalCard = ({
         <Col>
           <Card>
             <Card.Body className={styles.cardBody}>
-
-              <Container style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0px 0px 10px 0px" }}>
-                <div>My Proposals</div>
+              <Container
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  padding: '0px 0px 10px 0px',
+                }}
+              >
+                <div style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>
+                  My Proposals
+                </div>
 
                 <TabBar
-
                   selectedTab={selectedTab}
                   setSelectedTab={setSelectedTab}
                   searchText={searchText}
@@ -167,12 +174,14 @@ const MyProposalCard = ({
                                 setCurrentPage={(pageNumber) => setCurrentPages(selectedTab, pageNumber)}
                                 totalPages={totalPages[selectedTab] ?? 1} /> */}
 
-              {modalShow && <DetailsModal
-                show={modalShow}
-                onHide={() => setModalShow(false)}
-                proposal={selectedProposal}
-                status={selectedTab}
-              />}
+              {/* {modalShow && (
+                <DetailsModal
+                  show={modalShow}
+                  onHide={() => setModalShow(false)}
+                  proposal={selectedProposal}
+                  status={selectedTab}
+                />
+              )} */}
             </Card.Body>
           </Card>
         </Col>

@@ -10,6 +10,7 @@ const ProposalList = ({
   emptyListMessage,
   proposalPendingPR = false,
   proposalPendingPRSameList = false,
+  sponsorRequest = false,
   minHeight = '100px',
 }) => {
   return (
@@ -33,6 +34,7 @@ const ProposalList = ({
             selectedTab={selectedTab}
             proposalPendingPR={proposalPendingPR}
             proposalPendingPRSameList={proposal.pendingPR}
+            sponsorRequest={sponsorRequest}
             onClick={() => onClickProposal(proposal)}
           />
         ))

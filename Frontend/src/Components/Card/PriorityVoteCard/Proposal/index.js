@@ -57,7 +57,9 @@ const Proposal = ({
               <>
                 <LowerCardInfo className={'proposalInfo2'}>
                   Submitted on:{' '}
-                  {new Date(proposal._timestamp / 1000).toLocaleDateString()}
+                  {new Date(
+                    proposal._sponsored_timestamp / 1000,
+                  ).toLocaleDateString()}
                 </LowerCardInfo>
                 <Budget>
                   Budget: {icxFormat(proposal.budget)} {proposal.token}

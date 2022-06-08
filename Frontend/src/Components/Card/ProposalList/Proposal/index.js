@@ -37,6 +37,7 @@ const Proposal = ({
   onClick,
   proposalPendingPR = false,
   proposalPendingPRSameList = false,
+  sponsorRequest = false,
   period,
 }) => {
   const { isRemainingTimeZero } = useTimer();
@@ -76,11 +77,21 @@ const Proposal = ({
               <>
                 <LowerCardInfo className={'proposalInfo2'}>
                   Submitted on:{' '}
-                  {new Date(proposal._timestamp / 1000).toLocaleDateString()}
+                  {new Date(
+                    proposal._sponsored_timestamp / 1000,
+                  ).toLocaleDateString()}
                 </LowerCardInfo>
-                  <Budget>Budget: {icxFormat(proposal.budget)} {proposal.token}</Budget>
-                </>
-              )}
+                <Budget>
+                  Budget: {icxFormat(proposal.budget)} {proposal.token}
+                </Budget>
+                {sponsorRequest && (
+                  <Budget>
+                    Sponsor bond: {icxFormat(proposal.budget / 10)}{' '}
+                    {proposal.token}
+                  </Budget>
+                )}
+              </>
+            )}
 
             {['Active', 'Paused'].includes(
               proposalStatusMapping.find(

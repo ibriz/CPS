@@ -34,29 +34,14 @@ const ProgressReport = ({
           className={ClassNames(styles.infos, { [styles.infosModal]: isModal })}
         >
           <Row style={{ alignItems: 'center' }} className={styles.firstRow}>
-            <Badge
-              size='xs'
-              variant={
-                progressReportStatusMapping.find(
-                  mapping => mapping.status === progressReport.status,
-                ).badgeColor
-              }
-              className={styles.badge}
-            >
-              {
-                progressReportStatusMapping.find(
-                  mapping => mapping.status === progressReport.status,
-                ).name
-              }
-            </Badge>{' '}
             <LowerCardTitle>
               {progressReport.progressReportTitle}
             </LowerCardTitle>
           </Row>
           <Row className={styles.secondRow}>
-            {showProject && (
+            {/* {showProject && (
               <Budget>Project: {progressReport.projectTitle}</Budget>
-            )}
+            )} */}
 
             {progressReportStatusMapping.find(
               mapping => mapping.status === progressReport.status,
@@ -69,40 +54,28 @@ const ProgressReport = ({
           </Row>
         </Col>
 
-        {progressReportStatusMapping.find(
-          mapping => mapping.status === progressReport.status,
-        ).name !== 'Draft' && (
-          <Col
-            md='3'
-            xs='12'
-            className={ClassNames(styles.progressBar, {
-              [styles.progressBarModal]: isModal,
-            })}
+        <Col
+          lg='3'
+          xs='12'
+          style={{ alignItems: 'center', justifyContent: 'center' }}
+          className={styles.firstRow}
+        >
+          <Badge
+            size='xs'
+            variant={
+              progressReportStatusMapping.find(
+                mapping => mapping.status === progressReport.status,
+              ).badgeColor
+            }
+            className={styles.badge}
           >
-            {/* <ProgressText>Stake- {progressReport.approvedPercentage ? progressReport.approvedPercentage.toFixed() : 0}% approved, {progressReport.rejectedPercentage ? progressReport.rejectedPercentage.toFixed() : 0}% rejected</ProgressText>
-                        <ProgressBarCombined 
-                          approvedPercentage = {progressReport.approvedPercentage}
-                          rejectedPercentage = {progressReport.rejectedPercentage}
-                          /> */}
-
-            <VoteProgressBar
-              approvedPercentage={progressReport.approvedPercentage}
-              rejectedPercentage={progressReport.rejectedPercentage}
-            />
-
-            {/* <ProgressText>Voter count- {progressReport.approvedVotesPercentageCount ? progressReport.approvedVotesPercentageCount.toFixed() : 0}% approved, {progressReport.rejectedVotesPercentageCount ? progressReport.rejectedVotesPercentageCount.toFixed() : 0}% rejected</ProgressText>
-                        <ProgressBarCombined 
-                          approvedPercentage = {progressReport.approvedVotesPercentageCount}
-                          rejectedPercentage = {progressReport.rejectedVotesPercentageCount}
-                          /> */}
-
-            <VoteProgressBar
-              approvedPercentage={progressReport.approvedVotesPercentageCount}
-              rejectedPercentage={progressReport.rejectedVotesPercentageCount}
-              voterCount
-            />
-          </Col>
-        )}
+            {
+              progressReportStatusMapping.find(
+                mapping => mapping.status === progressReport.status,
+              ).name
+            }
+          </Badge>{' '}
+        </Col>
 
         {/* {
                     progressReportStatusMapping.find(mapping => mapping.status === progressReport.status).name !== 'Draft' && progressReportStatusMapping.find(mapping => mapping.status === progressReport.status).name === 'Rejected' && progressReport.approvedVotesPercentageCount > progressReport.approvedPercentage &&

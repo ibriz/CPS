@@ -6,8 +6,8 @@ import LowerCardTitle from 'Components/UI/LowerCardList/LowerCardTitle';
 import { proposalStatusMapping } from 'Constants';
 import { formatDescription } from 'Helpers';
 
-const Vote = ({ vote, budgetChange = false }) => {
-  const [showSponsorMessage, setShowSponsorMessage] = React.useState(false);
+const Vote = ({ vote, budgetChange = false, isOpen = false }) => {
+  const [showSponsorMessage, setShowSponsorMessage] = React.useState(isOpen);
 
   const [voteReason, setVoteReason] = React.useState('');
 

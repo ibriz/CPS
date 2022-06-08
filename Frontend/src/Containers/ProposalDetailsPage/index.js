@@ -187,6 +187,7 @@ function ProposalDetailsPage(props) {
     sponsorMessage,
     isPrep,
     emptyProgressReportDetailRequest,
+    emptyProposalDetailRequest,
     ipfsError,
     changeVote,
     fetchChangeVoteRequest,
@@ -269,7 +270,7 @@ function ProposalDetailsPage(props) {
 
   useEffect(() => {
     if (proposalDetail) {
-      setLoading(false);
+      // setLoading(false);
     }
     let description = formatDescription(proposalDetail?.description);
     setDescription(description);
@@ -337,11 +338,15 @@ function ProposalDetailsPage(props) {
   // }, [proposal]);
 
   useEffect(() => {
-    proposal &&
-      proposal.ipfsHash &&
+    if (proposal && proposal.ipfsHash) {
+      emptyProposalDetailRequest();
+      emptyProgressReportDetailRequest();
+      setLoading(false);
+
       props.fetchProposalDetail({
         hash: proposal.ipfsHash,
       });
+    }
     console.log('I AM HERE', proposal);
 
     if (status === 'Active' || status === 'Completed' || status === 'Paused') {
@@ -358,6 +363,10 @@ function ProposalDetailsPage(props) {
       NotificationManager.error('Error fetching ipfs data');
     }
   }, [ipfsError]);
+
+  useEffect(() => {
+    setLoading(true);
+  }, []);
 
   useEffect(() => {
     // if (status === 'Voting') {
@@ -418,7 +427,7 @@ function ProposalDetailsPage(props) {
 
   return (
     <Container fluid>
-      {loading ? (
+      {loading || !proposalDetail ? (
         <Container>
           <LoadingDiv>
             <Spinner animation='border' variant='secondary' />
@@ -720,39 +729,41 @@ function ProposalDetailsPage(props) {
                               </Row>
                             </Container>
                           ) : (
-                            <Container
-                              fluid
-                              style={{
-                                marginTop: '12px',
-                                backgroundColor: 'white',
-                                padding: '12px',
-                              }}
-                            >
+                            <div>
                               {status === 'Voting' && (
-                                <p
+                                <Container
+                                  fluid
                                   style={{
-                                    color: '#262626',
-                                    textAlign: 'center',
+                                    marginTop: '12px',
+                                    backgroundColor: 'white',
+                                    padding: '12px',
                                   }}
                                 >
-                                  You have already voted for this proposal.{' '}
-                                  <br />{' '}
-                                  {changeVote && (
-                                    <ButtonGroup aria-label='Basic example'>
-                                      <Button
-                                        style={{ width: 200 }}
-                                        onClick={() =>
-                                          setChangeVoteButton(true)
-                                        }
-                                        variant='primary'
-                                      >
-                                        Change Vote
-                                      </Button>
-                                    </ButtonGroup>
-                                  )}
-                                </p>
+                                  <p
+                                    style={{
+                                      color: '#262626',
+                                      textAlign: 'center',
+                                    }}
+                                  >
+                                    You have already voted for this proposal.{' '}
+                                    <br />{' '}
+                                    {changeVote && (
+                                      <ButtonGroup aria-label='Basic example'>
+                                        <Button
+                                          style={{ width: 200 }}
+                                          onClick={() =>
+                                            setChangeVoteButton(true)
+                                          }
+                                          variant='primary'
+                                        >
+                                          Change Vote
+                                        </Button>
+                                      </ButtonGroup>
+                                    )}
+                                  </p>
+                                </Container>
                               )}
-                            </Container>
+                            </div>
                           )}
                         </>
                       )}
@@ -775,7 +786,20 @@ function ProposalDetailsPage(props) {
                                 padding: '12px',
                               }}
                             >
-                              <ListTitle>VOTES</ListTitle>
+                              <ListTitle>
+                                <div
+                                  style={{ padding: '10px', display: 'flex' }}
+                                >
+                                  <span style={{ marginRight: '4px' }}>
+                                    VOTES
+                                  </span>
+                                  <InfoIcon
+                                    description={
+                                      'Click on a vote to view more details'
+                                    }
+                                  />
+                                </div>
+                              </ListTitle>
                               <VoteList votes={votesByProposal} />
                             </div>
                           ) : null}
@@ -862,7 +886,8 @@ function ProposalDetailsPage(props) {
                           {
                             key: 'Project Duration',
                             value:
-                              `${proposal?.projectDuration} months` || 'N/A',
+                              `${Number(proposal?.projectDuration)} months` ||
+                              'N/A',
                           },
                           {
                             key: 'Total Budget',
@@ -911,6 +936,18 @@ function ProposalDetailsPage(props) {
                           {
                             key: 'Team Size',
                             value: `${proposalDetail?.teamSize}` || 'N/A',
+                          },
+                          {
+                            key: 'Submitted On',
+                            value: `${new Date(
+                              proposal?._sponsored_timestamp / 1000,
+                            ).toLocaleDateString()}`,
+                          },
+                          {
+                            key: 'Last Updated On',
+                            value: `${new Date(
+                              proposal?._timestamp / 1000,
+                            ).toLocaleDateString()}`,
                           },
 
                           ...(['Active', 'Paused'].includes(status)
@@ -1150,6 +1187,8 @@ const mapDispatchToProps = dispatch => ({
   fetchMaintenanceModeRequest: () => dispatch(fetchMaintenanceModeRequest()),
   fetchProposalByIpfsRequest: payload =>
     dispatch(fetchProposalByIpfsRequest(payload)),
+  emptyProposalDetailRequest: payload =>
+    dispatch(emptyProposalDetailRequest(payload)),
 });
 
 export default connect(

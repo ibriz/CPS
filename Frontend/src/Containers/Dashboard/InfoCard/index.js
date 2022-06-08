@@ -1,8 +1,15 @@
 import React from 'react';
 import { Row, Col, Card } from 'react-bootstrap';
 import styles from './InfoCard.module.scss';
+import InfoIcon from 'Components/InfoIcon';
 
-const InfoCard = ({ bg = 'secondary', title, value, color = '#FF0000' }) => {
+const InfoCard = ({
+  bg = 'secondary',
+  title,
+  value,
+  color = '#FF0000',
+  hoverText,
+}) => {
   return (
     <Card
       bg={bg}
@@ -16,12 +23,12 @@ const InfoCard = ({ bg = 'secondary', title, value, color = '#FF0000' }) => {
         <Card.Title
           dangerouslySetInnerHTML={{ __html: value }}
           style={{ textAlign: 'center', fontSize: '1.5rem', fontWeight: 700 }}
-        >
-        </Card.Title>
+        ></Card.Title>
         <Card.Text
           style={{ fontSize: '0.875rem', textAlign: 'center', fontWeight: 500 }}
         >
           {title}
+          {hoverText && <InfoIcon description={hoverText} />}
         </Card.Text>
       </Card.Body>
     </Card>

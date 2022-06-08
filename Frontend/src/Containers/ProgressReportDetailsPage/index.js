@@ -23,6 +23,7 @@ import {
   fetchChangeVoteRequestProgressReport,
   fetchProgressReportByIpfsRequest,
   fetchProgressReportDetailRequest,
+  emptyProgressReportDetailRequest,
   // approveSponserRequest, rejectSponsorRequest, voteProposal
 } from 'Redux/Reducers/progressReportSlice';
 import {
@@ -138,6 +139,7 @@ function ProgressReportDetailsPage(props) {
     fetchMaintenanceModeRequest,
     fetchProgressReportByIpfsRequest,
     selectedProgressReportByIpfs,
+    emptyProgressReportDetailRequest,
     ...remainingProps
   } = props;
 
@@ -245,15 +247,18 @@ function ProgressReportDetailsPage(props) {
   };
 
   useEffect(() => {
-    progressReport &&
+    if (progressReport) {
+      emptyProgressReportDetailRequest();
+      setLoading(false);
       props.fetchProgressReportDetailRequest({
         hash: progressReport.ipfsHash,
       });
+    }
   }, [progressReport]);
 
   useEffect(() => {
     if (progressDetail) {
-      setLoading(false);
+      // setLoading(false);
     }
     let description = formatDescription(progressDetail?.description);
     setDescription(description);
@@ -327,7 +332,7 @@ function ProgressReportDetailsPage(props) {
 
   return (
     <Container fluid>
-      {loading ? (
+      {loading || !progressDetail ? (
         <Container>
           <LoadingDiv>
             <Spinner animation='border' variant='secondary' />
@@ -909,7 +914,20 @@ function ProgressReportDetailsPage(props) {
                                   padding: '12px',
                                 }}
                               >
-                                <ListTitle>VOTES</ListTitle>
+                                <ListTitle>
+                                  <div
+                                    style={{ padding: '10px', display: 'flex' }}
+                                  >
+                                    <span style={{ marginRight: '4px' }}>
+                                      VOTES
+                                    </span>
+                                    <InfoIcon
+                                      description={
+                                        'Click on a vote to view more details'
+                                      }
+                                    />
+                                  </div>
+                                </ListTitle>
                                 <VoteList
                                   votes={votesByProposal}
                                   progressReport
@@ -1011,6 +1029,18 @@ function ProgressReportDetailsPage(props) {
                             value: progressDetail?.timeRemainingToCompletion
                               ? `${progressDetail?.timeRemainingToCompletion} months`
                               : 'N/A',
+                          },
+                          {
+                            key: 'Submitted On',
+                            value: `${new Date(
+                              progressReport?.sponsoredTimestamp / 1000,
+                            ).toLocaleDateString()}`,
+                          },
+                          {
+                            key: 'Last Updated On',
+                            value: `${new Date(
+                              progressReport?.timestamp / 1000,
+                            ).toLocaleDateString()}`,
                           },
                           {
                             key: 'Stake',
@@ -1253,6 +1283,8 @@ const mapDispatchToProps = dispatch => ({
   fetchMaintenanceModeRequest: () => dispatch(fetchMaintenanceModeRequest()),
   fetchProgressReportByIpfsRequest: payload =>
     dispatch(fetchProgressReportByIpfsRequest(payload)),
+  emptyProgressReportDetailRequest: payload =>
+    dispatch(emptyProgressReportDetailRequest()),
 });
 
 export default connect(

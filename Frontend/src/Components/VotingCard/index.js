@@ -23,6 +23,7 @@ import {
 import DetailsModalProgressReport from 'Components/Card/DetailsModalProgressReport';
 import PriorityVoteCard from 'Components/Card/PriorityVoteCard';
 import PriorityVoteStatusCard from 'Components/Card/PriorityVoteStatusCard';
+import { useHistory } from 'react-router-dom';
 
 const VotingCard = ({
   proposalList,
@@ -51,6 +52,7 @@ const VotingCard = ({
   const [pageNumber, setPageNumber] = useState();
   // const [modalShow, setModalShow] = React.useState(false);
   // const [modalShowPR, setModalShowPR] = React.useState(false);
+  const history = useHistory();
 
   const [selectedProposal, setSelectedProposal] = React.useState();
   const status = 'Voting';
@@ -59,21 +61,23 @@ const VotingCard = ({
   const [selectedProgressReport, setSelectedProgressReport] = React.useState();
 
   const onClickProposal = proposal => {
-    setModalShow(true);
+    // setModalShow(true);
+    history.push(`/proposals/${proposal.ipfsHash}`);
     setSelectedProposal(proposal);
   };
 
-  const onClickProposalDraft = proposal => { };
+  const onClickProposalDraft = proposal => {};
 
   const onClickProgressReport = progressReport => {
-    setModalShowPR(true);
+    // setModalShowPR(true);
+    history.push(`/progress-reports/${progressReport.ipfsHash}`);
     setSelectedProgressReport(progressReport);
   };
 
   useEffect(() => {
     if (selectedTab === 'Priority Voting') {
       if (!priorityVote) {
-        fetchProposalListRequest({ status, walletAddress })
+        fetchProposalListRequest({ status, walletAddress });
       } else {
         fetchSortPriorityProposalListRequest();
       }
@@ -170,7 +174,8 @@ const VotingCard = ({
                 tabs={proposalStatesList}
                 placeholder='Search Proposal'
                 newIndexList={
-                  !priorityVote && proposalStatesList.includes('Priority Voting')
+                  !priorityVote &&
+                  proposalStatesList.includes('Priority Voting')
                     ? [proposalStatesList.indexOf('Priority Voting')]
                     : []
                 }
@@ -217,7 +222,7 @@ const VotingCard = ({
                                 currentPage={pageNumber?.[selectedTab]}
                                 setCurrentPage={(pageNumber) => setCurrentPages(selectedTab, pageNumber)}
                                 totalPages={totalPages[status]} /> */}
-              {modalShow && (
+              {/* {modalShow && (
                 <DetailsModal
                   show={modalShow}
                   onHide={() => setModalShow(false)}
@@ -235,7 +240,7 @@ const VotingCard = ({
                   status={status}
                   voting={true}
                 />
-              )}
+              )} */}
             </Card.Body>
           </Card>
         </Col>

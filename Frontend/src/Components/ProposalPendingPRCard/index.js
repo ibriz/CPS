@@ -41,8 +41,9 @@ const ProposalPendingPRCard = ({
   const [selectedProposal, setSelectedProposal] = React.useState();
 
   const onClickProposal = proposal => {
-    setModalShow(true);
+    // setModalShow(true);
     setSelectedProposal(proposal);
+    history.push(`/proposals/${proposal.ipfsHash}`);
   };
 
   const onClickProposalDraft = proposal => {
@@ -161,12 +162,12 @@ const ProposalPendingPRCard = ({
                                 setCurrentPage={(pageNumber) => setCurrentPages(selectedTab, pageNumber)}
                                 totalPages={totalPages[selectedTab] ?? 1} /> */}
 
-              {modalShow && <DetailsModal
+              {/* {modalShow && <DetailsModal
                 show={modalShow}
                 onHide={() => setModalShow(false)}
                 proposal={selectedProposal}
                 status={selectedTab}
-              />}
+              />} */}
             </Card.Body>
           </Card>
         </Col>
