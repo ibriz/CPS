@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './ProposalList.module.scss';
 import { Container } from 'react-bootstrap';
 import ProgressReport from './ProgressReport';
+import ProgressReportInProposal from './ProgressReportInProposal';
 
 const ProjectReportList = ({
   projectReports,
@@ -9,6 +10,7 @@ const ProjectReportList = ({
   onClickProgressReport,
   isModal = false,
   minHeight = '100px',
+  isInsideProposal = false,
 }) => {
   return (
     <Container
@@ -25,15 +27,25 @@ const ProjectReportList = ({
       }
     >
       {projectReports.length ? (
-        projectReports.map(progressReport => (
-          <ProgressReport
-            // key = {progressReport.reportKey}
-            progressReport={progressReport}
-            selectedTab={selectedTab}
-            onClick={() => onClickProgressReport(progressReport)}
-            isModal={isModal}
-          />
-        ))
+        projectReports.map(progressReport =>
+          !isInsideProposal ? (
+            <ProgressReport
+              // key = {progressReport.reportKey}
+              progressReport={progressReport}
+              selectedTab={selectedTab}
+              onClick={() => onClickProgressReport(progressReport)}
+              isModal={isModal}
+            />
+          ) : (
+            <ProgressReportInProposal
+              // key = {progressReport.reportKey}
+              progressReport={progressReport}
+              selectedTab={selectedTab}
+              onClick={() => onClickProgressReport(progressReport)}
+              isModal={isModal}
+            />
+          ),
+        )
       ) : (
         <span className={styles.noProposals}>
           No {selectedTab} Progress Report

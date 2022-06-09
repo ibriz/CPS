@@ -221,9 +221,9 @@ function ProposalDetailsPage(props) {
     mapping => mapping.status === proposal?._status,
   )?.name;
 
-  const prepName = proposalDetail?.sponserPrepName
-    ? proposalDetail?.sponserPrepName
-    : preps.find(prep => prep.address == proposalDetail?.sponserPrep)?.name;
+  const prepName = preps.find(
+    prep => prep.address == proposalDetail?.sponserPrep,
+  )?.name;
 
   useEffect(() => {
     fetchPrepsRequest();
@@ -820,6 +820,7 @@ function ProposalDetailsPage(props) {
                                 projectReports={progressReportByProposal}
                                 onClickProgressReport={onClickProgressReport}
                                 isModal={false}
+                                isInsideProposal={true}
                               />
                             </div>
                           )}
