@@ -11,7 +11,6 @@ const PARAMS = {
   contributorAddress: 'contributor_address',
   totalBudget: 'total_budget',
   timestamp: 'timestamp',
-  sponsoredTimestamp: 'sponsored_timestamp',
   proposalHash: 'ipfs_hash',
   reportHash: 'report_hash',
 
@@ -384,7 +383,6 @@ const proposalSlice = createSlice({
           ipfsHash: progressReport[PARAMS.reportHash],
           reportKey: progressReport[PARAMS.reportHash],
           proposalKey: progressReport[PARAMS.proposalHash],
-          sponsoredTimestamp: progressReport[PARAMS.sponsoredTimestamp],
 
           approvedVotes: IconConverter.toBigNumber(
             progressReport[PARAMS.approvedVotes],
@@ -472,7 +470,6 @@ const proposalSlice = createSlice({
         projectTitle: progressReport[PARAMS.proposalTitle],
         contributorAddress: progressReport[PARAMS.contributorAddress],
         timestamp: progressReport[PARAMS.timestamp],
-        sponsoredTimestamp: progressReport[PARAMS.sponsoredTimestamp],
         ipfsHash: progressReport[PARAMS.reportHash],
         reportKey: progressReport[PARAMS.reportHash],
         proposalKey: progressReport[PARAMS.proposalHash],

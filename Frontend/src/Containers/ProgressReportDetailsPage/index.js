@@ -1033,12 +1033,6 @@ function ProgressReportDetailsPage(props) {
                           {
                             key: 'Submitted On',
                             value: `${new Date(
-                              progressReport?.sponsoredTimestamp / 1000,
-                            ).toLocaleDateString()}`,
-                          },
-                          {
-                            key: 'Last Updated On',
-                            value: `${new Date(
                               progressReport?.timestamp / 1000,
                             ).toLocaleDateString()}`,
                           },
