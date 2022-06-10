@@ -365,8 +365,8 @@ const Dashboard = ({
                   }}
                 >
                   {isPrep
-                    ? `You can claim installment amount of ${getClaimInstallment()}`
-                    : `You can claim proposal grant of ${getClaimInstallment()}`}
+                    ? `You can claim installment amount of $${getClaimInstallment()}`
+                    : `You can claim proposal grant of $${getClaimInstallment()}`}
                 </span>
               </Container>
               {
