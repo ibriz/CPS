@@ -39,6 +39,7 @@ const Proposal = ({
   proposalPendingPRSameList = false,
   sponsorRequest = false,
   period,
+  minLayout = false,
 }) => {
   const { isRemainingTimeZero } = useTimer();
   return (
@@ -61,64 +62,73 @@ const Proposal = ({
                 ).name
               }
             </Badge>{' '}
-            <LowerCardTitle>{proposal._proposal_title}</LowerCardTitle>
+            {!minLayout && (
+              <LowerCardTitle>{proposal._proposal_title}</LowerCardTitle>
+            )}
           </Row>
-          <Row className={styles.secondRow}>
-            <LowerCardInfo>{`${proposal._contributor_address.slice(
-              0,
-              4,
-            )}...${proposal._contributor_address.slice(
-              proposal._contributor_address.length - 3,
-            )}`}</LowerCardInfo>
 
-            {proposalStatusMapping.find(
-              mapping => mapping.status === proposal._status,
-            ).name !== 'Draft' && (
+          <Row className={styles.secondRow}>
+            {minLayout ? (
+              <LowerCardTitle>{proposal._proposal_title}</LowerCardTitle>
+            ) : (
               <>
-                <LowerCardInfo className={'proposalInfo2'}>
-                  Submitted on:{' '}
-                  {new Date(
-                    proposal._sponsored_timestamp / 1000,
-                  ).toLocaleDateString()}
-                </LowerCardInfo>
-                <Budget>
-                  Budget: {icxFormat(proposal.budget)} {proposal.token}
-                </Budget>
-                {sponsorRequest && (
-                  <Budget>
-                    Sponsor bond: {icxFormat(proposal.budget / 10)}{' '}
-                    {proposal.token}
-                  </Budget>
+                <LowerCardInfo>{`${proposal._contributor_address.slice(
+                  0,
+                  4,
+                )}...${proposal._contributor_address.slice(
+                  proposal._contributor_address.length - 3,
+                )}`}</LowerCardInfo>
+
+                {proposalStatusMapping.find(
+                  mapping => mapping.status === proposal._status,
+                ).name !== 'Draft' && (
+                  <>
+                    <LowerCardInfo className={'proposalInfo2'}>
+                      Submitted on:{' '}
+                      {new Date(
+                        proposal._sponsored_timestamp / 1000,
+                      ).toLocaleDateString()}
+                    </LowerCardInfo>
+                    <Budget>
+                      Budget: {icxFormat(proposal.budget)} {proposal.token}
+                    </Budget>
+                    {sponsorRequest && (
+                      <Budget>
+                        Sponsor bond: {icxFormat(proposal.budget / 10)}{' '}
+                        {proposal.token}
+                      </Budget>
+                    )}
+                  </>
                 )}
+
+                {['Active', 'Paused'].includes(
+                  proposalStatusMapping.find(
+                    mapping => mapping.status === proposal._status,
+                  ).name,
+                ) &&
+                  proposalPendingPRSameList &&
+                  period !== 'VOTING' &&
+                  !isRemainingTimeZero && (
+                    <>
+                      <Link
+                        to={{
+                          pathname: '/newProgressReport',
+                          // search: "?sort=name",
+                          // hash: "#the-hash",
+                          ipfsKey: proposal.ipfsKey,
+                        }}
+                      >
+                        <Button
+                          variant='info'
+                          className={styles.createProposalButton}
+                        >
+                          Create Progress Report
+                        </Button>
+                      </Link>
+                    </>
+                  )}
               </>
             )}
-
-            {['Active', 'Paused'].includes(
-              proposalStatusMapping.find(
-                mapping => mapping.status === proposal._status,
-              ).name,
-            ) &&
-              proposalPendingPRSameList &&
-              period !== 'VOTING' &&
-              !isRemainingTimeZero && (
-                <>
-                  <Link
-                    to={{
-                      pathname: '/newProgressReport',
-                      // search: "?sort=name",
-                      // hash: "#the-hash",
-                      ipfsKey: proposal.ipfsKey,
-                    }}
-                  >
-                    <Button
-                      variant='info'
-                      className={styles.createProposalButton}
-                    >
-                      Create Progress Report
-                    </Button>
-                  </Link>
-                </>
-              )}
           </Row>
         </Col>
         {!proposalPendingPR && (
@@ -145,11 +155,13 @@ const Proposal = ({
                                         rejectedPercentage={proposal.rejectedPercentage}
                                     /> */}
 
-                <VoteProgressBar
-                  approvedPercentage={proposal.approvedPercentage}
-                  rejectedPercentage={proposal.rejectedPercentage}
-                  proposal
-                />
+                {!minLayout && (
+                  <VoteProgressBar
+                    approvedPercentage={proposal.approvedPercentage}
+                    rejectedPercentage={proposal.rejectedPercentage}
+                    proposal
+                  />
+                )}
 
                 {/* <ProgressText>Voter count- {proposal.approvedVotesPercentageCount ? proposal.approvedVotesPercentageCount.toFixed() : 0}% approved, {proposal.rejectedVotesPercentageCount ? proposal.rejectedVotesPercentageCount.toFixed() : 0}% rejected</ProgressText>
                                     <InfoIcon description="The category the project falls into" 

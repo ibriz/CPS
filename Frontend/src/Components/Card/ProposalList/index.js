@@ -12,6 +12,7 @@ const ProposalList = ({
   proposalPendingPRSameList = false,
   sponsorRequest = false,
   minHeight = '100px',
+  minLayout = false,
 }) => {
   return (
     <Container
@@ -36,6 +37,7 @@ const ProposalList = ({
             proposalPendingPRSameList={proposal.pendingPR}
             sponsorRequest={sponsorRequest}
             onClick={() => onClickProposal(proposal)}
+            minLayout={minLayout}
           />
         ))
       ) : (

@@ -167,6 +167,7 @@ const MyProposalCard = ({
                     : onClickProposal
                 }
                 emptyListMessage='No Proposal'
+                minLayout={true}
               />
 
               {/* <Pagination

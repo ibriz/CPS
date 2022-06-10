@@ -11,6 +11,7 @@ const ProjectReportList = ({
   isModal = false,
   minHeight = '100px',
   isInsideProposal = false,
+  minLayout = false,
 }) => {
   return (
     <Container
@@ -35,6 +36,7 @@ const ProjectReportList = ({
               selectedTab={selectedTab}
               onClick={() => onClickProgressReport(progressReport)}
               isModal={isModal}
+              minLayout={minLayout}
             />
           ) : (
             <ProgressReportInProposal

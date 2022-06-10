@@ -25,6 +25,7 @@ const ProgressReport = ({
   showProject = true,
   onClick,
   isModal = false,
+  minLayout = false,
 }) => {
   return (
     <>
@@ -49,24 +50,43 @@ const ProgressReport = ({
                 ).name
               }
             </Badge>{' '}
-            <LowerCardTitle>
-              {progressReport.progressReportTitle}
-            </LowerCardTitle>
+            {!minLayout && (
+              <LowerCardTitle>
+                {progressReport.progressReportTitle}
+              </LowerCardTitle>
+            )}
           </Row>
           <Row className={styles.secondRow}>
-            {showProject && (
-              <Budget>Project: {progressReport.projectTitle}</Budget>
-            )}
+            {minLayout ? (
+              <LowerCardTitle>
+                {progressReport.progressReportTitle}
+              </LowerCardTitle>
+            ) : (
+              <>
+                {showProject && (
+                  <Budget>Project: {progressReport.projectTitle}</Budget>
+                )}
 
-            {progressReportStatusMapping.find(
-              mapping => mapping.status === progressReport.status,
-            ).name !== 'Draft' && (
-              <LowerCardInfo className={'proposalInfo2'}>
-                Submitted on:{' '}
-                {new Date(progressReport.timestamp / 1000).toLocaleDateString()}
-              </LowerCardInfo>
+                {progressReportStatusMapping.find(
+                  mapping => mapping.status === progressReport.status,
+                ).name !== 'Draft' && (
+                  <LowerCardInfo className={'proposalInfo2'}>
+                    Submitted on:{' '}
+                    {new Date(
+                      progressReport.timestamp / 1000,
+                    ).toLocaleDateString()}
+                  </LowerCardInfo>
+                )}
+              </>
             )}
           </Row>
+          {minLayout && (
+            <Row className={styles.secondRow}>
+              {showProject && (
+                <Budget>Project: {progressReport.projectTitle}</Budget>
+              )}
+            </Row>
+          )}
         </Col>
 
         {progressReportStatusMapping.find(
@@ -85,10 +105,12 @@ const ProgressReport = ({
                           rejectedPercentage = {progressReport.rejectedPercentage}
                           /> */}
 
-            <VoteProgressBar
-              approvedPercentage={progressReport.approvedPercentage}
-              rejectedPercentage={progressReport.rejectedPercentage}
-            />
+            {!minLayout && (
+              <VoteProgressBar
+                approvedPercentage={progressReport.approvedPercentage}
+                rejectedPercentage={progressReport.rejectedPercentage}
+              />
+            )}
 
             {/* <ProgressText>Voter count- {progressReport.approvedVotesPercentageCount ? progressReport.approvedVotesPercentageCount.toFixed() : 0}% approved, {progressReport.rejectedVotesPercentageCount ? progressReport.rejectedVotesPercentageCount.toFixed() : 0}% rejected</ProgressText>
                         <ProgressBarCombined 

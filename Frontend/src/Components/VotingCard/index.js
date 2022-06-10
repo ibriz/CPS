@@ -183,6 +183,7 @@ const VotingCard = ({
               <hr style={{ marginTop: '-9px' }} />
               {selectedTab === 'Proposals' ? (
                 <ProposalList
+                  minLayout={true}
                   proposals={filteredProposalList}
                   selectedTab={status}
                   searchText={searchText}
@@ -198,6 +199,7 @@ const VotingCard = ({
                 />
               ) : selectedTab === 'Progress Reports' ? (
                 <ProgressReportList
+                  minLayout={true}
                   projectReports={filteredProgressReportList}
                   selectedTab={status}
                   onClickProgressReport={onClickProgressReport}
