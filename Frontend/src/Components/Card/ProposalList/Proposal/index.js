@@ -40,6 +40,7 @@ const Proposal = ({
   sponsorRequest = false,
   period,
   minLayout = false,
+  showBadge = true,
 }) => {
   const { isRemainingTimeZero } = useTimer();
   return (
@@ -47,29 +48,31 @@ const Proposal = ({
       <Row className={styles.proposalContainer} onClick={onClick}>
         <Col sm={proposalPendingPR ? '8' : '9'} className={styles.infos}>
           <Row style={{ alignItems: 'center' }} className={styles.firstRow}>
-            <Badge
-              size='xs'
-              variant={
-                proposalStatusMapping.find(
-                  mapping => mapping.status === proposal._status,
-                ).badgeColor
-              }
-              className={styles.badge}
-            >
-              {
-                proposalStatusMapping.find(
-                  mapping => mapping.status === proposal._status,
-                ).name
-              }
-            </Badge>{' '}
-            {!minLayout && (
-              <LowerCardTitle>{proposal._proposal_title}</LowerCardTitle>
-            )}
+            {showBadge && (
+              <Badge
+                size='xs'
+                variant={
+                  proposalStatusMapping.find(
+                    mapping => mapping.status === proposal._status,
+                  ).badgeColor
+                }
+                className={styles.badge}
+              >
+                {
+                  proposalStatusMapping.find(
+                    mapping => mapping.status === proposal._status,
+                  ).name
+                }
+              </Badge>
+            )}{' '}
+            <LowerCardTitle>{proposal._proposal_title}</LowerCardTitle>
           </Row>
 
           <Row className={styles.secondRow}>
             {minLayout ? (
-              <LowerCardTitle>{proposal._proposal_title}</LowerCardTitle>
+              <Budget>
+                Budget: {icxFormat(proposal.budget)} {proposal.token}
+              </Budget>
             ) : (
               <>
                 <LowerCardInfo>{`${proposal._contributor_address.slice(

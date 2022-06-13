@@ -12,6 +12,7 @@ const ProjectReportList = ({
   minHeight = '100px',
   isInsideProposal = false,
   minLayout = false,
+  showBadge = true,
 }) => {
   return (
     <Container
@@ -37,6 +38,7 @@ const ProjectReportList = ({
               onClick={() => onClickProgressReport(progressReport)}
               isModal={isModal}
               minLayout={minLayout}
+              showBadge={showBadge}
             />
           ) : (
             <ProgressReportInProposal
@@ -45,6 +47,7 @@ const ProjectReportList = ({
               selectedTab={selectedTab}
               onClick={() => onClickProgressReport(progressReport)}
               isModal={isModal}
+              showBadge={showBadge}
             />
           ),
         )

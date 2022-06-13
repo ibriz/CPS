@@ -26,6 +26,7 @@ const ProgressReport = ({
   onClick,
   isModal = false,
   minLayout = false,
+  showBadge = true,
 }) => {
   return (
     <>
@@ -35,33 +36,29 @@ const ProgressReport = ({
           className={ClassNames(styles.infos, { [styles.infosModal]: isModal })}
         >
           <Row style={{ alignItems: 'center' }} className={styles.firstRow}>
-            <Badge
-              size='xs'
-              variant={
-                progressReportStatusMapping.find(
-                  mapping => mapping.status === progressReport.status,
-                ).badgeColor
-              }
-              className={styles.badge}
-            >
-              {
-                progressReportStatusMapping.find(
-                  mapping => mapping.status === progressReport.status,
-                ).name
-              }
-            </Badge>{' '}
-            {!minLayout && (
-              <LowerCardTitle>
-                {progressReport.progressReportTitle}
-              </LowerCardTitle>
-            )}
+            {showBadge && (
+              <Badge
+                size='xs'
+                variant={
+                  progressReportStatusMapping.find(
+                    mapping => mapping.status === progressReport.status,
+                  ).badgeColor
+                }
+                className={styles.badge}
+              >
+                {
+                  progressReportStatusMapping.find(
+                    mapping => mapping.status === progressReport.status,
+                  ).name
+                }
+              </Badge>
+            )}{' '}
+            <LowerCardTitle>
+              {progressReport.progressReportTitle}
+            </LowerCardTitle>
           </Row>
-          <Row className={styles.secondRow}>
-            {minLayout ? (
-              <LowerCardTitle>
-                {progressReport.progressReportTitle}
-              </LowerCardTitle>
-            ) : (
+          {!minLayout && (
+            <Row className={styles.secondRow}>
               <>
                 {showProject && (
                   <Budget>Project: {progressReport.projectTitle}</Budget>
@@ -78,8 +75,8 @@ const ProgressReport = ({
                   </LowerCardInfo>
                 )}
               </>
-            )}
-          </Row>
+            </Row>
+          )}
           {minLayout && (
             <Row className={styles.secondRow}>
               {showProject && (

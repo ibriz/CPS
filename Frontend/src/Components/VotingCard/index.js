@@ -184,6 +184,7 @@ const VotingCard = ({
               {selectedTab === 'Proposals' ? (
                 <ProposalList
                   minLayout={true}
+                  showBadge={false}
                   proposals={filteredProposalList}
                   selectedTab={status}
                   searchText={searchText}
@@ -200,6 +201,7 @@ const VotingCard = ({
               ) : selectedTab === 'Progress Reports' ? (
                 <ProgressReportList
                   minLayout={true}
+                  showBadge={false}
                   projectReports={filteredProgressReportList}
                   selectedTab={status}
                   onClickProgressReport={onClickProgressReport}

@@ -13,6 +13,7 @@ const ProposalList = ({
   sponsorRequest = false,
   minHeight = '100px',
   minLayout = false,
+  showBadge = true,
 }) => {
   return (
     <Container
@@ -38,6 +39,7 @@ const ProposalList = ({
             sponsorRequest={sponsorRequest}
             onClick={() => onClickProposal(proposal)}
             minLayout={minLayout}
+            showBadge={showBadge}
           />
         ))
       ) : (
