@@ -32,6 +32,13 @@ const PARAMS = {
   token: 'token',
 };
 
+export const VotingPhase = {
+  IDLE: 'Idle',
+  START: 'Start',
+  SIGNING: 'Signing',
+  AUTHORIZING: 'Authorizing',
+};
+
 const initialState = {
   numberOfSubmittedProposals: 29,
   totalSubmittedProposalBudget: 1240000,
@@ -46,6 +53,7 @@ const initialState = {
   proposalDetail: null,
   modalShowSponsorRequests: false,
   modalShowVoting: false,
+  votingPhase: VotingPhase.IDLE,
 
   proposalList: {
     Active: [],
@@ -498,6 +506,9 @@ const proposalSlice = createSlice({
     setModalShowSponsorRequests(state, action) {
       state.modalShowSponsorRequests = action.payload;
     },
+    setVotingPhase(state, action) {
+      state.votingPhase = action.payload;
+    },
     setModalShowVoting(state, action) {
       state.modalShowVoting = action.payload;
     },
@@ -910,5 +921,6 @@ export const {
   fetchPriorityVotingRequest,
   fetchPriorityVotingSuccess,
   fetchPriorityVotingFailure,
+  setVotingPhase,
 } = proposalSlice.actions;
 export default proposalSlice.reducer;

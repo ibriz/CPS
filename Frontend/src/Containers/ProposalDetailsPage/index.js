@@ -30,6 +30,7 @@ import {
   fetchVoteResultRequest,
   fetchSponsorMessageRequest,
   fetchChangeVoteRequest,
+  VotingPhase,
 } from 'Redux/Reducers/proposalSlice';
 import {
   emptyProgressReportDetailRequest,
@@ -88,7 +89,7 @@ const DescriptionTitle = styled.div`
 `;
 
 const LoadingDiv = styled.div`
-  height: 50vh;
+  height: 25vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -195,6 +196,7 @@ function ProposalDetailsPage(props) {
     isMaintenanceMode,
     fetchMaintenanceModeRequest,
     fetchProposalByIpfsRequest,
+    votingPhase,
     ...remainingProps
   } = props;
 
@@ -386,6 +388,7 @@ function ProposalDetailsPage(props) {
       });
   }, [proposal]);
 
+  const [voteLoading, setVoteLoading] = React.useState(false);
   const onSubmitVote = () => {
     voteProposal({
       vote,
@@ -394,6 +397,11 @@ function ProposalDetailsPage(props) {
       vote_change: changeVoteButton ? '1' : '0',
     });
   };
+
+  useEffect(() => {
+    if (votingPhase === VotingPhase.IDLE) setVoteLoading(false);
+    else setVoteLoading(true);
+  }, [votingPhase]);
 
   const onClickApproveSponsorRequest = () => {
     const { IconConverter } = IconService;
@@ -526,7 +534,19 @@ function ProposalDetailsPage(props) {
                     {proposalDetail?.sponserPrep === walletAddress &&
                       status === 'Pending' &&
                       period === 'APPLICATION' &&
-                      remainingTime > 0 && (
+                      remainingTime > 0 &&
+                      (voteLoading ? (
+                        <Container
+                          fluid
+                          style={{
+                            backgroundColor: 'white',
+                          }}
+                        >
+                          <LoadingDiv>
+                            <Spinner animation='border' variant='secondary' />
+                          </LoadingDiv>
+                        </Container>
+                      ) : (
                         <Container
                           fluid
                           style={{
@@ -619,16 +639,30 @@ function ProposalDetailsPage(props) {
               
           </Row> */}
                         </Container>
-                      )}
+                      ))}
 
                     {isPrep &&
                       votingPRep &&
                       period === 'VOTING' &&
                       remainingTime > 0 && (
                         <>
-                          {!votesByProposal.some(
-                            vote => vote.sponsorAddress === walletAddress,
-                          ) || changeVoteButton ? (
+                          {voteLoading ? (
+                            <Container
+                              fluid
+                              style={{
+                                backgroundColor: 'white',
+                              }}
+                            >
+                              <LoadingDiv>
+                                <Spinner
+                                  animation='border'
+                                  variant='secondary'
+                                />
+                              </LoadingDiv>
+                            </Container>
+                          ) : !votesByProposal.some(
+                              vote => vote.sponsorAddress === walletAddress,
+                            ) || changeVoteButton ? (
                             <Container
                               fluid
                               style={{
@@ -1169,6 +1203,7 @@ const mapStateToProps = state => ({
   votingPRep: state.account.votingPRep,
   isMaintenanceMode: state.fund.isMaintenanceMode,
   selectedProposalByIpfs: state.proposals.selectedProposal,
+  votingPhase: state.proposals.votingPhase,
 });
 
 const mapDispatchToProps = dispatch => ({

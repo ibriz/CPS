@@ -1,6 +1,10 @@
 import { put, select } from '@redux-saga/core/effects';
 import { sendTransaction, signTransaction } from 'Redux/ICON/utils';
-import { setBackendTriggerData } from 'Redux/Reducers/proposalSlice';
+import {
+  setBackendTriggerData,
+  setVotingPhase,
+  VotingPhase,
+} from 'Redux/Reducers/proposalSlice';
 import store from 'Redux/Store';
 
 const voteStatusMapping = {
@@ -12,19 +16,19 @@ const voteStatusMapping = {
 export const getAddress = state => state.account.address;
 
 function* voteProposalWorker({ payload }) {
-
   const walletAddress = yield select(getAddress);
 
   const params = {
     _vote: voteStatusMapping[payload.vote],
     _vote_reason: payload.voteReason,
     _ipfs_key: payload.ipfsKey,
-    _vote_change:payload.vote_change
+    _vote_change: payload.vote_change,
   };
 
+  yield put(setVotingPhase(VotingPhase.SIGNING));
   const { signature } = yield signTransaction(walletAddress);
-  
-  if(signature == '-1' || !signature) {
+
+  if (signature == '-1' || !signature) {
     return;
   }
 
@@ -33,17 +37,17 @@ function* voteProposalWorker({ payload }) {
     params,
   });
 
-    yield put(
-        setBackendTriggerData({
-            eventType: "voteProposal",
-            data: {
-                userAddress: walletAddress,
-                proposalIpfsHash: payload.ipfsKey
-            }
-        })
-    );
-
-    console.log(params);
+  yield put(setVotingPhase(VotingPhase.AUTHORIZING));
+  yield put(
+    setBackendTriggerData({
+      eventType: 'voteProposal',
+      data: {
+        userAddress: walletAddress,
+        proposalIpfsHash: payload.ipfsKey,
+      },
+    }),
+  );
+  console.log(params);
 }
 
 export default voteProposalWorker;
