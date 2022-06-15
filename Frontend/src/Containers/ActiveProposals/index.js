@@ -1,21 +1,21 @@
 import React from 'react';
 import Header from '../../Components/Header';
 import { Container } from 'react-bootstrap';
-import VotingCard from 'Components/VotingCard';
+import ActiveProposalsCard from 'Components/ActiveProposalsCard';
 import UpperCard from '../Proposals/UpperCard';
 
-const Voting = () => {
+const ActiveProposals = () => {
   return (
     <Container>
       {/* <Header title='Voting' /> */}
-      <UpperCard voting />
+      {/* <UpperCard voting /> */}
 
-      <VotingCard
-        proposalStatesList={['Proposals', 'Progress Reports']}
-        initialState={'Proposals'}
+      <ActiveProposalsCard
+        proposalStatesList={['Active']}
+        initialState={'Active'}
       />
     </Container>
   );
 };
 
-export default Voting;
+export default ActiveProposals;

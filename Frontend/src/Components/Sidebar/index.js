@@ -9,11 +9,12 @@ import {
 import { FaTachometerAlt, FaGem, FaList, FaBookOpen } from 'react-icons/fa';
 import { MdDashboard, MdForum } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import { Badge } from 'react-bootstrap';
+import { Badge, Fade } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { CgFileDocument } from 'react-icons/cg';
 import iconCPSImg from '../../Assets/Images/ICON CPS white.svg';
+import { GenIcon } from 'react-icons';
 
 const Aside = ({
   collapsed,
@@ -91,6 +92,20 @@ const Aside = ({
             </MenuItem>
             <MenuItem
               icon={<FaGem />}
+              style={getHighlightedStyle(['/voting'])}
+            >
+              {<span>Voting</span>}
+              <Link to='/voting' />
+            </MenuItem>
+            <MenuItem
+              icon={<FaList />}
+              style={getHighlightedStyle(['/Active Proposals'])}
+            >
+              {<span>Active Proposals</span>}
+              <Link to='/ActiveProposals' />
+            </MenuItem>
+            <MenuItem
+              icon={<FaTachometerAlt />}
               style={getHighlightedStyle(['/proposals', '/newProposal'])}
             >
               {' '}
@@ -98,7 +113,7 @@ const Aside = ({
               <Link to={process.env.PUBLIC_URL + '/proposals'} />
             </MenuItem>
             <MenuItem
-              icon={<FaList />}
+              icon={<FaGem />}
               style={getHighlightedStyle([
                 '/progress-reports',
                 '/newProgressReport',
@@ -147,6 +162,20 @@ const Aside = ({
               </MenuItem>
               <MenuItem
                 icon={<FaGem />}
+                style={getHighlightedStyle(['/voting'])}
+              >
+                {<span>Voting</span>}
+                <Link to='/voting' />
+              </MenuItem>
+              <MenuItem
+              icon={<FaList />}
+              style={getHighlightedStyle(['/Active Proposals'])}
+            >
+              {<span>Active Proposals</span>}
+              <Link to='/Active Proposals' />
+            </MenuItem>
+              <MenuItem
+                icon={<FaTachometerAlt />}
                 style={getHighlightedStyle(['/proposals', '/newProposal'])}
               >
                 {' '}
@@ -154,7 +183,7 @@ const Aside = ({
                 <Link to={process.env.PUBLIC_URL + '/proposals'} />
               </MenuItem>
               <MenuItem
-                icon={<FaList />}
+                icon={<FaGem />}
                 style={getHighlightedStyle([
                   '/progress-reports',
                   '/newProgressReport',

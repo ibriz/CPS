@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Row, Card, Col } from 'react-bootstrap';
 import styles from './ProposalCard.module.scss';
-import TabBar from 'Components/Card/TabBar';
+import TabBar from 'Components/Card/VotingTabBar';
 import ProposalList from 'Components/Card/ProposalList';
 import { connect } from 'react-redux';
 import {
