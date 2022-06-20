@@ -107,6 +107,7 @@ const SponsorRequestsCard = ({
                     ? onClickProposalDraft
                     : onClickProposal
                 }
+                minLayout={true}
               />
 
               <Pagination

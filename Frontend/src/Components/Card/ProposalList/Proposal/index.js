@@ -65,8 +65,16 @@ const Proposal = ({
                 }
               </Badge>
             )}{' '}
-            <LowerCardTitle>{proposal._proposal_title}</LowerCardTitle>
+            {!minLayout && (
+              <LowerCardTitle>{proposal._proposal_title}</LowerCardTitle>
+            )}
           </Row>
+
+          {minLayout && (
+            <Row className={styles.secondRow}>
+              <LowerCardTitle>{proposal._proposal_title}</LowerCardTitle>
+            </Row>
+          )}
 
           <Row className={styles.secondRow}>
             {minLayout ? (
