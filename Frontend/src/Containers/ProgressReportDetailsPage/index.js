@@ -30,6 +30,7 @@ import {
   approveSponserRequest,
   rejectSponsorRequest,
   voteProposal,
+  VotingPhase,
 } from 'Redux/Reducers/proposalSlice';
 import {
   voteProgressReport,
@@ -140,6 +141,7 @@ function ProgressReportDetailsPage(props) {
     fetchProgressReportByIpfsRequest,
     selectedProgressReportByIpfs,
     emptyProgressReportDetailRequest,
+    votingPhase,
     ...remainingProps
   } = props;
 
@@ -294,6 +296,8 @@ function ProgressReportDetailsPage(props) {
       });
   }, [progressReport]);
 
+  const [voteLoading, setVoteLoading] = React.useState(false);
+
   const onSubmitVote = () => {
     voteProgressReport({
       vote,
@@ -306,6 +310,11 @@ function ProgressReportDetailsPage(props) {
       vote_change: changeVoteButton ? '1' : '0',
     });
   };
+
+  useEffect(() => {
+    if (votingPhase === VotingPhase.IDLE) setVoteLoading(false);
+    else setVoteLoading(true);
+  }, [votingPhase]);
 
   const onClickApproveSponsorRequest = () => {
     approveSponserRequest({
@@ -667,7 +676,19 @@ function ProgressReportDetailsPage(props) {
                     {isPrep &&
                       votingPRep &&
                       period === 'VOTING' &&
-                      remainingTime > 0 && (
+                      remainingTime > 0 &&
+                      (voteLoading ? (
+                        <Container
+                          fluid
+                          style={{
+                            backgroundColor: 'white',
+                          }}
+                        >
+                          <LoadingDiv>
+                            <Spinner animation='border' variant='secondary' />
+                          </LoadingDiv>
+                        </Container>
+                      ) : (
                         <Container
                           fluid
                           style={{
@@ -900,7 +921,7 @@ function ProgressReportDetailsPage(props) {
                             </>
                           )}
                         </Container>
-                      )}
+                      ))}
 
                     {!sponsorRequest && (
                       <>
@@ -1261,6 +1282,7 @@ const mapStateToProps = state => ({
   votingPRep: state.account.votingPRep,
   isMaintenanceMode: state.fund.isMaintenanceMode,
   selectedProgressReportByIpfs: state.progressReport.selectedProgressReport,
+  votingPhase: state.proposals.votingPhase,
 });
 
 const mapDispatchToProps = dispatch => ({

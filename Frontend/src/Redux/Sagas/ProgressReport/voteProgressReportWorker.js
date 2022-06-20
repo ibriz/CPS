@@ -1,6 +1,10 @@
 import { put, select } from '@redux-saga/core/effects';
 import { sendTransaction, signTransaction } from 'Redux/ICON/utils';
-import { setBackendTriggerData } from 'Redux/Reducers/proposalSlice';
+import {
+  setBackendTriggerData,
+  setVotingPhase,
+  VotingPhase,
+} from 'Redux/Reducers/proposalSlice';
 
 const getAddress = state => state.account.address;
 
@@ -11,7 +15,6 @@ const voteStatusMapping = {
 };
 
 function* voteProgressReportWorker({ payload }) {
-
   const walletAddress = yield select(getAddress);
 
   const params = {
@@ -20,34 +23,36 @@ function* voteProgressReportWorker({ payload }) {
     _vote_reason: payload.voteReason,
     _ipfs_key: payload.proposalKey,
     _report_key: payload.reportKey,
-    _vote_change:payload.vote_change
+    _vote_change: payload.vote_change,
   };
 
-  const { signature } =  yield signTransaction(walletAddress);
-  
-  if(signature == '-1' || !signature) {
+  yield put(setVotingPhase(VotingPhase.SIGNING));
+  const { signature } = yield signTransaction(walletAddress);
+
+  if (signature == '-1' || !signature) {
     return;
   }
 
+  yield put(setVotingPhase(VotingPhase.AUTHORIZING));
   sendTransaction({
     method: 'vote_progress_report',
     params,
   });
 
-    yield put(
-        setBackendTriggerData({
-            eventType: 'voteProgressReport',
-            data: {
-                vote: voteStatusMapping[payload.vote],
-                userAddress: walletAddress,
-                voteReason: payload.voteReason,
-                proposalIpfsHash: payload.proposalKey,
-                progressIpfsHash: payload.reportKey
-            }
-        })
-    );
+  yield put(
+    setBackendTriggerData({
+      eventType: 'voteProgressReport',
+      data: {
+        vote: voteStatusMapping[payload.vote],
+        userAddress: walletAddress,
+        voteReason: payload.voteReason,
+        proposalIpfsHash: payload.proposalKey,
+        progressIpfsHash: payload.reportKey,
+      },
+    }),
+  );
 
-    console.log(params);
+  console.log(params);
 }
 
 export default voteProgressReportWorker;
