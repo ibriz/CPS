@@ -110,13 +110,15 @@ const SponsorRequestsCard = ({
                 minLayout={true}
               />
 
-              <Pagination
-                currentPage={pageNumber?.[selectedTab]}
-                setCurrentPage={pageNumber =>
-                  setCurrentPages(selectedTab, pageNumber)
-                }
-                totalPages={totalPages[selectedTab]}
-              />
+              {filteredProposalList.length > 0 && (
+                <Pagination
+                  currentPage={pageNumber?.[selectedTab]}
+                  setCurrentPage={pageNumber =>
+                    setCurrentPages(selectedTab, pageNumber)
+                  }
+                  totalPages={totalPages[selectedTab]}
+                />
+              )}
 
               {/* {
                                 modalShow && <DetailsModal

@@ -174,14 +174,16 @@ const ProgressReportCard = ({
               }
             />
 
-            <Pagination
-              currentPage={pageNumber?.[selectedTab]}
-              setCurrentPage={pageNumber =>
-                setCurrentPages(selectedTab, pageNumber)
-              }
-              // totalPages={totalPages?.[selectedTab]}
-              totalPages={pageLength}
-            />
+            {filteredProgressReportList.length > 0 && (
+              <Pagination
+                currentPage={pageNumber?.[selectedTab]}
+                setCurrentPage={pageNumber =>
+                  setCurrentPages(selectedTab, pageNumber)
+                }
+                // totalPages={totalPages?.[selectedTab]}
+                totalPages={pageLength}
+              />
+            )}
             {/* 
             {modalShow && (
               <DetailsModal
