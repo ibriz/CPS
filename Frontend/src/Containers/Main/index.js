@@ -8,6 +8,7 @@ import ProposalCreationPage from '../ProposalCreationPage';
 import ProgressReportCreationPage from '../ProgressReportCreationPage';
 import SponsorRequests from '../SponsorRequests';
 import Voting from '../Voting';
+import ActiveProposals from '../ActiveProposals';
 import BackedProjects from '../BackedProjects';
 import { connect } from 'react-redux';
 import Footer from 'Components/Footer';
@@ -101,12 +102,56 @@ const Main = ({
                   <title>CPS - Proposals</title>
                 </Helmet>
               </Route>
+
+
               <Route path={process.env.PUBLIC_URL + '/proposals'}>
                 {<Proposals />}
                 <Helmet>
                   <title>CPS - Proposals</title>
                 </Helmet>
               </Route>
+
+              <Route path={process.env.PUBLIC_URL + '/ActiveProposals'}>
+                {<ActiveProposals />}
+                <Helmet>
+                  <title>Active Proposals</title>
+                </Helmet>
+              </Route>
+
+
+
+             <Route path={process.env.PUBLIC_URL + '/voting/:id'}>
+                {/* <Proposals /> */}
+
+                {<ProposalDetailsPage show={true} />}
+
+                {/* {address ? (
+                  <Proposals />
+                ) : (
+                  <>
+                    <Home />
+                    <Footer />
+
+                    <Helmet>
+                      <title>CPS</title>
+                    </Helmet>
+                  </>
+                )} */}
+                <Helmet>
+                  <title>Voting </title>
+                </Helmet>
+              </Route>
+
+
+              <Route path={process.env.PUBLIC_URL + '/voting'}>
+                {<Voting />}
+                <Helmet>
+                  <title>Voting </title>
+                </Helmet>
+              </Route>
+
+
+
               <Route path='/progress-reports/:id'>
                 {/* {<ProgressReports />} */}
                 <ProgressReportDetailsPage />
@@ -142,12 +187,12 @@ const Main = ({
             {prepRoute(<SponsorRequests />)}
 
           </Route> */}
-              {/* <Route path="/voting">
+              {/* /* <Route path="/voting">
             {prepRoute(<Voting />)}
-          </Route> */}
-              {/* <Route path="/backed-projects">
+          </Route> */
+              /* <Route path="/backed-projects">
             {prepRoute(<BackedProjects />)}
-          </Route> */}
+          </Route> */ }
               <Route path='/'>
                 <Dashboard />
                 <Helmet>

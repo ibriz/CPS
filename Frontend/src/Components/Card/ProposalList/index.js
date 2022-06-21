@@ -39,7 +39,7 @@ const ProposalList = ({
             sponsorRequest={sponsorRequest}
             onClick={() => onClickProposal(proposal)}
             minLayout={minLayout}
-            showBadge={showBadge}
+           showBadge={showBadge}
           />
         ))
       ) : (
