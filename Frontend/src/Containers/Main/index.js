@@ -19,6 +19,8 @@ import Header from '../../Components/Header';
 import DetailsModal from '../../Components/Card/DetailsModal';
 import ProposalDetailsPage from 'Containers/ProposalDetailsPage';
 import ProgressReportDetailsPage from 'Containers/ProgressReportDetailsPage';
+import StatsPage from 'Containers/StatsPage';
+import ProposalHistoryPage from 'Containers/ProposalHistoryPage';
 
 const Main = ({
   handleToggleSidebar,
@@ -103,7 +105,6 @@ const Main = ({
                 </Helmet>
               </Route>
 
-
               <Route path={process.env.PUBLIC_URL + '/proposals'}>
                 {<Proposals />}
                 <Helmet>
@@ -111,16 +112,14 @@ const Main = ({
                 </Helmet>
               </Route>
 
-              <Route path={process.env.PUBLIC_URL + '/ActiveProposals'}>
+              <Route path={process.env.PUBLIC_URL + '/active-proposals'}>
                 {<ActiveProposals />}
                 <Helmet>
-                  <title>Active Proposals</title>
+                  <title>CPS - Active Proposals</title>
                 </Helmet>
               </Route>
 
-
-
-             <Route path={process.env.PUBLIC_URL + '/voting/:id'}>
+              <Route path={process.env.PUBLIC_URL + '/voting/:id'}>
                 {/* <Proposals /> */}
 
                 {<ProposalDetailsPage show={true} />}
@@ -138,19 +137,16 @@ const Main = ({
                   </>
                 )} */}
                 <Helmet>
-                  <title>Voting </title>
+                  <title>CPS - Voting</title>
                 </Helmet>
               </Route>
-
 
               <Route path={process.env.PUBLIC_URL + '/voting'}>
                 {<Voting />}
                 <Helmet>
-                  <title>Voting </title>
+                  <title>CPS - Voting</title>
                 </Helmet>
               </Route>
-
-
 
               <Route path='/progress-reports/:id'>
                 {/* {<ProgressReports />} */}
@@ -165,6 +161,23 @@ const Main = ({
                   <title>CPS - Progress Reports</title>
                 </Helmet>
               </Route>
+              <Route path='/proposal-history'>
+                <>
+                  {<ProposalHistoryPage />}
+                  <Helmet>
+                    <title>CPS - Proposal History</title>
+                  </Helmet>
+                </>
+              </Route>
+              <Route path='/stats'>
+                <>
+                  {<StatsPage />}
+                  <Helmet>
+                    <title>CPS - Stats</title>
+                  </Helmet>
+                </>
+              </Route>
+
               <Route path='/newProposal'>
                 <>
                   {<ProposalCreationPage />}
@@ -192,7 +205,7 @@ const Main = ({
           </Route> */
               /* <Route path="/backed-projects">
             {prepRoute(<BackedProjects />)}
-          </Route> */ }
+          </Route> */}
               <Route path='/'>
                 <Dashboard />
                 <Helmet>

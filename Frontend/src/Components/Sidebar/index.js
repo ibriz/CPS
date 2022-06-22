@@ -62,7 +62,11 @@ const Aside = ({
           }}
         >
           {!collapsed && (
-            <Link style={{ fontSize: 'initial' }} to='/' className='sidebarHeader'>
+            <Link
+              style={{ fontSize: 'initial' }}
+              to='/'
+              className='sidebarHeader'
+            >
               {/* <span style = {{fontSize: '26px', fontWeight: 400}}>ICON</span><span style = {{fontSize: '26px', fontWeight: '900'}}>CPS</span> */}
               <img src={iconCPSImg} style={{ width: '65%' }} />
             </Link>
@@ -90,10 +94,7 @@ const Aside = ({
               {<span>Dashboard</span>}
               <Link to='/dashboard' />
             </MenuItem>
-            <MenuItem
-              icon={<FaGem />}
-              style={getHighlightedStyle(['/voting'])}
-            >
+            <MenuItem icon={<FaGem />} style={getHighlightedStyle(['/voting'])}>
               {<span>Voting</span>}
               <Link to='/voting' />
             </MenuItem>
@@ -102,9 +103,9 @@ const Aside = ({
               style={getHighlightedStyle(['/Active Proposals'])}
             >
               {<span>Active Proposals</span>}
-              <Link to='/ActiveProposals' />
+              <Link to='/active-proposals' />
             </MenuItem>
-            <MenuItem
+            {/* <MenuItem
               icon={<FaTachometerAlt />}
               style={getHighlightedStyle(['/proposals', '/newProposal'])}
             >
@@ -122,15 +123,33 @@ const Aside = ({
               {' '}
               {<span>Progress Reports</span>}
               <Link to='/progress-reports' />
-            </MenuItem>
+            </MenuItem> */}
 
-            <MenuItem icon={<MdForum />}>
+            {/* <MenuItem icon={<MdForum />}>
               {' '}
               {<span>ICON Forum</span>}
               <a
                 href='https://forum.icon.community/c/contribution-proposals/45'
                 target='_blank'
               />
+            </MenuItem> */}
+
+            <MenuItem
+              icon={<MdForum />}
+              style={getHighlightedStyle(['/proposal-history'])}
+            >
+              {' '}
+              {<span>Proposal History</span>}
+              <Link to='/proposal-history' />
+            </MenuItem>
+
+            <MenuItem
+              icon={<MdForum />}
+              style={getHighlightedStyle(['/stats'])}
+            >
+              {' '}
+              {<span>Stats</span>}
+              <Link to='/stats' />
             </MenuItem>
 
             <MenuItem icon={<FaBookOpen />}>
@@ -168,13 +187,13 @@ const Aside = ({
                 <Link to='/voting' />
               </MenuItem>
               <MenuItem
-              icon={<FaList />}
-              style={getHighlightedStyle(['/Active Proposals'])}
-            >
-              {<span>Active Proposals</span>}
-              <Link to='/Active Proposals' />
-            </MenuItem>
-              <MenuItem
+                icon={<FaList />}
+                style={getHighlightedStyle(['/Active Proposals'])}
+              >
+                {<span>Active Proposals</span>}
+                <Link to='/Active Proposals' />
+              </MenuItem>
+              {/* <MenuItem
                 icon={<FaTachometerAlt />}
                 style={getHighlightedStyle(['/proposals', '/newProposal'])}
               >
@@ -192,7 +211,7 @@ const Aside = ({
                 {' '}
                 {<span>Progress Reports</span>}
                 <Link to='/progress-reports' />
-              </MenuItem>
+              </MenuItem> */}
 
               {/* <MenuItem
                 icon={<FaTachometerAlt />}
@@ -215,11 +234,14 @@ const Aside = ({
 
               <MenuItem icon={<MdForum />}>
                 {' '}
-                {<span>ICON Forum</span>}
-                <a
-                  href='https://forum.icon.community/c/contribution-proposals/45'
-                  target='_blank'
-                />
+                {<span>Proposal History</span>}
+                <Link to='/progress-reports' />
+              </MenuItem>
+
+              <MenuItem icon={<MdForum />}>
+                {' '}
+                {<span>Stats</span>}
+                <Link to='/progress-reports' />
               </MenuItem>
 
               <MenuItem icon={<FaBookOpen />}>
