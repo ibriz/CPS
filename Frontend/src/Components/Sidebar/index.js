@@ -100,7 +100,7 @@ const Aside = ({
             </MenuItem>
             <MenuItem
               icon={<FaList />}
-              style={getHighlightedStyle(['/Active Proposals'])}
+              style={getHighlightedStyle(['/active-proposals'])}
             >
               {<span>Active Proposals</span>}
               <Link to='/active-proposals' />
@@ -188,10 +188,10 @@ const Aside = ({
               </MenuItem>
               <MenuItem
                 icon={<FaList />}
-                style={getHighlightedStyle(['/Active Proposals'])}
+                style={getHighlightedStyle(['/active-proposals'])}
               >
                 {<span>Active Proposals</span>}
-                <Link to='/Active Proposals' />
+                <Link to='/active-proposals' />
               </MenuItem>
               {/* <MenuItem
                 icon={<FaTachometerAlt />}
