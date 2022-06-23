@@ -232,16 +232,22 @@ const Aside = ({
 
               </MenuItem> */}
 
-              <MenuItem icon={<MdForum />}>
+              <MenuItem
+                icon={<MdForum />}
+                style={getHighlightedStyle(['/proposal-history'])}
+              >
                 {' '}
                 {<span>Proposal History</span>}
-                <Link to='/progress-reports' />
+                <Link to='/proposal-history' />
               </MenuItem>
 
-              <MenuItem icon={<MdForum />}>
+              <MenuItem
+                icon={<MdForum />}
+                style={getHighlightedStyle(['/stats'])}
+              >
                 {' '}
                 {<span>Stats</span>}
-                <Link to='/progress-reports' />
+                <Link to='/stats' />
               </MenuItem>
 
               <MenuItem icon={<FaBookOpen />}>

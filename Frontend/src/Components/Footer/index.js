@@ -26,7 +26,7 @@ const socialLinks = [
   },
   {
     name: 'discord',
-    link: 'https://discord.gg/Nz8kTUtCgE',
+    link: 'https://discord.gg/4vpFeYams4',
     icon: FaDiscord,
     fontSize: '30px',
   },

@@ -52,6 +52,9 @@ const Proposal = ({
                 }
               </Badge>
             )}{' '}
+          </Row>
+
+          <Row className={styles.secondRow}>
             <LowerCardTitle>{proposal._proposal_title}</LowerCardTitle>
           </Row>
 

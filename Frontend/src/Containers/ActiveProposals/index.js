@@ -11,7 +11,7 @@ const ActiveProposals = () => {
       {/* <UpperCard voting /> */}
 
       <ActiveProposalsCard
-        proposalStatesList={['Active']}
+        proposalStatesList={['Active', 'Paused']}
         initialState={'Active'}
       />
     </Container>

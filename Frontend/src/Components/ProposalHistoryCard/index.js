@@ -152,7 +152,7 @@ const ProposalHistoryCard = ({
           )}
 
           <Row className={styles.proposalCard} style={{ marginTop: '32px' }}>
-            <Col>
+            {/* <Col>
               <Card>
                 <Card.Body className={styles.cardBody}>
                   <TabBar
@@ -180,10 +180,11 @@ const ProposalHistoryCard = ({
                 }
                 // totalPages={totalPages[selectedTab] ?? 1}
                 totalPages={pageLength}
-              /> */}
+              /> }
                 </Card.Body>
               </Card>
             </Col>
+            */}
           </Row>
         </div>
       )}

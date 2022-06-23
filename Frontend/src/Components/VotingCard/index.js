@@ -173,12 +173,12 @@ const VotingCard = ({
                 setSearchText={setSearchText}
                 tabs={proposalStatesList}
                 placeholder='Search Proposal'
-                newIndexList={
-                  !priorityVote &&
-                  proposalStatesList.includes('Priority Voting')
-                    ? [proposalStatesList.indexOf('Priority Voting')]
-                    : []
-                }
+                // newIndexList={
+                //   !priorityVote &&
+                //   proposalStatesList.includes('Priority Voting')
+                //     ? [proposalStatesList.indexOf('Priority Voting')]
+                //     : []
+                // }
               />
               <hr style={{ marginTop: '-9px' }} />
               {selectedTab === 'Proposals' ? (
