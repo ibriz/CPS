@@ -60,13 +60,6 @@ const Proposal = ({
 
           <Row className={styles.secondRow}>
             <>
-              <LowerCardInfo>{`${proposal._contributor_address.slice(
-                0,
-                4,
-              )}...${proposal._contributor_address.slice(
-                proposal._contributor_address.length - 3,
-              )}`}</LowerCardInfo>
-
               {proposalStatusMapping.find(
                 mapping => mapping.status === proposal._status,
               ).name !== 'Draft' && (

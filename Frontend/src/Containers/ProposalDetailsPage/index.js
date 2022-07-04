@@ -644,6 +644,7 @@ function ProposalDetailsPage(props) {
                     {isPrep &&
                       votingPRep &&
                       period === 'VOTING' &&
+                      status === 'Voting' &&
                       remainingTime > 0 && (
                         <>
                           {voteLoading ? (

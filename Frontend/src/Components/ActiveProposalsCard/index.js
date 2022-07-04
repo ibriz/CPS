@@ -197,14 +197,16 @@ const ActiveProposalsCard = ({
                 minHeight={minHeight}
               />
 
-              <Pagination
-                currentPage={pageNumber?.[selectedTab]}
-                setCurrentPage={pageNumber =>
-                  setCurrentPages(selectedTab, pageNumber)
-                }
-                // totalPages={totalPages[selectedTab] ?? 1}
-                totalPages={pageLength}
-              />
+              {filteredProposalList.length > 0 && (
+                <Pagination
+                  currentPage={pageNumber?.[selectedTab]}
+                  setCurrentPage={pageNumber =>
+                    setCurrentPages(selectedTab, pageNumber)
+                  }
+                  // totalPages={totalPages[selectedTab] ?? 1}
+                  totalPages={pageLength}
+                />
+              )}
               {/* {modalShow && (
                 <DetailsModal
                   show={modalShow}
