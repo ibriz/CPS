@@ -51,10 +51,11 @@ const ProposalHistoryCard = ({
   const proposalIpfsKey = useParams().id;
   const location = useLocation();
   const [displayLength, setDisplayLength] = useState(9);
-  const [totalProposals, setTotalProposals] = useState(0);
+  const [totalProposals, setTotalProposals] = useState(-1);
   const [loading, setLoading] = useState(false);
 
-  const [selectedTab, setSelectedTab] = useState('Completed');
+  const [tabs, setTabs] = useState(['Completed', 'Rejected', 'Disqualified']);
+
   const onClickProposal = proposal => {
     setSelectedProposal(proposal);
     if (location.pathname !== '/') {
@@ -65,26 +66,24 @@ const ProposalHistoryCard = ({
   const history = useHistory();
 
   useEffect(() => {
-    // fetchProposalListRequest({
-    //   status: selectedTab,
-    //   walletAddress: walletAddress || wallet.getAddress(),
-    //   pageNumber: pageNumber?.[selectedTab] ?? 1,
-    // });
-    let length = totalPages[selectedTab] || 1;
+    for (let i = 0; i < tabs.length; i++) {
+      let tab = tabs[i];
+      let length = totalPages[tab] || 1;
 
-    setLoading(true);
-    for (let i = 0; i < length; i++) {
-      fetchProposalListRequest({
-        status: selectedTab,
-        walletAddress: walletAddress || wallet.getAddress(),
-        // pageNumber: pageNumber?.[selectedTab] ?? 1,
-        pageNumber: i + 1,
-      });
+      setLoading(true);
+      for (let i = 0; i < length; i++) {
+        fetchProposalListRequest({
+          status: tab,
+          walletAddress: walletAddress || wallet.getAddress(),
+          // pageNumber: pageNumber?.[selectedTab] ?? 1,
+          pageNumber: i + 1,
+        });
+      }
     }
   }, [
-    selectedTab,
     fetchDraftsRequest,
     fetchProposalListRequest,
+    tabs,
     walletAddress,
     totalPages,
   ]);
@@ -98,15 +97,20 @@ const ProposalHistoryCard = ({
   }, []);
 
   useEffect(() => {
-    const flattenedProposals =
-      [].concat.apply([], proposalList[selectedTab]) || [];
-    setTotalProposals(flattenedProposals.length);
+    const flattenedProposals = [];
+    for (let i = 0; i < tabs.length; i++) {
+      const flattenedProposalsTemp =
+        [].concat.apply([], proposalList[tabs[i]]) || [];
 
+      flattenedProposals.push(...flattenedProposalsTemp);
+    }
+
+    setTotalProposals(flattenedProposals.length);
     if (flattenedProposals.length > 0) {
       setLoading(false);
       setFilteredProposalList(flattenedProposals.slice(0, displayLength));
     }
-  }, [selectedTab, proposalList, walletAddress, displayLength]);
+  }, [proposalList, walletAddress, displayLength, tabs]);
 
   useEffect(() => {
     if (selectedProposalByIpfs?.ipfsHash) {
@@ -134,8 +138,6 @@ const ProposalHistoryCard = ({
         >
           <ProposalHistoryList
             proposals={filteredProposalList}
-            selectedTab={selectedTab}
-            // searchText={searchText}
             selectedProposal={selectedProposal}
             setSelectedProposal={setSelectedProposal}
             onClickProposal={onClickProposal}
@@ -151,41 +153,10 @@ const ProposalHistoryCard = ({
             </Button>
           )}
 
-          <Row className={styles.proposalCard} style={{ marginTop: '32px' }}>
-            {/* <Col>
-              <Card>
-                <Card.Body className={styles.cardBody}>
-                  <TabBar
-                    selectedTab={selectedTab}
-                    // setSelectedTab={setSelectedTab}
-                    searchText={''}
-                    setSearchText={() => {}}
-                    tabs={['Completed']}
-                    placeholder='Search Proposal'
-                  />
-                  <hr style={{ marginTop: '-9px' }} />
-                  <ProposalList
-                    proposals={filteredProposalList}
-                    selectedTab={selectedTab}
-                    selectedProposal={selectedProposal}
-                    setSelectedProposal={setSelectedProposal}
-                    onClickProposal={onClickProposal}
-                    minHeight={minHeight}
-                  />
-
-                  {/* <Pagination
-                currentPage={pageNumber?.[selectedTab]}
-                setCurrentPage={pageNumber =>
-                  setCurrentPages(selectedTab, pageNumber)
-                }
-                // totalPages={totalPages[selectedTab] ?? 1}
-                totalPages={pageLength}
-              /> }
-                </Card.Body>
-              </Card>
-            </Col>
-            */}
-          </Row>
+          <Row
+            className={styles.proposalCard}
+            style={{ marginTop: '32px' }}
+          ></Row>
         </div>
       )}
       {/* <Header title='Proposals' /> */}

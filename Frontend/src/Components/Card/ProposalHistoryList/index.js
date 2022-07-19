@@ -5,7 +5,6 @@ import Proposal from './Proposal';
 
 const ProposalHistoryList = ({
   proposals,
-  selectedTab,
   onClickProposal,
   emptyListMessage,
   sponsorRequest = false,
@@ -38,7 +37,6 @@ const ProposalHistoryList = ({
           proposal ? (
             <Proposal
               proposal={proposal}
-              selectedTab={selectedTab}
               sponsorRequest={sponsorRequest}
               onClick={() => onClickProposal(proposal)}
               minLayout={minLayout}
@@ -50,7 +48,7 @@ const ProposalHistoryList = ({
         )
       ) : (
         <span className={styles.noProposals}>
-          {emptyListMessage || `No ${selectedTab} Proposals`}
+          {emptyListMessage || `No Proposals`}
         </span>
       )}
     </Container>
