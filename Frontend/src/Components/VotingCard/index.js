@@ -77,7 +77,7 @@ const VotingCard = ({
   useEffect(() => {
     if (selectedTab === 'Priority Voting') {
       if (!priorityVote) {
-        fetchProposalListRequest({ status, walletAddress });
+        fetchProposalListRequest({ status });
       } else {
         fetchSortPriorityProposalListRequest();
       }
