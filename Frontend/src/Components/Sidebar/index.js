@@ -6,7 +6,14 @@ import {
   SidebarHeader,
   SidebarContent,
 } from 'react-pro-sidebar';
-import { FaTachometerAlt, FaGem, FaList, FaBookOpen } from 'react-icons/fa';
+import {
+  FaTachometerAlt,
+  FaGem,
+  FaList,
+  FaBookOpen,
+  FaChartLine,
+} from 'react-icons/fa';
+import { BiPieChartAlt } from 'react-icons/bi';
 import { MdDashboard, MdForum } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import { Badge, Fade } from 'react-bootstrap';
@@ -135,7 +142,7 @@ const Aside = ({
             </MenuItem> */}
 
             <MenuItem
-              icon={<MdForum />}
+              icon={<BiPieChartAlt />}
               style={getHighlightedStyle(['/proposal-history'])}
             >
               {' '}
@@ -144,7 +151,7 @@ const Aside = ({
             </MenuItem>
 
             <MenuItem
-              icon={<MdForum />}
+              icon={<FaChartLine />}
               style={getHighlightedStyle(['/stats'])}
             >
               {' '}
@@ -233,7 +240,7 @@ const Aside = ({
               </MenuItem> */}
 
               <MenuItem
-                icon={<MdForum />}
+                icon={<BiPieChartAlt />}
                 style={getHighlightedStyle(['/proposal-history'])}
               >
                 {' '}
@@ -242,7 +249,7 @@ const Aside = ({
               </MenuItem>
 
               <MenuItem
-                icon={<MdForum />}
+                icon={<FaChartLine />}
                 style={getHighlightedStyle(['/stats'])}
               >
                 {' '}
