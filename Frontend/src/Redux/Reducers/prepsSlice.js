@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   preps: [],
+  prepsWithStats: null,
 };
 
 const prepsSlice = createSlice({
@@ -37,6 +38,16 @@ const prepsSlice = createSlice({
     payPenalty() {
       return;
     },
+
+    fetchPrepsWithStatsRequest(state) {
+      return;
+    },
+    fetchPrepsWithStatsSuccess(state, action) {
+      state.prepsWithStats = action.payload;
+    },
+    fetchPrepsWithStatsFailure(state) {
+      return;
+    },
   },
 });
 
@@ -44,6 +55,9 @@ export const {
   fetchPrepsRequest,
   fetchPrepsSuccess,
   fetchPrepsFailure,
+  fetchPrepsWithStatsRequest,
+  fetchPrepsWithStatsSuccess,
+  fetchPrepsWithStatsFailure,
   unregisterPrep,
   registerPrep,
   payPenalty,

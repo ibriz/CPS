@@ -1,3 +1,4 @@
+import StatsCard from 'Components/StatsCard';
 import React from 'react';
 import { Container } from 'react-bootstrap';
 
@@ -5,7 +6,10 @@ export default function StatsPage() {
   return (
     <Container fluid>
       {' '}
-      <h3 style={{ textAlign: 'center' }}>Coming soon</h3>
+      <StatsCard
+        stateList={['Validator stats', 'Platform stats']}
+        initialState={'Validator stats'}
+      />
     </Container>
   );
 }
