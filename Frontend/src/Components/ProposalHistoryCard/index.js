@@ -44,6 +44,7 @@ const ProposalHistoryCard = ({
   fetchProposalByIpfsRequest,
   selectedProposalByIpfs,
   emptyProposalDetailRequest,
+  proposalListLoading,
 }) => {
   const [filteredProposalList, setFilteredProposalList] =
     useState(proposalList);
@@ -53,7 +54,6 @@ const ProposalHistoryCard = ({
   const location = useLocation();
   const [displayLength, setDisplayLength] = useState(9);
   const [totalProposals, setTotalProposals] = useState(-1);
-  const [loading, setLoading] = useState(false);
 
   const [tabs, setTabs] = useState(['Completed', 'Rejected', 'Disqualified']);
   let [searchText, setSearchText] = useState('');
@@ -71,7 +71,6 @@ const ProposalHistoryCard = ({
       let tab = tabs[i];
       let length = totalPages[tab] || 1;
 
-      setLoading(true);
       for (let i = 0; i < length; i++) {
         fetchProposalListRequest({
           status: tab,
@@ -113,7 +112,6 @@ const ProposalHistoryCard = ({
 
     setTotalProposals(flattenedProposals.length);
 
-    setLoading(false);
     setFilteredProposalList(flattenedProposals.slice(0, displayLength));
   }, [proposalList, walletAddress, displayLength, tabs, searchText]);
 
@@ -129,7 +127,7 @@ const ProposalHistoryCard = ({
 
   return (
     <div>
-      {loading ? (
+      {proposalListLoading ? (
         <LoadingDiv>
           <Spinner animation='border' variant='secondary' />
         </LoadingDiv>
@@ -182,6 +180,7 @@ const mapStateToProps = () => state => {
     walletAddress: state.account.address,
     totalPages: state.proposals.totalPages,
     selectedProposalByIpfs: state.proposals.selectedProposal,
+    proposalListLoading: state.proposals.proposalListLoading,
   };
 };
 

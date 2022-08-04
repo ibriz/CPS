@@ -65,6 +65,7 @@ const initialState = {
     Rejected: [],
     Draft: [],
   },
+  proposalListLoading: false,
 
   myProposalList: [],
 
@@ -242,11 +243,13 @@ const proposalSlice = createSlice({
     },
 
     fetchProposalListRequest(state) {
+      state.proposalListLoading = true;
       return;
     },
     fetchProposalListSuccess(state, action) {
       // state.proposalList = action.payload
       // state.proposalList.
+      state.proposalListLoading = false;
       console.log(action.payload.response.data);
 
       state.proposalList[action.payload.status][action.payload.pageNumber - 1] =
@@ -316,6 +319,7 @@ const proposalSlice = createSlice({
       return;
     },
     fetchProposalListFailure(state) {
+      state.proposalListLoading = false;
       return;
     },
     updateProposalStatus(state, action) {
