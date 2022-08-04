@@ -19,7 +19,7 @@ const ProposalHistoryList = ({
         proposals.length
           ? {
               display: 'grid',
-              gridTemplateColumns: 'repeat(3, auto)',
+              gridTemplateColumns: 'repeat(3, 1fr)',
               columnGap: '12px',
               rowGap: '12px',
               marginTop: '16px',

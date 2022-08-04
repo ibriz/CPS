@@ -138,6 +138,7 @@ const ProposalHistoryCard = ({
             alignItems: 'center',
             flexDirection: 'column',
             marginTop: '16px',
+            minHeight: '50vh',
           }}
         >
           <NavBarInputGroup

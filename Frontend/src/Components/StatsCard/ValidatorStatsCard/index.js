@@ -3,6 +3,19 @@ import Table from 'react-bootstrap/Table';
 import Form from 'react-bootstrap/Form';
 import prepsSlice from 'Redux/Reducers/prepsSlice';
 const ValidatorStatsCard = ({ preps, count1, count2 }) => {
+  let [prepList, setPrepList] = React.useState([]);
+
+  React.useEffect(() => {
+    let prepList = preps?.slice();
+    prepList = prepList?.sort(function (a, b) {
+      if (a?.prep?.name?.toLowerCase() < b?.prep?.name?.toLowerCase())
+        return -1;
+      if (a?.prep?.name?.toLowerCase() > b?.prep?.name?.toLowerCase()) return 1;
+      return 0;
+    });
+    setPrepList(prepList);
+  }, [preps]);
+
   const type = 'checkbox';
   return (
     <Table striped bordered hover>
@@ -16,9 +29,9 @@ const ValidatorStatsCard = ({ preps, count1, count2 }) => {
         </tr>
       </thead>
       <tbody>
-        {preps?.map((prep, i) => (
+        {prepList?.map((prep, i) => (
           <tr>
-            <td>{i}</td>
+            <td>{i + 1}</td>
             <td>{prep.prep.name}</td>
             <td>
               {prep.proposalRemaining} / {count1}
@@ -29,7 +42,9 @@ const ValidatorStatsCard = ({ preps, count1, count2 }) => {
             <td>
               <Form.Check
                 checked={Boolean(Number(prep.priorityVoting))}
-                disabled
+                onClick={() => {
+                  return false;
+                }}
                 type={type}
               />
             </td>
