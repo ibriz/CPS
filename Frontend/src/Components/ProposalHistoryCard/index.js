@@ -21,6 +21,7 @@ import ProposalList from 'Components/Card/ProposalList';
 import TabBar from 'Components/Card/TabBar';
 import styles from '../ActiveProposalsCard/ProposalCard.module.scss';
 import styled from 'styled-components';
+import NavBarInputGroup from '../UI/LowerCardNavBar/NavBarInputGroup';
 
 const LoadingDiv = styled.div`
   height: 50vh;
@@ -55,7 +56,7 @@ const ProposalHistoryCard = ({
   const [loading, setLoading] = useState(false);
 
   const [tabs, setTabs] = useState(['Completed', 'Rejected', 'Disqualified']);
-
+  let [searchText, setSearchText] = useState('');
   const onClickProposal = proposal => {
     setSelectedProposal(proposal);
     if (location.pathname !== '/') {
@@ -97,20 +98,24 @@ const ProposalHistoryCard = ({
   }, []);
 
   useEffect(() => {
-    const flattenedProposals = [];
+    let flattenedProposals = [];
     for (let i = 0; i < tabs.length; i++) {
       const flattenedProposalsTemp =
         [].concat.apply([], proposalList[tabs[i]]) || [];
 
       flattenedProposals.push(...flattenedProposalsTemp);
     }
+    flattenedProposals = flattenedProposals.filter(proposal =>
+      proposal?._proposal_title
+        ?.toLowerCase()
+        .includes(searchText?.toLowerCase()),
+    );
 
     setTotalProposals(flattenedProposals.length);
-    if (flattenedProposals.length > 0) {
-      setLoading(false);
-      setFilteredProposalList(flattenedProposals.slice(0, displayLength));
-    }
-  }, [proposalList, walletAddress, displayLength, tabs]);
+
+    setLoading(false);
+    setFilteredProposalList(flattenedProposals.slice(0, displayLength));
+  }, [proposalList, walletAddress, displayLength, tabs, searchText]);
 
   useEffect(() => {
     if (selectedProposalByIpfs?.ipfsHash) {
@@ -134,8 +139,14 @@ const ProposalHistoryCard = ({
             display: 'flex',
             alignItems: 'center',
             flexDirection: 'column',
+            marginTop: '16px',
           }}
         >
+          <NavBarInputGroup
+            placeholder='Search'
+            value={searchText}
+            setValue={setSearchText}
+          />
           <ProposalHistoryList
             proposals={filteredProposalList}
             selectedProposal={selectedProposal}
