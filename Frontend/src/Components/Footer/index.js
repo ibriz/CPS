@@ -32,7 +32,7 @@ const socialLinks = [
   },
   {
     name: 'github',
-    link: 'https://github.com/icon-project',
+    link: 'https://github.com/icon-community/CPS',
     icon: AiFillGithub,
   },
 
