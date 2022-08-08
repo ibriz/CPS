@@ -14,13 +14,13 @@ function* fetchRemainingVotesRequestWorker({ payload }) {
     const getAddress = state => state.account.address;
     const walletAddress = yield select(getAddress);
 
-    // const response = yield call(callKeyStoreWallet, {
-    //   method: 'get_remaining_project',
-    //   params: {
-    //     _wallet_address: payload.walletAddress,
-    //     _project_type: payload.type,
-    //   },
-    // });
+    const response = yield call(callKeyStoreWallet, {
+      method: 'get_remaining_project',
+      params: {
+        _wallet_address: walletAddress,
+        _project_type: payload.type,
+      },
+    });
 
     // let response
     // if (payload.type === "proposal") {
@@ -143,34 +143,15 @@ function* fetchRemainingVotesRequestWorker({ payload }) {
     // }
 
     if (payload.type === 'proposal') {
-      const response = yield call(callKeyStoreWallet, {
-        method: 'get_proposal_details',
-        params: {
-          _status: '_pending',
-          // _wallet_address: payload.walletAddress,
-          _end_index: `${(payload.pageNumber || 3) * 10}`,
-          _start_index: `${(payload.pageNumber || 1) * 10 - 10}`,
-        },
-      });
-
       yield put(
         fetchRemainingVotesProposalSuccess({
-          response: response.data,
+          response,
         }),
       );
     } else {
-      const response = yield call(callKeyStoreWallet, {
-        method: 'get_progress_reports',
-        params: {
-          _status: '_waiting',
-          // _address: payload.walletAddress,
-          _end_index: `${(payload.pageNumber || 3) * 10}`,
-          _start_index: `${(payload.pageNumber || 1) * 10 - 10}`,
-        },
-      });
       yield put(
         fetchRemainingVotesPRSuccess({
-          response: response.data,
+          response,
         }),
       );
     }
