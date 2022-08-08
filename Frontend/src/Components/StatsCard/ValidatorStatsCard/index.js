@@ -23,8 +23,8 @@ const ValidatorStatsCard = ({ preps, count1, count2 }) => {
         <tr>
           <th>S.N.</th>
           <th>Validator Name</th>
-          <th>Proposals</th>
-          <th>Progress reports</th>
+          <th>Remaining Proposals</th>
+          <th>Remaining Progress Reports</th>
           <th>Priority Voting</th>
         </tr>
       </thead>
@@ -33,20 +33,17 @@ const ValidatorStatsCard = ({ preps, count1, count2 }) => {
           <tr>
             <td>{i + 1}</td>
             <td>{prep.prep.name}</td>
+            <td>{prep.proposalRemaining}</td>
+            <td>{prep.progressReportRemaining}</td>
             <td>
-              {prep.proposalRemaining} / {count1}
-            </td>
-            <td>
-              {prep.progressReportRemaining} / {count2}
-            </td>
-            <td>
-              <Form.Check
+              {/* <Form.Check
                 checked={Boolean(Number(prep.priorityVoting))}
                 onClick={() => {
                   return false;
                 }}
                 type={type}
-              />
+              /> */}
+              {Boolean(Number(prep.priorityVoting)) ? 'Voted' : 'Not Voted'}
             </td>
           </tr>
         ))}
