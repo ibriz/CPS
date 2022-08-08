@@ -261,7 +261,7 @@ const Aside = ({
                 {' '}
                 {<span>User Guide</span>}
                 <a
-                  href='https://medium.com/ibriz-iconosphere/how-to-use-the-contribution-proposal-system-1efe714c9182'
+                  href='https://github.com/icon-community/CPS/wiki'
                   target='_blank'
                 />
               </MenuItem>
