@@ -195,6 +195,7 @@ const ActiveProposalsCard = ({
                     : onClickProposal
                 }
                 minHeight={minHeight}
+                minLayout={true}
               />
 
               {filteredProposalList.length > 0 && (
