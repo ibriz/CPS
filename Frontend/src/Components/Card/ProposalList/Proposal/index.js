@@ -1,7 +1,7 @@
 import React from 'react';
 import { Row, Col, Badge, Button } from 'react-bootstrap';
 import styles from './Proposal.module.scss';
-
+import { useHistory } from 'react-router-dom';
 import ProgressText from '../../../UI/ProgressText';
 import ProgressBar from '../../../UI/ProgressBar';
 import LowerCardTitle from '../../../UI/LowerCardList/LowerCardTitle';
@@ -43,6 +43,7 @@ const Proposal = ({
   showBadge = true,
 }) => {
   const { isRemainingTimeZero } = useTimer();
+  const history = useHistory();
   if (selectedTab != 'Active') {
     return (
       <>
@@ -133,7 +134,7 @@ const Proposal = ({
                         <Link
                           to={{
                             pathname: '/newProgressReport',
-                            // search: "?sort=name",
+                            // search: '?sort=name',
                             // hash: "#the-hash",
                             ipfsKey: proposal.ipfsKey,
                           }}
@@ -164,22 +165,28 @@ const Proposal = ({
                   ) &&
                     !proposal?.submitProgressReport && (
                       <>
-                        <Link
+                        {/* <Link
                           to={{
                             pathname: '/newProgressReport',
                             // search: "?sort=name",
                             // hash: "#the-hash",
                             ipfsKey: proposal.ipfsKey,
                           }}
+                        > */}
+                        <Button
+                          variant='info'
+                          className={styles.createProposalButton}
+                          onClick={e => {
+                            e.stopPropagation();
+                            history.push({
+                              pathname: '/newProgressReport',
+                              ipfsKey: proposal.ipfsKey,
+                            });
+                          }}
                         >
-                          <Button
-                            variant='info'
-                            className={styles.createProposalButton}
-                            onClick={e => e.stopPropagation()}
-                          >
-                            CREATE PROGRESS REPORT
-                          </Button>
-                        </Link>
+                          CREATE PROGRESS REPORT
+                        </Button>
+                        {/* </Link> */}
                       </>
                     )}
                 </Col>
