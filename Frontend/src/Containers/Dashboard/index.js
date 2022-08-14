@@ -31,6 +31,7 @@ import {
 } from 'Redux/Reducers/fundSlice';
 import { setLoginButtonClicked } from 'Redux/Reducers/accountSlice';
 import congratulationsImg from '../../Assets/Images/congratulations.png';
+import UpperCard from 'Containers/Proposals/UpperCard';
 
 const Dashboard = ({
   payPenaltyRequest,
@@ -514,6 +515,22 @@ const Dashboard = ({
         ))}
       </Row>
 
+      {isPrep && isRegistered && period === 'VOTING' && (
+        <>
+          <div className={styles.myProposalHeading}>Pending Votes</div>
+
+          <VotingCard
+            proposalStatesList={
+              period === 'VOTING'
+                ? ['Priority Voting', 'Proposals', 'Progress Reports']
+                : ['Proposals', 'Progress Reports']
+            }
+            initialState={period === 'VOTING' ? 'Priority Voting' : 'Proposals'}
+            priorityVote={priorityVote}
+          />
+        </>
+      )}
+
       {/* {
                 (!isPrep || !isRegistered) && period === 'APPLICATION' &&
                 <>
@@ -526,7 +543,7 @@ const Dashboard = ({
       {
         <>
           {/* <div className={styles.myProposalHeading}>My Proposals</div> */}
-
+          <UpperCard />
           <MyProposalCard />
         </>
       }
@@ -543,22 +560,6 @@ const Dashboard = ({
               'Disqualified',
             ]}
             initialState={'Pending'}
-          />
-        </>
-      )}
-
-      {isPrep && isRegistered && (
-        <>
-          <div className={styles.myProposalHeading}>Pending Votes</div>
-
-          <VotingCard
-            proposalStatesList={
-              period === 'VOTING'
-                ? ['Priority Voting', 'Proposals', 'Progress Reports']
-                : ['Proposals', 'Progress Reports']
-            }
-            initialState={period === 'VOTING' ? 'Priority Voting' : 'Proposals'}
-            priorityVote={priorityVote}
           />
         </>
       )}

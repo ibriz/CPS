@@ -30,6 +30,7 @@ const PARAMS = {
   sponsorVoteReason: 'sponsor_vote_reason',
   projectDuration: 'project_duration',
   token: 'token',
+  submitProgressReport: 'submit_progress_report',
 };
 
 export const VotingPhase = {
@@ -618,6 +619,9 @@ const proposalSlice = createSlice({
           totalVotes: IconConverter.toBigNumber(proposal[PARAMS.totalVotes]),
           projectDuration: IconConverter.toBigNumber(
             proposal[PARAMS.projectDuration],
+          ),
+          submitProgressReport: Boolean(
+            Number(proposal[PARAMS.submitProgressReport]),
           ),
 
           sponsorVoteReason: proposal[PARAMS.sponsorVoteReason],

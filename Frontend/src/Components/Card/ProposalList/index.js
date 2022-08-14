@@ -32,6 +32,7 @@ const ProposalList = ({
       {proposals.length ? (
         proposals.map(proposal => (
           <Proposal
+            key={proposal?.ipfsHash}
             proposal={proposal}
             selectedTab={selectedTab}
             proposalPendingPR={proposalPendingPR}
@@ -39,7 +40,7 @@ const ProposalList = ({
             sponsorRequest={sponsorRequest}
             onClick={() => onClickProposal(proposal)}
             minLayout={minLayout}
-           showBadge={showBadge}
+            showBadge={showBadge}
           />
         ))
       ) : (
