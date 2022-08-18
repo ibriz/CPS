@@ -301,10 +301,10 @@ const Dashboard = ({
   };
 
   useEffect(() => {
-    if (isPrep && isRegistered) {
+    if (isPrep && isRegistered && cpsTreasuryScoreAddress && address) {
       fetchSponsorDepositAmountRequest();
     }
-  }, [isPrep, isRegistered]);
+  }, [isPrep, isRegistered, cpsTreasuryScoreAddress, address]);
 
   useEffect(() => {
     if (isPrep) {
