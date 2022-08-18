@@ -35,7 +35,7 @@ const GrantTimeline = props => {
           </div>
           <div className='descriptionItem'>
             <div>
-              P-Reps either accept or reject the submitted proposals and
+              Validators either accept or reject the submitted proposals and
               progress reports
             </div>
             <p>Voting Period</p>

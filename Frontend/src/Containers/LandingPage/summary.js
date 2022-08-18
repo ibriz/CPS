@@ -274,7 +274,7 @@ const Summary = ({
             onClick={() => setPrepListModalShow(true)}
             style={{ textDecoration: 'underline', cursor: 'pointer' }}
           >
-            P-Reps
+            Validators
           </p>
         </div>
       </div>
