@@ -550,7 +550,7 @@ const Dashboard = ({
 
       {isPrep && isRegistered && (
         <>
-          <div className={styles.myProposalHeading}>Sponsor Requests</div>
+          <div className={styles.myProposalHeading}>Sponsored Projects</div>
 
           <SponsorRequestsCard
             proposalStatesList={[
