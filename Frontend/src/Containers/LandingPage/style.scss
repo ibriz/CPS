@@ -858,6 +858,9 @@
       flex-direction: column;
       align-items: center;
       padding: 20px 20px 10px 20px;
+      a {
+        text-decoration: none;
+      }
       & > h1 {
         color: rgba(7, 41, 45, 1);
         font-weight: bold;
