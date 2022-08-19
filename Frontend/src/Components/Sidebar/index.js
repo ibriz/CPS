@@ -33,9 +33,14 @@ const Aside = ({
   isRegistered,
   history,
   setToggled,
+  priorityVote,
+  remainingVotesProposal,
+  remainingVotesPR,
+  period,
 }) => {
   const highlightedStyle = { background: 'rgba(38, 38, 38, 0.1)' };
   const pathName = history.location.pathname;
+  const [notificationsCount, setNotificationsCount] = React.useState(0);
 
   const getHighlightedStyle = routes => {
     return routes.includes(pathName) ? highlightedStyle : {};
@@ -46,6 +51,14 @@ const Aside = ({
       handleCollapsedChange(false);
     }
   }, [toggled]);
+
+  useEffect(() => {
+    setNotificationsCount(
+      priorityVote
+        ? remainingVotesProposal.length + remainingVotesPR.length
+        : remainingVotesProposal.length + remainingVotesPR.length + 1,
+    );
+  }, [priorityVote, remainingVotesPR, remainingVotesProposal, period]);
 
   return (
     <ProSidebar
@@ -183,7 +196,26 @@ const Aside = ({
                 icon={<MdDashboard />}
                 style={getHighlightedStyle(['/dashboard'])}
               >
-                {<span>Dashboard</span>}
+                {
+                  <span style={{ position: 'relative' }}>
+                    Dashboard
+                    {period === 'VOTING' && (
+                      <span
+                        style={{
+                          position: 'absolute',
+                          top: '-3px',
+                          right: '-24px',
+                          fontSize: '10px',
+                          padding: '1px 4px',
+                          backgroundColor: '#fa3e3e',
+                          borderRadius: '2px',
+                        }}
+                      >
+                        {notificationsCount}
+                      </span>
+                    )}
+                  </span>
+                }
                 <Link to='/dashboard' />
               </MenuItem>
               <MenuItem
@@ -314,7 +346,11 @@ const Aside = ({
 
 const mapStateToProps = state => ({
   isPrep: state.account.isPrep,
+  period: state.period.period,
   isRegistered: state.account.isRegistered,
+  priorityVote: state.proposals.priorityVoting,
+  remainingVotesProposal: state.proposals.remainingVotes,
+  remainingVotesPR: state.progressReport.remainingVotes,
 });
 
 export default withRouter(connect(mapStateToProps)(Aside));
