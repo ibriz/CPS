@@ -7,6 +7,9 @@ import { callKeyStoreWallet } from '../../ICON/utils';
 
 function* fetchPrepsWithStatsWorker({ payload }) {
   try {
+    yield put(
+      fetchPrepsWithStatsSuccess({ prepsWithStats: [], loading: true }),
+    );
     const preps = yield call(callKeyStoreWallet, {
       method: 'get_PReps',
     });
@@ -46,7 +49,9 @@ function* fetchPrepsWithStatsWorker({ payload }) {
       result[i].progressReportRemaining = remainingPR.length;
       result[i].priorityVoting = priorityVoting;
     }
-    yield put(fetchPrepsWithStatsSuccess(result));
+    yield put(
+      fetchPrepsWithStatsSuccess({ prepsWithStats: result, loading: false }),
+    );
   } catch (error) {
     yield put(fetchPrepsWithStatsFailure(error));
   }

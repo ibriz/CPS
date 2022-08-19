@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Card, Col, Spinner, Container } from 'react-bootstrap';
+import { Row, Card, Col, Spinner, Container, Button } from 'react-bootstrap';
 import TabBar from 'Components/Card/TabBar';
 import { connect } from 'react-redux';
 import { withRouter, useLocation, useParams } from 'react-router-dom';
@@ -34,6 +34,7 @@ const StatsCard = ({
   fetchPrepsWithStatsRequest,
   fetchProposalListRequest,
   fetchProgressReport,
+  loading,
 }) => {
   const [selectedTab, setSelectedTab] = useState(initialState);
   //   const [filteredProposalList, setFilteredProposalList] =
@@ -77,7 +78,7 @@ const StatsCard = ({
     totalCountProgressReport += progressReports[i].length;
   }
 
-  return !prepsWithStats ? (
+  return loading ? (
     <Container>
       <LoadingDiv>
         <Spinner animation='border' variant='secondary' />
@@ -89,15 +90,24 @@ const StatsCard = ({
         <Col>
           <Card>
             <Card.Body className={styles.cardBody}>
-              <TabBar
-                selectedTab={selectedTab}
-                setSelectedTab={setSelectedTab}
-                // searchText={searchText}
-                // setSearchText={setSearchText}
-                tabs={stateList}
-                // placeholder='Search Proposal'
-                hideSearch={true}
-              />
+              <Container className={styles.statsTab}>
+                <TabBar
+                  selectedTab={selectedTab}
+                  setSelectedTab={setSelectedTab}
+                  // searchText={searchText}
+                  // setSearchText={setSearchText}
+                  tabs={stateList}
+                  // placeholder='Search Proposal'
+                  hideSearch={true}
+                />
+
+                <Button
+                  className={styles.refreshButton}
+                  onClick={fetchPrepsWithStatsRequest}
+                >
+                  Refresh
+                </Button>
+              </Container>
               <hr style={{ marginTop: '-9px' }} />
 
               {selectedTab === 'Validator stats' && (
@@ -123,6 +133,7 @@ const mapStateToProps = state => {
     selectedProposalByIpfs: state.proposals.selectedProposal,
     preps: state.preps.preps,
     prepsWithStats: state.preps.prepsWithStats,
+    loading: state.preps.loading,
     totalCountProposal: state.proposals.totalCount['Voting'],
     progressReports: state.progressReport.progressReportList['Voting'],
 

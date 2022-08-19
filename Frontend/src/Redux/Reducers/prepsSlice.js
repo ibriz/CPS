@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   preps: [],
   prepsWithStats: null,
+  loading: false,
 };
 
 const prepsSlice = createSlice({
@@ -43,7 +44,8 @@ const prepsSlice = createSlice({
       return;
     },
     fetchPrepsWithStatsSuccess(state, action) {
-      state.prepsWithStats = action.payload;
+      state.prepsWithStats = action.payload.prepsWithStats;
+      state.loading = action.payload.loading;
     },
     fetchPrepsWithStatsFailure(state) {
       return;
