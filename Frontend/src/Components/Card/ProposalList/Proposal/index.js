@@ -41,6 +41,7 @@ const Proposal = ({
   period,
   minLayout = false,
   showBadge = true,
+  myProposalList = false,
 }) => {
   const { isRemainingTimeZero } = useTimer();
   const history = useHistory();
@@ -163,16 +164,9 @@ const Proposal = ({
                       mapping => mapping.status === proposal._status,
                     ).name,
                   ) &&
+                    myProposalList &&
                     !proposal?.submitProgressReport && (
                       <>
-                        {/* <Link
-                          to={{
-                            pathname: '/newProgressReport',
-                            // search: "?sort=name",
-                            // hash: "#the-hash",
-                            ipfsKey: proposal.ipfsKey,
-                          }}
-                        > */}
                         <Button
                           variant='info'
                           className={styles.createProposalButton}
@@ -310,7 +304,7 @@ const Proposal = ({
                     </>
                   )}
 
-                  {['Active', 'Paused'].includes(
+                  {/* {['Active', 'Paused'].includes(
                     proposalStatusMapping.find(
                       mapping => mapping.status === proposal._status,
                     ).name,
@@ -335,7 +329,7 @@ const Proposal = ({
                           </Button>
                         </Link>
                       </>
-                    )}
+                    )} */}
                 </>
               )}
             </Row>
@@ -408,7 +402,7 @@ const Proposal = ({
             </Col>
           )}
 
-          {proposalPendingPR && (
+          {/* {proposalPendingPR && (
             <Col
               lg='4'
               xs='12'
@@ -442,7 +436,7 @@ const Proposal = ({
                   </>
                 )}
             </Col>
-          )}
+          )} */}
         </Row>
 
         <hr className={styles.horizontalRule} />

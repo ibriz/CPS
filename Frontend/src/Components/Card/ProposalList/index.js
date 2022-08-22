@@ -14,6 +14,7 @@ const ProposalList = ({
   minHeight = '100px',
   minLayout = false,
   showBadge = true,
+  myProposalList = false,
 }) => {
   return (
     <Container
@@ -41,6 +42,7 @@ const ProposalList = ({
             onClick={() => onClickProposal(proposal)}
             minLayout={minLayout}
             showBadge={showBadge}
+            myProposalList={myProposalList}
           />
         ))
       ) : (

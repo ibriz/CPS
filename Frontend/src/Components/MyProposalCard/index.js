@@ -168,6 +168,7 @@ const MyProposalCard = ({
                 }
                 emptyListMessage='No Proposal'
                 minLayout={true}
+                myProposalList={true}
               />
 
               {/* <Pagination
