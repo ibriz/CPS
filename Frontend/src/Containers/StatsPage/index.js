@@ -1,15 +1,28 @@
 import StatsCard from 'Components/StatsCard';
 import React from 'react';
 import { Container } from 'react-bootstrap';
+import useTimer from 'Hooks/useTimer';
 
-export default function StatsPage() {
+const StatsPage = () => {
+  const { period } = useTimer();
+
+  const votingTabs = ['Validator stats', 'Platform stats'];
+  const applicationTabs = ['Platform stats'];
+
   return (
     <Container fluid>
-      {' '}
-      <StatsCard
-        stateList={['Validator stats', 'Platform stats']}
-        initialState={'Validator stats'}
-      />
+      {period === 'VOTING' && (
+        <StatsCard stateList={votingTabs} initialState={votingTabs[0]} />
+      )}
+
+      {period === 'APPLICATION' && (
+        <StatsCard
+          stateList={applicationTabs}
+          initialState={applicationTabs[0]}
+        />
+      )}
     </Container>
   );
-}
+};
+
+export default StatsPage;

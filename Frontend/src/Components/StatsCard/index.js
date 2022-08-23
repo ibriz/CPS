@@ -57,20 +57,23 @@ const StatsCard = ({
   //   };
 
   useEffect(() => {
-    fetchProposalListRequest({
-      status: 'Voting',
-      walletAddress: walletAddress || wallet.getAddress(),
-      pageNumber: 1,
-    });
-    fetchProgressReport({
-      status: 'Voting',
-      walletAddress: walletAddress || wallet.getAddress(),
-      pageNumber: 1,
-    });
+    if (selectedTab === 'Validator stats') {
+      fetchProposalListRequest({
+        status: 'Voting',
+        walletAddress: walletAddress || wallet.getAddress(),
+        pageNumber: 1,
+      });
+      fetchProgressReport({
+        status: 'Voting',
+        walletAddress: walletAddress || wallet.getAddress(),
+        pageNumber: 1,
+      });
+    }
   }, []);
 
   useEffect(() => {
-    if (!prepsWithStats) fetchPrepsWithStatsRequest();
+    if (!prepsWithStats && selectedTab === 'Validator stats')
+      fetchPrepsWithStatsRequest();
   }, []);
 
   let totalCountProgressReport = 0;
@@ -101,12 +104,14 @@ const StatsCard = ({
                   hideSearch={true}
                 />
 
-                <Button
-                  className={styles.refreshButton}
-                  onClick={fetchPrepsWithStatsRequest}
-                >
-                  Refresh
-                </Button>
+                {selectedTab === 'Validator stats' && (
+                  <Button
+                    className={styles.refreshButton}
+                    onClick={fetchPrepsWithStatsRequest}
+                  >
+                    Refresh
+                  </Button>
+                )}
               </Container>
               <hr style={{ marginTop: '-9px' }} />
 
