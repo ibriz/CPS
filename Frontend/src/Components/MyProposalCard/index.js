@@ -10,12 +10,13 @@ import {
   fetchProposalByAddressRequest,
 } from 'Redux/Reducers/proposalSlice';
 import Pagination from 'Components/Card/Pagination';
-import proposalStates from './proposalStates';
+import sortOrderProposalStates from './sortOrderProposalStates';
 // import { select } from 'redux-saga/effects';
 import wallet from 'Redux/ICON/FrontEndWallet';
 import DetailsModal from 'Components/Card/DetailsModal';
 import { withRouter } from 'react-router-dom';
 import { getProposalPendingProgressReport } from 'Selectors';
+import { proposalStatusMapping } from 'Constants';
 
 const MyProposalCard = ({
   myProposalList,
@@ -32,13 +33,18 @@ const MyProposalCard = ({
   },
   fetchProposalByAddressRequest,
 }) => {
+  const PAGE_SIZE = 5;
+
   const [selectedTab, setSelectedTab] = useState();
+
   const [filteredProposalList, setFilteredProposalList] =
     useState(myProposalList);
   let [searchText, setSearchText] = useState('');
-  const [pageNumber, setPageNumber] = useState();
+  const [pageNumber, setPageNumber] = useState(1);
   const [modalShow, setModalShow] = React.useState(false);
   const [selectedProposal, setSelectedProposal] = React.useState();
+
+  const [pageLength, setPageLength] = useState(1);
 
   const [proposalPendingPRList, setProposalPendingPRList] = useState(
     proposalPendingProgressReport,
@@ -85,18 +91,13 @@ const MyProposalCard = ({
     walletAddress,
   ]);
 
-  const setCurrentPages = (status, pageNumber) => {
-    setPageNumber(prevState => ({
-      ...prevState,
-      [status]: pageNumber,
-    }));
+  const paginate = (array, page_size, page_number) => {
+    return array.slice((page_number - 1) * page_size, page_number * page_size);
   };
 
   useEffect(() => {
-    proposalStates.map(proposalState => {
-      setCurrentPages(proposalState, 1);
-    });
-  }, []);
+    setPageNumber(1);
+  }, [searchText]);
 
   useEffect(() => {
     let filteredProposals = proposalPendingProgressReport.filter(proposal =>
@@ -104,7 +105,20 @@ const MyProposalCard = ({
         ?.toLowerCase()
         .includes(searchText?.toLowerCase()),
     );
+    setPageLength(Math.ceil(filteredProposals.length / PAGE_SIZE) || 1);
+    filteredProposals = paginate(filteredProposals, PAGE_SIZE, pageNumber || 1);
 
+    filteredProposals.sort((a, b) => {
+      const statusA = proposalStatusMapping.find(
+        mapping => mapping.status === a?._status,
+      )?.name;
+      const statusB = proposalStatusMapping.find(
+        mapping => mapping.status === b?._status,
+      )?.name;
+      return (
+        sortOrderProposalStates[statusA] - sortOrderProposalStates[statusB]
+      );
+    });
     setFilteredProposalList(filteredProposals);
     // }
 
@@ -170,11 +184,13 @@ const MyProposalCard = ({
                 minLayout={true}
                 myProposalList={true}
               />
-
-              {/* <Pagination
-                                currentPage={pageNumber?.[selectedTab]}
-                                setCurrentPage={(pageNumber) => setCurrentPages(selectedTab, pageNumber)}
-                                totalPages={totalPages[selectedTab] ?? 1} /> */}
+              {filteredProposalList.length > 0 && (
+                <Pagination
+                  currentPage={pageNumber}
+                  setCurrentPage={pageNumber => setPageNumber(pageNumber)}
+                  totalPages={pageLength ?? 1}
+                />
+              )}
 
               {/* {modalShow && (
                 <DetailsModal
