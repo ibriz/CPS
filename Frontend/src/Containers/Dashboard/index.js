@@ -515,6 +515,8 @@ const Dashboard = ({
         ))}
       </Row>
 
+      <UpperCard />
+
       {isPrep && isRegistered && period === 'VOTING' && (
         <>
           <div className={styles.myProposalHeading}>Pending Votes</div>
@@ -543,7 +545,7 @@ const Dashboard = ({
       {
         <>
           {/* <div className={styles.myProposalHeading}>My Proposals</div> */}
-          <UpperCard />
+
           <MyProposalCard />
         </>
       }
