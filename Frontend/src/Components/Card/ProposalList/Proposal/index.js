@@ -45,6 +45,43 @@ const Proposal = ({
 }) => {
   const { isRemainingTimeZero } = useTimer();
   const history = useHistory();
+
+  //// For drafts only
+  if (
+    proposalStatusMapping.find(mapping => mapping.status === proposal._status)
+      .name === 'Draft'
+  ) {
+    return (
+      <>
+        <Row className={styles.proposalContainer} onClick={onClick}>
+          <Col sm={proposalPendingPR ? '8' : '9'} className={styles.infos}>
+            <Row style={{ alignItems: 'center' }} className={styles.firstRow}>
+              {showBadge && (
+                <Badge
+                  size='xs'
+                  variant={
+                    proposalStatusMapping.find(
+                      mapping => mapping.status === proposal._status,
+                    ).badgeColor
+                  }
+                  className={styles.badge}
+                >
+                  {
+                    proposalStatusMapping.find(
+                      mapping => mapping.status === proposal._status,
+                    ).name
+                  }
+                </Badge>
+              )}{' '}
+              <LowerCardTitle>{proposal._proposal_title}</LowerCardTitle>
+            </Row>
+          </Col>
+        </Row>
+        <hr className={styles.horizontalRule} />
+      </>
+    );
+  }
+
   if (selectedTab != 'Active') {
     return (
       <>

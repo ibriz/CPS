@@ -26,7 +26,9 @@ const MyProposalCard = ({
   proposalStatesList,
   initialState,
   fetchDraftsRequest,
+  myDraftsList,
   history,
+  proposalList,
   proposalPendingProgressReport: {
     proposalPendingProgressReport,
     proposalNotPendingProgressReport,
@@ -46,6 +48,8 @@ const MyProposalCard = ({
 
   const [pageLength, setPageLength] = useState(1);
 
+  const [showDrafts, setShowDrafts] = useState(false);
+
   const [proposalPendingPRList, setProposalPendingPRList] = useState(
     proposalPendingProgressReport,
   );
@@ -57,34 +61,33 @@ const MyProposalCard = ({
   };
 
   const onClickProposalDraft = proposal => {
-    // setSelectedProposal(proposalList[selectedTab][proposal.index]);
-    // history.push({
-    //     pathname: '/newProposal',
-    //     draftProposal: proposalList[selectedTab][proposal.index],
-    //     isDraft: true
-    //   })
+    setSelectedProposal(proposalList['Draft'][proposal.index]);
+    history.push({
+      pathname: '/newProposal',
+      draftProposal: proposalList['Draft'][proposal.index],
+      isDraft: true,
+    });
   };
 
   useEffect(() => {
-    // if (selectedTab !== 'Draft') {
-    fetchMyProposalListRequest({
-      // status: selectedTab,
-      walletAddress: walletAddress || wallet.getAddress(),
-      // pageNumber: pageNumber?.[selectedTab] ?? 1
-    });
+    if (showDrafts) {
+      fetchDraftsRequest({
+        walletAddress,
+      });
+    } else {
+      fetchMyProposalListRequest({
+        // status: selectedTab,
+        walletAddress: walletAddress || wallet.getAddress(),
+        // pageNumber: pageNumber?.[selectedTab] ?? 1
+      });
 
-    fetchProposalByAddressRequest({
-      walletAddress: walletAddress || wallet.getAddress(),
-    });
-    // } else {
-    //     fetchDraftsRequest(
-    //         {
-    //             walletAddress
-    //         }
-    //     );
-    // }
+      fetchProposalByAddressRequest({
+        walletAddress: walletAddress || wallet.getAddress(),
+      });
+    }
   }, [
     selectedTab,
+    showDrafts,
     pageNumber,
     fetchDraftsRequest,
     fetchMyProposalListRequest,
@@ -95,12 +98,14 @@ const MyProposalCard = ({
     return array.slice((page_number - 1) * page_size, page_number * page_size);
   };
 
+  // Resets the pagination
   useEffect(() => {
     setPageNumber(1);
-  }, [searchText]);
+  }, [searchText, showDrafts]);
 
   useEffect(() => {
-    let filteredProposals = proposalPendingProgressReport.filter(proposal =>
+    const mainList = showDrafts ? myDraftsList : myProposalList;
+    let filteredProposals = mainList.filter(proposal =>
       proposal._proposal_title
         ?.toLowerCase()
         .includes(searchText?.toLowerCase()),
@@ -120,6 +125,7 @@ const MyProposalCard = ({
       );
     });
     setFilteredProposalList(filteredProposals);
+
     // }
 
     // else {
@@ -135,7 +141,15 @@ const MyProposalCard = ({
     // }
 
     // setFilteredProposalList(filteredProposals);
-  }, [selectedTab, myProposalList, searchText, pageNumber, walletAddress]);
+  }, [
+    selectedTab,
+    myProposalList,
+    searchText,
+    pageNumber,
+    walletAddress,
+    myDraftsList,
+    showDrafts,
+  ]);
 
   return (
     <>
@@ -151,20 +165,45 @@ const MyProposalCard = ({
                   padding: '0px 0px 10px 0px',
                 }}
               >
-                <div style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>
+                <div
+                  style={{
+                    fontWeight: 'bold',
+                    fontSize: '1.1rem',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
                   My Proposals
                 </div>
 
-                <TabBar
-                  selectedTab={selectedTab}
-                  setSelectedTab={setSelectedTab}
-                  searchText={searchText}
-                  setSearchText={setSearchText}
-                  tabs={[]}
-                  placeholder='Search Proposal'
-                  maxWidth
-                />
+                <Container
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    alignItems: 'center',
+                  }}
+                >
+                  <a
+                    href='#'
+                    style={{ textDecoration: 'none', marginRight: '12px' }}
+                    onClick={e => {
+                      e.preventDefault();
+                      setShowDrafts(prevState => !prevState);
+                    }}
+                  >
+                    {showDrafts ? 'View regular' : 'View drafts'}
+                  </a>
+                  <TabBar
+                    selectedTab={selectedTab}
+                    setSelectedTab={setSelectedTab}
+                    searchText={searchText}
+                    setSearchText={setSearchText}
+                    tabs={[]}
+                    placeholder='Search Proposal'
+                    maxWidth
+                  />
+                </Container>
               </Container>
+
               <hr style={{ marginTop: '-9px' }} />
 
               <ProposalList
@@ -176,13 +215,12 @@ const MyProposalCard = ({
                 selectedProposal={selectedProposal}
                 setSelectedProposal={setSelectedProposal}
                 onClickProposal={
-                  selectedTab === 'Draft'
-                    ? onClickProposalDraft
-                    : onClickProposal
+                  showDrafts ? onClickProposalDraft : onClickProposal
                 }
                 emptyListMessage='No Proposal'
                 minLayout={true}
                 myProposalList={true}
+                // showBudget={showDrafts ? false : true}
               />
               {filteredProposalList.length > 0 && (
                 <Pagination
@@ -213,6 +251,8 @@ const mapStateToProps = state => ({
   walletAddress: state.account.address,
   totalPages: state.proposals.totalPages,
   proposalPendingProgressReport: getProposalPendingProgressReport(state),
+  myDraftsList: state.proposals.proposalList['Draft'],
+  proposalList: state.proposals.proposalList,
 });
 
 const mapDispatchToProps = dispatch => ({
