@@ -26,7 +26,7 @@ function PRepListModal({ preps, ...props }) {
     >
       <Modal.Header closeButton>
         <Modal.Title id='contained-modal-title-vcenter'>
-          List of P-Reps
+          List of Validators
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
