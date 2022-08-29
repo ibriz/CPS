@@ -184,7 +184,11 @@ const MyProposalCard = ({
                 >
                   <a
                     href='#'
-                    style={{ textDecoration: 'none', marginRight: '12px' }}
+                    style={{
+                      textDecoration: 'none',
+                      marginRight: '12px',
+                      fontWeight: 'bold',
+                    }}
                     onClick={e => {
                       e.preventDefault();
                       setShowDrafts(prevState => !prevState);
