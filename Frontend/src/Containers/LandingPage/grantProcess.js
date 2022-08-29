@@ -61,8 +61,8 @@ const GrantProcess = props => {
               <li className='current'>
                 <h3>Log in/Create an account in the CPS App</h3>
                 <p>
-                  Explore the <Link to='/dashboard'>CPS Application</Link> and
-                  all the current proposals/active projects being funded.
+                  Explore the <Link to='/dashboard'>CPS App</Link> and all the
+                  current proposals/active projects being funded.
                 </p>
               </li>
               <li className='current'>
