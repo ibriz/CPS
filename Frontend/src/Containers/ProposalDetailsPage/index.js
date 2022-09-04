@@ -378,7 +378,7 @@ function ProposalDetailsPage(props) {
         proposalKey: proposal.ipfsKey,
       });
     // }
-  }, [proposal, props.show]);
+  }, [proposal, props.show, votingPhase]);
 
   useEffect(() => {
     proposal &&

@@ -286,7 +286,7 @@ function ProgressReportDetailsPage(props) {
       fetchVoteResultBudgetChangeRequest({
         reportKey: progressReport.reportKey,
       });
-  }, [progressReport, props.show]);
+  }, [progressReport, props.show, votingPhase]);
 
   useEffect(() => {
     progressReport &&
