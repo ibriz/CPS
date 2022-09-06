@@ -70,7 +70,6 @@ const ActiveProposalsCard = ({
       // });
       let length = totalPages[selectedTab] || 1;
       for (let i = 0; i < length; i++) {
-        console.log('length fetching new page');
         fetchProposalListRequest({
           status: selectedTab,
           walletAddress: walletAddress || wallet.getAddress(),

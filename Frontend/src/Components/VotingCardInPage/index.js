@@ -31,6 +31,7 @@ const VotingCard = ({
   fetchSortPriorityProposalListRequest,
   walletAddress,
   totalPages,
+  totalPagesProgressReport,
   proposalStatesList,
   initialState,
   priorityVote,
@@ -53,6 +54,7 @@ const VotingCard = ({
   // const [modalShow, setModalShow] = React.useState(false);
   // const [modalShowPR, setModalShowPR] = React.useState(false);
   const history = useHistory();
+  const [pageLength, setPageLength] = useState(1);
 
   const [selectedProposal, setSelectedProposal] = React.useState();
   const status = 'Voting';
@@ -75,45 +77,40 @@ const VotingCard = ({
   };
 
   useEffect(() => {
-    if (selectedTab === 'Priority Voting') {
-      if (!priorityVote) {
-        fetchProposalListRequest({ status });
+    const length =
+      (selectedTab === 'Proposals'
+        ? totalPages[status]
+        : totalPagesProgressReport[status]) || 1;
+
+    // Note: Total pages is 1 if proposal/pr has not been fetched yet. It fetches the first page, which gives back the total pages for that status.
+    // Then the page no change will cause other pages to be fetched.
+    for (let i = 0; i < length; i++) {
+      if (selectedTab === 'Proposals') {
+        fetchProposalListRequest({
+          status: status,
+          walletAddress: walletAddress || wallet.getAddress(),
+          pageNumber: i + 1,
+        });
       } else {
-        fetchSortPriorityProposalListRequest();
+        fetchProgressReport({
+          status: status,
+          walletAddress: walletAddress || wallet.getAddress(),
+          // pageNumber: pageNumber?.[selectedTab] ?? 1,
+          pageNumber: i + 1,
+        });
       }
     }
-  }, [selectedTab, priorityVote]);
-
-  useEffect(() => {
-    fetchProgressReport({
-      status: status,
-      walletAddress: walletAddress || wallet.getAddress(),
-      pageNumber: pageNumber?.[selectedTab] ?? 1,
-    });
     // fetchRemainingVotesRequest({
     //   type: 'progress_report',
     // });
-  }, [selectedTab, pageNumber, fetchRemainingVotesRequest]);
-
-  useEffect(() => {
-    const filteredProgressReports = (
-      progressReportList[status][pageNumber?.[selectedTab] - 1 || 0] || []
-    ).filter(proposal => proposal.progressReportTitle.includes(searchText));
-
-    setFilteredProgressReportList(filteredProgressReports);
-  }, [selectedTab, progressReportList, searchText, pageNumber]);
-
-  useEffect(() => {
-    fetchProposalListRequest({
-      status: status,
-      walletAddress: walletAddress || wallet.getAddress(),
-      pageNumber: pageNumber?.[selectedTab] ?? 1,
-    });
-
-    // fetchRemainingVotesRequest({
-    //   type: 'proposal',
-    // });
-  }, [selectedTab, pageNumber, fetchRemainingVotesRequest]);
+  }, [
+    selectedTab,
+    pageNumber,
+    fetchRemainingVotesRequest,
+    totalPages,
+    totalPagesProgressReport,
+    walletAddress,
+  ]);
 
   const setCurrentPages = (status, pageNumber) => {
     setPageNumber(prevState => ({
@@ -128,17 +125,56 @@ const VotingCard = ({
     });
   }, []);
 
+  const paginate = (array, page_size, page_number) => {
+    return array.slice((page_number - 1) * page_size, page_number * page_size);
+  };
+
   useEffect(() => {
     // const filteredProposals = (selectedTab !== 'All') ? proposalList.filter(
     //     (proposal) => proposal._status === proposalStatusBySelectedTab[selectedTab]
     // ) : proposalList;
 
-    const filteredProposals = (
-      proposalList[status][pageNumber?.[selectedTab] - 1 || 0] || []
-    ).filter(proposal => proposal._proposal_title.includes(searchText));
+    // const filteredProposals = (
+    //   proposalList[status][pageNumber?.[selectedTab] - 1 || 0] || []
+    // ).filter(proposal => proposal._proposal_title.includes(searchText));
 
-    setFilteredProposalList(filteredProposals);
-  }, [selectedTab, proposalList, searchText, pageNumber]);
+    // setFilteredProposalList(filteredProposals);
+
+    if (selectedTab === 'Proposals') {
+      let filteredProposals;
+      const flattenedProposals =
+        [].concat.apply([], proposalList[status]) || [];
+      const searchFilteredProposals = flattenedProposals.filter(proposal =>
+        proposal?._proposal_title
+          ?.toLowerCase()
+          .includes(searchText?.toLowerCase()),
+      );
+      setPageLength(Math.ceil(searchFilteredProposals.length / 10) || 1);
+      filteredProposals = paginate(
+        searchFilteredProposals,
+        10,
+        pageNumber?.[selectedTab] || 1,
+      );
+      setFilteredProposalList(filteredProposals);
+    } else {
+      let filteredPRs;
+      const flattenedPRs =
+        [].concat.apply([], progressReportList[status]) || [];
+      const searchFilteredPRs = flattenedPRs.filter(pr =>
+        pr?.progressReportTitle
+          ?.toLowerCase()
+          .includes(searchText?.toLowerCase()),
+      );
+
+      setPageLength(Math.ceil(searchFilteredPRs.length / 10) || 1);
+      filteredPRs = paginate(
+        searchFilteredPRs,
+        10,
+        pageNumber?.[selectedTab] || 1,
+      );
+      setFilteredProgressReportList(filteredPRs);
+    }
+  }, [selectedTab, proposalList, progressReportList, searchText, pageNumber]);
 
   // useEffect(() => {
   //   setSelectedTab('Proposals');
@@ -166,69 +202,57 @@ const VotingCard = ({
               />
               <hr style={{ marginTop: '-9px' }} />
               {selectedTab === 'Proposals' ? (
-                <ProposalList
-                  minLayout={true}
-                  showBadge={false}
-                  proposals={filteredProposalList}
-                  selectedTab={status}
-                  searchText={searchText}
-                  modalShow={modalShow}
-                  setModalShow={setModalShow}
-                  selectedProposal={selectedProposal}
-                  setSelectedProposal={setSelectedProposal}
-                  onClickProposal={
-                    selectedTab === 'Draft'
-                      ? onClickProposalDraft
-                      : onClickProposal
-                  }
-                />
-              ) : selectedTab === 'Progress Reports' ? (
-                <ProgressReportList
-                  minLayout={true}
-                  showBadge={false}
-                  projectReports={filteredProgressReportList}
-                  selectedTab={status}
-                  onClickProgressReport={onClickProgressReport}
-                />
-              ) : !priorityVote ? (
-                <PriorityVoteCard
-                  proposals={proposalList?.['Voting']?.[0] || []}
-                  selectedTab={status}
-                  searchText={searchText}
-                  emptyListMessage='No Priority Voting'
-                />
+                <>
+                  <ProposalList
+                    minLayout={true}
+                    showBadge={false}
+                    proposals={filteredProposalList}
+                    selectedTab={status}
+                    searchText={searchText}
+                    modalShow={modalShow}
+                    setModalShow={setModalShow}
+                    selectedProposal={selectedProposal}
+                    setSelectedProposal={setSelectedProposal}
+                    onClickProposal={
+                      selectedTab === 'Draft'
+                        ? onClickProposalDraft
+                        : onClickProposal
+                    }
+                  />
+
+                  {filteredProposalList.length > 0 && (
+                    <Pagination
+                      currentPage={pageNumber?.[selectedTab]}
+                      setCurrentPage={pageNumber =>
+                        setCurrentPages(selectedTab, pageNumber)
+                      }
+                      // totalPages={totalPages[selectedTab] ?? 1}
+                      totalPages={pageLength}
+                    />
+                  )}
+                </>
               ) : (
-                <PriorityVoteStatusCard
-                  proposals={proposalList?.['Voting']?.[0] || []}
-                  selectedTab={status}
-                  searchText={searchText}
-                  emptyListMessage='No Priority Voting'
-                />
-              )}
+                <>
+                  <ProgressReportList
+                    minLayout={true}
+                    showBadge={false}
+                    projectReports={filteredProgressReportList}
+                    selectedTab={status}
+                    onClickProgressReport={onClickProgressReport}
+                  />
 
-              {/* <Pagination
-                                currentPage={pageNumber?.[selectedTab]}
-                                setCurrentPage={(pageNumber) => setCurrentPages(selectedTab, pageNumber)}
-                                totalPages={totalPages[status]} /> */}
-              {/* {modalShow && (
-                <DetailsModal
-                  show={modalShow}
-                  onHide={() => setModalShow(false)}
-                  proposal={selectedProposal}
-                  status={status}
-                  voting={true}
-                />
+                  {filteredProgressReportList.length > 0 && (
+                    <Pagination
+                      currentPage={pageNumber?.[selectedTab]}
+                      setCurrentPage={pageNumber =>
+                        setCurrentPages(selectedTab, pageNumber)
+                      }
+                      // totalPages={totalPages[selectedTab] ?? 1}
+                      totalPages={pageLength}
+                    />
+                  )}
+                </>
               )}
-
-              {modalShowPR && (
-                <DetailsModalProgressReport
-                  show={modalShowPR}
-                  onHide={() => setModalShowPR(false)}
-                  progressReport={selectedProgressReport}
-                  status={status}
-                  voting={true}
-                />
-              )} */}
             </Card.Body>
           </Card>
         </Col>
