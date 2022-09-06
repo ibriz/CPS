@@ -1,5 +1,6 @@
+@import '../../../Theme/variables.css';
 .proposalTitle {
-  color: #262626;
+  color: var(--proposal-text-color);
   font-style: normal;
   font-size: 0.95rem;
 }
@@ -13,7 +14,7 @@
   font-style: normal;
   font-weight: normal;
   font-size: 0.95rem;
-  color: #262626;
+  color: var(--proposal-text-color);
 }
 
 .createProposalButton {
@@ -23,6 +24,7 @@
 
 .upperCard {
   margin-top: 20px;
+  background-color: var(--proposal-card-color) !important;
 
   div[class^='col'] {
     display: flex;

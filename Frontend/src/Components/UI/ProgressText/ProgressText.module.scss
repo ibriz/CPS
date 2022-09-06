@@ -1,9 +1,10 @@
+@import '../../../Theme/variables.css';
 .progressText {
   font-style: normal;
   font-weight: 600;
   font-size: 0.7rem;
   line-height: 15px;
-  color: rgba(38, 38, 38, 0.85);
+  color: var(--proposal-text-color-3);
 }
 
 @supports (background: -webkit-canvas(squares)) {

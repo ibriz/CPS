@@ -1,0 +1,70 @@
+/* 1 */
+:root {
+  --font-color: #333;
+  --background-color: #000;
+  --primary-color: #1aaaba;
+  --primary-text-color: white;
+
+  /* Dashboard */
+  --bg-color-1: linear-gradient(
+      0deg,
+      rgba(38, 38, 38, 0.05),
+      rgba(38, 38, 38, 0.05)
+    ),
+    #ffffff;
+  --sidebar-color: #27aab9;
+  --topbar-home-color: white;
+  --footer-bg-color: rgba(38, 38, 38, 0.1);
+  --console-color: #262626;
+  --card-title-text-color: #262626;
+
+  --proposal-card-color: #ffffff;
+  --proposal-text-color: #262626;
+  --proposal-text-color-2: rgba(38, 38, 38, 0.6);
+  --proposal-text-color-3: rgba(38, 38, 38, 0.85);
+
+  --proposal-nav-color: rgba(38, 38, 38, 0.9);
+  --proposal-nav-hover-color: rgba(38, 38, 38, 0.9);
+
+  /* Rest */
+  --paragraph-color-1: #020808;
+  --paragraph-color-2: #586665;
+  --heading-clor-1: #07292d;
+  --link-color: #007bff;
+
+  --topbar-landing-color: #1aaaba;
+}
+
+/* 2 */
+[data-theme='dark'] {
+  --font-color: #eee;
+  --background-color: #333;
+
+  --primary-color: #1aaaba;
+  --primary-text-color: #d2d2d2;
+
+  /* Dashboard */
+  --bg-color-1: black;
+  --sidebar-color: #1c1c1e;
+  --topbar-home-color: #2b2b2d;
+  --footer-bg-color: #393939;
+  --console-color: #c2c2c2;
+  --card-title-text-color: #8c8b92;
+
+  --proposal-card-color: #242425;
+  --proposal-text-color: #d2d2d2;
+  --proposal-text-color-2: #d2d2d2;
+  --proposal-text-color-3: #d2d2d2;
+  --proposal-nav-color: #8c8b92;
+  --proposal-nav-color: #8c8b92;
+  --proposal-nav-hover-color: white;
+
+  /* Rest */
+
+  --paragraph-color-1: #020808;
+  --paragraph-color-2: #586665;
+  --heading-clor-1: #07292d;
+  --link-color: #007bff;
+
+  --topbar-landing-color: #1c1c1e;
+}

@@ -22,10 +22,7 @@ const DeveloperCommunity = props => {
           </a>
         </div>
         <div>
-          <a
-            target='_blank'
-            href='https://discord.com/channels/395473147333443587/413810858997841930'
-          >
+          <a target='_blank' href='https://discord.gg/4vpFeYams4'>
             <img src={discordImg} />
             <p>Discord</p>
           </a>

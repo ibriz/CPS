@@ -9,6 +9,7 @@ import ConfirmationModal from 'Components/UI/ConfirmationModal';
 import EmailConfirmationModal from 'Components/Header/EmailConfirmationModal';
 import UserInfoFormModal from 'Components/Header/UserInfoFormModal';
 import { withRouter } from 'react-router-dom';
+import DarkMode from "../../Theme/darkMode";
 
 
 
@@ -158,6 +159,8 @@ const Navbar = props => {
                             !isRemainingTimeZero) || (isPrep && !isRegistered && !payPenalty && !isRemainingTimeZero) ? 1 : !walletAddress ? 0.2 : 0.8
                     }}
                 >
+
+										<DarkMode></DarkMode>
 
                     {!walletAddress ? (
                         <p className="dashboardBtn" style={window.innerWidth > 1100 ? { marginRight: 20 } : {}} onClick={async () => {

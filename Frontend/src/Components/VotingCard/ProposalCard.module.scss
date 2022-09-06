@@ -1,3 +1,9 @@
+@import '../../Theme/variables.css';
 .proposalCard {
   margin-top: 10px;
+}
+
+.cardBody {
+  background-color: var(--proposal-card-color);
+  color: var(--proposal-text-color);
 }

@@ -10,6 +10,7 @@ const InfoCard = ({
   value,
   color = '#FF0000',
   hoverText,
+  border = true,
 }) => {
   return (
     <Card
@@ -31,7 +32,11 @@ const InfoCard = ({
         >
           <Card.Body
             className={styles.cardBody}
-            style={{ color: color, border: `1px solid ${color}` }}
+            style={
+              border
+                ? { color: color, border: `1px solid ${color}` }
+                : { color: color }
+            }
           >
             <Card.Title
               dangerouslySetInnerHTML={{ __html: value }}
@@ -55,7 +60,11 @@ const InfoCard = ({
       ) : (
         <Card.Body
           className={styles.cardBody}
-          style={{ color: color, border: `1px solid ${color}` }}
+          style={
+            border
+              ? { color: color, border: `1px solid ${color}` }
+              : { color: color }
+          }
         >
           <Card.Title
             dangerouslySetInnerHTML={{ __html: value }}

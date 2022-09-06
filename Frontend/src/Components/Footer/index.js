@@ -12,6 +12,7 @@ import {
 import { FaDiscord } from 'react-icons/fa';
 import { SiFacebook } from 'react-icons/si';
 import iconCPSImg from '../../Assets/Images/FundedByICONCPSBlack.png';
+import '../../Theme/variables.css';
 
 const socialLinks = [
   {
@@ -75,7 +76,8 @@ const Footer = ({ console = false, width = undefined, footerRef }) => {
     ? styles.footerColumnConsole
     : styles.footerColumn;
 
-  const consoleColor = '#262626';
+  const consoleColor = 'var(--console-color)';
+  const storedTheme = localStorage.getItem('theme');
   return (
     <Container
       fluid
@@ -83,7 +85,7 @@ const Footer = ({ console = false, width = undefined, footerRef }) => {
       style={{
         color: console ? consoleColor : '#FFFFFF',
         marginTop: console ? '40px' : '0px',
-        backgroundColor: console && 'rgba(38, 38, 38, 0.1)',
+        backgroundColor: console && ' var(--footer-bg-color)',
       }}
       id='footer'
       ref={footerRef}
@@ -235,7 +237,13 @@ const Footer = ({ console = false, width = undefined, footerRef }) => {
             >
               {/* Support us with your votes */}
               <Button
-                variant={console ? 'outline-dark' : 'outline-light'}
+                variant={
+                  console
+                    ? storedTheme === 'dark'
+                      ? 'outline-light'
+                      : 'outline-dark'
+                    : 'outline-light'
+                }
                 style={{
                   marginLeft: '0px',
                   paddingTop: '3px',
@@ -254,7 +262,13 @@ const Footer = ({ console = false, width = undefined, footerRef }) => {
               style={{ color: console ? consoleColor : 'white' }}
             >
               <Button
-                variant={console ? 'outline-dark' : 'outline-light'}
+                variant={
+                  console
+                    ? storedTheme === 'dark'
+                      ? 'outline-light'
+                      : 'outline-dark'
+                    : 'outline-light'
+                }
                 style={{
                   marginLeft: '0px',
                   paddingTop: '3px',
