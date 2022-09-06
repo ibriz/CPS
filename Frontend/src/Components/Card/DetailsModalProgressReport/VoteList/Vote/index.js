@@ -57,17 +57,22 @@ const Vote = ({ vote, budgetChange = false, isOpen = false }) => {
             </Col>
           </Row>
           {showSponsorMessage && !budgetChange && (
-            <Row className={styles.firstRow} style={{ paddingLeft: '15px' }}>
-              <span style={{ fontWeight: 600, fontSize: '0.85rem' }}>
+            <Row
+              className={styles.firstRow}
+              style={{ padding: '15px 8% 15px 15px' }}
+            >
+              {/* <span style={{ fontWeight: 600, fontSize: '0.85rem' }}>
                 Reason:
-              </span>
+              </span> */}
               {vote.reason ? (
                 <div
-                  style={{ fontSize: '0.85rem' }}
+                  style={{ fontSize: '0.85rem', textAlign: 'justify' }}
                   dangerouslySetInnerHTML={{ __html: voteReason }}
                 />
               ) : (
-                <div style={{ fontSize: '0.85rem' }}>No Message</div>
+                <div style={{ fontSize: '0.85rem', textAlign: 'justify' }}>
+                  No Message
+                </div>
               )}
             </Row>
           )}
