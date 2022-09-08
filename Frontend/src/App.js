@@ -11,19 +11,43 @@ import Footer from 'Components/Footer';
 import { Helmet } from 'react-helmet';
 import UnsubscribePage from 'Containers/UnsubscribePage';
 import VerifiedPage from 'Containers/VerifiedPage';
-import { fetchbnUSDAddressRequest } from './Redux/Reducers/fundSlice'
+import { fetchbnUSDAddressRequest } from './Redux/Reducers/fundSlice';
 import LandingPage from './Containers/LandingPage';
 
-
-function App({ address, fetchUserDataRequest, fetchUserPromptRequest, fetchbnUSDAddressRequest }) {
+function App({
+  address,
+  fetchUserDataRequest,
+  fetchUserPromptRequest,
+  fetchbnUSDAddressRequest,
+}) {
   useEffect(() => {
     address && fetchUserDataRequest();
     address && fetchUserPromptRequest();
   }, [address]);
 
+  const setThemeAtStartup = () => {
+    const setDark = () => {
+      localStorage.setItem('theme', 'dark');
+      document.documentElement.setAttribute('data-theme', 'dark');
+    };
+
+    const storedTheme = localStorage.getItem('theme');
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    const defaultDark =
+      storedTheme === 'dark' || (storedTheme === null && prefersDark);
+
+    if (defaultDark) {
+      setDark();
+    }
+  };
+
+  setThemeAtStartup();
   useEffect(() => {
-    fetchbnUSDAddressRequest()
-  }, [])
+    fetchbnUSDAddressRequest();
+  }, []);
   return (
     <>
       <Switch>
@@ -73,7 +97,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = {
   fetchUserDataRequest,
   fetchUserPromptRequest,
-  fetchbnUSDAddressRequest
+  fetchbnUSDAddressRequest,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
