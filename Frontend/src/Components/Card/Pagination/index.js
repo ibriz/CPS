@@ -1,9 +1,11 @@
 import React from 'react';
 import PaginationComponent from 'react-responsive-pagination';
+import styles from './Pagination.module.scss';
+import Pagination from 'react-responsive-pagination';
 
-const Pagination = ({ currentPage, setCurrentPage, totalPages }) => {
+const Pagination1 = ({ currentPage, setCurrentPage, totalPages }) => {
   return (
-    <div className='commentBox'>
+    <div className={styles.paginationContainer}>
       <PaginationComponent
         current={currentPage ?? 1}
         total={totalPages}
@@ -14,4 +16,4 @@ const Pagination = ({ currentPage, setCurrentPage, totalPages }) => {
   );
 };
 
-export default Pagination;
+export default Pagination1;

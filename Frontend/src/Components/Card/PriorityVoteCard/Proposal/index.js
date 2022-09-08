@@ -13,13 +13,14 @@ const Proposal = ({
   proposalPendingPR = false,
   priorityVoteList,
 }) => {
+  const isDarkTheme = localStorage.getItem('theme') === 'dark';
   return (
     <>
       <Row
         style={
           priorityVoteList.includes(proposal.ipfsHash)
-            ? { background: '#eee' }
-            : { background: 'white' }
+            ? { background: isDarkTheme ? '#333' : '#eee' }
+            : { background: isDarkTheme ? '#242425' : 'white' }
         }
         className={styles.proposalContainer}
         onClick={onClick}

@@ -64,3 +64,18 @@ input:checked + .slider {
 .test {
   color: var(--font-color);
 }
+
+.themeContainer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 10px 15px 20px 15px;
+}
+
+#checkbox {
+  margin-right: 12px;
+}
+
+.themeText {
+  color: white;
+}

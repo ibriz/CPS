@@ -78,6 +78,7 @@ import {
   useHistory,
 } from 'react-router-dom';
 import BackButton from 'Components/UI/BackButton';
+import '../../Theme/variables.css';
 
 const DescriptionTitle = styled.div`
   font-style: normal;
@@ -500,10 +501,10 @@ function ProposalDetailsPage(props) {
                           <div
                             style={{
                               // textAlign: 'center',
-                              color: '#262626',
+                              color: 'var(--proposal-text-color)',
+                              backgroundColor: 'var(--proposal-card-color)',
                               marginBottom: '5px',
                               marginTop: '16px',
-                              background: 'white',
                               fontSize: '1.5rem',
                               lineHeight: '36px',
                               display: 'flex',
@@ -816,7 +817,7 @@ function ProposalDetailsPage(props) {
                           votesByProposal?.length ? (
                             <div
                               style={{
-                                backgroundColor: 'white',
+                                backgroundColor: 'var(--proposal-card-color)',
                                 marginTop: '12px',
                                 padding: '12px',
                               }}
@@ -825,7 +826,12 @@ function ProposalDetailsPage(props) {
                                 <div
                                   style={{ padding: '10px', display: 'flex' }}
                                 >
-                                  <span style={{ marginRight: '4px' }}>
+                                  <span
+                                    style={{
+                                      marginRight: '4px',
+                                      color: 'var(--proposal-text-color)',
+                                    }}
+                                  >
                                     VOTES
                                   </span>
                                   <InfoIcon
@@ -845,7 +851,7 @@ function ProposalDetailsPage(props) {
                             status === 'Paused') && (
                             <div
                               style={{
-                                backgroundColor: 'white',
+                                backgroundColor: 'var(--proposal-card-color)',
                                 marginTop: '12px',
                                 padding: '12px',
                               }}
@@ -1132,7 +1138,7 @@ function ProposalDetailsPage(props) {
                           paddingLeft: '0px',
                           paddingRight: '0px',
                           padding: '12px',
-                          backgroundColor: 'white',
+                          backgroundColor: 'var(--proposal-card-color)',
                         }}
                       >
                         {/* <MilestoneTable

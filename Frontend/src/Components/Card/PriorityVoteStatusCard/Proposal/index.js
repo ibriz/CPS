@@ -8,9 +8,13 @@ import { icxFormat } from 'Helpers';
 import { proposalStatusMapping } from 'Constants';
 
 const Proposal = ({ proposal, index }) => {
+  const isDarkTheme = localStorage.getItem('theme') === 'dark';
   return (
     <>
-      <Row style={{ background: 'white' }} className={styles.proposalContainer}>
+      <Row
+        style={{ background: isDarkTheme ? '#242425' : 'white' }}
+        className={styles.proposalContainer}
+      >
         <Row
           style={{
             alignItems: 'center',

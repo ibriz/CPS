@@ -2,9 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 
 const Description1 = styled.div`
-  color: #262626;
+  color: var(--proposal-text-color);
   font-size: 0.9rem;
-  padding:0px 25px;
+  padding: 0px 25px;
 `;
 
 const DescriptionTitle = styled.div`
@@ -12,16 +12,18 @@ const DescriptionTitle = styled.div`
   font-weight: 600;
   font-size: 14px;
   line-height: 17px;
-  color: #262626;
+  color: var(--proposal-text-color);
   margin-bottom: 5px;
-  padding:0px 10px;
+  padding: 0px 10px;
 `;
 
 const Description = ({ description, title = 'DESCRIPTION' }) => {
-
-  description = description.replaceAll('<a', (match) => {
-    return match + ' target="_blank" style="word-break:break-word;white-space:normal"  ';
-  })
+  description = description.replaceAll('<a', match => {
+    return (
+      match +
+      ' target="_blank" style="word-break:break-word;white-space:normal"  '
+    );
+  });
   return (
     <>
       <DescriptionTitle>{title}</DescriptionTitle>

@@ -9,7 +9,7 @@
   font-weight: normal;
   font-size: 0.85rem;
   line-height: 15px;
-  color: rgba(38, 38, 38, 1);
+  color: var(--proposal-text-color);
 }
 
 .proposalInfo2 {
@@ -21,7 +21,7 @@
   font-weight: 600;
   font-size: 9px;
   line-height: 15px;
-  color: rgba(38, 38, 38, 0.6);
+  color: var(--proposal-text-color);
 }
 
 .info {

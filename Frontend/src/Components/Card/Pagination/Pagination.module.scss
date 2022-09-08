@@ -1,0 +1,42 @@
+@import '../../../Theme/variables.css';
+.page-item {
+  background-color: black;
+}
+
+.my-page-link {
+  color: white;
+  background-color: black;
+}
+
+.paginationContainer {
+  li:first-child {
+    span {
+      background-color: var(--pagination-background-color) !important;
+    }
+
+    a {
+      background-color: var(--pagination-background-color) !important;
+    }
+  }
+
+  li:last-child {
+    span {
+      background-color: var(--pagination-background-color) !important;
+    }
+
+    a {
+      background-color: var(--pagination-background-color) !important;
+    }
+  }
+}
+
+.paginationContainer {
+  a {
+    background-color: var(--pagination-background-color);
+    // border-color: var(--pagination-background-color);
+    color: grey;
+  }
+  // a:hover {
+  //   color: white;
+  // }
+}

@@ -185,7 +185,7 @@ const VotingCard = ({
       <Row className={styles.proposalCard}>
         <Col>
           <Card>
-            <Card.Body>
+            <Card.Body className={styles.cardBody}>
               <TabBar
                 selectedTab={selectedTab}
                 setSelectedTab={setSelectedTab}

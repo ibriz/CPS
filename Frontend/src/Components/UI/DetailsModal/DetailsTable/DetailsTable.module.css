@@ -2,10 +2,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background-color: var(--table-background-color);
+  border-color: var(--table-border-color) !important;
 }
 
 .tableHeader {
-  background: #27AAB9 !important;
+  background: #27aab9 !important;
   font-style: normal;
   font-weight: 600;
   font-size: 14px;
@@ -18,7 +20,7 @@
   font-weight: 600;
   font-size: 0.65rem;
   line-height: 15px;
-  color: rgba(38, 38, 38, 0.9);
+  color: var(--proposal-text-color);
 }
 
 .value {
@@ -27,6 +29,5 @@
   font-size: 0.65rem;
   line-height: 15px;
   text-align: right;
-
-  color: rgba(38, 38, 38, 0.9);
+  color: var(--proposal-text-color);
 }

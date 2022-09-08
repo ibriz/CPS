@@ -19,7 +19,8 @@ const MilestonesTimeline = ({ milestones = [] }) => {
           // createdAt="2016-09-11 09:06 AM"
           icon={<AiFillStar />}
           contentStyle={{
-            backgroundColor: 'white',
+            backgroundColor: 'var(--proposal-card-color)',
+            color: 'var(--proposal-text-color) !important',
             boxShadow: 'none',
             paddingLeft: '0px',
             marginLeft: '-21px',

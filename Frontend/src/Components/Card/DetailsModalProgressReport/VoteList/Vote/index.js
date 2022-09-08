@@ -21,7 +21,7 @@ const Vote = ({ vote, budgetChange = false, isOpen = false }) => {
         className={styles.proposalContainer}
         style={
           showSponsorMessage
-            ? { backgroundColor: 'rgba(237, 237, 237, 0.4)' }
+            ? { backgroundColor: 'var(--card-highlight-color)' }
             : {}
         }
         onClick={() => setShowSponsorMessage(prevState => !prevState)}

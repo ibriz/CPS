@@ -614,10 +614,10 @@ function ProgressReportDetailsPage(props) {
                         <Col xs='12'>
                           <div
                             style={{
-                              color: '#262626',
+                              color: 'var(--proposal-text-color)',
+                              backgroundColor: 'var(--proposal-card-color)',
                               marginBottom: '5px',
                               marginTop: '16px',
-                              background: 'white',
                               fontSize: '1.5rem',
                               lineHeight: '36px',
                               display: 'flex',
@@ -932,7 +932,7 @@ function ProgressReportDetailsPage(props) {
                               <div
                                 style={{
                                   marginTop: '12px',
-                                  backgroundColor: 'white',
+                                  backgroundColor: 'var(--proposal-card-color)',
                                   padding: '12px',
                                 }}
                               >
@@ -940,7 +940,12 @@ function ProgressReportDetailsPage(props) {
                                   <div
                                     style={{ padding: '10px', display: 'flex' }}
                                   >
-                                    <span style={{ marginRight: '4px' }}>
+                                    <span
+                                      style={{
+                                        marginRight: '4px',
+                                        color: 'var(--proposal-text-color)',
+                                      }}
+                                    >
                                       VOTES
                                     </span>
                                     <InfoIcon

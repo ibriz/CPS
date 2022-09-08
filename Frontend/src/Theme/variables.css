@@ -17,14 +17,29 @@
   --footer-bg-color: rgba(38, 38, 38, 0.1);
   --console-color: #262626;
   --card-title-text-color: #262626;
+  --card-highlight-color: rgba(237, 237, 237, 0.4);
+  --card-comment-color: #545454;
+  --table-background-color: inherit;
+  --table-border-color: rgb(223, 221, 221);
 
   --proposal-card-color: #ffffff;
+  --proposal-border-color: rgba(232, 231, 231, 0.7);
   --proposal-text-color: #262626;
   --proposal-text-color-2: rgba(38, 38, 38, 0.6);
   --proposal-text-color-3: rgba(38, 38, 38, 0.85);
+  --proposal-header-text-color: #262626;
 
   --proposal-nav-color: rgba(38, 38, 38, 0.9);
   --proposal-nav-hover-color: rgba(38, 38, 38, 0.9);
+
+  --pagination-background-color: #fff;
+  --searchbar-background-color: white;
+
+  --progress-color: #27aab9;
+
+  /* --pagination-active-color: #007bff;
+  --pagination-link-color: #007bff;
+  --pagination-border-color: #dee2e6; */
 
   /* Rest */
   --paragraph-color-1: #020808;
@@ -50,14 +65,29 @@
   --footer-bg-color: #393939;
   --console-color: #c2c2c2;
   --card-title-text-color: #8c8b92;
+  --card-highlight-color: rgba(12, 12, 12, 0.4);
+  --card-comment-color: #9e9d9d;
+  --table-background-color: #242425 !important;
+  --table-border-color: #242425;
 
   --proposal-card-color: #242425;
+  --proposal-border-color: #242425;
   --proposal-text-color: #d2d2d2;
   --proposal-text-color-2: #d2d2d2;
   --proposal-text-color-3: #d2d2d2;
-  --proposal-nav-color: #8c8b92;
+  --proposal-header-text-color: #fff;
+
   --proposal-nav-color: #8c8b92;
   --proposal-nav-hover-color: white;
+
+  --pagination-background-color: #242425;
+  --searchbar-background-color: black;
+
+  --progress-color: #2ce977;
+
+  /* --pagination-active-color: white;
+  --pagination-link-color: #b3b4b4;
+  --pagination-border-color: grey; */
 
   /* Rest */
 
