@@ -33,16 +33,18 @@ const ProposalCard = ({
   emptyProposalDetailRequest,
 }) => {
   const [selectedTab, setSelectedTab] = useState(initialState);
-  const [filteredProposalList, setFilteredProposalList] = useState(
-    proposalList,
-  );
+  const [filteredProposalList, setFilteredProposalList] =
+    useState(proposalList);
+
   let [searchText, setSearchText] = useState('');
   const [pageNumber, setPageNumber] = useState();
   const [modalShow, setModalShow] = React.useState(false);
   const [selectedProposal, setSelectedProposal] = React.useState();
+  const [pageLength, setPageLength] = useState(1);
   const proposalIpfsKey = useParams().id;
   const location = useLocation();
   const onClickProposal = proposal => {
+    console.log('Here', { proposal });
     setModalShow(true);
     setSelectedProposal(proposal);
     if (location.pathname !== '/') {
@@ -61,11 +63,21 @@ const ProposalCard = ({
 
   useEffect(() => {
     if (selectedTab !== 'Draft') {
-      fetchProposalListRequest({
-        status: selectedTab,
-        walletAddress: walletAddress || wallet.getAddress(),
-        pageNumber: pageNumber?.[selectedTab] ?? 1,
-      });
+      // fetchProposalListRequest({
+      //   status: selectedTab,
+      //   walletAddress: walletAddress || wallet.getAddress(),
+      //   pageNumber: pageNumber?.[selectedTab] ?? 1,
+      // });
+      let length = totalPages[selectedTab] || 1;
+      for (let i = 0; i < length; i++) {
+        console.log('length fetching new page');
+        fetchProposalListRequest({
+          status: selectedTab,
+          walletAddress: walletAddress || wallet.getAddress(),
+          // pageNumber: pageNumber?.[selectedTab] ?? 1,
+          pageNumber: i + 1,
+        });
+      }
     } else {
       fetchDraftsRequest({
         walletAddress,
@@ -77,7 +89,12 @@ const ProposalCard = ({
     fetchDraftsRequest,
     fetchProposalListRequest,
     walletAddress,
+    totalPages,
   ]);
+
+  useEffect(() => {
+    setCurrentPages(selectedTab, 1);
+  }, [searchText]);
 
   const setCurrentPages = (status, pageNumber) => {
     setPageNumber(prevState => ({
@@ -108,23 +125,42 @@ const ProposalCard = ({
     }
   }, [selectedProposalByIpfs]);
 
+  const paginate = (array, page_size, page_number) => {
+    return array.slice((page_number - 1) * page_size, page_number * page_size);
+  };
+
   useEffect(() => {
     // const filteredProposals = (selectedTab !== 'All') ? proposalList.filter(
     //     (proposal) => proposal._status === proposalStatusBySelectedTab[selectedTab]
     // ) : proposalList;
     let filteredProposals;
     if (selectedTab !== 'Draft') {
-      filteredProposals = (
-        proposalList[selectedTab][pageNumber?.[selectedTab] - 1 || 0] || []
-      ).filter(proposal =>
-        proposal._proposal_title
+      const flattenedProposals =
+        [].concat.apply([], proposalList[selectedTab]) || [];
+      const searchFilteredProposals = flattenedProposals.filter(proposal =>
+        proposal?._proposal_title
           ?.toLowerCase()
           .includes(searchText?.toLowerCase()),
       );
+      setPageLength(Math.ceil(searchFilteredProposals.length / 10) || 1);
+      filteredProposals = paginate(
+        searchFilteredProposals,
+        10,
+        pageNumber?.[selectedTab] || 1,
+      );
+
+      // filteredProposals = (
+      //   proposalList[selectedTab][pageNumber?.[selectedTab] - 1 || 0] || []
+      // ).filter(proposal =>
+      //   proposal._proposal_title
+      //     ?.toLowerCase()
+      //     .includes(searchText?.toLowerCase()),
+      // );
     } else {
       filteredProposals = proposalList[selectedTab].map((proposal, index) => ({
         ...proposal,
       }));
+      setPageLength(Math.ceil(filteredProposals / 10) || 1);
     }
 
     setFilteredProposalList(filteredProposals);
@@ -161,14 +197,18 @@ const ProposalCard = ({
                 minHeight={minHeight}
               />
 
-              <Pagination
-                currentPage={pageNumber?.[selectedTab]}
-                setCurrentPage={pageNumber =>
-                  setCurrentPages(selectedTab, pageNumber)
-                }
-                totalPages={totalPages[selectedTab] ?? 1}
-              />
-              {modalShow && (
+              {filteredProposalList.length > 0 && (
+                <Pagination
+                  currentPage={pageNumber?.[selectedTab]}
+                  setCurrentPage={pageNumber =>
+                    setCurrentPages(selectedTab, pageNumber)
+                  }
+                  // totalPages={totalPages[selectedTab] ?? 1}
+                  totalPages={pageLength}
+                />
+              )}
+
+              {/* {modalShow && (
                 <DetailsModal
                   show={modalShow}
                   onHide={() => {
@@ -181,7 +221,7 @@ const ProposalCard = ({
                   proposal={selectedProposal}
                   status={selectedTab}
                 />
-              )}
+              )} */}
             </Card.Body>
           </Card>
         </Col>

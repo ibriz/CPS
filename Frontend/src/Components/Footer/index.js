@@ -9,8 +9,9 @@ import {
   AiFillFacebook,
   AiFillRedditCircle,
 } from 'react-icons/ai';
-import { FaTelegram } from 'react-icons/fa';
+import { FaDiscord } from 'react-icons/fa';
 import { SiFacebook } from 'react-icons/si';
+import iconCPSImg from '../../Assets/Images/FundedByICONCPSBlack.png';
 
 const socialLinks = [
   {
@@ -24,14 +25,14 @@ const socialLinks = [
     icon: AiFillTwitterCircle,
   },
   {
-    name: 'telegram',
-    link: 'https://t.me/hello_iconworld',
-    icon: FaTelegram,
-    fontSize: '33px',
+    name: 'discord',
+    link: 'https://discord.gg/4vpFeYams4',
+    icon: FaDiscord,
+    fontSize: '30px',
   },
   {
     name: 'github',
-    link: 'https://github.com/icon-project',
+    link: 'https://github.com/icon-community/CPS',
     icon: AiFillGithub,
   },
 
@@ -63,8 +64,7 @@ const links = [
 
   {
     title: 'CPS Yellow Paper',
-    link:
-      'https://docs.google.com/document/d/1yPwgsXx4ow5NVnG1ktMKYp5JvjQvWEfuSkq6Iy-OIXA/',
+    link: 'https://docs.google.com/document/d/1yPwgsXx4ow5NVnG1ktMKYp5JvjQvWEfuSkq6Iy-OIXA/',
   },
 ];
 
@@ -79,20 +79,20 @@ const Footer = ({ console = false, width = undefined, footerRef }) => {
   return (
     <Container
       fluid
-      className={ClassNames({ 'bg-info': !console, 'footer': true })}
+      className={ClassNames({ 'bg-info': !console, footer: true })}
       style={{
         color: console ? consoleColor : '#FFFFFF',
         marginTop: console ? '40px' : '0px',
         backgroundColor: console && 'rgba(38, 38, 38, 0.1)',
       }}
-      id="footer"
+      id='footer'
       ref={footerRef}
     >
       <Row className={ClassNames(firstRowStyle)}>
         {/* <Col md="1"> </Col> */}
 
         <Col lg='4' xs='12' className={ClassNames(footerColumnStyles)}>
-          {console ? (
+          {/* {console ? (
             <svg
               width='114'
               height='28'
@@ -100,7 +100,7 @@ const Footer = ({ console = false, width = undefined, footerRef }) => {
               fill='none'
               xmlns='http://www.w3.org/2000/svg'
             >
-              <g clip-path='url(#clip0)'>
+              <g clipPath='url(#clip0)'>
                 <path
                   d='M3.76715 8.60669H0.529053V21.9308H3.76715V8.60669Z'
                   fill='#262626'
@@ -206,7 +206,9 @@ const Footer = ({ console = false, width = undefined, footerRef }) => {
                 </clipPath>
               </defs>
             </svg>
-          )}
+          )} */}
+          <img src={iconCPSImg} style={{ width: '45%' }} />
+
           <div style={{ marginTop: '20px' }}>Built by:</div>
           <div style={{}}>
             <a
@@ -268,41 +270,51 @@ const Footer = ({ console = false, width = undefined, footerRef }) => {
 
         <Col lg='1'> </Col>
 
-        {console && <Col
-          lg='3'
-          xs='12'
-          className={ClassNames(footerColumnStyles, styles.socialColumn)}
-          style={{ paddingLeft: '45px !important' }}
-        >
-          <div style={{ marginTop: '15px' }}>Find us on:</div>
-          <div
-            style={{ display: 'flex', marginTop: '15px', alignItems: 'center', gap: 5 }}
+        {console && (
+          <Col
+            lg='3'
+            xs='12'
+            className={ClassNames(footerColumnStyles, styles.socialColumn)}
+            style={{ paddingLeft: '45px !important' }}
           >
-            {socialLinks.map(socialLink => (
-              <a
-                href={socialLink.link}
-                key={socialLink.name}
-                target='_blank'
-                style={{ zIndex: 1000 }}
-              >
-                <socialLink.icon
-                  style={{
-                    fontSize: socialLink.fontSize
-                      ? socialLink.fontSize
-                      : '35px',
-                    color: console ? consoleColor : 'white'
-                  }}
-                />
-              </a>
-            ))}
-          </div>
-        </Col>}
+            <div style={{ marginTop: '15px' }}>Find us on:</div>
+            <div
+              style={{
+                display: 'flex',
+                marginTop: '15px',
+                alignItems: 'center',
+                gap: 5,
+              }}
+            >
+              {socialLinks.map(socialLink => (
+                <a
+                  href={socialLink.link}
+                  key={socialLink.name}
+                  target='_blank'
+                  style={{ zIndex: 1000 }}
+                >
+                  <socialLink.icon
+                    style={{
+                      fontSize: socialLink.fontSize
+                        ? socialLink.fontSize
+                        : '35px',
+                      color: console ? consoleColor : 'white',
+                    }}
+                  />
+                </a>
+              ))}
+            </div>
+          </Col>
+        )}
         {!console && <Col lg='1'> </Col>}
 
         <Col
           lg={console ? '3' : '5'}
           className={ClassNames(footerColumnStyles, linksStyle)}
-          style={{ paddingRight: 0, textAlign: width && width <= 767 ? 'left' : 'right' }}
+          style={{
+            paddingRight: 0,
+            textAlign: width && width <= 767 ? 'left' : 'right',
+          }}
         >
           {links.map(link => (
             <div style={{ marginTop: '10px' }}>

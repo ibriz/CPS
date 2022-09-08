@@ -16,8 +16,8 @@ function* fetchProposalDetailWorker({ payload }) {
       fetchProposalDetailSuccess({
         response: {
           ...response,
-          ipfsHash: payload.hash
-        }
+          ipfsHash: payload.hash,
+        },
       }),
     );
   } catch (error) {

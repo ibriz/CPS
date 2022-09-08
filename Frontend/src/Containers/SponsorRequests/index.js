@@ -7,7 +7,7 @@ import UpperCard from '../Proposals/UpperCard';
 const SponsorRequests = () => {
   return (
     <Container>
-      <Header title='Sponsor Requests' />
+      {/* <Header title='Sponsor Requests' /> */}
       <UpperCard sponsorRequest />
 
       <SponsorRequestsCard

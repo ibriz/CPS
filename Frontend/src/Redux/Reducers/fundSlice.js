@@ -229,7 +229,8 @@ const fundSlice = createSlice({
       return;
     },
     fetchSponsorDepositAmountSuccess(state, action) {
-      const { ICX, bnUSD } = action.payload.response.sponsor_deposit_amount;
+      const { ICX, bnUSD } = action.payload.response.total_sponsor_bond;
+      console.log('Total sponsor bond: ', { ICX, bnUSD });
       state.sponsorDepositAmount = {
         icx: Number(
           IconConverter.toBigNumber(ICX || '0x0').dividedBy(10 ** 18),

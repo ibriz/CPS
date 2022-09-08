@@ -1,0 +1,26 @@
+.cardBody {
+  padding: 10px;
+}
+
+.proposalCard {
+  margin-top: 16px;
+}
+
+.platformStats {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  font-size: x-large;
+  height: 120px;
+}
+
+.statsTab {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  max-width: none !important;
+}
+
+.refreshButton {
+  margin-bottom: 20px;
+}

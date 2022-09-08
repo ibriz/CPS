@@ -26,7 +26,7 @@ const Header = ({
 }) => {
   return (
     <>
-      <Row className={styles.headerContainer} style={{ marginTop: '15px' }}>
+      <Row className={styles.headerContainer} style={{ margin: '0px', background: "white", }}>
         {window.innerWidth <= 1200 && (
           <span className={styles.heading} style={{ marginTop: '0px' }}>
             {title}
@@ -41,7 +41,7 @@ const Header = ({
         </div>
       </Row>
 
-      {window.innerWidth > 1200 && (
+      {/* {window.innerWidth > 1200 && (
         <Row style={{ justifyContent: 'center', marginTop: '2px' }}>
           <span
             className={styles.heading}
@@ -50,7 +50,7 @@ const Header = ({
             {title}
           </span>
         </Row>
-      )}
+      )} */}
       {/* 
         <Row>
         <span>Wallet Balance - {walletBalance.toFixed(2)} ICX</span>

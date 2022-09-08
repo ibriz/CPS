@@ -10,6 +10,7 @@ const PARAMS = {
   contributorAddress: 'contributor_address',
   totalBudget: 'total_budget',
   timestamp: 'timestamp',
+  sponsoredTimestamp: 'sponsored_timestamp',
   proposalHash: 'ipfs_hash',
 
   approvedVotes: 'approved_votes',
@@ -29,6 +30,14 @@ const PARAMS = {
   sponsorVoteReason: 'sponsor_vote_reason',
   projectDuration: 'project_duration',
   token: 'token',
+  submitProgressReport: 'submit_progress_report',
+};
+
+export const VotingPhase = {
+  IDLE: 'Idle',
+  START: 'Start',
+  SIGNING: 'Signing',
+  AUTHORIZING: 'Authorizing',
 };
 
 const initialState = {
@@ -45,6 +54,7 @@ const initialState = {
   proposalDetail: null,
   modalShowSponsorRequests: false,
   modalShowVoting: false,
+  votingPhase: VotingPhase.IDLE,
 
   proposalList: {
     Active: [],
@@ -56,6 +66,7 @@ const initialState = {
     Rejected: [],
     Draft: [],
   },
+  proposalListLoading: false,
 
   myProposalList: [],
 
@@ -151,7 +162,7 @@ const proposalSlice = createSlice({
   name: 'proposal',
   initialState,
   reducers: {
-    submitProposalRequest(state) { },
+    submitProposalRequest(state) {},
     submitProposalSuccess(state) {
       state.submittingProposal = false;
     },
@@ -167,8 +178,8 @@ const proposalSlice = createSlice({
       return;
     },
     fetchSortPriorityProposalListSuccess(state, action) {
-      state.proposalList['Voting'][0] = action.payload.response
-        .map(proposal => ({
+      state.proposalList['Voting'][0] = action.payload.response.map(
+        proposal => ({
           _status: proposal[PARAMS.status],
           _proposal_title: proposal[PARAMS.proposalTitle],
           _contributor_address: proposal[PARAMS.contributorAddress],
@@ -177,6 +188,7 @@ const proposalSlice = createSlice({
             proposal[PARAMS.totalBudget],
           ).dividedBy(10 ** 18),
           _timestamp: proposal[PARAMS.timestamp],
+          _sponsored_timestamp: proposal[PARAMS.sponsoredTimestamp],
           ipfsHash: proposal[PARAMS.proposalHash],
           ipfsKey: proposal[PARAMS.proposalHash],
           approvedVotes: IconConverter.toBigNumber(
@@ -216,7 +228,8 @@ const proposalSlice = createSlice({
           //     return 0;
           //   }
           //   return (approvedVoters/totalVoters) * 100;
-        }))
+        }),
+      );
       console.log(action.payload.status);
       // state.totalPages[action.payload.status] = Math.ceil(IconConverter.toNumber(action.payload.response[0].count) / 10)
       state.totalPages[action.payload.status] = Math.ceil(
@@ -231,11 +244,14 @@ const proposalSlice = createSlice({
     },
 
     fetchProposalListRequest(state) {
+      state.proposalListLoading = true;
       return;
     },
     fetchProposalListSuccess(state, action) {
       // state.proposalList = action.payload
       // state.proposalList.
+      state.proposalListLoading = false;
+      console.log(action.payload.response.data);
 
       state.proposalList[action.payload.status][action.payload.pageNumber - 1] =
         action.payload.response.data
@@ -248,6 +264,7 @@ const proposalSlice = createSlice({
               proposal[PARAMS.totalBudget],
             ).dividedBy(10 ** 18),
             _timestamp: proposal[PARAMS.timestamp],
+            _sponsored_timestamp: proposal[PARAMS.sponsoredTimestamp],
             ipfsHash: proposal[PARAMS.proposalHash],
             ipfsKey: proposal[PARAMS.proposalHash],
             approvedVotes: IconConverter.toBigNumber(
@@ -303,6 +320,7 @@ const proposalSlice = createSlice({
       return;
     },
     fetchProposalListFailure(state) {
+      state.proposalListLoading = false;
       return;
     },
     updateProposalStatus(state, action) {
@@ -325,7 +343,7 @@ const proposalSlice = createSlice({
     emptyProposalDetailSuccess(state) {
       delete state.proposalDetail;
       state.error = '';
-      state.selectedProposal = {};
+      state.selectedProposal = null;
     },
     emptyProposalDetailFailure() {
       return;
@@ -367,6 +385,7 @@ const proposalSlice = createSlice({
           ).dividedBy(10 ** 18),
 
           _timestamp: proposal[PARAMS.timestamp],
+          _sponsored_timestamp: proposal[PARAMS.sponsoredTimestamp],
           ipfsHash: proposal[PARAMS.proposalHash],
           ipfsKey: proposal[PARAMS.proposalHash],
           projectDuration: IconConverter.toBigNumber(
@@ -492,6 +511,9 @@ const proposalSlice = createSlice({
     setModalShowSponsorRequests(state, action) {
       state.modalShowSponsorRequests = action.payload;
     },
+    setVotingPhase(state, action) {
+      state.votingPhase = action.payload;
+    },
     setModalShowVoting(state, action) {
       state.modalShowVoting = action.payload;
     },
@@ -588,6 +610,7 @@ const proposalSlice = createSlice({
           ).dividedBy(10 ** 18),
 
           _timestamp: proposal[PARAMS.timestamp],
+          _sponsored_timestamp: proposal[PARAMS.sponsoredTimestamp],
           ipfsHash: proposal[PARAMS.proposalHash],
           ipfsKey: proposal[PARAMS.proposalHash],
           approvedVotes: IconConverter.toBigNumber(
@@ -596,6 +619,9 @@ const proposalSlice = createSlice({
           totalVotes: IconConverter.toBigNumber(proposal[PARAMS.totalVotes]),
           projectDuration: IconConverter.toBigNumber(
             proposal[PARAMS.projectDuration],
+          ),
+          submitProgressReport: Boolean(
+            Number(proposal[PARAMS.submitProgressReport]),
           ),
 
           sponsorVoteReason: proposal[PARAMS.sponsorVoteReason],
@@ -664,6 +690,7 @@ const proposalSlice = createSlice({
             proposal[PARAMS.totalBudget],
           ).dividedBy(10 ** 18),
           _timestamp: proposal[PARAMS.timestamp],
+          _sponsored_timestamp: proposal[PARAMS.sponsoredTimestamp],
           ipfsHash: proposal[PARAMS.proposalHash],
           ipfsKey: proposal[PARAMS.proposalHash],
           approvedVotes: IconConverter.toBigNumber(
@@ -751,6 +778,7 @@ const proposalSlice = createSlice({
           proposal[PARAMS.totalBudget],
         ).dividedBy(10 ** 18),
         _timestamp: proposal[PARAMS.timestamp],
+        _sponsored_timestamp: proposal[PARAMS.sponsoredTimestamp],
         ipfsHash: proposal[PARAMS.proposalHash],
         ipfsKey: proposal[PARAMS.proposalHash],
         approvedVotes: IconConverter.toBigNumber(
@@ -901,5 +929,6 @@ export const {
   fetchPriorityVotingRequest,
   fetchPriorityVotingSuccess,
   fetchPriorityVotingFailure,
+  setVotingPhase,
 } = proposalSlice.actions;
 export default proposalSlice.reducer;

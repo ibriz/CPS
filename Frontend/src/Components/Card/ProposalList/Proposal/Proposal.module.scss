@@ -4,7 +4,7 @@
   padding-bottom: 5px;
   margin-top: -15px;
   cursor: pointer;
-
+  // padding: 12px !important;
   // border-bottom: 1px solid rgba(38, 38, 38, 0.1);
 }
 
@@ -175,7 +175,7 @@
 }
 
 .createProposalButton {
-  font-size: 0.95rem !important;
+  font-size: 0.8rem !important;
   padding-top: 1px !important;
   padding-bottom: 1px !important;
   padding-left: 5px !important;
@@ -185,6 +185,6 @@
 @media screen and (min-width: 992px) {
   .createProgressReportButtonContainer {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
   }
 }

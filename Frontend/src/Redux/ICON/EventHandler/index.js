@@ -12,6 +12,8 @@ import {
   fetchProposalByAddressRequest,
   submitPriorityVotingRequest,
   fetchPriorityVotingRequest,
+  setVotingPhase,
+  VotingPhase,
 } from 'Redux/Reducers/proposalSlice';
 import { setModalShowVotingPR } from 'Redux/Reducers/progressReportSlice';
 // import { fetchPeriodDetailsRequest } from 'Redux/Reducers/periodSlice';
@@ -53,21 +55,19 @@ const {
   votePriority,
 } = constants;
 
-function setTimeoutPromise () {
+function setTimeoutPromise() {
   return new Promise(function (resolve, reject) {
     setTimeout(resolve, 2000);
   });
 }
 
-async function getResult (
-  { txHash, successMessage, failureMessage },
-  callBack,
-) {
+async function getResult({ txHash, successMessage, failureMessage }, callBack) {
   try {
     const iconService = new IconService(provider);
     await setTimeoutPromise();
     const result = await iconService.getTransactionResult(txHash).execute();
     console.log(result);
+    store.dispatch(setVotingPhase(VotingPhase.IDLE));
     if (result.status === 0) {
       NotificationManager.error(result.failure.message, failureMessage);
     } else if (result.status === 1) {
@@ -133,7 +133,11 @@ export default event => {
       store.dispatch(
         signTransaction({ signature: '-1', signatureRawData: '-1' }),
       );
+      store.dispatch(setVotingPhase(VotingPhase.IDLE));
+      break;
 
+    case 'CANCEL_JSON-RPC':
+      store.dispatch(setVotingPhase(VotingPhase.IDLE));
       break;
 
     case 'RESPONSE_JSON-RPC':
@@ -287,8 +291,8 @@ export default event => {
                 body: {
                   eventType: 'sponsorApproval',
                   data: {
-                    proposalIpfsHash: store.getState().proposals.proposalDetail
-                      .ipfsHash,
+                    proposalIpfsHash:
+                      store.getState().proposals.proposalDetail.ipfsHash,
                   },
                 },
                 payload,
@@ -379,7 +383,7 @@ export default event => {
 
         case vote_proposal:
           console.group('vote_proposal');
-          console.log(payload);
+          console.log('vote_proposal', payload);
 
           console.groupEnd();
           getResult(

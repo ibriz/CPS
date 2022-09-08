@@ -1,0 +1,54 @@
+.modalHeader {
+    border-bottom: none !important;
+  }
+  
+  .container {
+    padding-left: 0px !important;
+    margin-bottom: 24px !important;
+  }
+  
+  @media screen and (min-width: 992px) {
+    .progressTextContainer {
+      padding-left: 0px !important;
+    }
+  }
+
+  .modalBody .description{
+    background-color: white;
+    border: 1px solid rgba(219, 219, 219, 0.5);
+    border-radius: 5px;
+    padding: 16px;
+    flex: 1;
+}
+
+  
+  .modalBody img {
+    max-width: 100%;
+  }
+  
+  .modalBody button {
+    width: 100px;
+  }
+  
+  .rejectButton {
+    margin-left: 10px;
+  }
+  
+  .progressBarContainer > div {
+    margin-left: 3px;
+  }
+  
+  .fakeInput {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    left: 50%;
+    z-index: -1000;
+  }
+
+  .backButton{
+    text-decoration-line: underline;
+    color: #27AAB9;
+    cursor: pointer;
+    padding: 12px;
+}

@@ -1,5 +1,5 @@
 .slanted {
-  background-color: #1aaaba;
+  background-color: #27AAB9;
   height: 450px;
   -webkit-clip-path: polygon(0 0, 100% 0, 100% 0%, 0 100%);
   clip-path: polygon(0 0, 100% 0, 100% 78%, 0 100%);
@@ -205,7 +205,7 @@
     display: none !important;
   }
 
-  .headerComp1 > * {
+  .headerComp1>* {
     margin-top: 5px;
   }
 }

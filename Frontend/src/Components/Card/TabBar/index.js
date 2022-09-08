@@ -13,6 +13,7 @@ const TabBar = ({
   placeholder,
   maxWidth,
   newIndexList = [],
+  hideSearch = false,
 }) => {
   return (
     <div className={styles.proposalNavBar}>
@@ -54,12 +55,14 @@ const TabBar = ({
         ))}
 
         <div style={{ flexGrow: 1 }}></div>
-        <NavBarInputGroup
-          placeholder={placeholder}
-          value={searchText}
-          setValue={setSearchText}
-          maxWidth={maxWidth}
-        />
+        {!hideSearch && (
+          <NavBarInputGroup
+            placeholder={placeholder}
+            value={searchText}
+            setValue={setSearchText}
+            maxWidth={maxWidth}
+          />
+        )}
       </Nav>
     </div>
   );

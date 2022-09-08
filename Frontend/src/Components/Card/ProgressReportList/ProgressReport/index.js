@@ -25,6 +25,8 @@ const ProgressReport = ({
   showProject = true,
   onClick,
   isModal = false,
+  minLayout = false,
+  showBadge = true,
 }) => {
   return (
     <>
@@ -34,39 +36,54 @@ const ProgressReport = ({
           className={ClassNames(styles.infos, { [styles.infosModal]: isModal })}
         >
           <Row style={{ alignItems: 'center' }} className={styles.firstRow}>
-            <Badge
-              size='xs'
-              variant={
-                progressReportStatusMapping.find(
-                  mapping => mapping.status === progressReport.status,
-                ).badgeColor
-              }
-              className={styles.badge}
-            >
-              {
-                progressReportStatusMapping.find(
-                  mapping => mapping.status === progressReport.status,
-                ).name
-              }
-            </Badge>{' '}
+            {showBadge && (
+              <Badge
+                size='xs'
+                variant={
+                  progressReportStatusMapping.find(
+                    mapping => mapping.status === progressReport.status,
+                  ).badgeColor
+                }
+                className={styles.badge}
+              >
+                {
+                  progressReportStatusMapping.find(
+                    mapping => mapping.status === progressReport.status,
+                  ).name
+                }
+              </Badge>
+            )}{' '}
             <LowerCardTitle>
               {progressReport.progressReportTitle}
             </LowerCardTitle>
           </Row>
-          <Row className={styles.secondRow}>
-            {showProject && (
-              <Budget>Project: {progressReport.projectTitle}</Budget>
-            )}
+          {!minLayout && (
+            <Row className={styles.secondRow}>
+              <>
+                {showProject && (
+                  <Budget>Project: {progressReport.projectTitle}</Budget>
+                )}
 
-            {progressReportStatusMapping.find(
-              mapping => mapping.status === progressReport.status,
-            ).name !== 'Draft' && (
-              <LowerCardInfo className={'proposalInfo2'}>
-                Submitted on:{' '}
-                {new Date(progressReport.timestamp / 1000).toLocaleDateString()}
-              </LowerCardInfo>
-            )}
-          </Row>
+                {progressReportStatusMapping.find(
+                  mapping => mapping.status === progressReport.status,
+                ).name !== 'Draft' && (
+                  <LowerCardInfo className={'proposalInfo2'}>
+                    Submitted on:{' '}
+                    {new Date(
+                      progressReport.timestamp / 1000,
+                    ).toLocaleDateString()}
+                  </LowerCardInfo>
+                )}
+              </>
+            </Row>
+          )}
+          {minLayout && (
+            <Row className={styles.secondRow}>
+              {showProject && (
+                <Budget>Project: {progressReport.projectTitle}</Budget>
+              )}
+            </Row>
+          )}
         </Col>
 
         {progressReportStatusMapping.find(
@@ -85,10 +102,12 @@ const ProgressReport = ({
                           rejectedPercentage = {progressReport.rejectedPercentage}
                           /> */}
 
-            <VoteProgressBar
-              approvedPercentage={progressReport.approvedPercentage}
-              rejectedPercentage={progressReport.rejectedPercentage}
-            />
+            {!minLayout && (
+              <VoteProgressBar
+                approvedPercentage={progressReport.approvedPercentage}
+                rejectedPercentage={progressReport.rejectedPercentage}
+              />
+            )}
 
             {/* <ProgressText>Voter count- {progressReport.approvedVotesPercentageCount ? progressReport.approvedVotesPercentageCount.toFixed() : 0}% approved, {progressReport.rejectedVotesPercentageCount ? progressReport.rejectedVotesPercentageCount.toFixed() : 0}% rejected</ProgressText>
                         <ProgressBarCombined 
@@ -111,7 +130,6 @@ const ProgressReport = ({
                         <ProgressBar percentage={progressReport.approvedPercentage} />
                     </Col>
                 }
-
                 {
                     progressReportStatusMapping.find(mapping => mapping.status === progressReport.status).name !== 'Draft' && progressReportStatusMapping.find(mapping => mapping.status === progressReport.status).name === 'Rejected' && progressReport.approvedPercentage >= progressReport.approvedVotesPercentageCount &&
                     <Col md="3" xs="12" className={styles.progressBar} >

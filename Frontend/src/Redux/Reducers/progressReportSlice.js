@@ -141,7 +141,7 @@ const initialState = {
   remainingVotes: [],
   selectedProgressReport: {},
   ipfsError: '',
-  changeVote: false
+  changeVote: false,
 };
 
 const proposalSlice = createSlice({
@@ -332,19 +332,17 @@ const proposalSlice = createSlice({
 
     fetchVoteResultBudgetChangeSuccess(state, action) {
       console.log('budgetChangeRequest', action.payload.response.data);
-      state.votesBudgetChangeByProgressReport = action.payload.response.data.map(
-        vote => ({
+      state.votesBudgetChangeByProgressReport =
+        action.payload.response.data.map(vote => ({
           sponsorAddress: vote.address,
           status: progressReportMapping.find(
             mapping => mapping.status === vote.vote,
           )?.name,
           timestamp: vote._timestamp,
           prepName: vote.prep_name,
-        }),
-      );
-      state.votesBudgetChangeByProgressReport = state.votesBudgetChangeByProgressReport.filter(
-        vote => vote.status,
-      );
+        }));
+      state.votesBudgetChangeByProgressReport =
+        state.votesBudgetChangeByProgressReport.filter(vote => vote.status);
       state.approvedVotesBudgetChange = IconConverter.toBigNumber(
         action.payload.response.approved_votes,
       );
@@ -385,6 +383,7 @@ const proposalSlice = createSlice({
           ipfsHash: progressReport[PARAMS.reportHash],
           reportKey: progressReport[PARAMS.reportHash],
           proposalKey: progressReport[PARAMS.proposalHash],
+
           approvedVotes: IconConverter.toBigNumber(
             progressReport[PARAMS.approvedVotes],
           ),
@@ -509,15 +508,14 @@ const proposalSlice = createSlice({
       const status = Number(action.payload.response);
       if (!status) {
         state.changeVote = true;
-      }
-      else {
+      } else {
         state.changeVote = false;
       }
     },
     fetchChangeVoteFailure(state) {
       state.changeVote = false;
-      return
-    }
+      return;
+    },
   },
 });
 
@@ -558,6 +556,6 @@ export const {
   emptyProposalReportDetailFailure,
   fetchChangeVoteRequestProgressReport,
   fetchChangeVoteSuccess,
-  fetchChangeVoteFailure
+  fetchChangeVoteFailure,
 } = proposalSlice.actions;
 export default proposalSlice.reducer;

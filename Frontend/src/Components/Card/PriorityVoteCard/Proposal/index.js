@@ -26,7 +26,7 @@ const Proposal = ({
       >
         <Col sm={proposalPendingPR ? '8' : '9'} className={styles.infos}>
           <Row style={{ alignItems: 'center' }} className={styles.firstRow}>
-            <Badge
+            {/* <Badge
               size='xs'
               variant={
                 proposalStatusMapping.find(
@@ -40,25 +40,27 @@ const Proposal = ({
                   mapping => mapping.status === proposal._status,
                 ).name
               }
-            </Badge>{' '}
+            </Badge>{' '} */}
             <LowerCardTitle>{proposal._proposal_title}</LowerCardTitle>
           </Row>
           <Row className={styles.secondRow}>
-            <LowerCardInfo>{`${proposal._contributor_address.slice(
+            {/* <LowerCardInfo>{`${proposal._contributor_address.slice(
               0,
               4,
             )}...${proposal._contributor_address.slice(
               proposal._contributor_address.length - 3,
-            )}`}</LowerCardInfo>
+            )}`}</LowerCardInfo> */}
 
             {proposalStatusMapping.find(
               mapping => mapping.status === proposal._status,
             ).name !== 'Draft' && (
               <>
-                <LowerCardInfo className={'proposalInfo2'}>
+                {/* <LowerCardInfo className={'proposalInfo2'}>
                   Submitted on:{' '}
-                  {new Date(proposal._timestamp / 1000).toLocaleDateString()}
-                </LowerCardInfo>
+                  {new Date(
+                    proposal._sponsored_timestamp / 1000,
+                  ).toLocaleDateString()}
+                </LowerCardInfo> */}
                 <Budget>
                   Budget: {icxFormat(proposal.budget)} {proposal.token}
                 </Budget>

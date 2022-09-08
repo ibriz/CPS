@@ -211,8 +211,7 @@ const ProposalCreationPage = ({
       document
         .getElementById('milestones')
         .setCustomValidity(
-          `The total duration in milestones should equal to the project duration (currently ${
-            proposal.projectDuration || 0
+          `The total duration in milestones should equal to the project duration (currently ${proposal.projectDuration || 0
           } months)`,
         );
     } else {
@@ -252,7 +251,7 @@ const ProposalCreationPage = ({
     document.getElementById('teamEmail').onfocus = () => {
       document.getElementById('teamEmail').onblur = () => {
         document.getElementById('teamEmail').reportValidity();
-        document.getElementById('teamEmail').onblur = () => {};
+        document.getElementById('teamEmail').onblur = () => { };
       };
     };
 
@@ -385,7 +384,7 @@ const ProposalCreationPage = ({
   }, []);
   return (
     <div className={styles.proposalCreationPage}>
-      <Header title='Create New Proposal' />
+      {/* <Header title='Create New Proposal' /> */}
 
       {/* <Row className={styles.newProposal}>
                 Create New Proposal
@@ -535,11 +534,10 @@ const ProposalCreationPage = ({
                   </option>
                   {prepList?.map(prep => {
                     return (
-                      <option value={prep?.address} key={prep?.address}>{`${
-                        prep?.name
-                      } (${prep?.address?.slice(0, 4)}...${prep?.address?.slice(
-                        prep.address.length - 2,
-                      )})`}</option>
+                      <option value={prep?.address} key={prep?.address}>{`${prep?.name
+                        } (${prep?.address?.slice(0, 4)}...${prep?.address?.slice(
+                          prep.address.length - 2,
+                        )})`}</option>
                     );
                   })}
                 </Form.Control>

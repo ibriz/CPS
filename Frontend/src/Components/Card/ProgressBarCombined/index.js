@@ -6,7 +6,14 @@ const ProgressBarCombined = ({
   rejectedPercentage = 0,
 }) => {
   return (
-    <ProgressBar style={{ height: '10px', width: '100%', maxWidth: '250px' }}>
+    <ProgressBar
+      style={{
+        height: '10px',
+        width: '100%',
+        maxWidth: '250px',
+        border: '1px solid darkgray',
+      }}
+    >
       <ProgressBar striped variant='success' now={approvedPercentage} key={1} />
       <ProgressBar striped variant='danger' now={rejectedPercentage} key={2} />
       <ProgressBar

@@ -34,6 +34,7 @@ const PriorityVoteStatusCard = ({
           paddingBottom: '16px',
           wordWrap: 'break-word',
           color: '#262626',
+          textDecoration: 'underline',
         }}
       >
         Current Ranking

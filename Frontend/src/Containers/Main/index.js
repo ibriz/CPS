@@ -8,12 +8,19 @@ import ProposalCreationPage from '../ProposalCreationPage';
 import ProgressReportCreationPage from '../ProgressReportCreationPage';
 import SponsorRequests from '../SponsorRequests';
 import Voting from '../Voting';
+import ActiveProposals from '../ActiveProposals';
 import BackedProjects from '../BackedProjects';
 import { connect } from 'react-redux';
 import Footer from 'Components/Footer';
 import { Helmet } from 'react-helmet';
 import useTimer from 'Hooks/useTimer';
 import Home from 'Containers/Home';
+import Header from '../../Components/Header';
+import DetailsModal from '../../Components/Card/DetailsModal';
+import ProposalDetailsPage from 'Containers/ProposalDetailsPage';
+import ProgressReportDetailsPage from 'Containers/ProgressReportDetailsPage';
+import StatsPage from 'Containers/StatsPage';
+import ProposalHistoryPage from 'Containers/ProposalHistoryPage';
 
 const Main = ({
   handleToggleSidebar,
@@ -30,8 +37,8 @@ const Main = ({
   const userRoute = component =>
     !isPrep || !isRegistered ? component : <Redirect to='/' />;
 
-  const applicationPeriodRoute = (component) =>
-    period !== 'VOTING' ? component : <Redirect to="/" />;
+  const applicationPeriodRoute = component =>
+    period !== 'VOTING' ? component : <Redirect to='/' />;
   // component
 
   return (
@@ -45,12 +52,30 @@ const Main = ({
           paddingRight: 0,
         }}
       >
-        <div style={{ paddingLeft: '25px', paddingRight: '25px', height: !address && window.location.pathname === '/dashboard' ? '100%' : "" }}>
-          <div className="btn-toggle" onClick={() => handleToggleSidebar(true)}>
+        <Header />
+        <div
+          style={{
+            paddingLeft: '25px',
+            paddingRight: '25px',
+            height:
+              !address && window.location.pathname === '/dashboard'
+                ? '100%'
+                : '',
+          }}
+        >
+          <div className='btn-toggle' onClick={() => handleToggleSidebar(true)}>
             <FaBars />
           </div>
 
-          <div className='block ' style={{ height: !address && window.location.pathname === '/dashboard' ? '100%' : "" }}>
+          <div
+            className='block '
+            style={{
+              height:
+                !address && window.location.pathname === '/dashboard'
+                  ? '100%'
+                  : '',
+            }}
+          >
             <Switch>
               <Route path='/dashboard'>
                 <Dashboard />
@@ -59,7 +84,9 @@ const Main = ({
                 </Helmet>
               </Route>
               <Route path={process.env.PUBLIC_URL + '/proposals/:id'}>
-                <Proposals />
+                {/* <Proposals /> */}
+
+                {<ProposalDetailsPage show={true} />}
 
                 {/* {address ? (
                   <Proposals />
@@ -77,24 +104,80 @@ const Main = ({
                   <title>CPS - Proposals</title>
                 </Helmet>
               </Route>
+
               <Route path={process.env.PUBLIC_URL + '/proposals'}>
                 {<Proposals />}
                 <Helmet>
                   <title>CPS - Proposals</title>
                 </Helmet>
               </Route>
-              <Route path="/progress-reports/:id">
+
+              <Route path={process.env.PUBLIC_URL + '/active-proposals'}>
+                {<ActiveProposals />}
+                <Helmet>
+                  <title>CPS - Active Proposals</title>
+                </Helmet>
+              </Route>
+
+              <Route path={process.env.PUBLIC_URL + '/voting/:id'}>
+                {/* <Proposals /> */}
+
+                {<ProposalDetailsPage show={true} />}
+
+                {/* {address ? (
+                  <Proposals />
+                ) : (
+                  <>
+                    <Home />
+                    <Footer />
+
+                    <Helmet>
+                      <title>CPS</title>
+                    </Helmet>
+                  </>
+                )} */}
+                <Helmet>
+                  <title>CPS - Voting</title>
+                </Helmet>
+              </Route>
+
+              <Route path={process.env.PUBLIC_URL + '/voting'}>
+                {<Voting />}
+                <Helmet>
+                  <title>CPS - Voting</title>
+                </Helmet>
+              </Route>
+
+              <Route path='/progress-reports/:id'>
+                {/* {<ProgressReports />} */}
+                <ProgressReportDetailsPage />
+                <Helmet>
+                  <title>CPS - Progress Reports</title>
+                </Helmet>
+              </Route>
+              <Route path='/progress-reports'>
                 {<ProgressReports />}
                 <Helmet>
                   <title>CPS - Progress Reports</title>
                 </Helmet>
               </Route>
-              <Route path="/progress-reports">
-                {<ProgressReports />}
-                <Helmet>
-                  <title>CPS - Progress Reports</title>
-                </Helmet>
+              <Route path='/proposal-history'>
+                <>
+                  {<ProposalHistoryPage />}
+                  <Helmet>
+                    <title>CPS - Proposal History</title>
+                  </Helmet>
+                </>
               </Route>
+              <Route path='/stats'>
+                <>
+                  {<StatsPage />}
+                  <Helmet>
+                    <title>CPS - Stats</title>
+                  </Helmet>
+                </>
+              </Route>
+
               <Route path='/newProposal'>
                 <>
                   {<ProposalCreationPage />}
@@ -117,10 +200,10 @@ const Main = ({
             {prepRoute(<SponsorRequests />)}
 
           </Route> */}
-              {/* <Route path="/voting">
+              {/* /* <Route path="/voting">
             {prepRoute(<Voting />)}
-          </Route> */}
-              {/* <Route path="/backed-projects">
+          </Route> */
+              /* <Route path="/backed-projects">
             {prepRoute(<BackedProjects />)}
           </Route> */}
               <Route path='/'>

@@ -1,13 +1,13 @@
 import React from 'react';
 import Header from '../../Components/Header';
 import { Container } from 'react-bootstrap';
-import VotingCard from 'Components/VotingCard';
+import VotingCard from 'Components/VotingCardInPage';
 import UpperCard from '../Proposals/UpperCard';
 
 const Voting = () => {
   return (
     <Container>
-      <Header title='Voting' />
+      {/* <Header title='Voting' /> */}
       <UpperCard voting />
 
       <VotingCard

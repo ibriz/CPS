@@ -6,14 +6,22 @@ import {
   SidebarHeader,
   SidebarContent,
 } from 'react-pro-sidebar';
-import { FaTachometerAlt, FaGem, FaList, FaBookOpen } from 'react-icons/fa';
+import {
+  FaTachometerAlt,
+  FaGem,
+  FaList,
+  FaBookOpen,
+  FaChartLine,
+} from 'react-icons/fa';
+import { BiPieChartAlt } from 'react-icons/bi';
 import { MdDashboard, MdForum } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import { Badge } from 'react-bootstrap';
+import { Badge, Fade } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { CgFileDocument } from 'react-icons/cg';
 import iconCPSImg from '../../Assets/Images/ICON CPS white.svg';
+import { GenIcon } from 'react-icons';
 
 const Aside = ({
   collapsed,
@@ -25,9 +33,14 @@ const Aside = ({
   isRegistered,
   history,
   setToggled,
+  priorityVote,
+  remainingVotesProposal,
+  remainingVotesPR,
+  period,
 }) => {
   const highlightedStyle = { background: 'rgba(38, 38, 38, 0.1)' };
   const pathName = history.location.pathname;
+  const [notificationsCount, setNotificationsCount] = React.useState(0);
 
   const getHighlightedStyle = routes => {
     return routes.includes(pathName) ? highlightedStyle : {};
@@ -38,6 +51,14 @@ const Aside = ({
       handleCollapsedChange(false);
     }
   }, [toggled]);
+
+  useEffect(() => {
+    setNotificationsCount(
+      priorityVote
+        ? remainingVotesProposal.length + remainingVotesPR.length
+        : remainingVotesProposal.length + remainingVotesPR.length + 1,
+    );
+  }, [priorityVote, remainingVotesPR, remainingVotesProposal, period]);
 
   return (
     <ProSidebar
@@ -61,7 +82,11 @@ const Aside = ({
           }}
         >
           {!collapsed && (
-            <Link style={{ fontSize: 'initial' }} to='/' className='sidebarHeader'>
+            <Link
+              style={{ fontSize: 'initial' }}
+              to='/'
+              className='sidebarHeader'
+            >
               {/* <span style = {{fontSize: '26px', fontWeight: 400}}>ICON</span><span style = {{fontSize: '26px', fontWeight: '900'}}>CPS</span> */}
               <img src={iconCPSImg} style={{ width: '65%' }} />
             </Link>
@@ -89,8 +114,19 @@ const Aside = ({
               {<span>Dashboard</span>}
               <Link to='/dashboard' />
             </MenuItem>
+            <MenuItem icon={<FaGem />} style={getHighlightedStyle(['/voting'])}>
+              {<span>Voting</span>}
+              <Link to='/voting' />
+            </MenuItem>
             <MenuItem
-              icon={<FaGem />}
+              icon={<FaList />}
+              style={getHighlightedStyle(['/active-proposals'])}
+            >
+              {<span>Active Proposals</span>}
+              <Link to='/active-proposals' />
+            </MenuItem>
+            {/* <MenuItem
+              icon={<FaTachometerAlt />}
               style={getHighlightedStyle(['/proposals', '/newProposal'])}
             >
               {' '}
@@ -98,7 +134,7 @@ const Aside = ({
               <Link to={process.env.PUBLIC_URL + '/proposals'} />
             </MenuItem>
             <MenuItem
-              icon={<FaList />}
+              icon={<FaGem />}
               style={getHighlightedStyle([
                 '/progress-reports',
                 '/newProgressReport',
@@ -107,22 +143,40 @@ const Aside = ({
               {' '}
               {<span>Progress Reports</span>}
               <Link to='/progress-reports' />
-            </MenuItem>
+            </MenuItem> */}
 
-            <MenuItem icon={<MdForum />}>
+            {/* <MenuItem icon={<MdForum />}>
               {' '}
               {<span>ICON Forum</span>}
               <a
                 href='https://forum.icon.community/c/contribution-proposals/45'
                 target='_blank'
               />
+            </MenuItem> */}
+
+            <MenuItem
+              icon={<BiPieChartAlt />}
+              style={getHighlightedStyle(['/proposal-history'])}
+            >
+              {' '}
+              {<span>Proposal History</span>}
+              <Link to='/proposal-history' />
+            </MenuItem>
+
+            <MenuItem
+              icon={<FaChartLine />}
+              style={getHighlightedStyle(['/stats'])}
+            >
+              {' '}
+              {<span>Stats</span>}
+              <Link to='/stats' />
             </MenuItem>
 
             <MenuItem icon={<FaBookOpen />}>
               {' '}
               {<span>User Guide</span>}
               <a
-                href='https://medium.com/ibriz-iconosphere/how-to-use-the-contribution-proposal-system-1efe714c9182'
+                href='https://github.com/icon-community/CPS/wiki'
                 target='_blank'
               />
             </MenuItem>
@@ -142,11 +196,44 @@ const Aside = ({
                 icon={<MdDashboard />}
                 style={getHighlightedStyle(['/dashboard'])}
               >
-                {<span>Dashboard</span>}
+                {
+                  <span style={{ position: 'relative' }}>
+                    Dashboard
+                    {period === 'VOTING' && (
+                      <span
+                        style={{
+                          position: 'absolute',
+                          top: '-3px',
+                          right: '-24px',
+                          fontSize: '10px',
+                          padding: '1px 4px',
+                          backgroundColor: '#fa3e3e',
+                          borderRadius: '2px',
+                        }}
+                      >
+                        {notificationsCount}
+                      </span>
+                    )}
+                  </span>
+                }
                 <Link to='/dashboard' />
               </MenuItem>
               <MenuItem
                 icon={<FaGem />}
+                style={getHighlightedStyle(['/voting'])}
+              >
+                {<span>Voting</span>}
+                <Link to='/voting' />
+              </MenuItem>
+              <MenuItem
+                icon={<FaList />}
+                style={getHighlightedStyle(['/active-proposals'])}
+              >
+                {<span>Active Proposals</span>}
+                <Link to='/active-proposals' />
+              </MenuItem>
+              {/* <MenuItem
+                icon={<FaTachometerAlt />}
                 style={getHighlightedStyle(['/proposals', '/newProposal'])}
               >
                 {' '}
@@ -154,7 +241,7 @@ const Aside = ({
                 <Link to={process.env.PUBLIC_URL + '/proposals'} />
               </MenuItem>
               <MenuItem
-                icon={<FaList />}
+                icon={<FaGem />}
                 style={getHighlightedStyle([
                   '/progress-reports',
                   '/newProgressReport',
@@ -163,7 +250,7 @@ const Aside = ({
                 {' '}
                 {<span>Progress Reports</span>}
                 <Link to='/progress-reports' />
-              </MenuItem>
+              </MenuItem> */}
 
               {/* <MenuItem
                 icon={<FaTachometerAlt />}
@@ -184,20 +271,29 @@ const Aside = ({
 
               </MenuItem> */}
 
-              <MenuItem icon={<MdForum />}>
+              <MenuItem
+                icon={<BiPieChartAlt />}
+                style={getHighlightedStyle(['/proposal-history'])}
+              >
                 {' '}
-                {<span>ICON Forum</span>}
-                <a
-                  href='https://forum.icon.community/c/contribution-proposals/45'
-                  target='_blank'
-                />
+                {<span>Proposal History</span>}
+                <Link to='/proposal-history' />
+              </MenuItem>
+
+              <MenuItem
+                icon={<FaChartLine />}
+                style={getHighlightedStyle(['/stats'])}
+              >
+                {' '}
+                {<span>Stats</span>}
+                <Link to='/stats' />
               </MenuItem>
 
               <MenuItem icon={<FaBookOpen />}>
                 {' '}
                 {<span>User Guide</span>}
                 <a
-                  href='https://medium.com/ibriz-iconosphere/how-to-use-the-contribution-proposal-system-1efe714c9182'
+                  href='https://github.com/icon-community/CPS/wiki'
                   target='_blank'
                 />
               </MenuItem>
@@ -250,7 +346,11 @@ const Aside = ({
 
 const mapStateToProps = state => ({
   isPrep: state.account.isPrep,
+  period: state.period.period,
   isRegistered: state.account.isRegistered,
+  priorityVote: state.proposals.priorityVoting,
+  remainingVotesProposal: state.proposals.remainingVotes,
+  remainingVotesPR: state.progressReport.remainingVotes,
 });
 
 export default withRouter(connect(mapStateToProps)(Aside));

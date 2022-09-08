@@ -16,7 +16,10 @@ import {
   claimSponsorBondReward,
   fetchSponsorDepositAmountRequest,
 } from 'Redux/Reducers/fundSlice';
-import { fetchProjectAmountsRequest, fetchPriorityVotingRequest } from 'Redux/Reducers/proposalSlice';
+import {
+  fetchProjectAmountsRequest,
+  fetchPriorityVotingRequest,
+} from 'Redux/Reducers/proposalSlice';
 import styles from './Dashboard.module.scss';
 import MyProposalCard from 'Components/MyProposalCard';
 import ProposalPendingPRCard from 'Components/ProposalPendingPRCard';
@@ -27,6 +30,8 @@ import {
   fetchCPSTreasuryScoreAddressRequest,
 } from 'Redux/Reducers/fundSlice';
 import { setLoginButtonClicked } from 'Redux/Reducers/accountSlice';
+import congratulationsImg from '../../Assets/Images/congratulations.png';
+import UpperCard from 'Containers/Proposals/UpperCard';
 
 const Dashboard = ({
   payPenaltyRequest,
@@ -63,12 +68,10 @@ const Dashboard = ({
   sponsorDepositAmount,
   fetchSponsorDepositAmountRequest,
   priorityVote,
-  fetchPriorityVotingRequest
+  fetchPriorityVotingRequest,
 }) => {
-  const [
-    showPayPenaltyConfirmationModal,
-    setShowPayPenaltyConfirmationModal,
-  ] = useState(false);
+  const [showPayPenaltyConfirmationModal, setShowPayPenaltyConfirmationModal] =
+    useState(false);
   const [
     showClaimRewardConfirmationModal,
     setShowClaimRewardConfirmationModal,
@@ -86,69 +89,35 @@ const Dashboard = ({
 
   let cardInfo;
 
-  const getSponsorBondRewardText = (amount) => {
+  const getSponsorBondRewardText = amount => {
     if (parseFloat(amount.icx) > 0 && parseFloat(amount.bnUSD) > 0) {
-      return `${icxFormat(
-        parseFloat(
-          amount.icx
-        ),
-        true)} ICX (${icxFormat(
-          parseFloat(
-            amount.bnUSD
-          ),
-          true,
-        )} bnUSD)`
-    }
-    else if (parseFloat(amount.icx) > 0) {
-      return `${icxFormat(
-        parseFloat(
-          amount.icx
-        ),
-        true)} ICX`
-    }
-    else {
-      return `${icxFormat(parseFloat(
-        amount.bnUSD || 0
-      ),
+      return `${icxFormat(parseFloat(amount.icx), true)} ICX (${icxFormat(
+        parseFloat(amount.bnUSD),
         true,
-      )} bnUSD`
+      )} bnUSD)`;
+    } else if (parseFloat(amount.icx) > 0) {
+      return `${icxFormat(parseFloat(amount.icx), true)} ICX`;
+    } else {
+      return `${icxFormat(parseFloat(amount.bnUSD || 0), true)} bnUSD`;
     }
-
-  }
-  const getIcxbnUSDAmount = (amount) => {
+  };
+  const getIcxbnUSDAmount = amount => {
     if (parseFloat(amount.icx) > 0 && parseFloat(amount.bnUSD) > 0) {
-      return `${icxFormat(
-        parseFloat(
-          amount.icx
-        ),
-        true)} ICX <br/> ${icxFormat(
-          parseFloat(
-            amount.bnUSD
-          ),
-          true,
-        )} bnUSD`
-    }
-    else if (parseFloat(amount.icx) > 0) {
-      return `${icxFormat(
-        parseFloat(
-          amount.icx
-        ),
-        true)} ICX`
-    }
-    else {
-      return `${icxFormat(parseFloat(
-        amount.bnUSD || 0
-      ),
+      return `${icxFormat(parseFloat(amount.icx), true)} ICX <br/> ${icxFormat(
+        parseFloat(amount.bnUSD),
         true,
-      )} bnUSD`
+      )} bnUSD`;
+    } else if (parseFloat(amount.icx) > 0) {
+      return `${icxFormat(parseFloat(amount.icx), true)} ICX`;
+    } else {
+      return `${icxFormat(parseFloat(amount.bnUSD || 0), true)} bnUSD`;
     }
-
-  }
+  };
 
   if (!isPrep || !isRegistered) {
     cardInfo = [
       {
-        color: '#1AAABA',
+        color: '#27AAB9',
         title: 'My Voting Proposals',
         // value={`${projectAmounts.Voting.count} (${icxFormat(projectAmounts.Voting.amount)} ICX)`}
         value: myProposalList.filter(
@@ -156,7 +125,7 @@ const Dashboard = ({
         ).length,
       },
       {
-        color: '#1AAABA',
+        color: '#27AAB9',
         title: 'My Approved Proposals',
         // value={`${projectAmounts.Active.count + projectAmounts.Paused.count} (${icxFormat(projectAmounts.Active.amount + projectAmounts.Paused.amount)} ICX)`} />
         value: myProposalList.filter(proposal =>
@@ -164,15 +133,16 @@ const Dashboard = ({
         ).length,
       },
       {
-        color: '#1AAABA',
+        color: '#27AAB9',
         title: `Next Disbursement in ${highestSignificantTimeForGrant.value} ${highestSignificantTimeForGrant.text}`,
         // value={`${icxFormat(cpfRemainingFunds, true)} ICX`}
-        value: getIcxbnUSDAmount(expectedGrant)
+        value: getIcxbnUSDAmount(expectedGrant),
       },
       {
-        title: `Remaining Time in ${period !== 'VOTING' ? 'Application Period' : 'Voting Period'
-          }`,
-        color: '#1AAABA',
+        title: `Remaining Time in ${
+          period !== 'VOTING' ? 'Application Period' : 'Voting Period'
+        }`,
+        color: '#27AAB9',
         // value={period === "APPLICATION" ? 'Application Period' : 'Voting Period'} />
         value: `${highestSignificantTime.value} ${highestSignificantTime.text}`,
       },
@@ -180,7 +150,7 @@ const Dashboard = ({
   } else {
     cardInfo = [
       {
-        color: '#1AAABA',
+        color: '#27AAB9',
         title: 'My Voting Proposals',
         // value={`${projectAmounts.Voting.count} (${icxFormat(projectAmounts.Voting.amount)} ICX)`}
         value: myProposalList.filter(
@@ -188,7 +158,7 @@ const Dashboard = ({
         ).length,
       },
       {
-        color: '#1AAABA',
+        color: '#27AAB9',
         title: 'My Approved Proposals',
         // value={`${projectAmounts.Active.count + projectAmounts.Paused.count} (${icxFormat(projectAmounts.Active.amount + projectAmounts.Paused.amount)} ICX)`} />
         value: myProposalList.filter(proposal =>
@@ -196,7 +166,7 @@ const Dashboard = ({
         ).length,
       },
       {
-        color: '#1AAABA',
+        color: '#27AAB9',
         title:
           period === 'APPLICATION'
             ? 'Remaining Sponsor Requests'
@@ -213,31 +183,32 @@ const Dashboard = ({
         title: `Remaining Time in ${
           period !== 'VOTING' ? 'Application Period' : 'Voting Period'
         }`,
-        color: '#1AAABA',
+        color: '#27AAB9',
         // value={period === "APPLICATION" ? 'Application Period' : 'Voting Period'} />
         value: ` ${highestSignificantTime.value} ${highestSignificantTime.text}`,
       },
       {
-        color: '#1AAABA',
+        color: '#27AAB9',
         title: 'My Sponsor Bond',
         // value={`${projectAmounts.Active.count + projectAmounts.Paused.count} (${icxFormat(projectAmounts.Active.amount + projectAmounts.Paused.amount)} ICX)`} />
         value: getIcxbnUSDAmount(sponsorDepositAmount),
+        hoverText: 'Only active projects are counted',
       },
       {
-        color: '#1AAABA',
+        color: '#27AAB9',
         title: `Next Sponsor Reward in  ${highestSignificantTimeForGrant.value} ${highestSignificantTimeForGrant.text}`,
         // value={`${icxFormat(cpfRemainingFunds, true)} ICX`}
         value: getIcxbnUSDAmount(sponsorReward),
       },
       {
-        color: '#1AAABA',
+        color: '#27AAB9',
         title: `Next Disbursement in ${highestSignificantTimeForGrant.value} ${highestSignificantTimeForGrant.text}`,
         // value={`${icxFormat(cpfRemainingFunds, true)} ICX`}
         value: getIcxbnUSDAmount(expectedGrant),
       },
 
       // {
-      //     color: '#1AAABA',
+      //     color: '#27AAB9',
       //     title: `Total Disbursement Due in ${highestSignificantTimeForGrant.value} ${highestSignificantTimeForGrant.text}`,
       //     // value={`${icxFormat(cpfRemainingFunds, true)} ICX`}
       //     value: `${icxFormat(parseFloat(expectedGrant) + parseFloat(sponsorReward), true)} ICX`
@@ -281,223 +252,288 @@ const Dashboard = ({
   }, [fetchCPFRemainingFundRequest, cpfScoreAddress]);
 
   const getClaimInstallment = () => {
-    if ((parseFloat(withDrawAmountSponsorReward
-      .icx) || parseFloat(withDrawAmountProposalGrant
-        .icx) > 0) && (parseFloat(withDrawAmountSponsorReward
-          .bnUSD) || parseFloat(withDrawAmountProposalGrant
-            .bnUSD) > 0)) {
+    if (
+      (parseFloat(withDrawAmountSponsorReward.icx) ||
+        parseFloat(withDrawAmountProposalGrant.icx) > 0) &&
+      (parseFloat(withDrawAmountSponsorReward.bnUSD) ||
+        parseFloat(withDrawAmountProposalGrant.bnUSD) > 0)
+    ) {
       return `${icxFormat(
         parseFloat(
           Number(withDrawAmountSponsorReward.icx)
             ? withDrawAmountSponsorReward.icx
             : withDrawAmountProposalGrant.icx,
         ),
-        true)} ICX (${icxFormat(
-          parseFloat(
-            Number(withDrawAmountSponsorReward.bnUSD)
-              ? withDrawAmountSponsorReward.bnUSD
-              : withDrawAmountProposalGrant.bnUSD,
-          ),
-          true,
-        )} bnUSD)`
-    }
-    else if (parseFloat(withDrawAmountSponsorReward
-      .icx) || parseFloat(withDrawAmountProposalGrant
-        .icx) > 0) {
-      return `${icxFormat(
-        parseFloat(
-          Number(withDrawAmountSponsorReward.icx)
-            ? withDrawAmountSponsorReward.icx
-            : withDrawAmountProposalGrant.icx,
-        ),
-        true)} ICX`
-    }
-    else if ((parseFloat(withDrawAmountSponsorReward
-      .bnUSD) || parseFloat(withDrawAmountProposalGrant
-        .bnUSD) > 0)) {
-      return `${icxFormat(parseFloat(
-        Number(withDrawAmountSponsorReward.bnUSD)
-          ? withDrawAmountSponsorReward.bnUSD
-          : withDrawAmountProposalGrant.bnUSD,
-      ),
         true,
-      )} bnUSD`
+      )} ICX (${icxFormat(
+        parseFloat(
+          Number(withDrawAmountSponsorReward.bnUSD)
+            ? withDrawAmountSponsorReward.bnUSD
+            : withDrawAmountProposalGrant.bnUSD,
+        ),
+        true,
+      )} bnUSD)`;
+    } else if (
+      parseFloat(withDrawAmountSponsorReward.icx) ||
+      parseFloat(withDrawAmountProposalGrant.icx) > 0
+    ) {
+      return `${icxFormat(
+        parseFloat(
+          Number(withDrawAmountSponsorReward.icx)
+            ? withDrawAmountSponsorReward.icx
+            : withDrawAmountProposalGrant.icx,
+        ),
+        true,
+      )} ICX`;
+    } else if (
+      parseFloat(withDrawAmountSponsorReward.bnUSD) ||
+      parseFloat(withDrawAmountProposalGrant.bnUSD) > 0
+    ) {
+      return `${icxFormat(
+        parseFloat(
+          Number(withDrawAmountSponsorReward.bnUSD)
+            ? withDrawAmountSponsorReward.bnUSD
+            : withDrawAmountProposalGrant.bnUSD,
+        ),
+        true,
+      )} bnUSD`;
     }
-
-  }
+  };
 
   useEffect(() => {
-    if(isPrep && isRegistered)
-    {
-      fetchSponsorDepositAmountRequest()
+    if (isPrep && isRegistered && cpsTreasuryScoreAddress && address) {
+      fetchSponsorDepositAmountRequest();
     }
-  },[isPrep,isRegistered])
+  }, [isPrep, isRegistered, cpsTreasuryScoreAddress, address]);
 
   useEffect(() => {
     if (isPrep) {
-      fetchPriorityVotingRequest()
+      fetchPriorityVotingRequest();
     }
-  }, [isPrep])
+  }, [isPrep]);
 
-  return (
+  return address ? (
+    <Container>
+      {/* < Header title='Dashboard' /> */}
+      <Row style={{ marginTop: '30px' }}>
+        <Col xs='12'>
+          <div className={styles.period}>
+            Period:{' '}
+            {period !== 'VOTING' ? 'Application Period' : 'Voting Period'}
+          </div>
+        </Col>
+      </Row>
 
-    address ?
-      <Container>
-        < Header title='Dashboard' />
-        <Row style={{ marginTop: '30px' }}>
+      {period === 'APPLICATION' && previousPeriod === 'APPLICATION' && (
+        <Row style={{ marginTop: '15px' }}>
           <Col xs='12'>
-            <div className={styles.period}>
-              Period:{' '}
-              {period !== 'VOTING' ? 'Application Period' : 'Voting Period'}
-            </div>
+            <Alert variant='info'>
+              <span>
+                Note: The period switched back to application period because{' '}
+                {preps.length < 7
+                  ? 'there were less than 7 P-Reps'
+                  : 'there were no voting proposals or progress reports.'}
+              </span>
+            </Alert>
           </Col>
         </Row>
+      )}
 
-        {
-          period === 'APPLICATION' && previousPeriod === 'APPLICATION' && (
-            <Row style={{ marginTop: '15px' }}>
-              <Col xs='12'>
-                <Alert variant='info'>
-                  <span>
-                    Note: The period switched back to application period because{' '}
-                    {preps.length < 7
-                      ? 'there were less than 7 P-Reps'
-                      : 'there were no voting proposals or progress reports.'}
-                  </span>
-                </Alert>
-              </Col>
-            </Row>
-          )
-        }
+      {(parseFloat(withDrawAmountSponsorReward.icx) > 0 ||
+        parseFloat(withDrawAmountSponsorReward.bnUSD) > 0 ||
+        parseFloat(withDrawAmountProposalGrant.icx) > 0 ||
+        parseFloat(withDrawAmountProposalGrant.bnUSD) > 0) && (
+        <Row style={{ marginTop: '15px' }}>
+          <Col xs='12'>
+            <Container className={styles.container}>
+              <img src={congratulationsImg} style={{ padding: '24px' }} />
+              <Container style={{ display: 'flex', flexDirection: 'column' }}>
+                <span
+                  style={{
+                    fontWeight: '500',
+                    fontSize: '1.5rem',
+                    lineHeight: '2rem',
+                  }}
+                >
+                  Congratulations!
+                </span>
 
-        {
-          (parseFloat(withDrawAmountSponsorReward.icx) > 0 || parseFloat(withDrawAmountSponsorReward.bnUSD) > 0 ||
-            parseFloat(withDrawAmountProposalGrant.icx) > 0 || parseFloat(withDrawAmountProposalGrant.bnUSD) > 0) && (
-            <Row style={{ marginTop: '15px' }}>
-              <Col xs='12'>
-                <Alert variant='success'>
+                <span
+                  style={{
+                    fontWeight: '500',
+                    fontSize: '1rem',
+                    lineHeight: '2rem',
+                  }}
+                >
                   {isPrep
-                    ? `Congratulations! You can claim installment amount of ${getClaimInstallment()}`
-                    : `Congratulations! You can claim proposal grant of ${getClaimInstallment()}`}
-
-                  {
-                    <>
-                      <br />
-                      <Button
-                        variant='info'
-                        onClick={setShowClaimRewardConfirmationModal}
-                      >
-                        Claim Installment
-                      </Button>
-                    </>
-                  }
-
-                  <ConfirmationModal
-                    show={showClaimRewardConfirmationModal}
-                    onHide={() => setShowClaimRewardConfirmationModal(false)}
-                    heading={'Reward Claim Confirmation'}
-                    onConfirm={claimReward}
+                    ? `You can claim installment amount of $${getClaimInstallment()}`
+                    : `You can claim proposal grant of $${getClaimInstallment()}`}
+                </span>
+              </Container>
+              {
+                <>
+                  <br />
+                  <Button
+                    className={styles.claimButton}
+                    variant='info'
+                    onClick={setShowClaimRewardConfirmationModal}
                   >
-                    <div>Are you sure you want to claim the reward?</div>
-                  </ConfirmationModal>
-                </Alert>
-              </Col>
-            </Row>
-          )
-        }
+                    Claim Installment
+                  </Button>
+                </>
+              }
 
-        {
-          (parseFloat(sponsorBondReward.icx) > 0 || parseFloat(sponsorBondReward.bnUSD) > 0) && (
-            <Row style={{ marginTop: '15px' }}>
-              <Col xs='12'>
-                <Alert variant='success'>
-                  {isPrep &&
-                    `Congratulations! You can claim a total sponsor bond of ${getSponsorBondRewardText(sponsorBondReward)}`}
-
-                  {
-                    <>
-                      <br />
-                      <Button
-                        variant='info'
-                        onClick={setShowClaimSponsorBondRewardConfirmationModal}
-                      >
-                        Claim Sponsor Bond
-                      </Button>
-                    </>
-                  }
-
-                  <ConfirmationModal
-                    show={showClaimSponsorBondRewardConfirmationModal}
-                    onHide={() =>
-                      setShowClaimSponsorBondRewardConfirmationModal(false)
-                    }
-                    heading={'Reward Claim Confirmation'}
-                    onConfirm={claimSponsorBondReward}
-                  >
-                    <div>Are you sure you want to claim the reward?</div>
-                  </ConfirmationModal>
-                </Alert>
-              </Col>
-            </Row>
-          )
-        }
-
-        {
-          payPenalty && (
-            <Row style={{ marginTop: '15px' }}>
-              <Col xs='12'>
-                <Alert variant='danger'>
-                  {period === 'APPLICATION' && !isRemainingTimeZero
-                    ? `You missed voting on some of the proposals or progress reports in the voting period.Please pay the penalty amount of ${payPenaltyAmount} bnUSD to re - register.`
-                    : `You missed voting on some of the proposals or progress reports in the voting period.Please pay the penalty amount of ${payPenaltyAmount} bnUSD in the next Application period to re - register.`}
-
-                  {period === 'APPLICATION' && !isRemainingTimeZero && (
-                    <>
-                      <br />
-                      <Button
-                        variant='info'
-                        onClick={setShowPayPenaltyConfirmationModal}
-                      >
-                        Pay Penalty
-                      </Button>
-                    </>
-                  )}
-
-                  <ConfirmationModal
-                    show={showPayPenaltyConfirmationModal}
-                    onHide={() => setShowPayPenaltyConfirmationModal(false)}
-                    heading={'Vote Confirmation'}
-                    onConfirm={payPenaltyRequest}
-                  >
-                    <div>Are you sure you pay the penalty?</div>
-                    <div style={{ color: 'red' }}>
-                      You will need to transfer {`${payPenaltyAmount} `} ICX
-                    </div>
-                  </ConfirmationModal>
-                </Alert>
-              </Col>
-            </Row>
-          )
-        }
-        <Row style={{ justifyContent: 'center' }}>
-          {cardInfo.map(info => (
-            <Col
-              lg='3'
-              style={{ marginTop: '10px' }}
-              className={styles.infoCardContainer}
-            >
-              <InfoCard
-                bg='light'
-                color={info.color}
-                title={info.title}
-                // value={`${ projectAmounts.Voting.count } (${ icxFormat(projectAmounts.Voting.amount) } ICX)`}
-                value={info.value}
-              />
-            </Col>
-          ))}
+              <ConfirmationModal
+                show={showClaimRewardConfirmationModal}
+                onHide={() => setShowClaimRewardConfirmationModal(false)}
+                heading={'Reward Claim Confirmation'}
+                onConfirm={claimReward}
+              >
+                <div>Are you sure you want to claim the reward?</div>
+              </ConfirmationModal>
+            </Container>
+          </Col>
         </Row>
+      )}
 
-        {/* {
+      {(parseFloat(sponsorBondReward.icx) > 0 ||
+        parseFloat(sponsorBondReward.bnUSD) > 0) && (
+        <Row style={{ marginTop: '15px' }}>
+          <Col xs='12'>
+            <Container className={styles.container}>
+              <img src={congratulationsImg} style={{ padding: '24px' }} />
+              {isPrep && (
+                <Container style={{ display: 'flex', flexDirection: 'column' }}>
+                  <span
+                    style={{
+                      fontWeight: '500',
+                      fontSize: '1.5rem',
+                      lineHeight: '2rem',
+                    }}
+                  >
+                    Congratulations!
+                  </span>
+
+                  <span
+                    style={{
+                      fontWeight: '500',
+                      fontSize: '1rem',
+                      lineHeight: '2rem',
+                    }}
+                  >
+                    You can claim a total sponsor bond of $
+                    {getSponsorBondRewardText(sponsorBondReward)}`
+                  </span>
+                </Container>
+              )}
+              {/* <Alert variant='success' style={{
+                  background: "#fff",
+                }}>
+                  {isPrep &&
+                    `Congratulations! You can claim a total sponsor bond of ${getSponsorBondRewardText(sponsorBondReward)}`} */}
+
+              {
+                <>
+                  <br />
+                  <Button
+                    variant='info'
+                    className={styles.claimButton}
+                    onClick={setShowClaimSponsorBondRewardConfirmationModal}
+                  >
+                    Claim Sponsor Bond
+                  </Button>
+                </>
+              }
+
+              <ConfirmationModal
+                show={showClaimSponsorBondRewardConfirmationModal}
+                onHide={() =>
+                  setShowClaimSponsorBondRewardConfirmationModal(false)
+                }
+                heading={'Reward Claim Confirmation'}
+                onConfirm={claimSponsorBondReward}
+              >
+                <div>Are you sure you want to claim the reward?</div>
+              </ConfirmationModal>
+              {/* </Alert> */}
+            </Container>
+          </Col>
+        </Row>
+      )}
+
+      {payPenalty && (
+        <Row style={{ marginTop: '15px' }}>
+          <Col xs='12'>
+            <Alert variant='danger'>
+              {period === 'APPLICATION' && !isRemainingTimeZero
+                ? `You missed voting on some of the proposals or progress reports in the voting period.Please pay the penalty amount of ${payPenaltyAmount} bnUSD to re - register.`
+                : `You missed voting on some of the proposals or progress reports in the voting period.Please pay the penalty amount of ${payPenaltyAmount} bnUSD in the next Application period to re - register.`}
+
+              {period === 'APPLICATION' && !isRemainingTimeZero && (
+                <>
+                  <br />
+                  <Button
+                    variant='info'
+                    onClick={setShowPayPenaltyConfirmationModal}
+                  >
+                    Pay Penalty
+                  </Button>
+                </>
+              )}
+
+              <ConfirmationModal
+                show={showPayPenaltyConfirmationModal}
+                onHide={() => setShowPayPenaltyConfirmationModal(false)}
+                heading={'Vote Confirmation'}
+                onConfirm={payPenaltyRequest}
+              >
+                <div>Are you sure you pay the penalty?</div>
+                <div style={{ color: 'red' }}>
+                  You will need to transfer {`${payPenaltyAmount} `} ICX
+                </div>
+              </ConfirmationModal>
+            </Alert>
+          </Col>
+        </Row>
+      )}
+      <Row style={{ justifyContent: 'center', padding: '24px 0px' }}>
+        {cardInfo.map(info => (
+          <Col
+            lg='3'
+            style={{ marginTop: '10px' }}
+            className={styles.infoCardContainer}
+          >
+            <InfoCard
+              bg='light'
+              color={info.color}
+              title={info.title}
+              // value={`${ projectAmounts.Voting.count } (${ icxFormat(projectAmounts.Voting.amount) } ICX)`}
+              value={info.value}
+              hoverText={info.hoverText}
+            />
+          </Col>
+        ))}
+      </Row>
+
+      <UpperCard />
+
+      {isPrep && isRegistered && period === 'VOTING' && (
+        <>
+          <div className={styles.myProposalHeading}>Pending Votes</div>
+
+          <VotingCard
+            proposalStatesList={
+              period === 'VOTING'
+                ? ['Priority Voting', 'Proposals', 'Progress Reports']
+                : ['Proposals', 'Progress Reports']
+            }
+            initialState={period === 'VOTING' ? 'Priority Voting' : 'Proposals'}
+            priorityVote={priorityVote}
+          />
+        </>
+      )}
+
+      {/* {
                 (!isPrep || !isRegistered) && period === 'APPLICATION' &&
                 <>
                     <div className={styles.myProposalHeading}>Proposals Pending Progress Report</div>
@@ -506,50 +542,53 @@ const Dashboard = ({
                 </>
             } */}
 
-        {
-          <>
-            <div className={styles.myProposalHeading}>My Proposals</div>
+      {
+        <>
+          {/* <div className={styles.myProposalHeading}>My Proposals</div> */}
 
-            <MyProposalCard />
-          </>
-        }
+          <MyProposalCard />
+        </>
+      }
 
-        {
-          isPrep && isRegistered && (
-            <>
-              <div className={styles.myProposalHeading}>Sponsor Requests</div>
+      {isPrep && isRegistered && (
+        <>
+          <div className={styles.myProposalHeading}>Sponsored Projects</div>
 
-              <SponsorRequestsCard
-                proposalStatesList={[
-                  'Pending',
-                  'Approved',
-                  'Rejected',
-                  'Disqualified',
-                ]}
-                initialState={'Pending'}
-              />
-            </>
-          )
-        }
-
-        {
-          isPrep && isRegistered && (
-            <>
-              <div className={styles.myProposalHeading}>Pending Votes</div>
-
-              <VotingCard
-                proposalStatesList={period === 'VOTING' ?
-                  ['Priority Voting', 'Proposals', 'Progress Reports']
-                  : ['Proposals', 'Progress Reports']}
-                initialState={period === 'VOTING' ? 'Priority Voting': 'Proposals'}
-                priorityVote={priorityVote}
-              />
-            </>
-          )
-        }
-      </Container > : <div style={{ display: 'flex', flexDirection: 'column', width: '100%', paddingRight: 30, height: '100%' }}>< Header /><p style={{
-        textAlign: 'center', fontSize: 20, height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'
-      }}>Sign in to use Dashboard</p></div >
+          <SponsorRequestsCard
+            proposalStatesList={[
+              'Pending',
+              'Approved',
+              'Rejected',
+              'Disqualified',
+            ]}
+            initialState={'Pending'}
+          />
+        </>
+      )}
+    </Container>
+  ) : (
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        width: '100%',
+        paddingRight: 30,
+        height: '100%',
+      }}
+    >
+      <p
+        style={{
+          textAlign: 'center',
+          fontSize: 20,
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        Sign in to use Dashboard
+      </p>
+    </div>
   );
 };
 
@@ -581,7 +620,7 @@ const mapStateToProps = state => ({
   preps: state.preps.preps,
   address: state.account.address,
   sponsorDepositAmount: state.fund.sponsorDepositAmount,
-  priorityVote: state.proposals.priorityVoting 
+  priorityVote: state.proposals.priorityVoting,
 });
 
 const mapDispatchToProps = {
@@ -595,7 +634,7 @@ const mapDispatchToProps = {
   claimSponsorBondReward,
   fetchSponsorBondRequest,
   fetchSponsorDepositAmountRequest,
-  fetchPriorityVotingRequest
+  fetchPriorityVotingRequest,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);

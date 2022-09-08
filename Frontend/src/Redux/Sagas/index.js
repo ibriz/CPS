@@ -75,6 +75,7 @@ import {
   unregisterPrepWorker,
   registerPrepWorker,
   payPenaltyWorker,
+  fetchPrepsWithStatsWorker,
 } from './PRep';
 import {
   fetchPeriodDetailsRequestWorker,
@@ -137,6 +138,7 @@ import {
 } from '../Reducers/periodSlice';
 import {
   fetchPrepsRequest,
+  fetchPrepsWithStatsRequest,
   unregisterPrep,
   registerPrep,
   payPenalty,
@@ -203,6 +205,7 @@ function* rootSaga() {
   yield takeEvery(updateProposalStatus.type, updateProposalStatusWorker);
 
   yield takeEvery(fetchPrepsRequest.type, fetchPrepWorker);
+  yield takeEvery(fetchPrepsWithStatsRequest.type, fetchPrepsWithStatsWorker);
 
   yield takeEvery(fetchProposalDetailRequest.type, fetchProposalDetailWorker);
   yield takeEvery(

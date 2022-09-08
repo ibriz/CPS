@@ -3,18 +3,23 @@ import { callKeyStoreWallet } from '../../ICON/utils';
 import {
   fetchSponsorDepositAmountSuccess,
   fetchSponsorDepositAmountFailure,
+  cpsTreasuryAddress,
 } from '../../Reducers/fundSlice';
 
 function* fetchSponsorDepositAmountWorker() {
   try {
     const getAddress = state => state.account.address;
+    const getCPSTreasuryScoreAddress = state =>
+      state.fund.cpsTreasuryScoreAddress;
+
+    const cpsTreasuryAddress = yield select(getCPSTreasuryScoreAddress);
     const address = yield select(getAddress);
     const response = yield call(callKeyStoreWallet, {
-      method: 'get_sponsors_requests',
+      method: 'get_sponsor_projected_fund',
       params: {
-        _status: '_approved',
-        _sponsor_address: address,
+        _wallet_address: address,
       },
+      scoreAddress: cpsTreasuryAddress,
     });
     console.log('Fetch sponsor bond', response);
     yield put(

@@ -8,7 +8,7 @@ import Header from '../../Components/Header';
 const Proposals = ({ numberOfSubmittedProposals }) => {
   return (
     <Container>
-      <Header title='Proposals' />
+      {/* <Header title='Proposals' /> */}
 
       <UpperCard />
       <ProposalCard

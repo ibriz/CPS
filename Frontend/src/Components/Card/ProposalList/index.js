@@ -10,7 +10,11 @@ const ProposalList = ({
   emptyListMessage,
   proposalPendingPR = false,
   proposalPendingPRSameList = false,
+  sponsorRequest = false,
   minHeight = '100px',
+  minLayout = false,
+  showBadge = true,
+  myProposalList = false,
 }) => {
   return (
     <Container
@@ -29,11 +33,16 @@ const ProposalList = ({
       {proposals.length ? (
         proposals.map(proposal => (
           <Proposal
+            key={proposal?.ipfsHash}
             proposal={proposal}
             selectedTab={selectedTab}
             proposalPendingPR={proposalPendingPR}
             proposalPendingPRSameList={proposal.pendingPR}
+            sponsorRequest={sponsorRequest}
             onClick={() => onClickProposal(proposal)}
+            minLayout={minLayout}
+            showBadge={showBadge}
+            myProposalList={myProposalList}
           />
         ))
       ) : (

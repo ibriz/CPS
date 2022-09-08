@@ -8,6 +8,7 @@
 
 .slick-prev {
   margin-left: -50px;
+
   @media screen and (max-width: 768px) {
     margin-left: -10px;
   }
@@ -15,6 +16,7 @@
 
 .slick-next {
   margin-right: -30px;
+
   @media screen and (max-width: 768px) {
     margin-right: 5px;
   }
@@ -35,18 +37,21 @@
   font-weight: bold !important;
   // box-shadow:0px 0px 8px -2px rgba(0, 0, 0, 0.5);
 }
+
 .slick-prev:before {
   content: '';
   background: url(../Images/arrowLeft.png);
   background-size: 40px 40px;
   background-repeat: no-repeat;
 }
+
 .slick-next:before {
   content: '';
   background: url(../Images/arrowRight.png);
   background-size: 40px 40px;
   background-repeat: no-repeat;
 }
+
 @media screen and (min-width: 650px) {
   .modal-mdxl {
     max-width: 630px !important;
@@ -54,7 +59,7 @@
 }
 
 $theme-colors: (
-  'info': #1aaaba,
+  'info': #27AAB9,
   'information': #17a2b8,
   'completed': #0f626b,
 );
@@ -67,7 +72,7 @@ $theme-colors: (
 
 @import '~bootstrap/scss/bootstrap';
 
-$sidebar-bg-color: #1aaaba;
+$sidebar-bg-color: #27AAB9;
 $submenu-bg-color: rgba(255, 255, 255, 0.05);
 $submenu-bg-color-collapsed: rgba(29, 29, 29, 0.95);
 $sidebar-color: #ffffff;
@@ -76,16 +81,15 @@ $icon-bg-color: rgba(255, 255, 255, 0.05);
 $icon-size: 35px;
 
 @import '~react-pro-sidebar/dist/scss/styles.scss';
+
 body {
   margin: 0;
   height: 100vh;
   color: #353535;
   font-family: 'Montserrat', sans-serif;
-  background: linear-gradient(
-      0deg,
+  background: linear-gradient(0deg,
       rgba(38, 38, 38, 0.05),
-      rgba(38, 38, 38, 0.05)
-    ),
+      rgba(38, 38, 38, 0.05)),
     #ffffff;
 }
 
@@ -120,6 +124,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+
     .sidebar-btn {
       padding: 1px 15px;
       border-radius: 40px;
@@ -133,10 +138,12 @@ body {
       justify-content: center;
       text-overflow: ellipsis;
       overflow: hidden;
+
       span {
         margin-left: 5px;
         font-size: 13px;
       }
+
       &:hover {
         color: $highlight-color;
       }
@@ -155,21 +162,21 @@ body {
   }
 
   main {
-    background: linear-gradient(
-        0deg,
+    background: linear-gradient(0deg,
         rgba(38, 38, 38, 0.05),
-        rgba(38, 38, 38, 0.05)
-      ),
+        rgba(38, 38, 38, 0.05)),
       #ffffff;
     font-family: Montserrat;
-    padding: 24px;
+    // padding: 24px;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
     overflow-y: auto;
+
     header {
       margin-bottom: 40px;
       border-bottom: 1px solid #efefef;
+
       h1 {
         display: flex;
         align-items: center;
@@ -181,17 +188,21 @@ body {
       margin-top: auto;
       color: #888;
       text-align: center;
+
       a {
         text-decoration: none;
         color: #888;
+
         &:hover {
           text-decoration: underline;
         }
       }
     }
   }
+
   .social-bagdes {
     margin-top: 10px;
+
     img {
       margin: 5px;
     }
@@ -202,7 +213,8 @@ body {
     margin-bottom: 24px;
     font-size: 14px;
     color: #545454;
-    > span {
+
+    >span {
       margin-left: 10px;
     }
   }
@@ -216,13 +228,16 @@ body {
         transform: translateX(20px);
       }
     }
+
     .block {
       direction: rtl;
-      > span {
+
+      >span {
         margin-left: 0;
         margin-right: 10px;
       }
     }
+
     .sidebar-btn-wrapper {
       .sidebar-btn {
         span {
@@ -235,12 +250,14 @@ body {
 
   @media (max-width: 767.98px) {
     overflow-x: hidden;
+
     header {
       h1 {
         font-size: 24px;
       }
     }
   }
+
   @media (max-width: $breakpoint-md) {
     .btn-toggle {
       display: flex;
@@ -259,14 +276,17 @@ body {
   font-size: 9px;
   letter-spacing: 1px;
   border-radius: 15px;
+
   &.red {
     color: #ffffff;
     background: #d63030;
   }
+
   &.gray {
     color: #ffffff;
     background: #777777;
   }
+
   &.yellow {
     color: #000000;
     background: #ffd331;
@@ -300,7 +320,7 @@ $col-1half: $col-base-size * 1.5;
   }
 }
 
-.pro-sidebar-header > div {
+.pro-sidebar-header>div {
   display: flex !important;
   justify-content: space-between !important;
   align-items: center !important;
@@ -346,6 +366,7 @@ a.sidebarHeader:hover {
 
 .ck.ck-editor__editable_inline {
   padding-left: 10px;
+
   ul,
   ol {
     padding-left: 15px;
