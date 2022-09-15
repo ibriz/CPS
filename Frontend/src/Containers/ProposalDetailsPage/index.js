@@ -124,6 +124,8 @@ const sponsorNote = (
   </div>
 );
 
+const isDarkTheme = localStorage.getItem('theme') === 'dark';
+
 function ProposalDetailsPage(props) {
   const voteOptions = [
     { title: 'Approve', bgColor: 'success' },
@@ -533,14 +535,14 @@ function ProposalDetailsPage(props) {
                     )}
 
                     {proposalDetail?.sponserPrep === walletAddress &&
-                      status === 'Pending' &&
+                      status === 'Voting' &&
                       period === 'APPLICATION' &&
                       remainingTime > 0 &&
                       (voteLoading ? (
                         <Container
                           fluid
                           style={{
-                            backgroundColor: 'white',
+                            backgroundColor: 'var(--proposal-card-color)',
                           }}
                         >
                           <LoadingDiv>
@@ -552,7 +554,7 @@ function ProposalDetailsPage(props) {
                           fluid
                           style={{
                             marginTop: '12px',
-                            backgroundColor: 'white',
+                            backgroundColor: 'var(--proposal-card-color)',
                             padding: '12px',
                           }}
                         >
@@ -573,9 +575,18 @@ function ProposalDetailsPage(props) {
                                   onClick={() =>
                                     setSponsorVote(sponsorVoteOption.title)
                                   }
-                                  style={{
-                                    border: '1px solid rgba(0,0,0,0.7)',
-                                  }}
+                                  style={
+                                    isDarkTheme
+                                      ? {
+                                          border: '1px solid rgba(0,0,0,0.7)',
+                                          backgroundColor:
+                                            'var(--vote-card-btn-color)',
+                                          color: 'var(--vote-card-text-color)',
+                                        }
+                                      : {
+                                          border: '1px solid rgba(0,0,0,0.7)',
+                                        }
+                                  }
                                 >
                                   {sponsorVoteOption.title}
                                 </Button>
@@ -589,7 +600,13 @@ function ProposalDetailsPage(props) {
                             </Col>
                           </Row>
                           <Row>
-                            <Col xs='12' style={{ padding: '12px' }}>
+                            <Col
+                              xs='12'
+                              style={{
+                                padding: '12px',
+                                color: 'var(--card-comment-color)',
+                              }}
+                            >
                               <span>
                                 Explain in brief the reason behind your decision
                               </span>
@@ -612,7 +629,10 @@ function ProposalDetailsPage(props) {
                             </Col>
                           </Row>
 
-                          <Alert variant={'info'} style={{ marginTop: '15px' }}>
+                          <Alert
+                            variant={isDarkTheme ? '' : 'info'}
+                            style={{ marginTop: '15px' }}
+                          >
                             {sponsorNote}
                           </Alert>
 
@@ -652,7 +672,7 @@ function ProposalDetailsPage(props) {
                             <Container
                               fluid
                               style={{
-                                backgroundColor: 'white',
+                                backgroundColor: 'var(--proposal-card-color)',
                               }}
                             >
                               <LoadingDiv>
@@ -669,7 +689,7 @@ function ProposalDetailsPage(props) {
                               fluid
                               style={{
                                 marginTop: '12px',
-                                backgroundColor: 'white',
+                                backgroundColor: 'var(--proposal-card-color)',
                                 padding: '12px',
                               }}
                             >
@@ -688,9 +708,21 @@ function ProposalDetailsPage(props) {
                                           : 'light'
                                       }
                                       onClick={() => setVote(voteOption.title)}
-                                      style={{
-                                        border: '1px solid rgba(0,0,0,0.7)',
-                                      }}
+                                      style={
+                                        isDarkTheme
+                                          ? {
+                                              border:
+                                                '1px solid rgba(0,0,0,0.7)',
+                                              backgroundColor:
+                                                'var(--vote-card-btn-color)',
+                                              color:
+                                                'var(--vote-card-text-color)',
+                                            }
+                                          : {
+                                              border:
+                                                '1px solid rgba(0,0,0,0.7)',
+                                            }
+                                      }
                                     >
                                       {voteOption.title}
                                     </Button>
@@ -707,7 +739,13 @@ function ProposalDetailsPage(props) {
                                 </Col>
                               </Row>
                               <Row>
-                                <Col xs='12 ' style={{ padding: '12px' }}>
+                                <Col
+                                  xs='12'
+                                  style={{
+                                    padding: '12px',
+                                    color: 'var(--card-comment-color)',
+                                  }}
+                                >
                                   <span>
                                     Explain in brief the reason behind your
                                     decision
@@ -777,7 +815,7 @@ function ProposalDetailsPage(props) {
                                 >
                                   <p
                                     style={{
-                                      color: '#262626',
+                                      color: 'var(--proposal-text-color)',
                                       textAlign: 'center',
                                     }}
                                   >
@@ -945,7 +983,7 @@ function ProposalDetailsPage(props) {
                                 href={`${trackerURL}/${proposalDetail?.sponserPrep}`}
                                 target='_blank'
                                 style={{
-                                  color: '#262626',
+                                  color: 'var(--proposal-text-color)',
                                   textDecoration: 'underline',
                                 }}
                               >
@@ -957,7 +995,7 @@ function ProposalDetailsPage(props) {
                                   href={`${trackerURL}/${proposalDetail?.sponserPrep}`}
                                   target='_blank'
                                   style={{
-                                    color: '#262626',
+                                    color: 'var(--proposal-text-color)',
                                     textDecoration: 'underline',
                                   }}
                                 >{`${proposalDetail?.sponserPrep?.slice(

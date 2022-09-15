@@ -16,6 +16,10 @@
     background-color: var(--searchbar-background-color);
   }
 
+  :first-child:focus {
+    background-color: var(--searchbar-background-color);
+  }
+
   input::placeholder {
     color: var(--proposal-text-color-3) !important;
   }

@@ -713,7 +713,7 @@ function ProgressReportDetailsPage(props) {
                                   >
                                     <span
                                       style={{
-                                        color: '#262626',
+                                        color: 'var(--proposal-text-color)',
                                         fontWeight: 600,
                                       }}
                                     >
@@ -766,7 +766,7 @@ function ProgressReportDetailsPage(props) {
                                       >
                                         <span
                                           style={{
-                                            color: '#262626',
+                                            color: 'var(--proposal-text-color)',
                                             fontWeight: 600,
                                           }}
                                         >
@@ -826,7 +826,7 @@ function ProgressReportDetailsPage(props) {
                                 <Col xs='12'>
                                   <span
                                     style={{
-                                      color: '#262626',
+                                      color: 'var(--proposal-text-color)',
                                       fontWeight: 600,
                                     }}
                                   >
@@ -898,7 +898,7 @@ function ProgressReportDetailsPage(props) {
                               {status === 'Voting' && (
                                 <p
                                   style={{
-                                    color: '#262626',
+                                    color: 'var(--proposal-text-color)',
                                     textAlign: 'center',
                                   }}
                                 >

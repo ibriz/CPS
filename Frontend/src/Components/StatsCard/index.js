@@ -91,7 +91,7 @@ const StatsCard = ({
     <>
       <Row className={styles.proposalCard}>
         <Col>
-          <Card>
+          <Card className={styles.card}>
             <Card.Body className={styles.cardBody}>
               <Container className={styles.statsTab}>
                 <TabBar

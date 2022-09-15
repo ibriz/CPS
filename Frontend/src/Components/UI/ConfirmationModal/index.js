@@ -16,6 +16,7 @@ const ConfirmationModal = ({
       aria-labelledby='contained-modal-title-vcenter'
       centered
       size={size}
+      className={styles.confirmationModalCustom}
     >
       <Modal.Header bg-primary closeButton>
         <Modal.Title

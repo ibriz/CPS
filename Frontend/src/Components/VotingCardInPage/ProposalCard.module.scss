@@ -6,3 +6,7 @@
   background-color: var(--proposal-card-color);
   color: var(--proposal-text-color);
 }
+
+.card {
+  border: var(--proposal-card-border) !important;
+}

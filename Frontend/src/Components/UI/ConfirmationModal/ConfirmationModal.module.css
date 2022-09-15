@@ -14,3 +14,8 @@
 .footer {
   justify-content: flex-end !important;
 }
+
+.confirmationModalCustom :first-child div div {
+  background-color: var(--proposal-card-color);
+  color: var(--proposal-text-color);
+}
