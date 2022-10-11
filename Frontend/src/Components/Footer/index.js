@@ -225,7 +225,7 @@ const Footer = ({ console = false, width = undefined, footerRef }) => {
           </div>
           <div style={{ marginTop: '5px' }}>
             <a
-              href='https://tracker.icon.foundation/address/hx231a795d1c719b9edf35c46b9daa4e0b5a1e83aa'
+              href='https://tracker.icon.community/address/hx231a795d1c719b9edf35c46b9daa4e0b5a1e83aa'
               style={
                 console
                   ? { color: consoleColor, textDecoration: 'underline' }
