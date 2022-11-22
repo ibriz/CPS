@@ -29,6 +29,8 @@
   --proposal-text-color-3: rgba(38, 38, 38, 0.85);
   --proposal-header-text-color: #262626;
   --proposal-card-border: 1px solid rgba(0, 0, 0, 0.125);
+  --proposal-details-title: #27aab9;
+
   --vote-card-btn-color: #e2e6ea;
   --vote-card-text-color: #212529;
 
@@ -80,6 +82,8 @@
   --proposal-text-color-3: #d2d2d2;
   --proposal-header-text-color: #fff;
   --proposal-card-border: none;
+  --proposal-details-title: #2B2B2D;;
+
   --vote-card-btn-color: #2b2b2d;
   --vote-card-text-color: white;
 

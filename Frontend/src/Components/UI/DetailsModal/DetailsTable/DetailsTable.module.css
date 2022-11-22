@@ -7,12 +7,13 @@
 }
 
 .tableHeader {
-  background: #27aab9 !important;
+  background:var(--proposal-details-title) !important;
   font-style: normal;
   font-weight: 600;
   font-size: 14px;
   line-height: 17px;
   color: #ffffff;
+  border: none !important;
 }
 
 .key {
