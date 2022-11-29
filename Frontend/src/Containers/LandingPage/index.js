@@ -92,15 +92,18 @@ const LandingPage = (props) => {
 
             <div className="landingPage" ref={targetRef} >
                 <Navbar headerRef={headerRef} {...refs} onClickLogin={handleLogin}  {...props} {...activeTabProps} />
-                <CPSDescription createProposalRef={createProposalRef} walletAddress={walletAddress} onClickLogin={handleLogin} {...activeTabProps} />
-                <Summary />
+                <div className='landingPage__Description'>
+
+                    <CPSDescription createProposalRef={createProposalRef} walletAddress={walletAddress} onClickLogin={handleLogin} {...activeTabProps} />
+                    <Summary />
+                </div>
                 <BuildOn />
                 <GrantProcess grantProcessRef={grantProcessRef} {...activeTabProps} />
                 <GrantTimeline />
-                <FAQ faqRef={faqRef} {...activeTabProps} />
                 <GrantReceipent {...props} />
+                <IconResource />
+                <FAQ faqRef={faqRef} {...activeTabProps} />
                 <div ref={footerRef}>
-                    <IconResource />
                     <DeveloperCommunity />
                 </div>
                 <Footer width={width} {...activeTabProps} />

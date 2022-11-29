@@ -69,7 +69,8 @@ input:checked + .slider {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  padding: 10px 15px 20px 15px;
+  padding: 0px 15px 0px 15px;
+  white-space: nowrap;
 }
 
 #checkbox {
@@ -77,5 +78,7 @@ input:checked + .slider {
 }
 
 .themeText {
-  color: white;
+  color: black;
+  font-size: 14px;
+  font-weight: 600;
 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import iconCPSImg from '../../Assets/Images/ICON CPS white.svg';
+import iconCPSImg from '../../Assets/Images/iconCPSlogo.svg';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import { Link, Redirect } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
@@ -163,15 +163,17 @@ const Navbar = props => {
 										<DarkMode></DarkMode>
 
                     {!walletAddress ? (
-                        <p className="dashboardBtn" style={window.innerWidth > 1100 ? { marginRight: 20 } : {}} onClick={async () => {
+                        <div style={{padding:"8px 0px", whiteSpace: "nowrap"}}>
+                        <Button className="dashboardBtn"  variant="info" style={window.innerWidth > 1100 ? { marginRight: 20, borderRadius: "43px" } : {borderRadius: "43px"}} onClick={async () => {
                             history.push('/dashboard');
-                        }}>Launch App</p>
+                        }}>Launch App</Button>
+                        </div>
                     ) : (
                         <ul>
                             <li
                                 className={activeTabRight === 'username' ? 'activeTab' : ''}
                                 onClick={() => {
-                                    setActiveTabRight('username')
+                                    // setActiveTabRight('username')
 
                                 }}
                             // style={(isPrep &&
@@ -266,7 +268,13 @@ const Navbar = props => {
                             </li>
                             {/* <Link to="/dashboard" style={{ textDecoration: 'none', color: 'white' }}> */}
                             <li onClick={() => history.push('/dashboard')}>
-                                Launch App
+                          
+                            <div style={{padding:"8px 0px", whiteSpace: "nowrap"}}>
+                        <Button className="dashboardBtn"  variant="info" style={{borderRadius: "43px"}} onClick={async () => {
+                            history.push('/dashboard');
+                        }}>Launch App</Button>
+                        </div>
+                       
                             </li>
                             {/* </Link> */}
                             <li

@@ -1,5 +1,6 @@
 import React from 'react';
 import useTimer from 'Hooks/useTimer';
+import timingImg from '../../Assets/Images/timing.png';
 
 const GrantTimeline = props => {
   const { remainingTime, remainingTimeSecond, period } = useTimer();
@@ -7,7 +8,15 @@ const GrantTimeline = props => {
   return (
     <div className='landingPage__GrantTimeline'>
       <div className='grantTimelineContainer'>
-        <h1>Grants Timeline</h1>
+        <div className='grantTimelineHeader'>
+          <h1>Grants Timeline</h1>
+          <div>
+            <img srcSet={timingImg + ' 2x'} />
+            <p>
+              &nbsp;&nbsp; Funding Cycle &nbsp;<b>20</b>
+            </p>
+          </div>
+        </div>
         <div className='votingPeriod'>
           <h6>
             <span>{period === 'APPLICATION' ? 'Application' : 'Voting'}</span>{' '}
@@ -49,9 +58,8 @@ const GrantTimeline = props => {
           </div>
         </div>
         {/* <p style={{ textDecoration: 'underline' }}> */}
-        <p>*Grants are issued monthly</p>
-        <p style={{ marginTop: '10px' }}>
-          For more details, please visit{' '}
+        <p className='grantTerms'>
+          *Grants are issued monthly. For more details, please visit{' '}
           <a
             href='https://github.com/icon-community/CPS/wiki/Funding-Cycle-Explanation'
             target='_blank'

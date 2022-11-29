@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import curveImg from '../../Assets/Images/curve.png';
 import iconLogoImg from '../../Assets/Images/iconLogo.png';
-import iconBlackImg from '../../Assets/Images/iconBlack.png';
+import iconBlackImg from '../../Assets/Images/iconCPS1.png';
 import { Link, Redirect } from 'react-router-dom';
 import Summary from './summary';
 import { Waypoint } from 'react-waypoint';
@@ -23,14 +23,14 @@ const CPSDescription = props => {
         // setActiveTabCenter('')
       }}
     >
-      <div ref={createProposalRef} className='landingPage__Description'>
+      <div ref={createProposalRef}>
         <div className='descriptionLeft scrollSection' id='description'>
-          <h3>Launch your project on </h3>
+          <h3>Launch your projects on </h3>
           <img src={iconBlackImg}></img>
           <p>
-            The Contribution Proposal System (CPS) is a decentralized grant
-            program that supports developers and teams wanting to build on the
-            ICON blockchain.
+            The Contribution Proposal System (CPS) <br></br>is a decentralized
+            grant program that supports developers and teams wanting to build on
+            the ICON blockchain.
           </p>
           <div className='buttons'>
             <p
