@@ -335,10 +335,10 @@ const proposalSlice = createSlice({
       // state.proposalList = action.payload
       // state.proposalList.
       state.proposalListLoading = false;
-      console.log('History data', action.payload.response);
+      // console.log('History data', action.payload.response);
 
-      state.proposalHistoryList.push(
-        ...action.payload.response.data.map(proposal => ({
+      state.proposalHistoryList = action.payload.response.data.map(
+        proposal => ({
           _status: proposal[PARAMS.status],
           _proposal_title: proposal[PARAMS.proposalTitle],
           _contributor_address: proposal[PARAMS.contributorAddress],
@@ -387,9 +387,9 @@ const proposalSlice = createSlice({
           //     return 0;
           //   }
           //   return (approvedVoters/totalVoters) * 100;
-        })),
-        // .sort((a, b) => b._timestamp - a._timestamp),
+        }),
       );
+      // .sort((a, b) => b._timestamp - a._timestamp);
 
       state.proposalHistoryListCount = IconConverter.toNumber(
         action.payload.response.count,

@@ -64,6 +64,8 @@ const ProposalHistoryCard = ({
   const history = useHistory();
 
   useEffect(() => {
+    // if (proposalHistoryList.length === 0) {
+    // }
     fetchProposalHistoryRequest({ startIndex: 0 });
   }, []);
 
@@ -100,13 +102,6 @@ const ProposalHistoryCard = ({
     //   proposalHistoryListCount,
     //   { displayLength },
     // );
-    if (proposalHistoryList.length < proposalHistoryListCount) {
-      fetchProposalHistoryRequest({ startIndex: proposalHistoryList.length });
-    }
-  };
-
-  const isFirstTimeLoad = () => {
-    return proposalListLoading && proposalHistoryList.length === 0;
   };
 
   const isShowMoreVisible = () => {
@@ -115,7 +110,7 @@ const ProposalHistoryCard = ({
 
   return (
     <div>
-      {isFirstTimeLoad() ? (
+      {proposalListLoading ? (
         <LoadingDiv>
           <Spinner animation='border' variant='secondary' />
         </LoadingDiv>
