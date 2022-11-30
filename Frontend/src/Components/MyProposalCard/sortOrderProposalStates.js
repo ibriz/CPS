@@ -1,7 +1,7 @@
 export default {
-  Active: 1,
-  Pending: 2,
-  Voting: 3,
+  Voting: 1,
+  Active: 2,
+  Pending: 3,
   Paused: 4,
   Completed: 5,
   Rejected: 6,

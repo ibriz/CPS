@@ -119,7 +119,7 @@ const Summary = ({
                       }}
                     >
                       {abbreviateNumber(
-                        Number(projectAmounts.Active?.amount?.bnUSD || 0),
+                        Number(projectAmounts.Active?.amount?.bnUSD + projectAmounts.Paused?.amount?.bnUSD || 0),
                       )}{' '}
                       bnUSD
                     </span>
@@ -132,7 +132,7 @@ const Summary = ({
           >
             <span className='d-inline-block' style={{ cursor: 'pointer' }}>
               <p>
-                {projectAmounts.Active.count}
+                {projectAmounts.Active.count+projectAmounts.Paused.count}
                 <br />
               </p>
               <p style={{ textDecoration: 'underline' }}>Active Projects</p>
