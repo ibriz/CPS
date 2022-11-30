@@ -7,6 +7,7 @@ import {
   fetchSponsorRequestsListSuccess,
   fetchSponsorRequestsListFailure,
 } from '../../Reducers/proposalSlice';
+import { IconConverter } from 'icon-sdk-js';
 
 const proposalListStatusMapping = {
   Pending: '_sponsor_pending',
@@ -22,10 +23,26 @@ function* fetchSponsorRequestsListWorker({ payload }) {
       params: {
         _status: proposalListStatusMapping[payload.status],
         _sponsor_address: payload.walletAddress,
+        _start_index: 0,
         // _end_index: `${(payload.pageNumber * 10)}`,
         // _start_index: `${(payload.pageNumber * 10) - 10}`,
       },
     });
+
+    const totalCount = IconConverter.toNumber(response.count);
+    let fetchedCount = response.data.length;
+    while (fetchedCount < totalCount) {
+      let temp = yield call(callKeyStoreWallet, {
+        method: 'get_sponsors_requests',
+        params: {
+          _status: proposalListStatusMapping[payload.status],
+          _sponsor_address: payload.walletAddress,
+          startIndex: `${Number(fetchedCount) || 0}`,
+        },
+      });
+      fetchedCount += temp.data.length;
+      response.data.push(...temp.data);
+    }
 
     // const response = {
     //   data: Array(10).fill(0).map((_, index) => (  {
