@@ -24,8 +24,6 @@ function* fetchSponsorRequestsListWorker({ payload }) {
         _status: proposalListStatusMapping[payload.status],
         _sponsor_address: payload.walletAddress,
         _start_index: 0,
-        // _end_index: `${(payload.pageNumber * 10)}`,
-        // _start_index: `${(payload.pageNumber * 10) - 10}`,
       },
     });
 
@@ -37,7 +35,7 @@ function* fetchSponsorRequestsListWorker({ payload }) {
         params: {
           _status: proposalListStatusMapping[payload.status],
           _sponsor_address: payload.walletAddress,
-          startIndex: `${Number(fetchedCount) || 0}`,
+          _start_index: `${Number(fetchedCount) || 0}`,
         },
       });
       fetchedCount += temp.data.length;
