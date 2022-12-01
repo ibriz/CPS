@@ -93,7 +93,7 @@ const VotingCard = ({
     //     }
     // );
     fetchRemainingVotesRequest({
-      type: 'progress_report',
+      type: 'progress_reports',
     });
   }, [selectedTab, pageNumber, fetchRemainingVotesRequest]);
 
