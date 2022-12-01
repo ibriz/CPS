@@ -435,7 +435,7 @@ export default event => {
               });
               store.dispatch(
                 fetchRemainingVotesRequest({
-                  type: 'progress_report',
+                  type: 'progress_reports',
                 }),
               );
               return true;
