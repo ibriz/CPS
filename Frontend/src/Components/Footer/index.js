@@ -122,7 +122,7 @@ const Footer = ({ console = false, width = undefined, footerRef }) => {
       style={{
         color: console ? 'consoleColor' : '#FFFFFF',
         marginTop: console ? '40px' : '0px',
-        backgroundColor: 'black',
+        backgroundColor: console ? 'consoleColor' : 'black',
       }}
       id='footer'
       ref={footerRef}

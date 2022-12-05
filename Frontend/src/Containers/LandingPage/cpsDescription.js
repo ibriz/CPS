@@ -46,7 +46,7 @@ const CPSDescription = props => {
             </p>
             <p>
               <a
-                style={{ color: '#27AAB9', textDecoration: 'none' }}
+                style={{ color: 'white', textDecoration: 'none' }}
                 href='https://discord.gg/4vpFeYams4'
                 target='_blank'
               >

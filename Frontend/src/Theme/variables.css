@@ -53,6 +53,14 @@
   --link-color: #007bff;
 
   --topbar-landing-color: white;
+  --landing-text-color: black;
+  --landing-gradient-bg: radial-gradient(108.37% 310.61% at 16.53% 26.7%, rgba(33, 33, 79, 0.3) 4.48%, rgba(30, 182, 191, 0.3) 38.5%, rgba(30, 182, 191, 0.3) 70.59%, rgba(33, 33, 79, 0.3) 100%) /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */, linear-gradient(180deg, #3F4058 0%, #177FFB 100%);
+  --landing-gradient-process: radial-gradient(146.09% 146.09% at 44.41% 118.51%, rgba(42, 33, 79, 0.7) 0%, rgba(23, 127, 251, 0.7) 48.23%, rgba(30, 182, 191, 0.7) 100%) , rgba(33, 33, 79, 0.5); 
+  --landing-gradient-description:  radial-gradient(146.09% 146.09% at 44.41% 118.51%, rgba(33, 33, 79, 0.7) 0%, rgba(23, 127, 251, 0.7) 48.23%, rgba(30, 182, 191, 0.7) 100%), rgba(33, 33, 79, 0.5);
+  --landing-bg: white;
+  --landing-heading-text-color: rgba(7, 41, 45, 1);
+  --landing-paragraph-text-color: rgba(88, 102, 101, 1);
+  --landing-descitem-text-color: #0D6BC1;
 }
 
 /* 2 */
@@ -107,4 +115,13 @@
   --link-color: #007bff;
 
   --topbar-landing-color: #1c1c1e;
+  --landing-text-color: white;
+  --landing-gradient-bg: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), radial-gradient(108.37% 310.61% at 16.53% 26.7%, rgba(33, 33, 79, 0.3) 4.48%, rgba(30, 182, 191, 0.3) 38.5%, rgba(30, 182, 191, 0.3) 70.59%, rgba(33, 33, 79, 0.3) 100%) /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */, linear-gradient(180deg, #3F4058 0%, #177FFB 100%);
+  --landing-gradient-process: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), radial-gradient(146.09% 146.09% at 44.41% 118.51%, rgba(33, 33, 79, 0.7) 0%, rgba(23, 127, 251, 0.7) 48.23%, rgba(30, 182, 191, 0.7) 100%) /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */, rgba(33, 33, 79, 0.5);
+  --landing-gradient-description: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), radial-gradient(146.09% 146.09% at 44.41% 118.51%, rgba(33, 33, 79, 0.7) 0%, rgba(23, 127, 251, 0.7) 48.23%, rgba(30, 182, 191, 0.7) 100%) /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */, rgba(33, 33, 79, 0.5);
+  --landing-bg: #242425;
+  --landing-heading-text-color:white;
+  --landing-paragraph-text-color: white;
+  --landing-descitem-text-color: white;
+  
 }

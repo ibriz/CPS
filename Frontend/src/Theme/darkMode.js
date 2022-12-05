@@ -2,13 +2,17 @@ import './darkMode.css';
 
 import React, { useState, useEffect } from 'react';
 import { ChangeEventHandler } from 'react';
+import { setThemeRequest } from 'Redux/Reducers/userSlice';
+import { connect } from 'react-redux';
 
-const DarkMode = () => {
+const DarkMode = ({ theme, setTheme }) => {
   const setDark = () => {
+    setTheme('dark');
     localStorage.setItem('theme', 'dark');
     document.documentElement.setAttribute('data-theme', 'dark');
   };
   const setLight = () => {
+    setTheme('light');
     localStorage.setItem('theme', 'light');
     document.documentElement.setAttribute('data-theme', 'light');
   };
@@ -64,4 +68,12 @@ const DarkMode = () => {
   );
 };
 
-export default DarkMode;
+const mapStateToProps = state => ({
+  theme: state.user.theme,
+});
+
+const mapDispatchToProps = dispatch => ({
+  setTheme: payload => dispatch(setThemeRequest(payload)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(DarkMode);

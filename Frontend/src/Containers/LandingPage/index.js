@@ -93,11 +93,13 @@ const LandingPage = (props) => {
             <div className="landingPage" ref={targetRef} >
                 <Navbar headerRef={headerRef} {...refs} onClickLogin={handleLogin}  {...props} {...activeTabProps} />
                 <div className='landingPage__Description'>
+                    <div className='landingPage__Background'>
 
-                    <CPSDescription createProposalRef={createProposalRef} walletAddress={walletAddress} onClickLogin={handleLogin} {...activeTabProps} />
-                    <Summary />
+                        <CPSDescription createProposalRef={createProposalRef} walletAddress={walletAddress} onClickLogin={handleLogin} {...activeTabProps} />
+                        <Summary />
+                    </div>
                 </div>
-                <BuildOn />
+                <BuildOn {...props} />
                 <GrantProcess grantProcessRef={grantProcessRef} {...activeTabProps} />
                 <GrantTimeline />
                 <GrantReceipent {...props} />
@@ -130,6 +132,7 @@ const mapStateToProps = state => ({
     email: state.user.email,
     verified: state.user.verified,
     initialPromptRedux: state.user.initialPrompt,
+    theme: state.user.theme,
 });
 
 const mapDispatchToProps = dispatch => ({

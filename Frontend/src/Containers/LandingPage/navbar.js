@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import iconCPSImg from '../../Assets/Images/iconCPSlogo.svg';
+import iconCPSImgDark from '../../Assets/Images/iconCPSlogo-light.svg';
+
 import { FaBars, FaTimes } from 'react-icons/fa';
 import { Link, Redirect } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
@@ -68,7 +70,8 @@ const Navbar = props => {
         faqRef,
         grantProcessRef,
         contactRef,
-        headerRef
+        headerRef,
+        theme
     } = props;
     const onLogout = () => {
         logout();
@@ -100,7 +103,7 @@ const Navbar = props => {
             <div className="navbarContainer">
                 <div className='navbarLeft'>
                     <div>
-                        <img src={iconCPSImg} alt='ICON CPS text' />
+                        <img src={theme==='light'? iconCPSImg: iconCPSImgDark} alt='ICON CPS text' />
                     </div>
                 </div>
                 <div

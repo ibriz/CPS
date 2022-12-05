@@ -3,8 +3,10 @@ import communityImg from '../../Assets/Images/StrongCommunity.png';
 import cheapImg from '../../Assets/Images/CheapTransactions.png';
 import fastImg from '../../Assets/Images/FastTransactions.png';
 import Features from '../../Assets/Images/Features.png';
+import FeaturesDark from '../../Assets/Images/Features-Dark.png';
 
 const BuildOn = props => {
+  const { theme } = props;
   return (
     <div className='landingPage__BuildOn'>
       <div className='buildOnContainer'>
@@ -17,7 +19,7 @@ const BuildOn = props => {
           ecosystem.
         </p>
         <div className='summary'>
-          <img src={Features} />
+          <img src={theme === 'light' ? Features : FeaturesDark} />
           {/*
                 <div >
                     <img src={cheapImg} />
