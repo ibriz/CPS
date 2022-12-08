@@ -9,6 +9,7 @@ import {
   fetchDraftsRequest,
   fetchProposalByIpfsRequest,
   emptyProposalDetailRequest,
+  fetchProposalHistoryRequest,
 } from 'Redux/Reducers/proposalSlice';
 import {
   withRouter,
@@ -32,30 +33,26 @@ const LoadingDiv = styled.div`
 `;
 
 const ProposalHistoryCard = ({
-  numberOfSubmittedProposals,
-  proposalList,
-  fetchProposalListRequest,
   walletAddress,
-  totalPages,
-  proposalStatesList,
-  initialState,
-  fetchDraftsRequest,
   minHeight,
   fetchProposalByIpfsRequest,
   selectedProposalByIpfs,
-  emptyProposalDetailRequest,
   proposalListLoading,
+  proposalHistoryList,
+  proposalHistoryListCount,
+  fetchProposalHistoryRequest,
 }) => {
   const [filteredProposalList, setFilteredProposalList] =
-    useState(proposalList);
+    useState(proposalHistoryList);
   const [selectedProposal, setSelectedProposal] = React.useState();
 
   const proposalIpfsKey = useParams().id;
   const location = useLocation();
-  const [displayLength, setDisplayLength] = useState(9);
-  const [totalProposals, setTotalProposals] = useState(-1);
+  const DISPLAY_SIZE = 9;
 
-  const [tabs, setTabs] = useState(['Completed', 'Rejected', 'Disqualified']);
+  const [totalLength, setTotalLength] = useState(proposalHistoryListCount);
+  const [displayLength, setDisplayLength] = useState(DISPLAY_SIZE);
+
   let [searchText, setSearchText] = useState('');
   const onClickProposal = proposal => {
     setSelectedProposal(proposal);
@@ -67,26 +64,10 @@ const ProposalHistoryCard = ({
   const history = useHistory();
 
   useEffect(() => {
-    for (let i = 0; i < tabs.length; i++) {
-      let tab = tabs[i];
-      let length = totalPages[tab] || 1;
-
-      for (let i = 0; i < length; i++) {
-        fetchProposalListRequest({
-          status: tab,
-          walletAddress: walletAddress || wallet.getAddress(),
-          // pageNumber: pageNumber?.[selectedTab] ?? 1,
-          pageNumber: i + 1,
-        });
-      }
-    }
-  }, [
-    fetchDraftsRequest,
-    fetchProposalListRequest,
-    tabs,
-    walletAddress,
-    totalPages,
-  ]);
+    // if (proposalHistoryList.length === 0) {
+    // }
+    fetchProposalHistoryRequest({ startIndex: 0 });
+  }, []);
 
   useEffect(() => {
     if (proposalIpfsKey) {
@@ -97,23 +78,15 @@ const ProposalHistoryCard = ({
   }, []);
 
   useEffect(() => {
-    let flattenedProposals = [];
-    for (let i = 0; i < tabs.length; i++) {
-      const flattenedProposalsTemp =
-        [].concat.apply([], proposalList[tabs[i]]) || [];
-
-      flattenedProposals.push(...flattenedProposalsTemp);
-    }
+    let flattenedProposals = proposalHistoryList;
     flattenedProposals = flattenedProposals.filter(proposal =>
       proposal?._proposal_title
         ?.toLowerCase()
         .includes(searchText?.toLowerCase()),
     );
-
-    setTotalProposals(flattenedProposals.length);
-
+    setTotalLength(flattenedProposals.length);
     setFilteredProposalList(flattenedProposals.slice(0, displayLength));
-  }, [proposalList, walletAddress, displayLength, tabs, searchText]);
+  }, [walletAddress, displayLength, searchText, proposalHistoryList]);
 
   useEffect(() => {
     if (selectedProposalByIpfs?.ipfsHash) {
@@ -122,7 +95,17 @@ const ProposalHistoryCard = ({
   }, [selectedProposalByIpfs]);
 
   const showMore = () => {
-    setDisplayLength(displayLength + 9);
+    setDisplayLength(displayLength + DISPLAY_SIZE);
+    // console.log(
+    //   'Length history list',
+    //   proposalHistoryList.length,
+    //   proposalHistoryListCount,
+    //   { displayLength },
+    // );
+  };
+
+  const isShowMoreVisible = () => {
+    return filteredProposalList.length > 0 && displayLength < totalLength;
   };
 
   return (
@@ -153,7 +136,7 @@ const ProposalHistoryCard = ({
             onClickProposal={onClickProposal}
             minHeight={minHeight}
           ></ProposalHistoryList>
-          {filteredProposalList.length > 0 && displayLength < totalProposals && (
+          {isShowMoreVisible() && (
             <Button
               variant='outline-secondary'
               style={{ borderRadius: '3px' }}
@@ -176,22 +159,19 @@ const ProposalHistoryCard = ({
 
 const mapStateToProps = () => state => {
   return {
-    numberOfSubmittedProposals: state.proposals.numberOfSubmittedProposals,
-    proposalList: state.proposals.proposalList,
     walletAddress: state.account.address,
-    totalPages: state.proposals.totalPages,
     selectedProposalByIpfs: state.proposals.selectedProposal,
     proposalListLoading: state.proposals.proposalListLoading,
+    proposalHistoryList: state.proposals.proposalHistoryList,
+    proposalHistoryListCount: state.proposals.proposalHistoryListCount,
   };
 };
 
 const mapDispatchToProps = dispatch => ({
-  fetchProposalListRequest: payload =>
-    dispatch(fetchProposalListRequest(payload)),
-  fetchDraftsRequest: payload => dispatch(fetchDraftsRequest(payload)),
   fetchProposalByIpfsRequest: payload =>
     dispatch(fetchProposalByIpfsRequest(payload)),
-  emptyProposalDetailRequest: payload => dispatch(emptyProposalDetailRequest()),
+  fetchProposalHistoryRequest: payload =>
+    dispatch(fetchProposalHistoryRequest(payload)),
 });
 
 export default connect(

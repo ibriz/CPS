@@ -976,7 +976,9 @@ function ProposalDetailsPage(props) {
                           {
                             key: 'Submitted On',
                             value: `${new Date(
-                              proposal?._sponsored_timestamp / 1000,
+                              (Number(proposal._sponsored_timestamp) !== 0
+                                ? proposal._sponsored_timestamp
+                                : proposal._timestamp) / 1000,
                             ).toLocaleDateString()}`,
                           },
                           {

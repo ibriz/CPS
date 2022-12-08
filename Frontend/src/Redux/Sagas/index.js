@@ -79,6 +79,7 @@ import {
 } from './PRep';
 import {
   fetchPeriodDetailsRequestWorker,
+  fetchPeriodCountWorker,
   updatePeriodWorker,
   updatePeriodFrontendWalletWorker,
 } from './Period';
@@ -115,6 +116,7 @@ import {
   submitPriorityVotingRequest,
   fetchPriorityVotingRequest,
   fetchSortPriorityProposalListRequest,
+  fetchProposalHistoryRequest,
 } from '../Reducers/proposalSlice';
 import {
   submitProgressReportRequest,
@@ -133,6 +135,7 @@ import {
 } from '../Reducers/progressReportSlice';
 import {
   fetchPeriodDetailsRequest,
+  fetchPeriodCountRequest,
   updatePeriod,
   updatePeriodFrontendWallet,
 } from '../Reducers/periodSlice';
@@ -165,6 +168,7 @@ import {
   disableUserPromptRequest,
 } from '../Reducers/userSlice';
 import { FiPrinter } from 'react-icons/fi';
+import fetchProposalHistoryWorker from './Proposal/fetchProposalHistoryWorker';
 
 function* rootSaga() {
   yield takeEvery(login.type, loginWorker);
@@ -176,6 +180,8 @@ function* rootSaga() {
   yield takeEvery(submitProposalSuccess.type, submitProposalToScoreWorker);
 
   yield takeEvery(fetchProposalListRequest.type, fetchProposalListWorker);
+  yield takeEvery(fetchProposalHistoryRequest.type, fetchProposalHistoryWorker);
+
   yield takeEvery(
     fetchSortPriorityProposalListRequest.type,
     fetchSortPriorityProposalListWorker,
@@ -260,6 +266,7 @@ function* rootSaga() {
     fetchPeriodDetailsRequest.type,
     fetchPeriodDetailsRequestWorker,
   );
+  yield takeEvery(fetchPeriodCountRequest.type, fetchPeriodCountWorker);
 
   yield takeEvery(updatePeriod.type, updatePeriodWorker);
   yield takeEvery(

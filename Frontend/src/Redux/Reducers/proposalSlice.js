@@ -68,6 +68,9 @@ const initialState = {
   },
   proposalListLoading: false,
 
+  proposalHistoryList: [],
+  proposalHistoryListCount: 0,
+
   myProposalList: [],
 
   totalPages: {
@@ -323,6 +326,82 @@ const proposalSlice = createSlice({
       state.proposalListLoading = false;
       return;
     },
+
+    fetchProposalHistoryRequest(state) {
+      state.proposalListLoading = true;
+      return;
+    },
+    fetchProposalHistorySuccess(state, action) {
+      // state.proposalList = action.payload
+      // state.proposalList.
+      state.proposalListLoading = false;
+      // console.log('History data', action.payload.response);
+
+      state.proposalHistoryList = action.payload.response.data.map(
+        proposal => ({
+          _status: proposal[PARAMS.status],
+          _proposal_title: proposal[PARAMS.proposalTitle],
+          _contributor_address: proposal[PARAMS.contributorAddress],
+          // budget: parseInt(proposal[PARAMS.totalBudget]),
+          budget: IconConverter.toBigNumber(
+            proposal[PARAMS.totalBudget],
+          ).dividedBy(10 ** 18),
+          _timestamp: proposal[PARAMS.timestamp],
+          _sponsored_timestamp: proposal[PARAMS.sponsoredTimestamp],
+          ipfsHash: proposal[PARAMS.proposalHash],
+          ipfsKey: proposal[PARAMS.proposalHash],
+          approvedVotes: IconConverter.toBigNumber(
+            proposal[PARAMS.approvedVotes],
+          ),
+          totalVotes: IconConverter.toBigNumber(proposal[PARAMS.totalVotes]),
+          projectDuration: IconConverter.toBigNumber(
+            proposal[PARAMS.projectDuration],
+          ),
+
+          sponsorVoteReason: proposal[PARAMS.sponsorVoteReason],
+          // approvedPercentage: (!proposal[PARAMS.totalVotes] || parseInt(proposal[PARAMS.totalVotes]) === 0) ? 0 : ((proposal[PARAMS.approvedVotes] / proposal[PARAMS.totalVotes]) * 100),
+
+          approvedPercentage: calculatePercentage({
+            total: proposal[PARAMS.totalVotes],
+            actual: proposal[PARAMS.approvedVotes],
+          }),
+          approvedVotesPercentageCount: calculatePercentage({
+            total: proposal[PARAMS.totalVoters],
+            actual: proposal[PARAMS.approvedVoters],
+          }),
+
+          rejectedPercentage: calculatePercentage({
+            total: proposal[PARAMS.totalVotes],
+            actual: proposal[PARAMS.rejectedVotes],
+          }),
+          rejectedVotesPercentageCount: calculatePercentage({
+            total: proposal[PARAMS.totalVoters],
+            actual: proposal[PARAMS.rejectedVoters],
+          }),
+
+          completedPercentage: parseInt(
+            IconConverter.toBigNumber(proposal[PARAMS.percentageCompleted]),
+          ),
+          token: proposal[PARAMS.token],
+          // if(parseInt(totalVoters) === 0) {
+          //     return 0;
+          //   }
+          //   return (approvedVoters/totalVoters) * 100;
+        }),
+      );
+      // .sort((a, b) => b._timestamp - a._timestamp);
+
+      state.proposalHistoryListCount = IconConverter.toNumber(
+        action.payload.response.count,
+      );
+
+      return;
+    },
+    fetchProposalHistoryFailure(state) {
+      state.proposalListLoading = false;
+      return;
+    },
+
     updateProposalStatus(state, action) {
       return;
     },
@@ -875,6 +954,11 @@ export const {
   fetchProposalListRequest,
   fetchProposalListSuccess,
   fetchProposalListFailure,
+
+  fetchProposalHistoryRequest,
+  fetchProposalHistorySuccess,
+  fetchProposalHistoryFailure,
+
   updateProposalStatus,
   fetchProposalDetailRequest,
   fetchProposalDetailSuccess,
