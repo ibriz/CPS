@@ -16,7 +16,7 @@ const DeveloperCommunity = props => {
       <h1>Join the ICON Developer Community</h1>
       <div>
         <div>
-          <a target='_blank' href='https://twitter.com/helloiconworld'>
+          <a target='_blank' href='https://twitter.com/iconcps'>
             <img src={twitterImg} />
             <p>Twitter</p>
           </a>
