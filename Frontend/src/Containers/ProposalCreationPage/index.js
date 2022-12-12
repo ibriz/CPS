@@ -81,6 +81,150 @@ const signingInfoMessage = (
   </div>
 );
 
+const initialDescription = `
+<h3 id="summary">Summary</h3>
+
+<h4 id="teamdescription">Team description</h4>
+
+<p><em>In-depth summary of team, including specialties, reference projects or contacts (contact must agree to provide information before being listed here)</em></p>
+
+<h4 id="projectdescription">Project description</h4>
+
+<p><em>In-depth summary of project, including motivation, services and deliverables proposed, expected engagement, total requested budget and benefit to the greater ICON Ecosystem</em></p>
+
+<h4 id="roadmap">Roadmap</h4>
+
+<p><em>Clearly formatted table. Projects applying for CPS funding should have roadmaps made in accordance with 30 day funding cycles. Please see <a href="https://github.com/icon-community/CPS/wiki/Funding-Cycle-Explanation">this explanation</a> of CPS funding cycles and how it may affect development and disbursement of funding</em></p>
+
+<p>Expected start date: <em>start date</em></p>
+
+<p><strong>Roadmap</strong>
+
+<table>
+<thead>
+  <tr>
+    <th>Name</th>
+    <th>Time [days]</th>
+    <th>Completion Date</th>
+		<th>Explanation</th>
+		<th>Dependants</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>Milestone 1</td>
+    <td>20 days</td>
+    <td>August 1</td>
+		<td>This provides deliverable 1</td>
+		<td>Milestone 2, Milestone 3</td>
+  </tr>
+	<tr>
+		<td>Milestone 2</td>
+		<td>10 days</td>
+		<td>August 20</td>
+		<td>This is where we will perform marketing and initial user onboarding</td>
+		<td>None</td>
+	</tr>
+	<tr>
+		<td>Milestone 3</td>
+		<td>10 days</td>
+		<td>September 1</td>
+		<td>This is where we perform debugging and maintenance services</td>
+		<td>None</td>
+	</tr>
+</tbody>
+</table>
+
+<h4 id="deliverables">Deliverables</h4>
+
+<p><em>Deliverables projected for project</em></p>
+
+<p><strong>Deliverables</strong>
+
+<table>
+<thead>
+  <tr>
+    <th>Name</th>
+		<th>Explanation</th>
+		<th>Notes</th>
+  </tr>
+	</thead>
+	<tbody>
+  <tr>
+    <td>Example 1</td>
+    <td>ICON ecosystem needs a better tool for this. It has been requested via community poll and provides these benefits</td>
+    <td>This is based on the existing tool from Cosmos called 123xyz</td>
+  </tr>
+	<tr>
+		<td>Example 2</td>
+		<td>This facilitates a better experience using Example 1 tool. It would be great to have, but it is technically not necessary for Example Task to be performed adequately</td>
+		<td>This is a visual tool</td>
+	</tr>
+	</tbody>
+
+</table>
+
+<h4 id="maintenance">Maintenance</h4>
+
+<p><em>In-depth explanation of maintenance plan</em></p>
+
+<h4 id="budget">Budget</h4>
+
+<p><em>Budget for project. Funding for CPS grants is available in <a href="https://balanced.network/stablecoin/">bnUSD (stablecoin)</a>. Funding for ICON Foundation grants is available in ICX or USD</em></p>
+
+<p><strong>Budget</strong></p>
+
+<table>
+<thead>
+  <tr>
+    <th>Source</th>
+    <th>Amount</th>
+    <th>Time [days]</th>
+		<th>Notes</th>
+  </tr>
+	</thead>
+	<tbody>
+  <tr>
+    <td>Person 1</td>
+    <td>USD 7000</td>
+    <td>60 days</td>
+		<td>This is the project lead</td>
+  </tr>
+	<tr>
+		<td>Person 2</td>
+		<td>USD 6000</td>
+		<td>60 days</td>
+		<td>This is the second developer</td>
+	</tr>
+	<tr>
+		<td>Service 1</td>
+		<td>USD 500</td>
+		<td>45 days</td>
+		<td>This is the service for providing X. It is necessary for the testing phaser</td>
+	</tr>
+	<tr>
+		<td>Service 2</td>
+		<td>USD 100</td>
+		<td>30 days</td>
+		<td>This is the service for providing Y. It is necessary for communications and marketing</td>
+	</tr>
+	</tbody>
+</table>
+
+<h4 id="guidelines">Guidelines</h4>
+
+<p>ICON ecosystem projects should abide by the guidelines made available from the following sources:</p>
+
+<ul>
+<li><a href="https://github.com/icon-project/community/tree/main/guidelines">ICON Community Guidelines</a></li>
+</ul>
+
+<h4>Deliverable conformance agreement</h4>
+
+<p><strong>In order for your project to be funded, you are agreeing to conform to the best practices of software, product development, and professional conduct as explained by the sources above.</strong></p>
+
+`;
+
 const ProposalCreationPage = ({
   submitProposal,
   history,
@@ -211,7 +355,8 @@ const ProposalCreationPage = ({
       document
         .getElementById('milestones')
         .setCustomValidity(
-          `The total duration in milestones should equal to the project duration (currently ${proposal.projectDuration || 0
+          `The total duration in milestones should equal to the project duration (currently ${
+            proposal.projectDuration || 0
           } months)`,
         );
     } else {
@@ -251,7 +396,7 @@ const ProposalCreationPage = ({
     document.getElementById('teamEmail').onfocus = () => {
       document.getElementById('teamEmail').onblur = () => {
         document.getElementById('teamEmail').reportValidity();
-        document.getElementById('teamEmail').onblur = () => { };
+        document.getElementById('teamEmail').onblur = () => {};
       };
     };
 
@@ -534,10 +679,11 @@ const ProposalCreationPage = ({
                   </option>
                   {prepList?.map(prep => {
                     return (
-                      <option value={prep?.address} key={prep?.address}>{`${prep?.name
-                        } (${prep?.address?.slice(0, 4)}...${prep?.address?.slice(
-                          prep.address.length - 2,
-                        )})`}</option>
+                      <option value={prep?.address} key={prep?.address}>{`${
+                        prep?.name
+                      } (${prep?.address?.slice(0, 4)}...${prep?.address?.slice(
+                        prep.address.length - 2,
+                      )})`}</option>
                     );
                   })}
                 </Form.Control>
@@ -553,7 +699,7 @@ const ProposalCreationPage = ({
               <Col sm='12' style={{ position: 'relative' }}>
                 <RichTextEditor
                   required
-                  initialData={proposal.description ?? null}
+                  initialData={proposal.description ?? initialDescription}
                   onChange={data =>
                     setProposal(prevState => ({
                       ...prevState,

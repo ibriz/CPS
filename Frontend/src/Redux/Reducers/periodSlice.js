@@ -7,6 +7,7 @@ const initialState = {
   period: null,
   timestamp: null,
   periodSpan: 0,
+  periodCount: 0,
 };
 
 const periodMapping = {
@@ -38,6 +39,17 @@ const periodSlice = createSlice({
       return;
     },
 
+    fetchPeriodCountRequest() {
+      return;
+    },
+    fetchPeriodCountSuccess(state, action) {
+      state.periodCount = parseInt(action.payload.response);
+      return;
+    },
+    fetchPeriodCountFailure() {
+      return;
+    },
+
     updatePeriod() {
       return;
     },
@@ -51,6 +63,9 @@ export const {
   fetchPeriodDetailsRequest,
   fetchPeriodDetailsSuccess,
   fetchPeriodDetailsFailure,
+  fetchPeriodCountRequest,
+  fetchPeriodCountSuccess,
+  fetchPeriodCountFailure,
   updatePeriod,
   updatePeriodFrontendWallet,
 } = periodSlice.actions;

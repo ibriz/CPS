@@ -35,7 +35,7 @@ function* fetchPrepsWithStatsWorker({ payload }) {
         method: 'get_remaining_project',
         params: {
           _wallet_address: prep.address,
-          _project_type: 'progress_report',
+          _project_type: 'progress_reports',
         },
       });
 

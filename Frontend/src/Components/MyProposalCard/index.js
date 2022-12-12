@@ -110,8 +110,6 @@ const MyProposalCard = ({
         ?.toLowerCase()
         .includes(searchText?.toLowerCase()),
     );
-    setPageLength(Math.ceil(filteredProposals.length / PAGE_SIZE) || 1);
-    filteredProposals = paginate(filteredProposals, PAGE_SIZE, pageNumber || 1);
 
     filteredProposals.sort((a, b) => {
       const statusA = proposalStatusMapping.find(
@@ -124,6 +122,10 @@ const MyProposalCard = ({
         sortOrderProposalStates[statusA] - sortOrderProposalStates[statusB]
       );
     });
+
+    setPageLength(Math.ceil(filteredProposals.length / PAGE_SIZE) || 1);
+    filteredProposals = paginate(filteredProposals, PAGE_SIZE, pageNumber || 1);
+
     setFilteredProposalList(filteredProposals);
 
     // }

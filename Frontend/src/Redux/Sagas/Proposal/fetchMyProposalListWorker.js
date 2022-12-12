@@ -7,6 +7,7 @@ import {
   fetchMyProposalListSuccess,
   fetchMyProposalListFailure,
 } from '../../Reducers/proposalSlice';
+import { IconConverter } from 'icon-sdk-js';
 
 const proposalListStatusMapping = {
   Active: '_active',
@@ -25,8 +26,23 @@ function* fetchMyProposalListWorker({ payload }) {
       method: 'get_proposal_detail_by_wallet',
       params: {
         _wallet_address: payload.walletAddress,
+        _start_index: 0,
       },
     });
+
+    const totalCount = IconConverter.toNumber(response.count);
+    let fetchedCount = response.data.length;
+    while (fetchedCount < totalCount) {
+      let temp = yield call(callKeyStoreWallet, {
+        method: 'get_proposal_detail_by_wallet',
+        params: {
+          _wallet_address: payload.walletAddress,
+          startIndex: `${Number(fetchedCount) || 0}`,
+        },
+      });
+      fetchedCount += temp.data.length;
+      response.data.push(...temp.data);
+    }
 
     // const response = {
     //   data: Array(10).fill(0).map((_, index) => (  {

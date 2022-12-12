@@ -67,7 +67,9 @@ const Proposal = ({
                   <LowerCardInfo className={styles.proposalInfo}>
                     Submitted on:{' '}
                     {new Date(
-                      proposal._sponsored_timestamp / 1000,
+                      (Number(proposal._sponsored_timestamp) !== 0
+                        ? proposal._sponsored_timestamp
+                        : proposal._timestamp) / 1000,
                     ).toLocaleDateString()}
                   </LowerCardInfo>
                   <Budget>

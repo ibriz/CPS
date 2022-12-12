@@ -127,9 +127,9 @@ const fundSlice = createSlice({
                 action.payload.response.withdraw_amount_icx,
               ).dividedBy(10 ** 18)
             : 0,
-          bnUSD: action.payload.response.withdraw_amount_bnusd
+          bnUSD: action.payload.response.withdraw_amount_bnUSD
             ? IconConverter.toBigNumber(
-                action.payload.response.withdraw_amount_bnusd,
+                action.payload.response.withdraw_amount_bnUSD,
               ).dividedBy(10 ** 18)
             : 0,
         };
@@ -164,9 +164,9 @@ const fundSlice = createSlice({
                 action.payload.response.withdraw_amount_icx,
               ).dividedBy(10 ** 18)
             : 0,
-          bnUSD: action.payload.response.withdraw_amount_bnusd
+          bnUSD: action.payload.response.withdraw_amount_bnUSD
             ? IconConverter.toBigNumber(
-                action.payload.response.withdraw_amount_bnusd,
+                action.payload.response.withdraw_amount_bnUSD,
               ).dividedBy(10 ** 18)
             : 0,
         };

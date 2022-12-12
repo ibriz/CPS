@@ -52,19 +52,19 @@ const SponsorRequestsCard = ({
     //   pageNumber: pageNumber?.[selectedTab] ?? 1,
     // });
 
-    let length = totalPages[selectedTab] || 1;
-    for (let i = 0; i < length; i++) {
-      console.log('length fetching new page');
-      fetchProposalListRequest({
-        status: selectedTab,
-        walletAddress: walletAddress || wallet.getAddress(),
-        // pageNumber: pageNumber?.[selectedTab] ?? 1,
-        pageNumber: i + 1,
-      });
-    }
+    // let length = totalPages[selectedTab] || 1;
+    // for (let i = 0; i < length; i++) {
+    console.log('length fetching new page');
+    fetchProposalListRequest({
+      status: selectedTab,
+      walletAddress: walletAddress || wallet.getAddress(),
+      // pageNumber: pageNumber?.[selectedTab] ?? 1,
+      pageNumber: 1,
+    });
+    // }
 
     // setModalShowSponsorRequests(true);
-  }, [selectedTab, pageNumber, fetchProposalListRequest, walletAddress]);
+  }, [selectedTab, fetchProposalListRequest, walletAddress]);
 
   const setCurrentPages = (status, pageNumber) => {
     setPageNumber(prevState => ({

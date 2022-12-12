@@ -26,7 +26,6 @@ function* fetchProposalListWorker({ payload }) {
       params: {
         _status: proposalListStatusMapping[payload.status],
         _wallet_address: payload.walletAddress,
-        _end_index: `${(payload.pageNumber || 3) * 10}`,
         _start_index: `${(payload.pageNumber || 1) * 10 - 10}`,
       },
     });

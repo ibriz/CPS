@@ -12,12 +12,35 @@
   align-items: center;
 }
 
+.periodCountContainer{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  
+}
+
+
+.periodCountContainer p {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 1.1rem;
+  color: #27AAB9;
+  margin-bottom: 0px;
+}
+
+.periodCountContainer p span {
+  font-weight: 700;
+  font-size: 1.4rem;
+}
+
 .account {
   right: 0;
   display: flex;
   align-items: center;
   width: 100%;
-  justify-content: flex-end;
+  justify-content: space-between;
   height: 70px;
   padding: 24px;
   box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.15);

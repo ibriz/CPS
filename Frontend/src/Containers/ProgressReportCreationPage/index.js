@@ -61,6 +61,149 @@ const signingInfoMessage = (
   </div>
 );
 
+const initialDescription = `
+<h3 id="summary">Summary</h3>
+<p><em>In-depth summary of project status, including sentiment, roadmap / timing, engagement so far, feedback to ICON Foundation or community, major issues / roadblocks</em></p>
+<h4 id="amendments-to-roadmap">Amendments to roadmap</h4>
+<p><em>Clearly formatted table. For <a href="https://cps.icon.community">CPS</a> projects, please see <a href="https://github.com/icon-community/CPS/wiki/Project-Activity-Flow-States">this explanation</a> of the possible states of the project and how they may affect development.</em></p>
+<p><strong>Roadmap amendments</strong>
+|<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Change</th>
+<th>Explanation</th>
+<th>Dependants</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Milestone 1</td>
+<td>Change date to July 3 from August 3</td>
+<td>We found a dangerous bug in the main code runner, so fixing this became a priority. Bug detailed <a href="https://example.com">here</a>.</td>
+<td>Milestone 3</td>
+</tr>
+<tr>
+<td>Milestone 2</td>
+<td>Change date from September 1 to August 10</td>
+<td>This looks to be easier than expected and is nearly complete</td>
+<td>None</td>
+</tr>
+<tr>
+<td>Milestone 3</td>
+<td>Change date from September 10 to October 1</td>
+<td>Milestone 1 has been moved back by 1 month, so this moves back by 20 days to account for this</td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<h4 id="amendments-to-budget">Amendments to budget</h4>
+<p><em>As of now, <a href="https://cps.icon.community">CPS</a> projects may not request amendments to the originally proposed budget</em></p>
+<p><em>All budget amendment requests must provide strict and logical reasoning. The requester is susceptible to denial of request for budget amendment if the grant provider does not perceive this request to provide sufficient reason. Funding for CPS grants is available in <a href="https://balanced.network/stablecoin/">bnUSD (stablecoin)</a>. Funding for ICON Foundation grants is available in ICX or USD</em></p>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Amount</th>
+<th>Time [days]</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Person 1</td>
+<td>ICX 7000</td>
+<td>10 days</td>
+<td>This is the second developer. They will be necessary for an extra 10 days due to the change in expected completion date for Milestone 1 in the Roadmap Amendments</td>
+</tr>
+<tr>
+<td>Service 1</td>
+<td>ICX 100</td>
+<td>20 days</td>
+<td>This is the service for providing X. It will be necessary for an extra 20 days due to the change in expected completion date for Milestone 3 in the Roadmap Amendments</td>
+</tr>
+</tbody>
+</table>
+<h4 id="deliverables">Deliverables</h4>
+<h4 id="accomplished-this-cycle">Accomplished this cycle</h4>
+<p><em>Which deliverables are ready now? Deliverable states are denoted in the development guidelines listed in the <a href="#Conformance-summary">Conformance summary section</a></em></p>
+<p><strong>Deliverables ready</strong>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Development State</th>
+<th>Notes</th>
+<th>Source / location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Example 1</td>
+<td>Beta</td>
+<td>This needs to be debugged based on usage, but may be released</td>
+<td><a href="https://github.com">Github repo</a></td>
+</tr>
+<tr>
+<td>Example 2</td>
+<td>Release</td>
+<td>This has been developed and sufficiently debugged</td>
+<td><a href="https://example.com">Webapp</a></td>
+</tr>
+<tr>
+<td>Example 3</td>
+<td>Release</td>
+<td>This is a marketing effort</td>
+<td>No direct link to source, but can be tracked on Twitter and Discord</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="projected-for-next-cycle">Projected for next cycle</h4>
+<p><em>Which deliverables are projected to be ready next cycle?</em></p>
+<p><strong>Deliverables projected for next cycle</strong>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Development State</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Example 1</td>
+<td>Not started</td>
+<td>This has not been started, but can be expected to be completed by the next progress report</td>
+</tr>
+<tr>
+<td>Example 2</td>
+<td>Alpha</td>
+<td>This is currently being tested internally, and is expected to be in Beta by the next progress report cycle</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="conformance-summary">Conformance summary</h4>
+<p>ICON ecosystem projects should abide by the guidelines made available from the following sources:</p>
+<ul>
+<li><a href="https://github.com/icon-project/community/tree/main/guidelines">ICON Community Guidelines</a></li>
+</ul>
+<h4 id="deliverable-conformance-agreement">Deliverable conformance agreement</h4>
+<p><strong>In order for your project to be funded, you are agreeing to conform to the best practices of software, product development, and professional conduct as explained by the sources above.</strong></p>
+<h4 id="instructions-to-run-tests">Instructions to run tests</h4>
+<p><em>Summary of tests and corresponding instructions to run them</em></p>
+<h4 id="link-to-license">Link to license</h4>
+<p><em>Link to license file</em></p>
+<h4 id="sample-of-docs">Sample of docs</h4>
+<p><em>Link to documentations</em></p>
+<h4 id="security-analysis">Security analysis</h4>
+<p><em>Summary of security analysis and link to security analysis resources</em></p>
+<h4 id="semantic-versioning-branching-analysis">Semantic versioning / branching analysis</h4>
+<p><em>Link to semantic versioning / branching practices for analysis</em></p>
+
+`;
+
 const ProgressReportCreationPage = ({
   submitProgressReport,
   history,
@@ -512,7 +655,7 @@ const ProgressReportCreationPage = ({
               <Col lg='12'>
                 <RichTextEditor
                   required
-                  initialData={progressReport.description ?? null}
+                  initialData={progressReport.description ?? initialDescription}
                   onChange={data =>
                     setProposal(prevState => ({
                       ...prevState,
