@@ -43,28 +43,16 @@ const DarkMode = ({ theme, setTheme }) => {
   };
   const forceUpdate = useForceUpdate();
   return (
-    // <div className='toggle-theme-wrapper'>
-    //   <label className='toggle-theme' htmlFor='checkbox'>
-    //     <input
-    //       type='checkbox'
-    //       id='checkbox'
-    //       onChange={toggleTheme}
-    //       defaultChecked={defaultDark}
-    //     />
-    //     {/* <div className='slider round'></div> */}
-    //   </label>
-    //   {/* <div className='test'>Testing</div> */}
+    <></>
+    // <div className='themeContainer'>
+    //   <input
+    //     type='checkbox'
+    //     id='checkbox'
+    //     onChange={toggleTheme}
+    //     defaultChecked={defaultDark}
+    //   />
+    //   <div className='themeText'>Dark mode</div>
     // </div>
-
-    <div className='themeContainer'>
-      <input
-        type='checkbox'
-        id='checkbox'
-        onChange={toggleTheme}
-        defaultChecked={defaultDark}
-      />
-      <div className='themeText'>Dark mode</div>
-    </div>
   );
 };
 

@@ -2,7 +2,7 @@ import React from 'react';
 import communityImg from '../../Assets/Images/StrongCommunity.png';
 import cheapImg from '../../Assets/Images/CheapTransactions.png';
 import fastImg from '../../Assets/Images/FastTransactions.png';
-import Features from '../../Assets/Images/Features.png';
+import Features from '../../Assets/Images/Features-Light.png';
 import FeaturesDark from '../../Assets/Images/Features-Dark.png';
 
 const BuildOn = props => {

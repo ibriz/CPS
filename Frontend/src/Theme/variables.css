@@ -62,6 +62,10 @@
   --landing-heading-text-color: rgba(7, 41, 45, 1);
   --landing-paragraph-text-color: rgba(88, 102, 101, 1);
   --landing-descitem-text-color: #0D6BC1;
+
+
+  --landing-features-bg: radial-gradient(146.09% 146.09% at 44.41% 118.51%, rgba(33, 33, 79, 0.7) 0%, rgba(23, 127, 251, 0.7) 48.23%, rgba(30, 182, 191, 0.7) 100%) /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */, rgba(33, 33, 79, 0.5);
+
 }
 
 /* 2 */
@@ -125,5 +129,7 @@
   --landing-heading-text-color:white;
   --landing-paragraph-text-color: white;
   --landing-descitem-text-color: white;
+
+  --landing-features-bg: #2A2C2E;
   
 }

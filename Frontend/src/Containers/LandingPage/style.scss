@@ -257,7 +257,7 @@
 
     margin-top: 0px;
     @media screen and (max-width: 768px) {
-      background-size: 50px 50px, 25px 25px, 40px 40px, 60px 60px;
+      // background-size: 50px 50px, 25px 25px, 40px 40px, 60px 60px;
       border-radius: 0%;
     }
     background-repeat: no-repeat;
@@ -389,7 +389,7 @@
       @media screen and (max-width: 769px) {
         margin-left: 0px;
         align-items: center;
-        padding: 5px;
+        padding:  80px 5px 5px 5px;
       }
     }
   
@@ -571,7 +571,7 @@
       padding: 20px 10px 0px 10px;
       // z-index: 2000;
       margin-top: 10px;
-      background: white !important;
+      // background: white !important;
       // position:relative;
       // bottom:0px;
       height: auto;
@@ -657,15 +657,18 @@
   
       div {
       
-        width: 60%;
+        width: 100%;
         display: flex;
         flex-direction: row;
         margin: auto;
+        background: var(--landing-features-bg);
         
         img {
         //  margin: 0px 46px;
         object-fit: contain;
-      
+        width: 60%;
+        margin: -40px auto 56px auto;
+        max-height: 720px;
         max-width: 100%;
         // height: 1005px;
        }
@@ -1007,7 +1010,7 @@
     @media screen and (max-width: 768px) {
       padding: 50px 10px 20px 10px;
       align-items: center;
-      background-image: url(../../Assets/Images/grantProcessBackgroundMobile.png);
+      // background-image: url(../../Assets/Images/grantProcessBackgroundMobile.png);
     }
   }
 
@@ -1391,7 +1394,7 @@
     }
     @media screen and (max-width: 768px) {
       padding: 50px 10px 40px 10px;
-      background-image: url(../../Assets/Images/faqBackgroundMobile.png);
+      // background-image: url(../../Assets/Images/faqBackgroundMobile.png);
     }
   }
   .gap {
@@ -1549,7 +1552,7 @@
     }
     @media screen and (max-width: 768px) {
       padding: 40px 20px 20px 20px;
-      background-image: url(../../Assets/Images/receipentBackgroundMobile.png);
+      // background-image: url(../../Assets/Images/receipentBackgroundMobile.png);
     }
   }
 

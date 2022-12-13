@@ -31,16 +31,23 @@ function App({
       document.documentElement.setAttribute('data-theme', 'dark');
     };
 
+    const setLight = () => {
+      localStorage.setItem('theme', 'light');
+      document.documentElement.setAttribute('data-theme', 'light');
+    };
+
     const storedTheme = localStorage.getItem('theme');
     const prefersDark =
       window.matchMedia &&
       window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-    const defaultDark =
-      storedTheme === 'dark' || (storedTheme === null && prefersDark);
+    // const defaultDark =
+    //   storedTheme === 'dark' || (storedTheme === null && prefersDark);
 
-    if (defaultDark) {
+    if (prefersDark) {
       setDark();
+    } else {
+      setLight();
     }
   };
 
