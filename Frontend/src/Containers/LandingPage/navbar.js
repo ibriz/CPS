@@ -69,7 +69,7 @@ const Navbar = props => {
         createProposalRef,
         faqRef,
         grantProcessRef,
-        contactRef,
+        footerRef,
         headerRef,
         theme
     } = props;
@@ -81,7 +81,7 @@ const Navbar = props => {
         { title: 'Create a proposal', id: 'description', className: 'landingPage__Description', ref: createProposalRef },
         { title: 'Grant Process', id: 'grantProcess', className: 'grantProcessContainer', ref: grantProcessRef },
         { title: 'FAQ', id: 'faq', className: 'faqHeader', ref: faqRef },
-        { title: 'Contact Us', id: 'footer', className: 'footer', ref: contactRef },
+        { title: 'Contact Us', id: 'footer', className: 'footer', ref: footerRef },
     ];
 
     const navbarRightItem = [

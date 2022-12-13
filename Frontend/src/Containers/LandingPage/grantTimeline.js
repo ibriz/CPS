@@ -13,7 +13,7 @@ const GrantTimeline = props => {
           <div>
             <img srcSet={timingImg + ' 2x'} />
             <p>
-              &nbsp;&nbsp; Funding Cycle &nbsp;<b>20</b>
+              &nbsp;&nbsp; Funding Cycle &nbsp;<b>{props.periodCount}</b>
             </p>
           </div>
         </div>

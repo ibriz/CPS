@@ -133,6 +133,7 @@ const Footer = ({ console = false, width = undefined, footerRef }) => {
         backgroundColor: console ? 'var(--console-bg-color)' : 'black',
       }}
       id='footer'
+      className='footer'
       ref={footerRef}
     >
       <Row className={ClassNames(firstRowStyle)}>
@@ -219,7 +220,7 @@ const Footer = ({ console = false, width = undefined, footerRef }) => {
           lg='3'
           xs='12'
           className={ClassNames(footerColumnStyles)}
-          style={{ textAlign: 'right', paddingRight: '52px' }}
+          style={{ textAlign: 'right', paddingRight: '42px' }}
         >
           <img src={cpsLogo} style={{ width: '45%' }} />
           <div

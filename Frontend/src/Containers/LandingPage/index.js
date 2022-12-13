@@ -26,13 +26,16 @@ import { setUserDataSubmitSuccess } from 'Redux/Reducers/userSlice';
 import { unregisterPrep, registerPrep } from 'Redux/Reducers/prepsSlice';
 import { Modal } from 'react-bootstrap';
 import { useLogin } from 'Hooks/useLogin';
+import { fetchPeriodCountRequest } from 'Redux/Reducers/periodSlice';
 const LandingPage = (props) => {
     const {
         loginRequest,
         walletAddress,
         setLoginButtonClicked,
         width,
-        loginButtonClicked
+        loginButtonClicked,
+        periodCount,
+        fetchPeriodCount,
     } = props;
 
     const { handleLogin, walletModal, setWalletModal } = useLogin();
@@ -87,6 +90,11 @@ const LandingPage = (props) => {
             window.removeEventListener("scroll", handleScroll);
         };
     }, [activeTabCenter]);
+
+    useEffect(() => {
+        fetchPeriodCount();
+    }, []);
+
     return (
         <>
 
@@ -101,7 +109,7 @@ const LandingPage = (props) => {
                 </div>
                 <BuildOn {...props} />
                 <GrantProcess grantProcessRef={grantProcessRef} {...activeTabProps} />
-                <GrantTimeline />
+                <GrantTimeline {...props} />
                 <GrantReceipent {...props} />
                 <IconResource />
                 <FAQ faqRef={faqRef} {...activeTabProps} />
@@ -133,6 +141,7 @@ const mapStateToProps = state => ({
     verified: state.user.verified,
     initialPromptRedux: state.user.initialPrompt,
     theme: state.user.theme,
+    periodCount: state.period.periodCount,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -144,6 +153,7 @@ const mapDispatchToProps = dispatch => ({
     registerPrep: () => dispatch(registerPrep()),
     setUserDataSubmitSuccess: payload =>
         dispatch(setUserDataSubmitSuccess(payload)),
+    fetchPeriodCount: () => dispatch(fetchPeriodCountRequest()),
 
 });
 

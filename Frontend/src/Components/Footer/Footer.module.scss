@@ -60,7 +60,7 @@ a:first-child > span.socialLink {
   }
 
   .footerColumn {
-    padding-left: 95px !important;
+    // padding-left: 95px !important;
   }
 
   .links {
@@ -95,5 +95,10 @@ a:first-child > span.socialLink {
   .firstRow,
   .firstRowConsole {
     padding-top: 20px !important;
+  }
+
+  .footerColumnConsole {
+    text-align: center !important;
+    padding-bottom: 20px;
   }
 }
