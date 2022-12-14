@@ -42,6 +42,11 @@
   --searchbar-background-color: white;
 
   --progress-color: #27aab9;
+  --pagination-active-color: #007bff;
+  --pagination-active-bg-color: white;
+  --pagination-inactive-color: black;
+  --pagination-hover-color: #e9ecef;
+
 
   /* --pagination-active-color: #007bff;
   --pagination-link-color: #007bff;
@@ -114,6 +119,10 @@
   --pagination-border-color: grey; */
 
   /* Rest */
+  --pagination-active-color: white;
+  --pagination-active-bg-color: #242425;
+  --pagination-inactive-color: grey;
+  --pagination-hover-color: #383838;
 
   --paragraph-color-1: #020808;
   --paragraph-color-2: #586665;
@@ -132,4 +141,34 @@
 
   --landing-features-bg: #2A2C2E;
   
+}
+
+
+
+/* Pagination selectors */
+.page-item .page-link {
+  position: relative;
+  display: block;
+  color: var(--pagination-inactive-color);
+  text-decoration: none;
+  border: none;
+
+
+}
+
+.page-item .page-link:hover {
+  position: relative;
+  display: block;
+  color: var(--pagination-active-color) !important;
+  background-color: var(--pagination-hover-color) !important;
+  text-decoration: none;
+  border: none;
+}
+
+.page-item.active .page-link {
+  font-weight: bold;
+  background-color: var(--pagination-active-bg-color) !important;
+  color: var(--pagination-active-color) !important;
+  font-size: 16px;
+  margin-top: -2px;
 }
