@@ -253,6 +253,10 @@
       background: url(../../Assets/Images/landingBg2.png);
       background-repeat: no-repeat;
       background-size: 100% 100%;
+
+      @media screen and (max-width: 768px) {
+        background-size: 100% 60%;
+      }
     }
 
     margin-top: 0px;
@@ -664,13 +668,17 @@
         background: var(--landing-features-bg);
         
         img {
-        //  margin: 0px 46px;
         object-fit: contain;
         width: 60%;
         margin: -40px auto 56px auto;
         max-height: 720px;
         max-width: 100%;
-        // height: 1005px;
+
+        @media screen and (max-width: 768px) {
+          width: 98%;
+          min-height: 380px;
+          object-fit: fill;
+        }
        }
         
 
@@ -894,6 +902,16 @@
         p{
           min-height: 120px;
           padding-right: 150px;
+
+        
+
+          @media screen and (max-width: 1280px) {
+            padding-right: 32px;
+           }
+
+           @media screen and (max-width: 768px) {
+            padding-right: 8px;
+           }
         }
       }
 
@@ -1030,6 +1048,10 @@
         align-items: center;
         justify-content: center;
         gap: 12px;
+
+        @media screen and (max-width: 768px) {
+         flex-direction: column;
+        }
 
         & > h1 {
           color: var(--landing-heading-text-color);
@@ -1275,7 +1297,7 @@
         }
       }
       @media screen and (max-width: 769px) {
-        max-width: 600px;
+        // max-width: 600px;
       }
     }
 

@@ -103,7 +103,7 @@ const Navbar = props => {
             <div className="navbarContainer">
                 <div className='navbarLeft'>
                     <div>
-                        <img src={theme==='light'? iconCPSImg: iconCPSImgDark} alt='ICON CPS text' />
+                        <img src={theme === 'light' ? iconCPSImg : iconCPSImgDark} alt='ICON CPS text' />
                     </div>
                 </div>
                 <div
@@ -163,13 +163,13 @@ const Navbar = props => {
                     }}
                 >
 
-										<DarkMode></DarkMode>
+                    <DarkMode></DarkMode>
 
                     {!walletAddress ? (
-                        <div style={{padding:"8px 0px", whiteSpace: "nowrap"}}>
-                        <Button className="dashboardBtn"  variant="info" style={window.innerWidth > 1100 ? { marginRight: 20, borderRadius: "43px" } : {borderRadius: "43px"}} onClick={async () => {
-                            history.push('/dashboard');
-                        }}>Launch App</Button>
+                        <div style={{ padding: "8px 0px", whiteSpace: "nowrap" }}>
+                            <Button className="dashboardBtn" variant="info" style={window.innerWidth > 1100 ? { marginRight: 20, borderRadius: "43px" } : { borderRadius: "43px" }} onClick={async () => {
+                                history.push('/dashboard');
+                            }}>Launch App</Button>
                         </div>
                     ) : (
                         <ul>
@@ -271,13 +271,13 @@ const Navbar = props => {
                             </li>
                             {/* <Link to="/dashboard" style={{ textDecoration: 'none', color: 'white' }}> */}
                             <li onClick={() => history.push('/dashboard')}>
-                          
-                            <div style={{padding:"8px 0px", whiteSpace: "nowrap"}}>
-                        <Button className="dashboardBtn"  variant="info" style={{borderRadius: "43px"}} onClick={async () => {
-                            history.push('/dashboard');
-                        }}>Launch App</Button>
-                        </div>
-                       
+
+                                <div style={{ padding: "8px 0px", whiteSpace: "nowrap" }}>
+                                    <Button className="dashboardBtn" variant="info" style={{ borderRadius: "43px" }} onClick={async () => {
+                                        history.push('/dashboard');
+                                    }}>Launch App</Button>
+                                </div>
+
                             </li>
                             {/* </Link> */}
                             <li
@@ -290,7 +290,9 @@ const Navbar = props => {
                 </div>
                 <div className='menuIcon'>
                     <label onClick={() => setIsOpened(prev => !prev)} htmlFor='menu'>
-                        {!isOpened ? <FaBars style={{ fontSize: 22 }} /> : <FaTimes style={{ fontSize: 22 }} />}
+                        {!isOpened ?
+                            <FaBars style={{ fontSize: 22, color: theme === 'light' ? 'black' : 'white' }} /> :
+                            <FaTimes style={{ fontSize: 22, color: theme === 'light' ? 'black' : 'white' }} />}
                     </label>
                 </div>
             </div>

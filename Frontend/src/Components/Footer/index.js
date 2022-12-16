@@ -144,7 +144,8 @@ const Footer = ({ console = false, width = undefined, footerRef }) => {
           className={ClassNames(footerColumnStyles, linksStyle)}
           style={{
             paddingRight: 0,
-            textAlign: width && width <= 767 ? 'left' : 'left',
+            textAlign: width && width <= 991 ? 'center' : 'left',
+            paddingBottom: width && width <= 991 ? '24px' : '0px',
           }}
         >
           <p style={{ fontWeight: '700' }}>Ecosystem</p>
@@ -170,7 +171,8 @@ const Footer = ({ console = false, width = undefined, footerRef }) => {
           className={ClassNames(footerColumnStyles, linksStyle)}
           style={{
             paddingRight: 0,
-            textAlign: width && width <= 767 ? 'left' : 'left',
+            textAlign: width && width <= 991 ? 'center' : 'left',
+            paddingBottom: width && width <= 991 ? '24px' : '0px',
           }}
         >
           <p style={{ fontWeight: '700' }}>Community</p>
@@ -195,7 +197,8 @@ const Footer = ({ console = false, width = undefined, footerRef }) => {
           className={ClassNames(footerColumnStyles, linksStyle)}
           style={{
             paddingRight: 0,
-            textAlign: width && width <= 767 ? 'left' : 'left',
+            textAlign: width && width <= 991 ? 'center' : 'left',
+            paddingBottom: width && width <= 991 ? '24px' : '0px',
           }}
         >
           <p style={{ fontWeight: '700' }}>Resources</p>
@@ -220,7 +223,10 @@ const Footer = ({ console = false, width = undefined, footerRef }) => {
           lg='3'
           xs='12'
           className={ClassNames(footerColumnStyles)}
-          style={{ textAlign: 'right', paddingRight: '42px' }}
+          style={{
+            textAlign: width && width <= 991 ? 'center' : 'right',
+            paddingRight: width && width <= 991 ? '0px' : '42px',
+          }}
         >
           <img src={cpsLogo} style={{ width: '45%' }} />
           <div
