@@ -148,7 +148,7 @@ const Footer = ({ console = false, width = undefined, footerRef }) => {
             paddingBottom: width && width <= 991 ? '24px' : '0px',
           }}
         >
-          <p style={{ fontWeight: '700' }}>Ecosystem</p>
+          <p style={{ fontWeight: '700' }}>Resources</p>
           {resourcesLinks.map(link => (
             <div style={{ marginTop: '10px' }}>
               <a
@@ -175,7 +175,7 @@ const Footer = ({ console = false, width = undefined, footerRef }) => {
             paddingBottom: width && width <= 991 ? '24px' : '0px',
           }}
         >
-          <p style={{ fontWeight: '700' }}>Community</p>
+          <p style={{ fontWeight: '700' }}>Ecosystem</p>
           {ecosystemLinks.map(link => (
             <div style={{ marginTop: '10px' }}>
               <a
@@ -201,7 +201,7 @@ const Footer = ({ console = false, width = undefined, footerRef }) => {
             paddingBottom: width && width <= 991 ? '24px' : '0px',
           }}
         >
-          <p style={{ fontWeight: '700' }}>Resources</p>
+          <p style={{ fontWeight: '700' }}>Community</p>
           {communityLinks.map(link => (
             <div style={{ marginTop: '10px' }}>
               <a
@@ -245,7 +245,7 @@ const Footer = ({ console = false, width = undefined, footerRef }) => {
             style={{ marginTop: '5px', fontSize: '14px', fontWeight: '600' }}
           >
             <a
-              href='https://tracker.icon.foundation/address/hx231a795d1c719b9edf35c46b9daa4e0b5a1e83aa'
+              href='https://tracker.icon.community/address/hx231a795d1c719b9edf35c46b9daa4e0b5a1e83aa'
               style={console ? { color: consoleColor } : { color: 'white' }}
               target='_blank'
             >
