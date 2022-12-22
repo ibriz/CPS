@@ -535,7 +535,7 @@ function ProposalDetailsPage(props) {
                     )}
 
                     {proposalDetail?.sponserPrep === walletAddress &&
-                      status === 'Voting' &&
+                      status === 'Pending' &&
                       period === 'APPLICATION' &&
                       remainingTime > 0 &&
                       (voteLoading ? (
@@ -1243,7 +1243,6 @@ const mapStateToProps = state => ({
 
   preps: state.preps.preps,
   sponsorMessage: state.proposals.sponsorMessage,
-  walletAddress: state.account.address,
   isPrep: state.account.isPrep,
   ipfsError: state.proposals.error,
   changeVote: state.proposals.changeVote,
