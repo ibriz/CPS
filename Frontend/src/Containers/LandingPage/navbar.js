@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import iconCPSImg from '../../Assets/Images/ICON CPS white.svg';
+import iconCPSImg from '../../Assets/Images/iconCPSlogo.svg';
+import iconCPSImgDark from '../../Assets/Images/iconCPSlogo-light.svg';
+
 import { FaBars, FaTimes } from 'react-icons/fa';
 import { Link, Redirect } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
@@ -9,6 +11,7 @@ import ConfirmationModal from 'Components/UI/ConfirmationModal';
 import EmailConfirmationModal from 'Components/Header/EmailConfirmationModal';
 import UserInfoFormModal from 'Components/Header/UserInfoFormModal';
 import { withRouter } from 'react-router-dom';
+import DarkMode from "../../Theme/darkMode";
 
 
 
@@ -66,8 +69,9 @@ const Navbar = props => {
         createProposalRef,
         faqRef,
         grantProcessRef,
-        contactRef,
-        headerRef
+        footerRef,
+        headerRef,
+        theme
     } = props;
     const onLogout = () => {
         logout();
@@ -77,7 +81,7 @@ const Navbar = props => {
         { title: 'Create a proposal', id: 'description', className: 'landingPage__Description', ref: createProposalRef },
         { title: 'Grant Process', id: 'grantProcess', className: 'grantProcessContainer', ref: grantProcessRef },
         { title: 'FAQ', id: 'faq', className: 'faqHeader', ref: faqRef },
-        { title: 'Contact Us', id: 'footer', className: 'footer', ref: contactRef },
+        { title: 'Contact Us', id: 'footer', className: 'footer', ref: footerRef },
     ];
 
     const navbarRightItem = [
@@ -99,7 +103,7 @@ const Navbar = props => {
             <div className="navbarContainer">
                 <div className='navbarLeft'>
                     <div>
-                        <img src={iconCPSImg} alt='ICON CPS text' />
+                        <img src={theme === 'light' ? iconCPSImg : iconCPSImgDark} alt='ICON CPS text' />
                     </div>
                 </div>
                 <div
@@ -159,16 +163,20 @@ const Navbar = props => {
                     }}
                 >
 
+                    <DarkMode></DarkMode>
+
                     {!walletAddress ? (
-                        <p className="dashboardBtn" style={window.innerWidth > 1100 ? { marginRight: 20 } : {}} onClick={async () => {
-                            history.push('/dashboard');
-                        }}>Launch App</p>
+                        <div style={{ padding: "8px 0px", whiteSpace: "nowrap" }}>
+                            <Button className="dashboardBtn" variant="info" style={window.innerWidth > 1100 ? { marginRight: 20, borderRadius: "43px" } : { borderRadius: "43px" }} onClick={async () => {
+                                history.push('/dashboard');
+                            }}>Launch App</Button>
+                        </div>
                     ) : (
                         <ul>
                             <li
                                 className={activeTabRight === 'username' ? 'activeTab' : ''}
                                 onClick={() => {
-                                    setActiveTabRight('username')
+                                    // setActiveTabRight('username')
 
                                 }}
                             // style={(isPrep &&
@@ -263,7 +271,13 @@ const Navbar = props => {
                             </li>
                             {/* <Link to="/dashboard" style={{ textDecoration: 'none', color: 'white' }}> */}
                             <li onClick={() => history.push('/dashboard')}>
-                                Launch App
+
+                                <div style={{ padding: "8px 0px", whiteSpace: "nowrap" }}>
+                                    <Button className="dashboardBtn" variant="info" style={{ borderRadius: "43px" }} onClick={async () => {
+                                        history.push('/dashboard');
+                                    }}>Launch App</Button>
+                                </div>
+
                             </li>
                             {/* </Link> */}
                             <li
@@ -276,7 +290,9 @@ const Navbar = props => {
                 </div>
                 <div className='menuIcon'>
                     <label onClick={() => setIsOpened(prev => !prev)} htmlFor='menu'>
-                        {!isOpened ? <FaBars style={{ fontSize: 22 }} /> : <FaTimes style={{ fontSize: 22 }} />}
+                        {!isOpened ?
+                            <FaBars style={{ fontSize: 22, color: theme === 'light' ? 'black' : 'white' }} /> :
+                            <FaTimes style={{ fontSize: 22, color: theme === 'light' ? 'black' : 'white' }} />}
                     </label>
                 </div>
             </div>

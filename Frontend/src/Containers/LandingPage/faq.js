@@ -86,9 +86,9 @@ const FAQ = (props) => {
                                 position: 'absolute', right: 30, top: 32, color: activeKey === result.key ?
                                     'rgba(26, 170, 186, 1)' : 'rgba(61, 69, 86, 1)'
                             }} /> :
-                                <FaChevronRight style={{
+                                <FaChevronDown style={{
                                     position: 'absolute', right: 30, top: 32, color: activeKey === result.key ?
-                                        'rgba(26, 170, 186, 1)' : 'rgba(61, 69, 86, 1)'
+                                        'white' : 'white'
                                 }} />
                             }
                         </div>

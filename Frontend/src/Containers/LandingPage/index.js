@@ -26,13 +26,16 @@ import { setUserDataSubmitSuccess } from 'Redux/Reducers/userSlice';
 import { unregisterPrep, registerPrep } from 'Redux/Reducers/prepsSlice';
 import { Modal } from 'react-bootstrap';
 import { useLogin } from 'Hooks/useLogin';
+import { fetchPeriodCountRequest } from 'Redux/Reducers/periodSlice';
 const LandingPage = (props) => {
     const {
         loginRequest,
         walletAddress,
         setLoginButtonClicked,
         width,
-        loginButtonClicked
+        loginButtonClicked,
+        periodCount,
+        fetchPeriodCount,
     } = props;
 
     const { handleLogin, walletModal, setWalletModal } = useLogin();
@@ -64,17 +67,29 @@ const LandingPage = (props) => {
             offsetBottom,
         };
     };
+    const scrollIsAtBottom = () => {
+        if ((window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
+            return true;
+        }
+        return false;
+    }
+
     useEffect(() => {
         const handleScroll = () => {
+            if (scrollIsAtBottom()) {
+                setActiveTabCenter(navbarCenterItem[navbarCenterItem.length - 1].id)
+                return;
+            }
             const { height: headerHeight } = getDimensions(headerRef.current);
             const scrollPosition = window.scrollY + headerHeight;
-            const selected = navbarCenterItem.find(({ section, ref }) => {
+            const selected = navbarCenterItem.slice().reverse().find(({ section, ref }) => {
                 const ele = ref.current;
                 if (ele) {
                     const { offsetBottom, offsetTop } = getDimensions(ele);
                     return scrollPosition > offsetTop && scrollPosition < offsetBottom;
                 }
             });
+            // console.log({selected})
             if (selected && selected.id !== activeTabCenter) {
                 setActiveTabCenter(selected.id);
             } else if (!selected && activeTabCenter) {
@@ -87,23 +102,33 @@ const LandingPage = (props) => {
             window.removeEventListener("scroll", handleScroll);
         };
     }, [activeTabCenter]);
+
+    useEffect(() => {
+        fetchPeriodCount();
+    }, []);
+
     return (
         <>
 
             <div className="landingPage" ref={targetRef} >
                 <Navbar headerRef={headerRef} {...refs} onClickLogin={handleLogin}  {...props} {...activeTabProps} />
-                <CPSDescription createProposalRef={createProposalRef} walletAddress={walletAddress} onClickLogin={handleLogin} {...activeTabProps} />
-                <Summary />
-                <BuildOn />
-                <GrantProcess grantProcessRef={grantProcessRef} {...activeTabProps} />
-                <GrantTimeline />
-                <FAQ faqRef={faqRef} {...activeTabProps} />
-                <GrantReceipent {...props} />
-                <div ref={footerRef}>
-                    <IconResource />
-                    <DeveloperCommunity />
+                <div className='landingPage__Description'>
+                    <div className='landingPage__Background'>
+
+                        <CPSDescription createProposalRef={createProposalRef} walletAddress={walletAddress} onClickLogin={handleLogin} {...activeTabProps} />
+                        <Summary />
+                    </div>
                 </div>
-                <Footer width={width} {...activeTabProps} />
+                <BuildOn {...props} />
+                <GrantProcess grantProcessRef={grantProcessRef} {...activeTabProps} />
+                <GrantTimeline {...props} />
+                <GrantReceipent {...props} />
+                <IconResource />
+                <FAQ faqRef={faqRef} {...activeTabProps} />
+                <DeveloperCommunity />
+
+                <Footer footerRef={footerRef} width={width} {...activeTabProps} />
+
                 <Modal style={{ zIndex: 99999, marginTop: 50 }} show={walletModal} onHide={() => setWalletModal(false)}>
                     <Modal.Body style={{ textAlign: 'center' }}>Please download <a target="_blank" href="https://chrome.google.com/webstore/detail/iconex/flpiciilemghbmfalicajoolhkkenfel" style={{ textDecoration: 'underline' }}>ICONex Wallet</a> or <a target="_blank" href="https://chrome.google.com/webstore/detail/hana/jfdlamikmbghhapbgfoogdffldioobgl" style={{ textDecoration: 'underline' }}>Hana Wallet</a>.</Modal.Body>
                 </Modal>
@@ -127,6 +152,8 @@ const mapStateToProps = state => ({
     email: state.user.email,
     verified: state.user.verified,
     initialPromptRedux: state.user.initialPrompt,
+    theme: state.user.theme,
+    periodCount: state.period.periodCount,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -138,6 +165,7 @@ const mapDispatchToProps = dispatch => ({
     registerPrep: () => dispatch(registerPrep()),
     setUserDataSubmitSuccess: payload =>
         dispatch(setUserDataSubmitSuccess(payload)),
+    fetchPeriodCount: () => dispatch(fetchPeriodCountRequest()),
 
 });
 

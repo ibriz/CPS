@@ -9,6 +9,7 @@ import ConfirmationModal from 'Components/UI/ConfirmationModal';
 import UserInfoFormModal from './UserInfoFormModal';
 import useTimer from 'Hooks/useTimer';
 import HeaderComponents from './HeaderComponents';
+import '../../Theme/variables.css';
 
 const Header = ({
   address,
@@ -26,7 +27,10 @@ const Header = ({
 }) => {
   return (
     <>
-      <Row className={styles.headerContainer} style={{ margin: '0px', background: "white", }}>
+      <Row
+        className={styles.headerContainer}
+        style={{ margin: '0px', background: 'var(--topbar-home-color)' }}
+      >
         {window.innerWidth <= 1200 && (
           <span className={styles.heading} style={{ marginTop: '0px' }}>
             {title}

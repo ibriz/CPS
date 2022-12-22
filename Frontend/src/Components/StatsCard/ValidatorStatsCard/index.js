@@ -2,6 +2,8 @@ import React from 'react';
 import Table from 'react-bootstrap/Table';
 import Form from 'react-bootstrap/Form';
 import prepsSlice from 'Redux/Reducers/prepsSlice';
+
+import styles from '../StatsCard.module.scss';
 const ValidatorStatsCard = ({ preps, count1, count2 }) => {
   let [prepList, setPrepList] = React.useState([]);
 
@@ -18,7 +20,7 @@ const ValidatorStatsCard = ({ preps, count1, count2 }) => {
 
   const type = 'checkbox';
   return (
-    <Table striped bordered hover>
+    <Table striped bordered hover className={styles.validatorTable}>
       <thead>
         <tr>
           <th>S.N.</th>

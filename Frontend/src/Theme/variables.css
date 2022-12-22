@@ -1,0 +1,174 @@
+/* 1 */
+:root {
+  --font-color: #333;
+  --background-color: #000;
+  --primary-color: #1aaaba;
+  --primary-text-color: white;
+
+  /* Dashboard */
+  --bg-color-1: linear-gradient(
+      0deg,
+      rgba(38, 38, 38, 0.05),
+      rgba(38, 38, 38, 0.05)
+    ),
+    #ffffff;
+  --sidebar-color: #27aab9;
+  --topbar-home-color: white;
+  --footer-bg-color: rgba(38, 38, 38, 0.1);
+  --console-color: #262626;
+  --console-bg-color: white;
+  --card-title-text-color: #262626;
+  --card-highlight-color: rgba(237, 237, 237, 0.4);
+  --card-comment-color: #545454;
+  --table-background-color: inherit;
+  --table-border-color: rgb(223, 221, 221);
+
+  --proposal-card-color: #ffffff;
+  --proposal-border-color: rgba(232, 231, 231, 0.7);
+  --proposal-text-color: #262626;
+  --proposal-text-color-2: rgba(38, 38, 38, 0.6);
+  --proposal-text-color-3: rgba(38, 38, 38, 0.85);
+  --proposal-header-text-color: #262626;
+  --proposal-card-border: 1px solid rgba(0, 0, 0, 0.125);
+  --proposal-details-title: #27aab9;
+
+  --vote-card-btn-color: #e2e6ea;
+  --vote-card-text-color: #212529;
+
+  --proposal-nav-color: rgba(38, 38, 38, 0.9);
+  --proposal-nav-hover-color: rgba(38, 38, 38, 0.9);
+
+  --pagination-background-color: #fff;
+  --searchbar-background-color: white;
+
+  --progress-color: #27aab9;
+  --pagination-active-color: #007bff;
+  --pagination-active-bg-color: white;
+  --pagination-inactive-color: black;
+  --pagination-hover-color: #e9ecef;
+
+
+  /* --pagination-active-color: #007bff;
+  --pagination-link-color: #007bff;
+  --pagination-border-color: #dee2e6; */
+
+  /* Rest */
+  --paragraph-color-1: #020808;
+  --paragraph-color-2: #586665;
+  --heading-clor-1: #07292d;
+  --link-color: #007bff;
+
+  --topbar-landing-color: white;
+  --landing-text-color: black;
+  --landing-gradient-bg: radial-gradient(108.37% 310.61% at 16.53% 26.7%, rgba(33, 33, 79, 0.3) 4.48%, rgba(30, 182, 191, 0.3) 38.5%, rgba(30, 182, 191, 0.3) 70.59%, rgba(33, 33, 79, 0.3) 100%) /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */, linear-gradient(180deg, #3F4058 0%, #177FFB 100%);
+  --landing-gradient-process: radial-gradient(146.09% 146.09% at 44.41% 118.51%, rgba(42, 33, 79, 0.7) 0%, rgba(23, 127, 251, 0.7) 48.23%, rgba(30, 182, 191, 0.7) 100%) , rgba(33, 33, 79, 0.5); 
+  --landing-gradient-description:  radial-gradient(146.09% 146.09% at 44.41% 118.51%, rgba(33, 33, 79, 0.7) 0%, rgba(23, 127, 251, 0.7) 48.23%, rgba(30, 182, 191, 0.7) 100%), rgba(33, 33, 79, 0.5);
+  --landing-bg: white;
+  --landing-heading-text-color: rgba(7, 41, 45, 1);
+  --landing-paragraph-text-color: rgba(88, 102, 101, 1);
+  --landing-descitem-text-color: #0D6BC1;
+
+
+  --landing-features-bg: radial-gradient(146.09% 146.09% at 44.41% 118.51%, rgba(33, 33, 79, 0.7) 0%, rgba(23, 127, 251, 0.7) 48.23%, rgba(30, 182, 191, 0.7) 100%) /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */, rgba(33, 33, 79, 0.5);
+
+}
+
+/* 2 */
+[data-theme='dark'] {
+  --font-color: #eee;
+  --background-color: #333;
+
+  --primary-color: #1aaaba;
+  --primary-text-color: #d2d2d2;
+
+  /* Dashboard */
+  --bg-color-1: black;
+  --sidebar-color: #1c1c1e;
+  --topbar-home-color: #2b2b2d;
+  --footer-bg-color: #393939;
+  --console-color: #c2c2c2;
+  --console-bg-color: #242425;
+  --card-title-text-color: #8c8b92;
+  --card-highlight-color: rgba(12, 12, 12, 0.4);
+  --card-comment-color: #9e9d9d;
+  --table-background-color: #242425 !important;
+  --table-border-color: #242425;
+
+  --proposal-card-color: #242425;
+  --proposal-border-color: #242425;
+  --proposal-text-color: #d2d2d2;
+  --proposal-text-color-2: #d2d2d2;
+  --proposal-text-color-3: #d2d2d2;
+  --proposal-header-text-color: #fff;
+  --proposal-card-border: none;
+  --proposal-details-title: #2B2B2D;;
+
+  --vote-card-btn-color: #2b2b2d;
+  --vote-card-text-color: white;
+
+  --proposal-nav-color: #8c8b92;
+  --proposal-nav-hover-color: white;
+
+  --pagination-background-color: #242425;
+  --searchbar-background-color: black;
+
+  --progress-color: #2ce977;
+
+  /* --pagination-active-color: white;
+  --pagination-link-color: #b3b4b4;
+  --pagination-border-color: grey; */
+
+  /* Rest */
+  --pagination-active-color: white;
+  --pagination-active-bg-color: #242425;
+  --pagination-inactive-color: grey;
+  --pagination-hover-color: #383838;
+
+  --paragraph-color-1: #020808;
+  --paragraph-color-2: #586665;
+  --heading-clor-1: #07292d;
+  --link-color: #007bff;
+
+  --topbar-landing-color: #1c1c1e;
+  --landing-text-color: white;
+  --landing-gradient-bg: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), radial-gradient(108.37% 310.61% at 16.53% 26.7%, rgba(33, 33, 79, 0.3) 4.48%, rgba(30, 182, 191, 0.3) 38.5%, rgba(30, 182, 191, 0.3) 70.59%, rgba(33, 33, 79, 0.3) 100%) /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */, linear-gradient(180deg, #3F4058 0%, #177FFB 100%);
+  --landing-gradient-process: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), radial-gradient(146.09% 146.09% at 44.41% 118.51%, rgba(33, 33, 79, 0.7) 0%, rgba(23, 127, 251, 0.7) 48.23%, rgba(30, 182, 191, 0.7) 100%) /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */, rgba(33, 33, 79, 0.5);
+  --landing-gradient-description: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), radial-gradient(146.09% 146.09% at 44.41% 118.51%, rgba(33, 33, 79, 0.7) 0%, rgba(23, 127, 251, 0.7) 48.23%, rgba(30, 182, 191, 0.7) 100%) /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */, rgba(33, 33, 79, 0.5);
+  --landing-bg: #242425;
+  --landing-heading-text-color:white;
+  --landing-paragraph-text-color: white;
+  --landing-descitem-text-color: white;
+
+  --landing-features-bg: #2A2C2E;
+  
+}
+
+
+
+/* Pagination selectors */
+.page-item .page-link {
+  position: relative;
+  display: block;
+  color: var(--pagination-inactive-color);
+  text-decoration: none;
+  border: none;
+
+
+}
+
+.page-item .page-link:hover {
+  position: relative;
+  display: block;
+  color: var(--pagination-active-color) !important;
+  background-color: var(--pagination-hover-color) !important;
+  text-decoration: none;
+  border: none;
+}
+
+.page-item.active .page-link {
+  font-weight: bold;
+  background-color: var(--pagination-active-bg-color) !important;
+  color: var(--pagination-active-color) !important;
+  font-size: 16px;
+  margin-top: -2px;
+}

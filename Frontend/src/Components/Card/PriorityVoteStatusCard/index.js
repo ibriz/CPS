@@ -9,6 +9,7 @@ const PriorityVoteStatusCard = ({
   emptyListMessage,
   minHeight = '100px',
 }) => {
+  const isDarkTheme = localStorage.getItem('theme') === 'dark';
   return (
     <Container
       fluid
@@ -33,7 +34,7 @@ const PriorityVoteStatusCard = ({
           fontStyle: 'normal',
           paddingBottom: '16px',
           wordWrap: 'break-word',
-          color: '#262626',
+          color: !isDarkTheme ? '#262626' : 'white',
           textDecoration: 'underline',
         }}
       >

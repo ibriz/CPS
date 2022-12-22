@@ -6,7 +6,7 @@
   cursor: pointer;
   // padding: 12px !important;
   // border-bottom: 1px solid rgba(38, 38, 38, 0.1);
-  background-color: white;
+  background-color: var(--proposal-card-color);
   margin-left: 0px !important;
   margin-right: 0px !important;
   padding: 24px !important;
@@ -17,7 +17,11 @@
   font-weight: normal;
   font-size: 9px;
   line-height: 15px;
-  color: rgba(38, 38, 38, 0.6);
+  color: var(--proposal-text-color);
+}
+
+.proposalInfo2 {
+  color: var(--proposal-text-color);
 }
 
 .budget {
@@ -25,7 +29,7 @@
   font-weight: 600;
   font-size: 9px;
   line-height: 15px;
-  color: rgba(38, 38, 38, 0.6);
+  color: var(--proposal-text-color);
 }
 
 .info {

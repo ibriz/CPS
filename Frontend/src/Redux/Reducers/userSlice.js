@@ -9,6 +9,7 @@ const initialState = {
   verified: false,
   userDataSubmitSuccess: false,
   initialPrompt: false,
+  theme: 'light',
 };
 
 const userSlice = createSlice({
@@ -67,6 +68,10 @@ const userSlice = createSlice({
     disableUserPromptRequest(state, action) {},
     disableUserPromptSuccess(state, action) {},
     disableUserPromptFailure(state, action) {},
+
+    setThemeRequest(state, action) {
+      state.theme = action.payload;
+    },
   },
   extraReducers: {
     'account/logout': (state, action) => {
@@ -96,5 +101,6 @@ export const {
   disableUserPromptRequest,
   disableUserPromptSuccess,
   disableUserPromptFailure,
+  setThemeRequest,
 } = userSlice.actions;
 export default userSlice.reducer;

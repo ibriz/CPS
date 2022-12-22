@@ -1,3 +1,4 @@
+@import '../../../../Theme/variables.css';
 .proposalContainer {
   align-items: center;
   padding-top: 5px;
@@ -12,7 +13,7 @@
   font-weight: normal;
   font-size: 9px;
   line-height: 15px;
-  color: rgba(38, 38, 38, 0.6);
+  color: var(--proposal-text-color-2);
 }
 
 .budget {
@@ -20,7 +21,7 @@
   font-weight: 600;
   font-size: 9px;
   line-height: 15px;
-  color: rgba(38, 38, 38, 0.6);
+  color: var(--proposal-text-color-2);
 }
 
 .info {

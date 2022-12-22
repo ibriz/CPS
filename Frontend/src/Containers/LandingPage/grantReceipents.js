@@ -148,13 +148,14 @@ const GrantReceipent = (props) => {
             setActiveKey(key);
         }
     };
+    const isDarkTheme = localStorage.getItem('theme') === 'dark';
 
     const getSlideToShow = () => {
         if (width > 769) {
-            return 3;
+            return 5;
         }
         else if (width > 567) {
-            return 2;
+            return 3;
         }
         else {
             return 1;
@@ -178,7 +179,7 @@ const GrantReceipent = (props) => {
 
     return (<div className="landingPage__GrantReceipent">
         <h1>CPS Grant Recipients</h1>
-        <Slider  {...settings} style={{ backgroundColor: 'rgba(243, 251, 255, 1)', maxWidth: 900, padding: '0px 10px 50px 10px' }}>
+        <Slider  {...settings} style={{ backgroundColor: isDarkTheme? '#242425': 'rgba(243, 251, 255, 1)', padding: '0px 10px 50px 10px' }}>
             {grantReceipentList.filter((result) => result.disabled == undefined).map((result, index) => {
                 return <div className="receipentCard" key={index}>
                     <img src={result.image} className={result.className} />

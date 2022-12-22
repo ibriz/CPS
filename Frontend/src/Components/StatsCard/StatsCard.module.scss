@@ -1,5 +1,14 @@
 .cardBody {
   padding: 10px;
+  background-color: var(--proposal-card-color);
+}
+
+.validatorTable {
+  color: var(--proposal-text-color) !important;
+
+  :hover {
+    color: var(--proposal-text-color) !important;
+  }
 }
 
 .proposalCard {
@@ -23,4 +32,7 @@
 
 .refreshButton {
   margin-bottom: 20px;
+}
+.card {
+  border: var(--proposal-card-border) !important;
 }

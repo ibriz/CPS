@@ -169,7 +169,7 @@ const ActiveProposalsCard = ({
     <>
       <Row className={styles.proposalCard}>
         <Col>
-          <Card>
+          <Card className={styles.card}>
             <Card.Body className={styles.cardBody}>
               <TabBar
                 selectedTab={selectedTab}

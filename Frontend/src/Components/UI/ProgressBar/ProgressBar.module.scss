@@ -3,4 +3,8 @@
   width: 100%;
   max-width: 250px;
   border: 0.5px solid darkgrey;
+
+  :first-child {
+    background-color: var(--progress-color) !important;
+  }
 }

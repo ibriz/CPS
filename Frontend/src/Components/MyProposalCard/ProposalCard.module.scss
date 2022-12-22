@@ -1,3 +1,4 @@
+@import '../../Theme/variables.css';
 .proposalCard {
   margin-top: 10px;
 }
@@ -9,10 +10,19 @@
   }
 }
 
+.cardBody {
+  background-color: var(--proposal-card-color);
+  color: var(--proposal-text-color);
+}
+
 .myProposalHeading {
   display: flex;
   justify-content: center;
   color: #262626;
   font-size: 40px;
   font-weight: 550;
+}
+
+.card {
+  border: var(--proposal-card-border) !important;
 }

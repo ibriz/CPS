@@ -1,3 +1,4 @@
+@import '../../Theme/variables.css';
 .infoCardContainer {
   // padding-left: 7px !important;
   // padding-right: 7px !important;
@@ -7,7 +8,7 @@
 .myProposalHeading {
   display: flex;
   justify-content: center;
-  color: #262626;
+  color: var(--card-title-text-color);
   font-size: 30px;
   font-weight: 550;
   margin-top: 10px;
@@ -15,7 +16,7 @@
 
 .period {
   text-align: center;
-  color: #262626;
+  color: var(--card-title-text-color);
   font-weight: 600;
   font-size: 1.15rem;
 }

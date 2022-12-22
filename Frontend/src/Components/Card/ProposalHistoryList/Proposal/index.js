@@ -64,7 +64,7 @@ const Proposal = ({
                 mapping => mapping.status === proposal._status,
               ).name !== 'Draft' && (
                 <>
-                  <LowerCardInfo className={'proposalInfo2'}>
+                  <LowerCardInfo className={styles.proposalInfo}>
                     Submitted on:{' '}
                     {new Date(
                       (Number(proposal._sponsored_timestamp) !== 0

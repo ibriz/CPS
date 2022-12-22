@@ -22,6 +22,7 @@ const NavBarInputGroup = ({
         aria-label="Recipient's username"
         aria-describedby='basic-addon2'
         type='search'
+        className={styles.formControl}
       />
       <InputGroup.Append className={styles.inputGroupAppend}>
         <InputGroup.Text>

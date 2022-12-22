@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 const MilestoneTable = ({ milestones, title = 'Milestones' }) => {
   const TableHeader = styled.th`
-    background: #27AAB9 !important;
+    background: #27aab9 !important;
     font-style: normal;
     font-weight: 600;
     font-size: 14px;
@@ -19,7 +19,7 @@ const MilestoneTable = ({ milestones, title = 'Milestones' }) => {
     font-weight: 600;
     font-size: 14px;
     line-height: 17px;
-    color: rgba(38, 38, 38, 0.9);
+    color: var(--proposal-nav-color);
   `;
 
   const Value = styled.div`
@@ -27,7 +27,7 @@ const MilestoneTable = ({ milestones, title = 'Milestones' }) => {
     font-weight: normal;
     font-size: 14px;
     line-height: 17px;
-    color: rgba(38, 38, 38, 0.9);
+    color: var(--proposal-nav-color);
   `;
 
   return (

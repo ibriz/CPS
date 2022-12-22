@@ -59,9 +59,7 @@ a:first-child > span.socialLink {
     padding-bottom: 60px;
   }
 
-  .footerColumn {
-    padding-left: 95px !important;
-  }
+ 
 
   .links {
     padding-left: 150px !important;
@@ -79,11 +77,11 @@ a:first-child > span.socialLink {
   }
 
   .footerColumnConsole {
-    padding-left: 95px !important;
+    padding-left: 20px !important;
   }
 
   .linksConsole {
-    padding-left: 150px !important;
+    padding-left: 50px !important;
   }
 
   .socialColumn {
@@ -95,5 +93,15 @@ a:first-child > span.socialLink {
   .firstRow,
   .firstRowConsole {
     padding-top: 20px !important;
+  }
+
+  .footerColumnConsole {
+    text-align: center !important;
+    padding-bottom: 20px !important;
+  }
+
+  .footerColumn {
+    // padding-left: 95px !important;
+    padding-left: 0px !important;
   }
 }

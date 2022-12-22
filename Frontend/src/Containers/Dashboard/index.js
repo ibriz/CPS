@@ -88,6 +88,7 @@ const Dashboard = ({
   } = useTimer();
 
   let cardInfo;
+  const isDarkTheme = localStorage.getItem('theme') === 'dark';
 
   const getSponsorBondRewardText = amount => {
     if (parseFloat(amount.icx) > 0 && parseFloat(amount.bnUSD) > 0) {
@@ -114,10 +115,12 @@ const Dashboard = ({
     }
   };
 
+  const cardTextColor = isDarkTheme ? '#D2D2D2' : '#27AAB9';
+
   if (!isPrep || !isRegistered) {
     cardInfo = [
       {
-        color: '#27AAB9',
+        color: cardTextColor,
         title: 'My Voting Proposals',
         // value={`${projectAmounts.Voting.count} (${icxFormat(projectAmounts.Voting.amount)} ICX)`}
         value: myProposalList.filter(
@@ -125,7 +128,7 @@ const Dashboard = ({
         ).length,
       },
       {
-        color: '#27AAB9',
+        color: cardTextColor,
         title: 'My Approved Proposals',
         // value={`${projectAmounts.Active.count + projectAmounts.Paused.count} (${icxFormat(projectAmounts.Active.amount + projectAmounts.Paused.amount)} ICX)`} />
         value: myProposalList.filter(proposal =>
@@ -133,7 +136,7 @@ const Dashboard = ({
         ).length,
       },
       {
-        color: '#27AAB9',
+        color: cardTextColor,
         title: `Next Disbursement in ${highestSignificantTimeForGrant.value} ${highestSignificantTimeForGrant.text}`,
         // value={`${icxFormat(cpfRemainingFunds, true)} ICX`}
         value: getIcxbnUSDAmount(expectedGrant),
@@ -142,7 +145,7 @@ const Dashboard = ({
         title: `Remaining Time in ${
           period !== 'VOTING' ? 'Application Period' : 'Voting Period'
         }`,
-        color: '#27AAB9',
+        color: cardTextColor,
         // value={period === "APPLICATION" ? 'Application Period' : 'Voting Period'} />
         value: `${highestSignificantTime.value} ${highestSignificantTime.text}`,
       },
@@ -150,7 +153,7 @@ const Dashboard = ({
   } else {
     cardInfo = [
       {
-        color: '#27AAB9',
+        color: cardTextColor,
         title: 'My Voting Proposals',
         // value={`${projectAmounts.Voting.count} (${icxFormat(projectAmounts.Voting.amount)} ICX)`}
         value: myProposalList.filter(
@@ -158,7 +161,7 @@ const Dashboard = ({
         ).length,
       },
       {
-        color: '#27AAB9',
+        color: cardTextColor,
         title: 'My Approved Proposals',
         // value={`${projectAmounts.Active.count + projectAmounts.Paused.count} (${icxFormat(projectAmounts.Active.amount + projectAmounts.Paused.amount)} ICX)`} />
         value: myProposalList.filter(proposal =>
@@ -166,7 +169,7 @@ const Dashboard = ({
         ).length,
       },
       {
-        color: '#27AAB9',
+        color: cardTextColor,
         title:
           period === 'APPLICATION'
             ? 'Remaining Sponsor Requests'
@@ -183,32 +186,32 @@ const Dashboard = ({
         title: `Remaining Time in ${
           period !== 'VOTING' ? 'Application Period' : 'Voting Period'
         }`,
-        color: '#27AAB9',
+        color: cardTextColor,
         // value={period === "APPLICATION" ? 'Application Period' : 'Voting Period'} />
         value: ` ${highestSignificantTime.value} ${highestSignificantTime.text}`,
       },
       {
-        color: '#27AAB9',
+        color: cardTextColor,
         title: 'My Sponsor Bond',
         // value={`${projectAmounts.Active.count + projectAmounts.Paused.count} (${icxFormat(projectAmounts.Active.amount + projectAmounts.Paused.amount)} ICX)`} />
         value: getIcxbnUSDAmount(sponsorDepositAmount),
         hoverText: 'Only active projects are counted',
       },
       {
-        color: '#27AAB9',
+        color: cardTextColor,
         title: `Next Sponsor Reward in  ${highestSignificantTimeForGrant.value} ${highestSignificantTimeForGrant.text}`,
         // value={`${icxFormat(cpfRemainingFunds, true)} ICX`}
         value: getIcxbnUSDAmount(sponsorReward),
       },
       {
-        color: '#27AAB9',
+        color: cardTextColor,
         title: `Next Disbursement in ${highestSignificantTimeForGrant.value} ${highestSignificantTimeForGrant.text}`,
         // value={`${icxFormat(cpfRemainingFunds, true)} ICX`}
         value: getIcxbnUSDAmount(expectedGrant),
       },
 
       // {
-      //     color: '#27AAB9',
+      //     color: cardTextColor,
       //     title: `Total Disbursement Due in ${highestSignificantTimeForGrant.value} ${highestSignificantTimeForGrant.text}`,
       //     // value={`${icxFormat(cpfRemainingFunds, true)} ICX`}
       //     value: `${icxFormat(parseFloat(expectedGrant) + parseFloat(sponsorReward), true)} ICX`
@@ -504,12 +507,13 @@ const Dashboard = ({
             className={styles.infoCardContainer}
           >
             <InfoCard
-              bg='light'
+              bg={isDarkTheme ? 'dark' : 'light'}
               color={info.color}
               title={info.title}
               // value={`${ projectAmounts.Voting.count } (${ icxFormat(projectAmounts.Voting.amount) } ICX)`}
               value={info.value}
               hoverText={info.hoverText}
+              border={!isDarkTheme}
             />
           </Col>
         ))}

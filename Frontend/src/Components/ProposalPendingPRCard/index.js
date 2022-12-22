@@ -126,7 +126,7 @@ const ProposalPendingPRCard = ({
     <>
       <Row className={styles.proposalCard}>
         <Col>
-          <Card>
+          <Card className={styles.card}>
             <Card.Body className={styles.cardBody}>
               {/* <div className = {styles.myProposalHeading}>My Proposals</div> */}
 

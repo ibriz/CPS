@@ -8,12 +8,20 @@
 
   input {
     font-size: 0.8rem;
-    border-color: rgba(38, 38, 38, 0.8) !important;
-    color: rgba(38, 38, 38, 1) !important;
+    border-color: var(--proposal-text-color-3) !important;
+    color: var(--proposal-text-color-3) !important;
+  }
+
+  :first-child {
+    background-color: var(--searchbar-background-color);
+  }
+
+  :first-child:focus {
+    background-color: var(--searchbar-background-color);
   }
 
   input::placeholder {
-    color: rgba(38, 38, 38, 0.75) !important;
+    color: var(--proposal-text-color-3) !important;
   }
 }
 
@@ -23,12 +31,20 @@
   }
 }
 
+.formControl {
+  background-color: var(--proposal-card-color);
+
+  :focus {
+    background-color: var(--searchbar-background-color);
+  }
+}
+
 .inputGroupAppend {
   font-size: 20px;
   display: flex;
   align-items: center;
   // margin-left: 2px !important;
-  color: rgba(38, 38, 38, 0.8);
+  color: var(--proposal-text-color-3);
 
   span {
     height: 100%;
