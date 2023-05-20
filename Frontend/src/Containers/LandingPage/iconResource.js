@@ -14,13 +14,14 @@ const IconResource = (props) => {
             <a target="_blank" href="https://www.icondev.io/">
                 <img src={iconDevPortalImg} />
             </a>
+            {/* 
             <a target="_blank" href="https://docs.opendevicon.io/">
                 <img src={iconDevIconImg} />
             </a>
             <a target="_blank" href="https://tsf.opendevicon.io/">
                 <img src={tokenScoreFactoryImg} />
             </a>
-            {/* <a target="_blank" href="https://iconweb.studio/">
+            <a target="_blank" href="https://iconweb.studio/">
                 <img src={iconWebStudioImg} />
             </a> */}
         </div>
