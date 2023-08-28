@@ -88,6 +88,7 @@ const UserInfoFormModal = ({
       size='lg'
       aria-labelledby='contained-modal-title-vcenter'
       centered
+      className='customModal'
     >
       <Modal.Header closeButton>
         <Modal.Title
