@@ -3,6 +3,7 @@ import CKEditor from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import ImageUploadAdapter from '../../Helpers/ImageUploadAdapter';
 import { TiTick } from 'react-icons/ti';
+import editorCss from './editorCss.css';
 import { ImCross } from 'react-icons/im';
 
 export function modelElementToPlainText(element) {
@@ -92,11 +93,13 @@ const RichTextEditor = ({
           console.log('Focus.', editor);
         }}
         config={{
+          allowedContent: true,
           plugins: [...ClassicEditor.builtinPlugins, ImageUploadAdapter],
           simpleUpload: {
             // The URL that the images are uploaded to.
             uploadUrl: 'http://13.212.13.194:3000/api/image/upload',
           },
+          contentCss: { editorCss },
         }}
       />
       {minimumNumberOfWords && (

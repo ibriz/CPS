@@ -44,7 +44,7 @@ const ActiveProposalsCard = ({
   const proposalIpfsKey = useParams().id;
   const location = useLocation();
   const onClickProposal = proposal => {
-    console.log('Here', { proposal });
+    // console.log('Here', { proposal });
     setModalShow(true);
     setSelectedProposal(proposal);
     if (location.pathname !== '/') {
@@ -230,7 +230,7 @@ const ActiveProposalsCard = ({
 };
 
 const mapStateToProps = state => {
-  console.log(state);
+  // console.log(state);
   return {
     proposalList: state.proposals.proposalList,
     walletAddress: state.account.address,

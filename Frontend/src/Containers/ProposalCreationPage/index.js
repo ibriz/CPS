@@ -729,7 +729,7 @@ const ProposalCreationPage = ({
               </Form.Label>
               <Col sm='12'>
                 <Button
-                  variant='light'
+                  variant='dark'
                   onClick={() => setModalShow(true)}
                   style={{ position: 'relative' }}
                 >

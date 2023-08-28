@@ -36,7 +36,7 @@ import {
   emptyProgressReportDetailRequest,
   fetchProgressReportByProposalRequest,
 } from 'Redux/Reducers/progressReportSlice';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import ProgressReportList from 'Components/Card/ProgressReportList';
 import {
   proposalStatusMapping,
@@ -127,6 +127,8 @@ const sponsorNote = (
 const isDarkTheme = localStorage.getItem('theme') === 'dark';
 
 function ProposalDetailsPage(props) {
+  // const isDark = useSelector(state => state.theme.isDark);
+  // console.log({ isDark });
   const voteOptions = [
     { title: 'Approve', bgColor: 'success' },
     { title: 'Reject', bgColor: 'danger' },
@@ -237,7 +239,6 @@ function ProposalDetailsPage(props) {
   useEffect(() => {
     fetchMaintenanceModeRequest();
   }, [fetchMaintenanceModeRequest]);
-
   useEffect(() => {
     console.log(
       'sponorRequest',
@@ -448,10 +449,10 @@ function ProposalDetailsPage(props) {
         !ipfsError && (
           <>
             <BackButton onClick={history.goBack}></BackButton>
-            <Container fluid className={styles.modalHeader}>
-              <Container fluid className={styles.container}>
-                <Row>
-                  <Col sm='12'>
+            <Container className={styles.modalHeader}>
+              <Container className={styles.container}>
+                <Row xs='12'>
+                  <Col>
                     <Header>
                       {(proposalDetail && proposalDetail.projectName) || 'N/A'}
                     </Header>
@@ -475,10 +476,23 @@ function ProposalDetailsPage(props) {
                 </Row>
               </Container>
 
-              <Container fluid className={styles.modalBody}>
-                <Row>
-                  <Col style={{ padding: '0px', wordBreak: 'break-word' }}>
-                    <Col className={styles.description}>
+              <Container className={styles.modalBody}>
+                <div
+                  className=' d-flex flex-column flex-xl-row '
+                  style={{
+                    width: '100%',
+                    gap: '16px',
+                  }}
+                >
+                  <div
+                    className='col-12 col-xl-8 order-xl-1 order-2'
+                    style={{
+                      width: '100%',
+                      padding: '0px',
+                      wordBreak: 'break-word',
+                    }}
+                  >
+                    <div className={`${styles.description}`}>
                       {/* <div dangerouslySetInnerHTML={{ __html: description }} /> */}
                       <Description
                         description={
@@ -495,7 +509,7 @@ function ProposalDetailsPage(props) {
                           title='Message from Sponsor'
                         />
                       )}
-                    </Col>
+                    </div>
 
                     {status === 'Voting' && (
                       <Row>
@@ -570,23 +584,23 @@ function ProposalDetailsPage(props) {
                                   variant={
                                     sponsorVote === sponsorVoteOption.title
                                       ? sponsorVoteOption.bgColor
-                                      : 'light'
+                                      : 'dark'
                                   }
                                   onClick={() =>
                                     setSponsorVote(sponsorVoteOption.title)
                                   }
-                                  style={
-                                    isDarkTheme
-                                      ? {
-                                          border: '1px solid rgba(0,0,0,0.7)',
-                                          backgroundColor:
-                                            'var(--vote-card-btn-color)',
-                                          color: 'var(--vote-card-text-color)',
-                                        }
-                                      : {
-                                          border: '1px solid rgba(0,0,0,0.7)',
-                                        }
-                                  }
+                                  // style={
+                                  //   isDarkTheme
+                                  //     ? {
+                                  //         border: '1px solid rgba(0,0,0,0.7)',
+                                  //         backgroundColor:
+                                  //           'var(--vote-card-btn-color)',
+                                  //         color: 'var(--vote-card-text-color)',
+                                  //       }
+                                  //     : {
+                                  //         border: '1px solid rgba(0,0,0,0.7)',
+                                  //       }
+                                  // }
                                 >
                                   {sponsorVoteOption.title}
                                 </Button>
@@ -620,6 +634,7 @@ function ProposalDetailsPage(props) {
                                 required
                                 initialData={sponsorVoteReason}
                                 onChange={data => setSponsorVoteReason(data)}
+                                // onChange={e => console.log(e)}
                               />
                               <input
                                 className={styles.fakeInput}
@@ -647,18 +662,18 @@ function ProposalDetailsPage(props) {
                           </Row>
 
                           {/* <Row style={{ justifyContent: 'center' }}>
-            <Button variant="success" onClick={onClickApproveSponsorRequest}
-            onClick={() => {
-                setSponsorConfirmationShow(true);
-                setSponsorVote('approve')
-            }}>Accept</Button>
-            <Button variant="danger" className={styles.rejectButton} onClick={onClickRejectSponsorRequest}
-            onClick={() => {
-              setSponsorConfirmationShow(true);
-              setSponsorVote('reject')
-            }}>Deny</Button>
-              
-          </Row> */}
+                            <Button variant="success" onClick={onClickApproveSponsorRequest}
+                            onClick={() => {
+                                setSponsorConfirmationShow(true);
+                                setSponsorVote('approve')
+                            }}>Accept</Button>
+                            <Button variant="danger" className={styles.rejectButton} onClick={onClickRejectSponsorRequest}
+                            onClick={() => {
+                              setSponsorConfirmationShow(true);
+                              setSponsorVote('reject')
+                            }}>Deny</Button>
+                              
+                          </Row> */}
                         </Container>
                       ))}
 
@@ -705,24 +720,21 @@ function ProposalDetailsPage(props) {
                                       variant={
                                         vote === voteOption.title
                                           ? voteOption.bgColor
+                                          : isDarkTheme
+                                          ? 'dark'
                                           : 'light'
                                       }
                                       onClick={() => setVote(voteOption.title)}
-                                      style={
-                                        isDarkTheme
-                                          ? {
-                                              border:
-                                                '1px solid rgba(0,0,0,0.7)',
-                                              backgroundColor:
-                                                'var(--vote-card-btn-color)',
-                                              color:
-                                                'var(--vote-card-text-color)',
-                                            }
-                                          : {
-                                              border:
-                                                '1px solid rgba(0,0,0,0.7)',
-                                            }
-                                      }
+                                      // style={
+                                      //   isDarkTheme
+                                      //     ? {
+                                      //         border:
+                                      //           '1px solid rgba(0,0,0,0.7)',
+                                      //       }
+                                      //     : {
+                                      //         border: '1px solid grey)',
+                                      //       }
+                                      // }
                                     >
                                       {voteOption.title}
                                     </Button>
@@ -945,12 +957,15 @@ function ProposalDetailsPage(props) {
                       Are you sure you want to {vote.toLowerCase()} the
                       proposal?
                     </ConfirmationModal>
-                  </Col>
+                  </div>
 
                   {/* <Col lg="4" className = "d-none d-lg-block"> */}
-                  <Col style={{ maxWidth: '360px', minWidth: '260px' }}>
-                    <Col
-                      xs='12'
+                  <div
+                    className='d-flex flex-column flex-md-row flex-xl-column order-xl-2 order-1'
+                    style={{ height: 'fit-content', gap: '12px' }}
+                  >
+                    <div
+                      className='col-xl-12 col-md-6 col-12'
                       style={{
                         paddingLeft: '0px',
                         paddingRight: '0px',
@@ -1169,12 +1184,13 @@ function ProposalDetailsPage(props) {
                             : []),
                         ]}
                       />
-                    </Col>
+                    </div>
 
                     {proposalDetail?.milestones?.length > 0 && (
-                      <Col
-                        xs='12'
+                      <div
+                        className='col-xl-12 col-md-6 col-12'
                         style={{
+                          height: 'fit-content',
                           paddingLeft: '0px',
                           paddingRight: '0px',
                           padding: '12px',
@@ -1187,18 +1203,15 @@ function ProposalDetailsPage(props) {
                     paddingLeft: '0px',
                     paddingRight: '0px'
                 }} /> */}
-                        <Row>
-                          <Col>
-                            <ListTitle>MILESTONES</ListTitle>
-                            <MilestonesTimeline
-                              milestones={proposalDetail?.milestones}
-                            />
-                          </Col>
-                        </Row>
-                      </Col>
+
+                        <ListTitle>MILESTONES</ListTitle>
+                        <MilestonesTimeline
+                          milestones={proposalDetail?.milestones}
+                        />
+                      </div>
                     )}
-                  </Col>
-                </Row>
+                  </div>
+                </div>
 
                 {/* <Row>
                   <Col>

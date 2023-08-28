@@ -151,8 +151,9 @@ export default event => {
       switch (payload.id) {
         case submit_proposal:
           console.log('history');
-          history.push('/proposals');
-          history.push('/proposals');
+          history.push('/dashboard');
+          history.push('/dashboard');
+          // history.push('/proposals');
           history.goBack();
           history.goForward();
 
@@ -181,8 +182,8 @@ export default event => {
 
         case submit_progress_report:
           console.log('history');
-          history.push('/progress-reports');
-          history.push('/progress-reports');
+          history.push('/voting');
+          history.push('/voting');
           history.goBack();
           history.goForward();
           getResult(
@@ -550,6 +551,17 @@ export default event => {
 
           // window.location.reload();
           NotificationManager.info('Reward Claim Request Sent');
+          break;
+
+        case claim_sponsor_bond:
+          getResult({
+            txHash: payload.result,
+            failureMessage: 'Sponsor Bond Claim Failed',
+            successMessage: 'Sponsor Bond Claimed Successfully',
+          });
+
+          // window.location.reload();
+          NotificationManager.info('Sponsor bond claimed successfully');
           break;
 
         case votePriority:

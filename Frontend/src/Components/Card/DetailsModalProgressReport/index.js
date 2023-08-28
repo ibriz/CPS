@@ -74,14 +74,16 @@ const LoadingDiv = styled.div`
 `;
 
 function DetailsModal(props) {
-  const voteOptions = [{ title: 'Approve', bgColor: 'success' }, { title: 'Reject', bgColor: 'danger' }];
+  const voteOptions = [
+    { title: 'Approve', bgColor: 'success' },
+    { title: 'Reject', bgColor: 'danger' },
+  ];
   const [vote, setVote] = useState('');
   const [voteProjectTermRevision, setVoteProjectTermRevision] = useState();
 
   const [voteReason, setVoteReason] = useState('');
-  const [sponsorConfirmationShow, setSponsorConfirmationShow] = React.useState(
-    false,
-  );
+  const [sponsorConfirmationShow, setSponsorConfirmationShow] =
+    React.useState(false);
   const [sponsorVote, setSponsorVote] = useState('');
   const [description, setDescription] = useState(null);
   const [revisionDescription, setRevisionDescription] = useState(null);
@@ -122,8 +124,8 @@ function DetailsModal(props) {
     changeVote,
     fetchChangeVoteRequest,
     votingPRep,
-		isMaintenanceMode,
-		fetchMaintenanceModeRequest,
+    isMaintenanceMode,
+    fetchMaintenanceModeRequest,
     ...remainingProps
   } = props;
 
@@ -132,20 +134,20 @@ function DetailsModal(props) {
   )?.name;
 
   useEffect(() => {
-    console.log(
-      'voteReason',
-      voting &&
-      period === 'VOTING' &&
-      remainingTime > 0 &&
-      !votesByProposal.some(vote => vote.sponsorAddress === walletAddress),
-    );
+    // console.log(
+    //   'voteReason',
+    //   voting &&
+    //     period === 'VOTING' &&
+    //     remainingTime > 0 &&
+    //     !votesByProposal.some(vote => vote.sponsorAddress === walletAddress),
+    // );
     if (
       voting &&
       period === 'VOTING' &&
       remainingTime > 0 &&
       !votesByProposal.some(vote => vote.sponsorAddress === walletAddress)
     ) {
-      console.log('voteReasonhere', document.getElementById('voteReason'));
+      // console.log('voteReasonhere', document.getElementById('voteReason'));
       if (!voteReason) {
         document.getElementById('voteReason') &&
           document
@@ -204,7 +206,7 @@ function DetailsModal(props) {
     setRevisionDescription(description);
   }, [progressDetail?.revisionDescription]);
 
-	useEffect(() => {
+  useEffect(() => {
     fetchMaintenanceModeRequest();
   }, [fetchMaintenanceModeRequest]);
 
@@ -222,8 +224,12 @@ function DetailsModal(props) {
   }, [props.progressReport, props.show]);
 
   useEffect(() => {
-    props.progressReport && fetchChangeVoteRequest({ ipfs_key: props.progressReport.ipfsHash, address: walletAddress })
-  }, [props.progressReport])
+    props.progressReport &&
+      fetchChangeVoteRequest({
+        ipfs_key: props.progressReport.ipfsHash,
+        address: walletAddress,
+      });
+  }, [props.progressReport]);
 
   const onSubmitVote = () => {
     voteProgressReport({
@@ -234,7 +240,7 @@ function DetailsModal(props) {
         : null,
       proposalKey: progressReport.proposalKey,
       reportKey: progressReport.reportKey,
-      vote_change: changeVoteButton ? "1" : "0"
+      vote_change: changeVoteButton ? '1' : '0',
     });
   };
 
@@ -253,14 +259,13 @@ function DetailsModal(props) {
     // props.onHide();
   };
 
-
   useEffect(() => {
     if (ipfsError) {
       setLoading(false);
       props.onHide();
-      NotificationManager.error("Error fetching ipfs data");
+      NotificationManager.error('Error fetching ipfs data');
     }
-  }, [ipfsError])
+  }, [ipfsError]);
 
   return (
     <Modal
@@ -274,265 +279,240 @@ function DetailsModal(props) {
           <Spinner animation='border' variant='secondary' />
         </LoadingDiv>
       ) : (
-        !ipfsError && <>
-          <Modal.Header closeButton className={styles.modalHeader}>
-            <Container fluid className={styles.container}>
-              <Row>
-                <Col sm='12'>
-                  <Header>
-                    {(progressDetail && progressDetail.progressReportTitle) ||
-                      'N/A'}
-                  </Header>
-                </Col>
-              </Row>
-              <Row>
-                <Col sm='12'>
-                  <Address>
-                    Project Name- {progressReport?.projectTitle || 'N/A'}
-                  </Address>
-                </Col>
-              </Row>
-              <Row style={{ alignItems: 'center' }}>
-                <Col lg='1' xs='12'>
-                  <Badge
-                    variant={
-                      progressReportStatusMapping.find(mapping => {
-                        return mapping.name === status;
-                      })?.badgeColor
-                    }
-                  >
-                    {status}
-                  </Badge>{' '}
-                </Col>
+        !ipfsError && (
+          <>
+            <Modal.Header closeButton className={styles.modalHeader}>
+              <Container fluid className={styles.container}>
+                <Row>
+                  <Col sm='12'>
+                    <Header>
+                      {(progressDetail && progressDetail.progressReportTitle) ||
+                        'N/A'}
+                    </Header>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col sm='12'>
+                    <Address>
+                      Project Name- {progressReport?.projectTitle || 'N/A'}
+                    </Address>
+                  </Col>
+                </Row>
+                <Row style={{ alignItems: 'center' }}>
+                  <Col lg='1' xs='12'>
+                    <Badge
+                      variant={
+                        progressReportStatusMapping.find(mapping => {
+                          return mapping.name === status;
+                        })?.badgeColor
+                      }
+                    >
+                      {status}
+                    </Badge>{' '}
+                  </Col>
 
-                {(selectedTab => {
-                  // console.log(props.selectedTab);
-                  // if (['Active', 'Paused'].includes(props.status))
-                  //   return (
-                  //     <>
-                  //       <Col lg="3" xs="12">
+                  {(selectedTab => {
+                    // console.log(props.selectedTab);
+                    // if (['Active', 'Paused'].includes(props.status))
+                    //   return (
+                    //     <>
+                    //       <Col lg="3" xs="12">
 
-                  //         <ProgressBar />
-                  //       </Col>
+                    //         <ProgressBar />
+                    //       </Col>
 
-                  //       <Col lg="3" xs="12" className={styles.progressTextContainer}>
-                  //         {
+                    //       <Col lg="3" xs="12" className={styles.progressTextContainer}>
+                    //         {
 
-                  //           <ProgressText>
-                  //             46% Completed
-                  //             </ProgressText>
-                  //         }
+                    //           <ProgressText>
+                    //             46% Completed
+                    //             </ProgressText>
+                    //         }
 
-                  //       </Col>
-                  //     </>
-                  //   )
-                  if (['Voting', 'Approved', 'Rejected'].includes(status))
-                    return (
-                      <>
-                        <Col
-                          lg='3'
-                          xs='12'
-                          className={styles.progressBarContainer}
-                        >
-                          {/* <ProgressBar
+                    //       </Col>
+                    //     </>
+                    //   )
+                    if (['Voting', 'Approved', 'Rejected'].includes(status))
+                      return (
+                        <>
+                          <Col
+                            lg='3'
+                            xs='12'
+                            className={styles.progressBarContainer}
+                          >
+                            {/* <ProgressBar
                           percentage={approvedPercentage} /> */}
-                          <ProgressBarCombined
-                            approvedPercentage={approvedPercentage}
-                            rejectedPercentage={rejectedPercentage}
-                          />
-                        </Col>
-
-                        <Col
-                          lg='8'
-                          xs='12'
-                          className={styles.progressTextContainer}
-                        >
-                          {
-                            // <ProgressText>
-                            //    Stake- {approvedPercentage ? `${approvedPercentage.toFixed()}` : 0}% approved, {rejectedPercentage ? `${rejectedPercentage.toFixed()}` : 0}% rejected
-                            //   </ProgressText>
-
-                            <VoteProgressBar
+                            <ProgressBarCombined
                               approvedPercentage={approvedPercentage}
                               rejectedPercentage={rejectedPercentage}
-                              noProgressBar
-                              placement='bottom'
                             />
-                          }
-                        </Col>
+                          </Col>
 
-                        <Col lg='1' xs='12'></Col>
-                        <Col
-                          lg='3'
-                          xs='12'
-                          className={styles.progressBarContainer}
-                        >
-                          <ProgressBarCombined
-                            approvedPercentage={approvedVoterPercentage}
-                            rejectedPercentage={rejectedVotersPercentage}
-                          />
-                        </Col>
+                          <Col
+                            lg='8'
+                            xs='12'
+                            className={styles.progressTextContainer}
+                          >
+                            {
+                              // <ProgressText>
+                              //    Stake- {approvedPercentage ? `${approvedPercentage.toFixed()}` : 0}% approved, {rejectedPercentage ? `${rejectedPercentage.toFixed()}` : 0}% rejected
+                              //   </ProgressText>
 
-                        <Col
-                          lg='8'
-                          xs='12'
-                          className={styles.progressTextContainer}
-                        >
-                          {
-                            // <ProgressText>
-                            //   Voter Count- {approvedVoterPercentage ? `${approvedVoterPercentage.toFixed()}` : 0}% approved, {rejectedVotersPercentage ? `${rejectedVotersPercentage.toFixed()}` : 0}% rejected
-                            // </ProgressText>
+                              <VoteProgressBar
+                                approvedPercentage={approvedPercentage}
+                                rejectedPercentage={rejectedPercentage}
+                                noProgressBar
+                                placement='bottom'
+                              />
+                            }
+                          </Col>
 
-                            <VoteProgressBar
+                          <Col lg='1' xs='12'></Col>
+                          <Col
+                            lg='3'
+                            xs='12'
+                            className={styles.progressBarContainer}
+                          >
+                            <ProgressBarCombined
                               approvedPercentage={approvedVoterPercentage}
                               rejectedPercentage={rejectedVotersPercentage}
-                              noProgressBar
-                              voterCount
-                              placement='bottom'
                             />
-                          }
-                        </Col>
+                          </Col>
 
-                        {progressDetail?.projectTermRevision && (
-                          <>
-                            <Col lg='1' xs='12'></Col>
-                            <Col
-                              lg='3'
-                              xs='12'
-                              className={styles.progressBarContainer}
-                            >
-                              <ProgressBarCombined
-                                approvedPercentage={
-                                  approvedPercentageBudgetChange
-                                }
-                                rejectedPercentage={
-                                  rejectedPercentageBudgetChange
-                                }
+                          <Col
+                            lg='8'
+                            xs='12'
+                            className={styles.progressTextContainer}
+                          >
+                            {
+                              // <ProgressText>
+                              //   Voter Count- {approvedVoterPercentage ? `${approvedVoterPercentage.toFixed()}` : 0}% approved, {rejectedVotersPercentage ? `${rejectedVotersPercentage.toFixed()}` : 0}% rejected
+                              // </ProgressText>
+
+                              <VoteProgressBar
+                                approvedPercentage={approvedVoterPercentage}
+                                rejectedPercentage={rejectedVotersPercentage}
+                                noProgressBar
+                                voterCount
+                                placement='bottom'
                               />
-                            </Col>
+                            }
+                          </Col>
 
-                            <Col
-                              lg='8'
-                              xs='12'
-                              className={styles.progressTextContainer}
-                            >
-                              {
-                                // <ProgressText>
-                                //   Stake- {approvedPercentageBudgetChange ? `${approvedPercentageBudgetChange.toFixed()}` : 0}% approved, {rejectedPercentageBudgetChange ? `${rejectedPercentageBudgetChange.toFixed()}` : 0}% rejected (Budget Change Request)
-                                // </ProgressText>
-
-                                <VoteProgressBar
+                          {progressDetail?.projectTermRevision && (
+                            <>
+                              <Col lg='1' xs='12'></Col>
+                              <Col
+                                lg='3'
+                                xs='12'
+                                className={styles.progressBarContainer}
+                              >
+                                <ProgressBarCombined
                                   approvedPercentage={
                                     approvedPercentageBudgetChange
                                   }
                                   rejectedPercentage={
                                     rejectedPercentageBudgetChange
                                   }
-                                  noProgressBar
-                                  budgetAdjustment
-                                  placement='bottom'
                                 />
-                              }
-                            </Col>
+                              </Col>
 
-                            <Col lg='1' xs='12'></Col>
-                            <Col
-                              lg='3'
-                              xs='12'
-                              className={styles.progressBarContainer}
-                            >
-                              <ProgressBarCombined
-                                approvedPercentage={
-                                  approvedVoterPercentageBudgetChange
+                              <Col
+                                lg='8'
+                                xs='12'
+                                className={styles.progressTextContainer}
+                              >
+                                {
+                                  // <ProgressText>
+                                  //   Stake- {approvedPercentageBudgetChange ? `${approvedPercentageBudgetChange.toFixed()}` : 0}% approved, {rejectedPercentageBudgetChange ? `${rejectedPercentageBudgetChange.toFixed()}` : 0}% rejected (Budget Change Request)
+                                  // </ProgressText>
+
+                                  <VoteProgressBar
+                                    approvedPercentage={
+                                      approvedPercentageBudgetChange
+                                    }
+                                    rejectedPercentage={
+                                      rejectedPercentageBudgetChange
+                                    }
+                                    noProgressBar
+                                    budgetAdjustment
+                                    placement='bottom'
+                                  />
                                 }
-                                rejectedPercentage={
-                                  rejectedVoterPercentageBudgetChange
-                                }
-                              />
-                            </Col>
+                              </Col>
 
-                            <Col
-                              lg='8'
-                              xs='12'
-                              className={styles.progressTextContainer}
-                            >
-                              {
-                                // <ProgressText>
-                                //     Voter count- {approvedVoterPercentageBudgetChange ? `${approvedVoterPercentageBudgetChange.toFixed()}` : 0}% approved, {rejectedVoterPercentageBudgetChange ? `${rejectedVoterPercentageBudgetChange.toFixed()}` : 0}% rejected (Budget Change Request)
-                                // </ProgressText>
-
-                                <VoteProgressBar
+                              <Col lg='1' xs='12'></Col>
+                              <Col
+                                lg='3'
+                                xs='12'
+                                className={styles.progressBarContainer}
+                              >
+                                <ProgressBarCombined
                                   approvedPercentage={
                                     approvedVoterPercentageBudgetChange
                                   }
                                   rejectedPercentage={
                                     rejectedVoterPercentageBudgetChange
                                   }
-                                  noProgressBar
-                                  budgetAdjustment
-                                  voterCount
-                                  placement='bottom'
                                 />
-                              }
-                            </Col>
-                          </>
-                        )}
-                      </>
-                    );
-                  else return null;
-                })()}
-              </Row>
-            </Container>
-          </Modal.Header>
-          <Modal.Body className={styles.modalBody}>
-            <Row>
-              <Col lg='8' xs='12'>
-                {/* <div dangerouslySetInnerHTML={{ __html: description }} /> */}
-                <Description
-                  description={
-                    (progressDetail && description) ||
-                    '<span>No Description</span>'
-                  }
-                />
-                {progressDetail && progressDetail.projectTermRevision ? (
+                              </Col>
+
+                              <Col
+                                lg='8'
+                                xs='12'
+                                className={styles.progressTextContainer}
+                              >
+                                {
+                                  // <ProgressText>
+                                  //     Voter count- {approvedVoterPercentageBudgetChange ? `${approvedVoterPercentageBudgetChange.toFixed()}` : 0}% approved, {rejectedVoterPercentageBudgetChange ? `${rejectedVoterPercentageBudgetChange.toFixed()}` : 0}% rejected (Budget Change Request)
+                                  // </ProgressText>
+
+                                  <VoteProgressBar
+                                    approvedPercentage={
+                                      approvedVoterPercentageBudgetChange
+                                    }
+                                    rejectedPercentage={
+                                      rejectedVoterPercentageBudgetChange
+                                    }
+                                    noProgressBar
+                                    budgetAdjustment
+                                    voterCount
+                                    placement='bottom'
+                                  />
+                                }
+                              </Col>
+                            </>
+                          )}
+                        </>
+                      );
+                    else return null;
+                  })()}
+                </Row>
+              </Container>
+            </Modal.Header>
+            <Modal.Body className={styles.modalBody}>
+              <Row>
+                <Col lg='8' xs='12'>
+                  {/* <div dangerouslySetInnerHTML={{ __html: description }} /> */}
                   <Description
                     description={
-                      (progressDetail && revisionDescription) ||
+                      (progressDetail && description) ||
                       '<span>No Description</span>'
                     }
-                    title='REVISION DESCRIPTION'
                   />
-                ) : null}
-              </Col>
-
-              {/* <Col lg="4" className = "d-none d-lg-block"> */}
-              <Col lg='4' xs='12'>
-                <Col
-                  xs='12'
-                  style={{
-                    paddingLeft: '0px',
-                    paddingRight: '0px',
-                  }}
-                >
-                  <DetailsTable
-                    title={'Project Details'}
-                    data={[
-                      {
-                        key: 'Percentage Completed',
-                        value: progressDetail?.percentageCompleted
-                          ? `${progressDetail?.percentageCompleted}%`
-                          : 'N/A',
-                      },
-                      {
-                        key: 'Time Remaining',
-                        value: progressDetail?.timeRemainingToCompletion
-                          ? `${progressDetail?.timeRemainingToCompletion} months`
-                          : 'N/A',
-                      },
-                    ]}
-                  />
+                  {progressDetail && progressDetail.projectTermRevision ? (
+                    <Description
+                      description={
+                        (progressDetail && revisionDescription) ||
+                        '<span>No Description</span>'
+                      }
+                      title='REVISION DESCRIPTION'
+                    />
+                  ) : null}
                 </Col>
-                {progressDetail?.projectTermRevision && (
+
+                {/* <Col lg="4" className = "d-none d-lg-block"> */}
+                <Col lg='4' xs='12'>
                   <Col
                     xs='12'
                     style={{
@@ -541,124 +521,119 @@ function DetailsModal(props) {
                     }}
                   >
                     <DetailsTable
-                      title={'Project Term Revision'}
+                      title={'Project Details'}
                       data={[
                         {
-                          key: 'Additional Budget',
-                          value: progressDetail?.additionalBudget
-                            ? `${icxFormat(
-                              progressDetail?.additionalBudget,
-                            )} ICX`
+                          key: 'Percentage Completed',
+                          value: progressDetail?.percentageCompleted
+                            ? `${progressDetail?.percentageCompleted}%`
                             : 'N/A',
                         },
                         {
-                          key: 'Additional Time',
-                          value: progressDetail?.additionalTime
-                            ? `${progressDetail?.additionalTime} months`
+                          key: 'Time Remaining',
+                          value: progressDetail?.timeRemainingToCompletion
+                            ? `${progressDetail?.timeRemainingToCompletion} months`
                             : 'N/A',
                         },
                       ]}
                     />
                   </Col>
-                )}
-              </Col>
-            </Row>
-
-            {status === 'Voting' && (
-              <Row>
-                <Col xs='12'>
-                  <div
-                    style={{
-                      textAlign: 'center',
-                      color: '#262626',
-                      marginBottom: '5px',
-                      fontWeight: '600',
-                      fontSize: '1rem',
-                    }}
-                  >
-                    <>
-                      {period !== 'VOTING'
-                        ? 'Voting starts in '
-                        : 'Voting ends in '}
-                    </>
-                    <b>{remainingTimer.day}</b> days{' '}
-                    <b>{remainingTimer.hour}</b> hours{' '}
-                    <b>{remainingTimer.minute}</b> minutes{' '}
-                    <b>{remainingTimer.second}</b> seconds
-                  </div>
+                  {progressDetail?.projectTermRevision && (
+                    <Col
+                      xs='12'
+                      style={{
+                        paddingLeft: '0px',
+                        paddingRight: '0px',
+                      }}
+                    >
+                      <DetailsTable
+                        title={'Project Term Revision'}
+                        data={[
+                          {
+                            key: 'Additional Budget',
+                            value: progressDetail?.additionalBudget
+                              ? `${icxFormat(
+                                  progressDetail?.additionalBudget,
+                                )} ICX`
+                              : 'N/A',
+                          },
+                          {
+                            key: 'Additional Time',
+                            value: progressDetail?.additionalTime
+                              ? `${progressDetail?.additionalTime} months`
+                              : 'N/A',
+                          },
+                        ]}
+                      />
+                    </Col>
+                  )}
                 </Col>
               </Row>
-            )}
 
-            {progressDetail?.contributor_address === walletAddress &&
-              status === 'Pending' && (
-                <Row style={{ justifyContent: 'center' }}>
-                  <Button
-                    variant='success'
-                    onClick={onClickApproveSponsorRequest}
-                    onClick={() => {
-                      setSponsorConfirmationShow(true);
-                      setSponsorVote('approve');
-                    }}
-                  >
-                    Approve
-                  </Button>
-                  <Button
-                    variant='danger'
-                    className={styles.rejectButton}
-                    onClick={onClickRejectSponsorRequest}
-                    onClick={() => {
-                      setSponsorConfirmationShow(true);
-                      setSponsorVote('reject');
-                    }}
-                  >
-                    Reject
-                  </Button>
+              {status === 'Voting' && (
+                <Row>
+                  <Col xs='12'>
+                    <div
+                      style={{
+                        textAlign: 'center',
+                        color: '#262626',
+                        marginBottom: '5px',
+                        fontWeight: '600',
+                        fontSize: '1rem',
+                      }}
+                    >
+                      <>
+                        {period !== 'VOTING'
+                          ? 'Voting starts in '
+                          : 'Voting ends in '}
+                      </>
+                      <b>{remainingTimer.day}</b> days{' '}
+                      <b>{remainingTimer.hour}</b> hours{' '}
+                      <b>{remainingTimer.minute}</b> minutes{' '}
+                      <b>{remainingTimer.second}</b> seconds
+                    </div>
+                  </Col>
                 </Row>
               )}
 
-            {isPrep && votingPRep && period === 'VOTING' && remainingTime > 0 && (
-              <>
-                {!votesByProposal.some(
-                  vote => vote.sponsorAddress === walletAddress,
-                ) || changeVoteButton ? (
+              {progressDetail?.contributor_address === walletAddress &&
+                status === 'Pending' && (
+                  <Row style={{ justifyContent: 'center' }}>
+                    <Button
+                      variant='success'
+                      onClick={onClickApproveSponsorRequest}
+                      onClick={() => {
+                        setSponsorConfirmationShow(true);
+                        setSponsorVote('approve');
+                      }}
+                    >
+                      Approve
+                    </Button>
+                    <Button
+                      variant='danger'
+                      className={styles.rejectButton}
+                      onClick={onClickRejectSponsorRequest}
+                      onClick={() => {
+                        setSponsorConfirmationShow(true);
+                        setSponsorVote('reject');
+                      }}
+                    >
+                      Reject
+                    </Button>
+                  </Row>
+                )}
+
+              {isPrep &&
+                votingPRep &&
+                period === 'VOTING' &&
+                remainingTime > 0 && (
                   <>
-                    {progressDetail?.projectTermRevision && (
-                      <Row>
-                        <Col
-                          xs='12'
-                          style={{ display: 'flex', justifyContent: 'center' }}
-                        >
-                          <span style={{ color: '#262626', fontWeight: 600 }}>
-                            Progress Report:
-                          </span>
-                        </Col>
-                      </Row>
-                    )}
-
-                    <Row>
-                      <Col
-                        xs='12'
-                        style={{ display: 'flex', justifyContent: 'center' }}
-                      >
-                        <ButtonGroup aria-label='Basic example'>
-                          {voteOptions.map(voteOption => (
-                            <Button
-                              variant={vote === voteOption.title ? voteOption.bgColor : 'light'}
-                              onClick={() => setVote(voteOption.title)}
-                              style={{ border: '1px solid rgba(0,0,0,0.7)' }}
-                            >
-                              {voteOption.title}
-                            </Button>
-                          ))}
-                        </ButtonGroup>
-                      </Col>
-                    </Row>
-
-                    {progressDetail?.projectTermRevision && (
+                    {!votesByProposal.some(
+                      vote => vote.sponsorAddress === walletAddress,
+                    ) || changeVoteButton ? (
                       <>
-                        <Col xs='12'>
-                          <Row style={{ marginTop: '10px' }}>
+                        {progressDetail?.projectTermRevision && (
+                          <Row>
                             <Col
                               xs='12'
                               style={{
@@ -669,11 +644,11 @@ function DetailsModal(props) {
                               <span
                                 style={{ color: '#262626', fontWeight: 600 }}
                               >
-                                Budget Adjustment:
+                                Progress Report:
                               </span>
                             </Col>
                           </Row>
-                        </Col>
+                        )}
 
                         <Row>
                           <Col
@@ -687,13 +662,11 @@ function DetailsModal(props) {
                               {voteOptions.map(voteOption => (
                                 <Button
                                   variant={
-                                    voteProjectTermRevision === voteOption.title
-                                      ? 'success'
+                                    vote === voteOption.title
+                                      ? voteOption.bgColor
                                       : 'light'
                                   }
-                                  onClick={() =>
-                                    setVoteProjectTermRevision(voteOption.title)
-                                  }
+                                  onClick={() => setVote(voteOption.title)}
                                   style={{
                                     border: '1px solid rgba(0,0,0,0.7)',
                                   }}
@@ -704,162 +677,234 @@ function DetailsModal(props) {
                             </ButtonGroup>
                           </Col>
                         </Row>
+
+                        {progressDetail?.projectTermRevision && (
+                          <>
+                            <Col xs='12'>
+                              <Row style={{ marginTop: '10px' }}>
+                                <Col
+                                  xs='12'
+                                  style={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                  }}
+                                >
+                                  <span
+                                    style={{
+                                      color: '#262626',
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    Budget Adjustment:
+                                  </span>
+                                </Col>
+                              </Row>
+                            </Col>
+
+                            <Row>
+                              <Col
+                                xs='12'
+                                style={{
+                                  display: 'flex',
+                                  justifyContent: 'center',
+                                }}
+                              >
+                                <ButtonGroup aria-label='Basic example'>
+                                  {voteOptions.map(voteOption => (
+                                    <Button
+                                      variant={
+                                        voteProjectTermRevision ===
+                                        voteOption.title
+                                          ? 'success'
+                                          : 'dark'
+                                      }
+                                      onClick={() =>
+                                        setVoteProjectTermRevision(
+                                          voteOption.title,
+                                        )
+                                      }
+                                      style={{
+                                        border: '1px solid rgba(0,0,0,0.7)',
+                                      }}
+                                    >
+                                      {voteOption.title}
+                                    </Button>
+                                  ))}
+                                </ButtonGroup>
+                              </Col>
+                            </Row>
+                          </>
+                        )}
+                        <Col
+                          xs={24}
+                          style={{
+                            width: '100%',
+                            textAlign: 'center',
+                            color: '#ff0000',
+                          }}
+                        >
+                          {error}
+                        </Col>
+
+                        <Row
+                          style={{
+                            marginTop: '10px',
+                            backgroundColor: '#ff0000',
+                          }}
+                        >
+                          <Col xs='12'>
+                            <span style={{ color: '#262626', fontWeight: 600 }}>
+                              Explain in brief the reason behind your decision:
+                            </span>
+                            <InfoIcon description={specialCharacterMessage()} />
+                          </Col>
+
+                          <Col xs='12'>
+                            <RichTextEditor
+                              initialData={voteReason}
+                              required
+                              onChange={data => setVoteReason(data)}
+                            />
+                            <input
+                              className={styles.fakeInput}
+                              style={{ left: '15px' }}
+                              id='voteReason'
+                            />
+                          </Col>
+                        </Row>
+                        {progressDetail?.isLastProgressReport && (
+                          <Alert variant='info' style={{ marginTop: '10px' }}>
+                            Note: This is the last progress report for this
+                            proposal.
+                          </Alert>
+                        )}
+
+                        <Row style={{ justifyContent: 'center' }}>
+                          {!isMaintenanceMode ? (
+                            <Button
+                              variant='primary'
+                              onClick={() => handleVoteSubmission()}
+                              style={{ marginTop: '10px', width: '150px' }}
+                            >
+                              Submit Vote
+                            </Button>
+                          ) : (
+                            <Popup
+                              component={
+                                <span className='d-inline-block'>
+                                  <Button
+                                    variant='info'
+                                    type='submit'
+                                    disabled
+                                    style={{ pointerEvents: 'none' }}
+                                  >
+                                    SUBMIT
+                                  </Button>
+                                </span>
+                              }
+                              popOverText='You can submit a vote after the maintenance period is over.'
+                              placement='left'
+                            />
+                          )}
+                        </Row>
+                      </>
+                    ) : (
+                      <>
+                        {status === 'Voting' && (
+                          <p style={{ color: '#262626', textAlign: 'center' }}>
+                            You have already voted for this progress report.{' '}
+                            <br />{' '}
+                            {changeVote && (
+                              <ButtonGroup aria-label='Basic example'>
+                                <Button
+                                  style={{ width: 200 }}
+                                  onClick={() => setChangeVoteButton(true)}
+                                  variant='primary'
+                                >
+                                  Change Vote
+                                </Button>
+                              </ButtonGroup>
+                            )}
+                          </p>
+                        )}
                       </>
                     )}
-                    <Col
-                      xs={24}
-                      style={{
-                        width: '100%',
-                        textAlign: 'center',
-                        color: '#ff0000',
-                      }}
-                    >
-                      {error}
-                    </Col>
-
-                    <Row style={{ marginTop: '10px' }}>
-                      <Col xs='12'>
-                        <span style={{ color: '#262626', fontWeight: 600 }}>
-                          Explain in brief the reason behind your decision:
-                        </span>
-                        <InfoIcon description={specialCharacterMessage()} />
-                      </Col>
-
-                      <Col xs='12'>
-                        <RichTextEditor
-                          initialData={voteReason}
-                          required
-                          onChange={data => setVoteReason(data)}
-                        />
-                        <input
-                          className={styles.fakeInput}
-                          style={{ left: '15px' }}
-                          id='voteReason'
-                        />
-                      </Col>
-                    </Row>
-                    {progressDetail?.isLastProgressReport && (
-                      <Alert variant='info' style={{ marginTop: '10px' }}>
-                        Note: This is the last progress report for this
-                        proposal.
-                      </Alert>
-                    )}
-
-                    <Row style={{ justifyContent: 'center' }}>
-										{!isMaintenanceMode ? (
-											<Button
-                        variant='primary'
-                        onClick={() => handleVoteSubmission()}
-                        style={{ marginTop: '10px', width: '150px' }}
-                      >
-                        Submit Vote
-                      </Button>
-										): 
-										( 
-											<Popup
-											component={
-												<span className='d-inline-block'>
-													<Button
-														variant='info'
-														type='submit'
-														disabled
-														style={{ pointerEvents: 'none' }}
-													>
-														SUBMIT
-													</Button>
-												</span>
-											}
-											popOverText='You can submit a vote after the maintenance period is over.'
-											placement='left'
-                  		/>
-										)}
-                    </Row>
-                  </>
-                ) : (
-                  <>
-                    {status === 'Voting' && <p style={{ color: '#262626', textAlign: 'center' }}>
-                      You have already voted for this progress report. <br /> {changeVote &&
-                        <ButtonGroup aria-label='Basic example'>
-                          <Button style={{ width: 200 }} onClick={() => setChangeVoteButton(true)} variant="primary">Change Vote</Button>
-                        </ButtonGroup>}
-                    </p>
-                    }
                   </>
                 )}
-              </>
-            )}
 
-            {!sponsorRequest && (
-              <>
-                <Row>
-                  <Col xs='12'>
-                    {
-                      <>
-                        <ListTitle>VOTES</ListTitle>
-                        <VoteList votes={votesByProposal} progressReport />
-                      </>
-                    }
-                  </Col>
-                </Row>
-
-                <Row>
-                  <Col xs='12'>
-                    {progressDetail?.projectTermRevision ? (
-                      <>
-                        <ListTitle>BUDGET CHANGE REQUEST VOTES</ListTitle>
-                        <VoteList
-                          votes={votesByBudgetChange}
-                          progressReport
-                          budgetChange
-                        />
-                      </>
-                    ) : null}
-                  </Col>
-                </Row>
-              </>
-            )}
-
-            <ConfirmationModal
-              show={sponsorConfirmationShow}
-              onHide={() => setSponsorConfirmationShow(false)}
-              heading={
-                sponsorVote === 'approve'
-                  ? 'Sponsor Request Approval Confirmation'
-                  : 'Sponsor Request Rejection Confirmation'
-              }
-              onConfirm={
-                sponsorVote === 'approve'
-                  ? onClickApproveSponsorRequest
-                  : onClickRejectSponsorRequest
-              }
-            >
-              {sponsorVote === 'approve' ? (
+              {!sponsorRequest && (
                 <>
-                  <div>
-                    Are you sure you want to approve the sponsor request?
-                  </div>
-                  <div style={{ color: 'red' }}>
-                    You will need to transfer {progressDetail.totalBudget * 0.1}{' '}
-                    ICX for sponsor bond.
-                  </div>
-                </>
-              ) : (
-                <span>
-                  Are you sure you want to reject the sponsor request?
-                </span>
-              )}
-            </ConfirmationModal>
+                  <Row>
+                    <Col xs='12'>
+                      {
+                        <>
+                          <ListTitle>VOTES</ListTitle>
+                          <VoteList votes={votesByProposal} progressReport />
+                        </>
+                      }
+                    </Col>
+                  </Row>
 
-            <ConfirmationModal
-              show={voteConfirmationShow}
-              onHide={() => setVoteConfirmationShow(false)}
-              heading={'Vote Confirmation'}
-              onConfirm={onSubmitVote}
-            >
-              Are you sure you want to {vote.toLowerCase()} the progress report?
-            </ConfirmationModal>
-          </Modal.Body>
-        </>
+                  <Row>
+                    <Col xs='12'>
+                      {progressDetail?.projectTermRevision ? (
+                        <>
+                          <ListTitle>BUDGET CHANGE REQUEST VOTES</ListTitle>
+                          <VoteList
+                            votes={votesByBudgetChange}
+                            progressReport
+                            budgetChange
+                          />
+                        </>
+                      ) : null}
+                    </Col>
+                  </Row>
+                </>
+              )}
+
+              <ConfirmationModal
+                show={sponsorConfirmationShow}
+                onHide={() => setSponsorConfirmationShow(false)}
+                heading={
+                  sponsorVote === 'approve'
+                    ? 'Sponsor Request Approval Confirmation'
+                    : 'Sponsor Request Rejection Confirmation'
+                }
+                onConfirm={
+                  sponsorVote === 'approve'
+                    ? onClickApproveSponsorRequest
+                    : onClickRejectSponsorRequest
+                }
+              >
+                {sponsorVote === 'approve' ? (
+                  <>
+                    <div>
+                      Are you sure you want to approve the sponsor request?
+                    </div>
+                    <div style={{ color: 'red' }}>
+                      You will need to transfer{' '}
+                      {progressDetail.totalBudget * 0.1} ICX for sponsor bond.
+                    </div>
+                  </>
+                ) : (
+                  <span>
+                    Are you sure you want to reject the sponsor request?
+                  </span>
+                )}
+              </ConfirmationModal>
+
+              <ConfirmationModal
+                show={voteConfirmationShow}
+                onHide={() => setVoteConfirmationShow(false)}
+                heading={'Vote Confirmation'}
+                onConfirm={onSubmitVote}
+              >
+                Are you sure you want to {vote.toLowerCase()} the progress
+                report?
+              </ConfirmationModal>
+            </Modal.Body>
+          </>
+        )
       )}{' '}
     </Modal>
   );
@@ -876,14 +921,12 @@ const mapStateToProps = state => ({
   rejectedVotersPercentage: getProgressReportRejectedVotersPercentage(state),
 
   approvedPercentageBudgetChange: getBudgetAdjustmentApprovedPercentage(state),
-  approvedVoterPercentageBudgetChange: getBudgetAdjustmentApprovedVotersPercentage(
-    state,
-  ),
+  approvedVoterPercentageBudgetChange:
+    getBudgetAdjustmentApprovedVotersPercentage(state),
 
   rejectedPercentageBudgetChange: getBudgetAdjustmentRejectedPercentage(state),
-  rejectedVoterPercentageBudgetChange: getBudgetAdjustmentRejectedVotersPercentage(
-    state,
-  ),
+  rejectedVoterPercentageBudgetChange:
+    getBudgetAdjustmentRejectedVotersPercentage(state),
 
   period: state.period.period,
   remainingTime: state.period.remainingTime,
@@ -891,8 +934,8 @@ const mapStateToProps = state => ({
   isPrep: state.account.isPrep,
   ipfsError: state.progressReport.ipfsError,
   changeVote: state.progressReport.changeVote,
-  votingPRep:state.account.votingPRep,
-	isMaintenanceMode: state.fund.isMaintenanceMode,
+  votingPRep: state.account.votingPRep,
+  isMaintenanceMode: state.fund.isMaintenanceMode,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -904,9 +947,9 @@ const mapDispatchToProps = dispatch => ({
   fetchVoteResultRequest: payload => dispatch(fetchVoteResultRequest(payload)),
   fetchVoteResultBudgetChangeRequest: payload =>
     dispatch(fetchVoteResultBudgetChangeRequest(payload)),
-  fetchChangeVoteRequest: (payload) => dispatch(fetchChangeVoteRequestProgressReport(payload)),
-	fetchMaintenanceModeRequest: () => dispatch(fetchMaintenanceModeRequest()),
-
+  fetchChangeVoteRequest: payload =>
+    dispatch(fetchChangeVoteRequestProgressReport(payload)),
+  fetchMaintenanceModeRequest: () => dispatch(fetchMaintenanceModeRequest()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DetailsModal);

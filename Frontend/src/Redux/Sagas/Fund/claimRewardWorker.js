@@ -10,7 +10,6 @@ function* claimRewardWorker({ payload }) {
     sendTransaction({
         method: 'claim_reward',
         scoreAddress: cpsTreasuryScoreAddress
-
         },
 
     )

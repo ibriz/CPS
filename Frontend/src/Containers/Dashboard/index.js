@@ -32,6 +32,7 @@ import {
 import { setLoginButtonClicked } from 'Redux/Reducers/accountSlice';
 import congratulationsImg from '../../Assets/Images/congratulations.png';
 import UpperCard from 'Containers/Proposals/UpperCard';
+import { useSelector } from 'react-redux';
 
 const Dashboard = ({
   payPenaltyRequest,
@@ -89,6 +90,7 @@ const Dashboard = ({
 
   let cardInfo;
   const isDarkTheme = localStorage.getItem('theme') === 'dark';
+  // const isDark = useSelector(state => state.theme.isDark);
 
   const getSponsorBondRewardText = amount => {
     if (parseFloat(amount.icx) > 0 && parseFloat(amount.bnUSD) > 0) {
@@ -330,7 +332,7 @@ const Dashboard = ({
       {period === 'APPLICATION' && previousPeriod === 'APPLICATION' && (
         <Row style={{ marginTop: '15px' }}>
           <Col xs='12'>
-            <Alert variant='info'>
+            <Alert variant='dark'>
               <span>
                 Note: The period switched back to application period because{' '}
                 {preps.length < 7

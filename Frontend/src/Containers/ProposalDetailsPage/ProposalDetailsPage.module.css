@@ -42,3 +42,8 @@
   left: 50%;
   z-index: -1000;
 }
+
+
+.form-control{
+  background-color: #2a2a2a;
+}

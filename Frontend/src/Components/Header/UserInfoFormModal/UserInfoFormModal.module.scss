@@ -19,19 +19,25 @@
   padding-right: 15px;
 }
 
-.modalBody label,
-.form label {
-  font-style: normal;
-  font-weight: 600;
-  font-size: 0.85rem;
-  line-height: 17px;
-  color: #262626;
-}
+// .modal-content {
+//   background-color: #000;
+//   color: #fff;
+// }
 
-.modalBody input,
-.modalBody select {
-  font-size: 0.86rem;
-}
+
+// .modalBody label,
+// .form label {
+//   font-style: normal;
+//   font-weight: 600;
+//   font-size: 0.85rem;
+//   line-height: 17px;
+//   color: #262626;
+// }
+
+// .modalBody input,
+// .modalBody select {
+//   font-size: 0.86rem;
+// }
 
 @media (min-width: 768px) {
   .inputSameLine {
@@ -75,3 +81,4 @@
     padding-left: 15px !important;
   }
 }
+

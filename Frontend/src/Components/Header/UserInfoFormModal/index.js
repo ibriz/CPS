@@ -54,10 +54,8 @@ const UserInfoFormModal = ({
     [user],
   );
 
-  let [
-    submissionConfirmationShow,
-    setSubmissionConfirmationShow,
-  ] = React.useState(false);
+  let [submissionConfirmationShow, setSubmissionConfirmationShow] =
+    React.useState(false);
 
   const handleSubmit = event => {
     event.preventDefault();
@@ -100,7 +98,7 @@ const UserInfoFormModal = ({
         </Modal.Title>
       </Modal.Header>
       <Modal.Body className={styles.modalBody}>
-        <Form onSubmit={handleSubmit}>
+        <Form variant='dark' onSubmit={handleSubmit}>
           <Form.Group as={Row} controlId='formPlaintextEmail'>
             <Form.Label column sm='2'>
               First Name

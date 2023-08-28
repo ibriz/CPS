@@ -6,9 +6,11 @@ import LowerCardInfo from '../../../UI/LowerCardList/LowerCardInfo';
 import Budget from '../../../UI/LowerCardList/Budget';
 import { icxFormat } from 'Helpers';
 import { proposalStatusMapping } from 'Constants';
+import { useSelector } from 'react-redux';
 
 const Proposal = ({ proposal, index }) => {
   const isDarkTheme = localStorage.getItem('theme') === 'dark';
+  // const isDark = useSelector(state => state.theme.isDark);
   return (
     <>
       <Row

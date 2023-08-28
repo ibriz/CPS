@@ -12,11 +12,11 @@ function* fetchCPSTreasuryScoreAddressWorker({ payload }) {
     });
 
     // const response = {
-    //     _current_block: 1000,
-    //     _next_block: 10000,
-    //     remaining_time: 86500,
-    //     _period_name: 'Voting Period'
-    // }
+    //   _current_block: 1000,
+    //   _next_block: 10000,
+    //   remaining_time: 86500,
+    //   _period_name: 'Application Period',
+    // };
 
     yield put(
       fetchCPSTreasuryScoreAddressSuccess({

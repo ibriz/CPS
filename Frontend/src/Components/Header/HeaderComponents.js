@@ -64,7 +64,7 @@ const HeaderComponents = ({
   }, []);
 
   useEffect(() => {
-    console.log('userDataSubmitSuccess', userDataSubmitSuccess);
+    // console.log('userDataSubmitSuccess', userDataSubmitSuccess);
     if (userDataSubmitSuccess && !verified && previousEmail !== email) {
       setUserDataSubmitSuccess({
         status: false,
