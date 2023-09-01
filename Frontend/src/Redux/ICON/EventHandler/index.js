@@ -40,16 +40,16 @@ import {
 // import { loginSuccess } from 'Redux/Reducers/accountSlice';
 
 const {
-  submit_proposal,
-  submit_progress_report,
+  submitProposal,
+  submitProgressReport,
   sponsor_vote,
   reject_sponsor,
-  vote_proposal,
-  vote_progress_report,
-  update_period,
-  unregister_prep,
-  register_prep,
-  pay_prep_penalty,
+  voteProposal,
+  voteProgressReport,
+  updatePeriod,
+  unregisterPrep,
+  registerPrep,
+  payPrepPenalty,
   approve_sponsor,
   claim_reward,
   votePriority,
@@ -149,7 +149,7 @@ export default event => {
       }
 
       switch (payload.id) {
-        case submit_proposal:
+        case submitProposal:
           console.log('history');
           history.push('/dashboard');
           history.push('/dashboard');
@@ -180,7 +180,7 @@ export default event => {
 
           break;
 
-        case submit_progress_report:
+        case submitProgressReport:
           console.log('history');
           history.push('/voting');
           history.push('/voting');
@@ -382,9 +382,9 @@ export default event => {
           // setTimeout(() => window.location.reload(), 800);
           break;
 
-        case vote_proposal:
-          console.group('vote_proposal');
-          console.log('vote_proposal', payload);
+        case voteProposal:
+          console.group('voteProposal');
+          console.log('voteProposal', payload);
 
           console.groupEnd();
           getResult(
@@ -416,7 +416,7 @@ export default event => {
 
           // result = await iconService.getTransactionResult().execute();
           break;
-        case vote_progress_report:
+        case voteProgressReport:
           getResult(
             {
               txHash: payload.result,
@@ -447,7 +447,7 @@ export default event => {
           // result = await iconService.getTransactionResult().execute();
           break;
 
-        case update_period:
+        case updatePeriod:
           getResult(
             {
               txHash: payload.result,
@@ -463,7 +463,7 @@ export default event => {
           NotificationManager.info('Period Update Request Sent');
           break;
 
-        case unregister_prep:
+        case unregisterPrep:
           getResult(
             {
               txHash: payload.result,
@@ -483,7 +483,7 @@ export default event => {
           NotificationManager.info('Prep Unregistration Request Sent');
           break;
 
-        case register_prep:
+        case registerPrep:
           getResult(
             {
               txHash: payload.result,
@@ -503,7 +503,7 @@ export default event => {
           NotificationManager.info('Prep Registration Request Sent');
           break;
 
-        case pay_prep_penalty:
+        case payPrepPenalty:
           getResult(
             {
               txHash: payload.result,
@@ -553,16 +553,16 @@ export default event => {
           NotificationManager.info('Reward Claim Request Sent');
           break;
 
-        case claim_sponsor_bond:
-          getResult({
-            txHash: payload.result,
-            failureMessage: 'Sponsor Bond Claim Failed',
-            successMessage: 'Sponsor Bond Claimed Successfully',
-          });
+        // case claim_sponsor_bond:
+        //   getResult({
+        //     txHash: payload.result,
+        //     failureMessage: 'Sponsor Bond Claim Failed',
+        //     successMessage: 'Sponsor Bond Claimed Successfully',
+        //   });
 
-          // window.location.reload();
-          NotificationManager.info('Sponsor bond claimed successfully');
-          break;
+        //   // window.location.reload();
+        //   NotificationManager.info('Sponsor bond claimed successfully');
+        //   break;
 
         case votePriority:
           getResult(

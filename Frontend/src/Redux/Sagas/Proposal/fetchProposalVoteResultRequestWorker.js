@@ -22,7 +22,7 @@ import {
 function* fetchProposalVoteResultRequestWorker({ payload }) {
   try {
     const response = yield call(callKeyStoreWallet, {
-      method: 'get_vote_result',
+      method: 'getVoteResult',
       params: {
         _ipfs_key: payload.proposalKey,
       },

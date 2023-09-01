@@ -8,7 +8,7 @@ import { callKeyStoreWallet } from '../../ICON/utils';
 function* fetchCPSTreasuryScoreAddressWorker({ payload }) {
   try {
     const response = yield call(callKeyStoreWallet, {
-      method: 'get_cps_treasury_score',
+      method: 'getCpsTreasuryScore',
     });
 
     // const response = {

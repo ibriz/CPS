@@ -89,16 +89,17 @@ const UserInfoFormModal = ({
       aria-labelledby='contained-modal-title-vcenter'
       centered
       className='customModal'
+      contentClassName={styles['modal-content']}
     >
       <Modal.Header closeButton>
         <Modal.Title
           id='contained-modal-title-vcenter'
-          style={{ color: '#262626' }}
+          // style={{ color: '#262626' }}
         >
           User Registration
         </Modal.Title>
       </Modal.Header>
-      <Modal.Body className={styles.modalBody}>
+      <Modal.Body /*className={styles.modalBody}*/>
         <Form variant='dark' onSubmit={handleSubmit}>
           <Form.Group as={Row} controlId='formPlaintextEmail'>
             <Form.Label column sm='2'>

@@ -15,7 +15,7 @@ async function periodChangeNotifications(presentPeriod, periodEndingDate) {
     const votingPeriodStatsForBot = new Promise(async (resolve, reject) => {
       try {
         // Send out last voting period's stats
-        const remainingFunds = await score.get_remaining_funds();
+        const remainingFunds = await score.getRemainingFund();
         const activeProjectAmt = await score.get_project_amounts_by_status(PROPOSAL_STATUS.ACTIVE);
         const votingPeriodStats = {
           remainingFunds: new BigNumber(remainingFunds).div(Math.pow(10,18)).toFixed(2),

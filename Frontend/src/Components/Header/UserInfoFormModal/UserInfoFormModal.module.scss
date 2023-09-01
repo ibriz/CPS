@@ -24,6 +24,11 @@
 //   color: #fff;
 // }
 
+.modalBody {
+  background-color: black !important;
+  color: white !important;
+}
+
 
 // .modalBody label,
 // .form label {
@@ -85,4 +90,5 @@
 
 .modal-content{
   background-color: var(--proposal-card-color) !important;
+  color: white !important;   
 }

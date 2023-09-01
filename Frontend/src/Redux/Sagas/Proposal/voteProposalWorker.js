@@ -33,7 +33,7 @@ function* voteProposalWorker({ payload }) {
   }
 
   sendTransaction({
-    method: 'vote_proposal',
+    method: 'voteProposal',
     params,
   });
 

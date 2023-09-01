@@ -35,7 +35,7 @@ function* voteProgressReportWorker({ payload }) {
 
   yield put(setVotingPhase(VotingPhase.AUTHORIZING));
   sendTransaction({
-    method: 'vote_progress_report',
+    method: 'voteProgressReport',
     params,
   });
 

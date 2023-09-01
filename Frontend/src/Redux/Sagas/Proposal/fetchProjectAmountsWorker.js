@@ -8,7 +8,7 @@ import { callKeyStoreWallet } from '../../ICON/utils';
 function* fetchProjectAmountsWorker({ payload }) {
   try {
     const response = yield call(callKeyStoreWallet, {
-      method: 'get_project_amounts',
+      method: 'getProjectAmounts',
     });
 
     // const response = {_pending:{_total_amount:0x1011,_count:0x10},

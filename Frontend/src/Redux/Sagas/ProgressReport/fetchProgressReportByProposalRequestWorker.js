@@ -9,7 +9,7 @@ import { progressReportStatusMapping } from 'Constants';
 function* submitProgressReportWorker({ payload }) {
   try {
     const response = yield call(callKeyStoreWallet, {
-      method: 'get_progress_reports_by_proposal',
+      method: 'getProgressReportsByProposal',
       params: {
         _ipfs_key: payload.proposalKey,
       },

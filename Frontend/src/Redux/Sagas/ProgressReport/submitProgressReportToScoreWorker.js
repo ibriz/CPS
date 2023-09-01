@@ -25,7 +25,7 @@ function* submitProgressReportToScoreWorker({ payload }) {
     }
 
     sendTransaction({
-        method: 'submit_progress_report',
+        method: 'submitProgressReport',
         params,
         icxAmount: 0,
     }

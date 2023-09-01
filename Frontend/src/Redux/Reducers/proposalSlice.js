@@ -30,7 +30,7 @@ const PARAMS = {
   sponsorVoteReason: 'sponsor_vote_reason',
   projectDuration: 'project_duration',
   token: 'token',
-  submitProgressReport: 'submit_progress_report',
+  submitProgressReport: 'submitProgressReport',
 };
 
 export const VotingPhase = {

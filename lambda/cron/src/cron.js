@@ -54,12 +54,12 @@ async function execute() {
 		console.log(present_period.remaining_time);
 		
 		if (parseInt(present_period.remaining_time, 'hex') == 0) {
-			// if current period is "Voting Period" -> update_period moves it to transition period
-			// wait for 20 secs, then again trigger the update_period if the current period is transition period
+			// if current period is "Voting Period" -> updatePeriod moves it to transition period
+			// wait for 20 secs, then again trigger the updatePeriod if the current period is transition period
 			// then verify that the period is now application period
 			console.log('Updating period...');
 
-			await score.update_period();
+			await score.updatePeriod();
 			await sleep(2000);	// sleep for 2 secs
 			present_period = await score.period_check();
 			console.log('Changed period to: ' + present_period['period_name']);
