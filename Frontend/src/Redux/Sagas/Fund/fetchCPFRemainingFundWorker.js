@@ -23,7 +23,7 @@ function* fetchCPFRemainingFundWorker({ payload }) {
     console.log({ sicxScoreAddress, dexScoreAddress });
 
     let response = yield call(callKeyStoreWallet, {
-      method: 'get_remaining_fund',
+      method: 'getRemainingFund',
       // scoreAddress: cpfTreasuryScoreAddress
     });
 

@@ -2,3 +2,17 @@
   display: flex;
   justify-content: flex-end;
 }
+.inputBox{
+  background-color: var(--proposal-card-color) !important;
+  color: var(--font-color) !important ;
+  border:  1px solid rgb(66, 66, 66) !important;
+} 
+.modal-content{
+  background-color: var(--proposal-card-color) !important;
+  color: var(--font-color) !important;   
+}
+
+.textColor{
+  color: var(--font-color) !important;
+
+}

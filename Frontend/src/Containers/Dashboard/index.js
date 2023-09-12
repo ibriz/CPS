@@ -31,6 +31,7 @@ import {
 } from 'Redux/Reducers/fundSlice';
 import { setLoginButtonClicked } from 'Redux/Reducers/accountSlice';
 import congratulationsImg from '../../Assets/Images/congratulations.png';
+import congratulationsWhiteImg from '../../Assets/Images/congratulationsWhite.png';
 import UpperCard from 'Containers/Proposals/UpperCard';
 import { useSelector } from 'react-redux';
 
@@ -351,9 +352,18 @@ const Dashboard = ({
         <Row style={{ marginTop: '15px' }}>
           <Col xs='12'>
             <Container className={styles.container}>
-              <img src={congratulationsImg} style={{ padding: '24px' }} />
-              <Container style={{ display: 'flex', flexDirection: 'column' }}>
+              <img
+                src={isDarkTheme ? congratulationsWhiteImg : congratulationsImg}
+                style={{ padding: '24px' }}
+              />
+              <Container
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                }}
+              >
                 <span
+                  className={styles.textContainer}
                   style={{
                     fontWeight: '500',
                     fontSize: '1.5rem',
@@ -364,6 +374,7 @@ const Dashboard = ({
                 </span>
 
                 <span
+                  className={styles.textContainer}
                   style={{
                     fontWeight: '500',
                     fontSize: '1rem',

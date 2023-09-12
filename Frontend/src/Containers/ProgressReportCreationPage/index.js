@@ -260,6 +260,38 @@ const ProgressReportCreationPage = ({
   const [revisionDescriptionCharacters, setRevisionDescriptionCharacters] =
     React.useState(0);
 
+  const [options, setOptions] = React.useState([
+    {
+      name: 'Milestone 1',
+      description: 'lorem ipsum dolor sit amet,',
+      isChecked: false,
+    },
+    {
+      name: 'Milestone 2',
+      description: 'lorem ipsum  ',
+      isChecked: false,
+    },
+  ]);
+  const handleCheckboxChange = index => {
+    setOptions(prevOptions =>
+      prevOptions.map((option, i) =>
+        i === index ? { ...option, isChecked: !option.isChecked } : option,
+      ),
+    );
+  };
+
+  const handleDescriptionChange = (index, description) => {
+    setOptions(prevOptions =>
+      prevOptions.map((option, i) =>
+        i === index ? { ...option, description } : option,
+      ),
+    );
+  };
+
+  const handleMilestoneSubmit = index => {
+    console.log('Submitted data:', options[index]);
+  };
+
   useEffect(() => {
     fetchCPFRemainingFundRequest();
     fetchCPFTreasuryScoreAddressRequest();
@@ -529,7 +561,7 @@ const ProgressReportCreationPage = ({
 
       <Row className={styles.cardContainer}>
         <Card className={styles.card}>
-          <Form onSubmit={handleSubmit}>
+          <Form onSubmit={handleSubmit} className={styles.FormCard}>
             <Form.Group
               as={Row}
               controlId='formPlaintextEmail'
@@ -544,6 +576,7 @@ const ProgressReportCreationPage = ({
                 <Form.Control
                   size='md'
                   as='select'
+                  className={styles.inputBox}
                   value={progressReport.projectName}
                   name='projectName'
                   id='projectName'
@@ -583,6 +616,7 @@ const ProgressReportCreationPage = ({
                 <Form.Control
                   placeholder='Progress Report Name'
                   size='md'
+                  className={styles.inputBox}
                   value={progressReport.progressReportTitle}
                   name='progressReportTitle'
                   id='progressReportTitle'
@@ -601,7 +635,7 @@ const ProgressReportCreationPage = ({
                 <span className={styles.required}></span>
                 {/* <InfoIcon description = "The completed percentage of the project"/>   */}
               </AppFormLabel>
-              <Col lg='' className='col-lg-2' className={styles.inputSameLine}>
+              <Col lg='2' className={styles.inputSameLine}>
                 <InputGroup size='md'>
                   <FormControl
                     placeholder='Percentage Completed'
@@ -675,6 +709,79 @@ const ProgressReportCreationPage = ({
                   id='description'
                 />
               </Col>
+            </Form.Group>
+            <Form.Group
+              as={Col}
+              controlId='formPlaintextEmail'
+              className={styles.maxWidthLabel}
+            >
+              <div className='d-flex'>
+                <AppFormLabel sm='12' rows lg='3'>
+                  Milestone Report
+                  <span className={styles.required}></span>
+                  {/* <InfoIcon description = "The completed percentage of the project"/>   */}
+                </AppFormLabel>
+                <Row>
+                  {options.map((option, index) => (
+                    <div
+                      key={index}
+                      class='d-flex custom-control custom-checkbox pl-4 pr-4'
+                    >
+                      <input
+                        type='checkbox'
+                        class='custom-control-input'
+                        value={option.name} // Changed from option.value to option.name
+                        checked={option.isChecked}
+                        id={`customCheck${index}`}
+                        onChange={() => handleCheckboxChange(index)}
+                      />{' '}
+                      <label
+                        class='custom-control-label w-100 p-0'
+                        for={`customCheck${index}`}
+                      >
+                        {option.name}
+                      </label>
+                    </div>
+                  ))}
+                </Row>
+              </div>
+              <div>
+                {options.map(
+                  (option, index) =>
+                    option.isChecked && (
+                      <div key={index} style={{ margin: '20px 0px  ' }}>
+                        <AppFormLabel
+                          column
+                          sm='12'
+                          className={styles.labelSameLine}
+                        >
+                          Description for {option.name}
+                        </AppFormLabel>
+                        <Col sm='12' className={styles.inputSameLine}>
+                          <InputGroup size='md'>
+                            <Form.Control
+                              name='Description'
+                              placeholder='Enter Milestone Description'
+                              as='textarea'
+                              rows={3}
+                              onChange={handleChange}
+                            />
+                          </InputGroup>
+                        </Col>
+                        <Button
+                          size='sm'
+                          variant='info'
+                          type='submit'
+                          disabled
+                          style={{ pointerEvents: 'none', marginTop: '8px' }}
+                          onClick={() => handleMilestoneSubmit(index)}
+                        >
+                          Save
+                        </Button>
+                      </div>
+                    ),
+                )}
+              </div>
             </Form.Group>
 
             {/* <Form.Group as={Row} controlId="formPlaintextEmail">

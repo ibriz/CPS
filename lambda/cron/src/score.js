@@ -232,7 +232,7 @@ async function get_proposal_and_progress_report_count() {
   const accepted_active_proposals = await iconService
     .call(
       icon_call_builder('getProposalsKeysByStatus', {
-        _status: '_pending',
+        status: '_pending',
       }),
     )
     .execute();

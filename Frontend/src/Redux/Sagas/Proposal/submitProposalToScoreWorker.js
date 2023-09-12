@@ -13,13 +13,14 @@ function* submitProposalToScoreWorker({ payload }) {
   // }
 
   const params = {
-    _proposals: {
+    proposals: {
+      ipfs_hash: payload.response.hash,
       project_title: payload.proposal.projectName,
+      project_duration: `${payload.proposal.projectDuration}`,
       total_budget: parseInt(payload.proposal.totalBudget).toFixed(),
       sponsor_address: payload.proposal.sponserPrep,
-      ipfs_hash: payload.response.hash,
       ipfs_link: `https://gateway.ipfs.io/ipfs/${payload.response.hash}`,
-      project_duration: `${payload.proposal.projectDuration}`,
+      milestoneCount: `${payload.proposal.milestoneCount}`,
       token: 'bnUSD',
     },
   };

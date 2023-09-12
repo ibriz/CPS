@@ -79,6 +79,25 @@ import {
 } from 'react-router-dom';
 import BackButton from 'Components/UI/BackButton';
 import '../../Theme/variables.css';
+import MilestoneVoteCard from 'Components/MilestoneVotingCard';
+
+const milestoneArray = [
+  {
+    name: 'Project started',
+    description:
+      ' Some placeholder content for the first accordion panel. This panel is shown by default, thanks to the <code>.show ',
+  },
+  {
+    name: 'Project started',
+    description:
+      ' Some placeholder content for the first accordion panel. This panel is shown by default, thanks to the <code>.show ',
+  },
+  {
+    name: 'Project started',
+    description:
+      ' Some placeholder content for the first accordion panel. This panel is shown by default, thanks to the <code>.show ',
+  },
+];
 
 const DescriptionTitle = styled.div`
   font-style: normal;
@@ -708,7 +727,7 @@ function ProposalDetailsPage(props) {
                                 padding: '12px',
                               }}
                             >
-                              <Row
+                              {/* <Row
                                 style={{
                                   justifyContent: 'center',
                                   flexDirection: 'row',
@@ -749,7 +768,22 @@ function ProposalDetailsPage(props) {
                                 >
                                   {error}
                                 </Col>
-                              </Row>
+                              </Row> */}
+                              {milestoneArray.map((milestone, index) => {
+                                return (
+                                  <div
+                                    id='milestoneArray'
+                                    className='d-flex flex-column'
+                                  >
+                                    <MilestoneVoteCard
+                                      id={index + 1}
+                                      name={milestone.name}
+                                      description={milestone.description}
+                                    />
+                                  </div>
+                                );
+                              })}
+
                               <Row>
                                 <Col
                                   xs='12'

@@ -25,10 +25,10 @@ function* fetchCPFTreasuryScoreAddressWorker({ payload }) {
       const response = yield call(callKeyStoreWallet, {
         method:
           payload.type === 'sponsorReward'
-            ? 'get_sponsor_projected_fund'
-            : 'get_contributor_projected_fund',
+            ? 'getSponsorProjectedFund'
+            : 'getContributorProjectedFund',
         params: {
-          _wallet_address: walletAddress,
+          walletAddress: walletAddress,
         },
         scoreAddress: cpsTreasuryScoreAddress,
       });

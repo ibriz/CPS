@@ -25,7 +25,7 @@ function* fetchProposalByAddressWorker({ payload }) {
       method: 'getActiveProposals',
       params: {
         // _status: '_active',
-        _wallet_address: payload.walletAddress,
+        walletAddress: payload.walletAddress,
       },
     });
 

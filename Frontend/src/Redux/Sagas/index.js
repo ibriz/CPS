@@ -74,6 +74,7 @@ import {
   fetchPrepWorker,
   unregisterPrepWorker,
   registerPrepWorker,
+  fetchSponsorBondPercentageWorker,
   payPenaltyWorker,
   fetchPrepsWithStatsWorker,
 } from './PRep';
@@ -145,6 +146,7 @@ import {
   unregisterPrep,
   registerPrep,
   payPenalty,
+  fetchSponsorBondPercentageRequest
 } from '../Reducers/prepsSlice';
 import {
   fetchCPFTreasuryScoreAddressRequest,
@@ -186,7 +188,7 @@ function* rootSaga() {
     fetchSortPriorityProposalListRequest.type,
     fetchSortPriorityProposalListWorker,
   );
-
+  yield takeEvery(fetchSponsorBondPercentageRequest.type, fetchSponsorBondPercentageWorker);
   yield takeEvery(fetchMyProposalListRequest.type, fetchMyProposalListWorker);
   yield takeEvery(fetchProposalByIpfsRequest.type, fetchProposalByIpfsWorker);
 

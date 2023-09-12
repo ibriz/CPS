@@ -15,10 +15,12 @@ import { fetchbnUSDAddressRequest } from './Redux/Reducers/fundSlice';
 import LandingPage from './Containers/LandingPage';
 import { useDispatch } from 'react-redux';
 import { setTheme } from './Redux/Reducers/themeSlice';
+import { fetchSponsorBondPercentageRequest } from './Redux/Reducers/prepsSlice';
 
 function App({
   address,
   fetchUserDataRequest,
+  fetchSponsorBondPercentageRequest,
   fetchUserPromptRequest,
   fetchbnUSDAddressRequest,
 }) {
@@ -73,6 +75,7 @@ function App({
 
   setThemeAtStartup();
   useEffect(() => {
+    fetchSponsorBondPercentageRequest();
     fetchbnUSDAddressRequest();
   }, []);
   return (
@@ -124,6 +127,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = {
   fetchUserDataRequest,
   fetchUserPromptRequest,
+  fetchSponsorBondPercentageRequest,
   fetchbnUSDAddressRequest,
 };
 

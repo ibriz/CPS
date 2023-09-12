@@ -159,6 +159,7 @@ function DetailsModal(props) {
     period,
     remainingTime,
     approvedVoterPercentage,
+    sponsorBondPercentage,
     fetchProposalDetail,
     walletAddress,
     rejectedPercentage,
@@ -370,7 +371,7 @@ function DetailsModal(props) {
       },
       sponsorBond: IconConverter.toBigNumber(
         proposalDetail?.totalBudget,
-      ).dividedBy(10),
+      ).multipliedBy(sponsorBondPercentage),
       reason: sponsorVoteReason.replace(/&nbsp;/g, ''),
     });
     // props.onHide();
@@ -787,6 +788,17 @@ function DetailsModal(props) {
                             flexDirection: 'row',
                           }}
                         >
+                          {/* {milestoneArray.map((milestone, index) => {
+                            return (
+                              <div className='d-flex flex-column'>
+                                <MilestoneVoteCard
+                                  id={index + 1}
+                                  name={milestone.name}
+                                  description={milestone.description}
+                                />
+                              </div>
+                            );
+                          })} */}
                           <ButtonGroup aria-label='Basic example'>
                             {voteOptions.map(voteOption => (
                               <Button
@@ -979,7 +991,7 @@ const mapStateToProps = state => ({
   votesByProposal: state.proposals.votesByProposal,
   approvedPercentage: getProposalApprovedPercentage(state),
   approvedVoterPercentage: getProposalApprovedVotersPercentage(state),
-
+  sponsorBondPercentage: state.preps.sponsorBondPercentage,
   rejectedPercentage: getProposalRejectedPercentage(state),
   rejectedVoterPercentage: getProposalRejectedVotersPercentage(state),
 

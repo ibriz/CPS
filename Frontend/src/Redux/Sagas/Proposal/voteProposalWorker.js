@@ -19,10 +19,10 @@ function* voteProposalWorker({ payload }) {
   const walletAddress = yield select(getAddress);
 
   const params = {
-    _vote: voteStatusMapping[payload.vote],
-    _vote_reason: payload.voteReason,
-    _ipfs_key: payload.ipfsKey,
-    _vote_change: payload.vote_change,
+    vote: voteStatusMapping[payload.vote],
+    vote_reason: payload.voteReason,
+    ipfs_key: payload.ipfsKey,
+    // _vote_change: payload.vote_change,
   };
 
   yield put(setVotingPhase(VotingPhase.SIGNING));

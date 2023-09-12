@@ -10,7 +10,7 @@ function* fetchVoteResultBudgetChangeRequestWorker({ payload }) {
     const response = yield call(callKeyStoreWallet, {
       method: 'getBudgetAdjustmentVoteResult',
       params: {
-        _report_key: payload.reportKey,
+        reportKey: payload.reportKey,
       },
     });
 

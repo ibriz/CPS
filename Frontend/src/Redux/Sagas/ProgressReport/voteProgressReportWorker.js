@@ -18,12 +18,12 @@ function* voteProgressReportWorker({ payload }) {
   const walletAddress = yield select(getAddress);
 
   const params = {
-    _vote: voteStatusMapping[payload.vote],
-    _budget_adjustment_vote: voteStatusMapping[payload.voteProjectTermRevision],
-    _vote_reason: payload.voteReason,
-    _ipfs_key: payload.proposalKey,
-    _report_key: payload.reportKey,
-    _vote_change: payload.vote_change,
+    vote: voteStatusMapping[payload.vote],
+    budgetAdjustmentVote: voteStatusMapping[payload.voteProjectTermRevision],
+    voteReason: payload.voteReason,
+    // ipfs_key: payload.proposalKey,
+    reportKey: payload.reportKey,
+    voteChange: payload.vote_change,
   };
 
   yield put(setVotingPhase(VotingPhase.SIGNING));

@@ -20,13 +20,17 @@
   font-weight: 600;
   font-size: 1.15rem;
 }
+.textContainer{
+  color: var(--font-color);
+}
 
 .container {
-  background: white !important;
+  background: var(--proposal-card-color) !important;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border: solid 1px #27aab9;
+  border-radius: 6px;
+  // border: solid 1px #27aab9;
 
   @media screen and (max-width: 1100px) {
     flex-direction: column;

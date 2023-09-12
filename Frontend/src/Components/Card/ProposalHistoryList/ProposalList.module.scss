@@ -2,7 +2,8 @@
   display: flex;
   justify-content: center;
   font-size: 27px;
-  background-color: white;
+  color: var(--font-color);
+  background-color: var(--proposal-card-color);
   flex-grow: 1;
   padding: 12px;
 }

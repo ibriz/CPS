@@ -4,6 +4,7 @@
   --background-color: #000;
   --primary-color: #1aaaba;
   --primary-text-color: white;
+  --green-color :#c2ffd4;
 
   /* Dashboard */
   --bg-color-1: linear-gradient(
@@ -21,7 +22,7 @@
   --card-highlight-color: rgba(237, 237, 237, 0.4);
   --card-comment-color: #545454;
   --table-background-color: inherit;
-  --table-border-color: rgb(223, 221, 221);
+  --table-border-color: rgb(221, 221, 221);
 
   --proposal-card-color: #ffffff;
   --proposal-border-color: rgba(232, 231, 231, 0.7);
@@ -77,7 +78,7 @@
 [data-theme='dark'] {
   --font-color: #eee;
   --background-color: #333;
-
+  --green-color :#024b18;
   --primary-color: #1aaaba;
   --primary-text-color: #d2d2d2;
 
@@ -92,7 +93,7 @@
   --card-highlight-color: rgba(12, 12, 12, 0.4);
   --card-comment-color: #9e9d9d;
   --table-background-color: #242425 !important;
-  --table-border-color: #242425;
+  --table-border-color: #353535;
 
   --proposal-card-color: #242425;
   --proposal-border-color: #242425;

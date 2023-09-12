@@ -21,9 +21,9 @@ function* fetchSponsorRequestsListWorker({ payload }) {
     const response = yield call(callKeyStoreWallet, {
       method: 'getSponsorsRequests',
       params: {
-        _status: proposalListStatusMapping[payload.status],
-        _sponsor_address: payload.walletAddress,
-        _start_index: 0,
+        status: proposalListStatusMapping[payload.status],
+        sponsorAddress: payload.walletAddress,
+        startIndex: 0,
       },
     });
 
@@ -33,9 +33,9 @@ function* fetchSponsorRequestsListWorker({ payload }) {
       let temp = yield call(callKeyStoreWallet, {
         method: 'getSponsorsRequests',
         params: {
-          _status: proposalListStatusMapping[payload.status],
-          _sponsor_address: payload.walletAddress,
-          _start_index: `${Number(fetchedCount) || 0}`,
+          status: proposalListStatusMapping[payload.status],
+          sponsorAddress: payload.walletAddress,
+          startIndex: `${Number(fetchedCount) || 0}`,
         },
       });
       fetchedCount += temp.data.length;

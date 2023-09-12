@@ -24,7 +24,7 @@ function* fetchProposalVoteResultRequestWorker({ payload }) {
     const response = yield call(callKeyStoreWallet, {
       method: 'getVoteResult',
       params: {
-        _ipfs_key: payload.proposalKey,
+        ipfsKey: payload.proposalKey,
       },
     });
 

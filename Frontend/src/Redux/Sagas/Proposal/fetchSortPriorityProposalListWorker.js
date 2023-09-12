@@ -18,8 +18,8 @@ function* fetchSortPriorityProposalListWorker({ payload }) {
     let arr = [];
     for (let i = 0; i < response.length; i++) {
       const detailsResopnse = yield call(callKeyStoreWallet, {
-        method: 'get_proposal_details_by_hash',
-        params: { _ipfs_key: response[i] },
+        method: 'getProposalDetailsByHash',
+        params: { ipfsKey: response[i] },
       });
       arr.push(detailsResopnse);
     }

@@ -694,7 +694,7 @@ function ProgressReportDetailsPage(props) {
                           fluid
                           style={{
                             marginTop: '12px',
-                            backgroundColor: 'white',
+                            backgroundColor: 'var(--proposal-card-color)',
                             padding: '12px',
                           }}
                         >
@@ -898,14 +898,17 @@ function ProgressReportDetailsPage(props) {
                               {status === 'Voting' && (
                                 <p
                                   style={{
-                                    color: 'var(--proposal-text-color)',
+                                    color: 'var(--font-color)',
                                     textAlign: 'center',
                                   }}
                                 >
                                   You have already voted for this progress
                                   report. <br />{' '}
                                   {changeVote && (
-                                    <ButtonGroup aria-label='Basic example'>
+                                    <ButtonGroup
+                                      style={{ padding: '10px 0' }}
+                                      aria-label='Basic example'
+                                    >
                                       <Button
                                         style={{ width: 200 }}
                                         onClick={() =>

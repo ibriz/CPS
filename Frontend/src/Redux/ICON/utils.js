@@ -12,18 +12,26 @@ import frontEndWallet from './FrontEndWallet';
 // var CPSScore = 'cx00c1e2d9b009fca69002c53c1ce3ed377708381e';
 // var CPSScore = 'cx6bb0e6683dd326165d42289c12b6bd0eaa596cc9';
 // var CPSScore = 'cx9f4ab72f854d3ccdc59aa6f2c3e2215dd62e879f';
-export const CPSScore = 'cx9f4ab72f854d3ccdc59aa6f2c3e2215dd62e879f';
 // export const CPSScore = 'cx7b98401aa6578296abd311b4cb70e90812e9ebae';
 
-var nid = 1;
-export const provider = new HttpProvider('https://ctz.solidwallet.io/api/v3');
+//main net
+// export const CPSScore = 'cx9f4ab72f854d3ccdc59aa6f2c3e2215dd62e879f';
+// var nid = 1;
+// export const provider = new HttpProvider('https://ctz.solidwallet.io/api/v3');
+// export const trackerURL = 'https://tracker.icon.community/address';
+
+//test net
+export const CPSScore = 'cx01762d753ae9aadaf27fe43330d7b12cc46a9a05';
+var nid = 2;
+export const provider = new HttpProvider(
+  'https://lisbon.net.solidwallet.io/api/v3',
+);
+export const trackerURL = 'https://tracker.lisbon.icon.community/address';
+
 // export const provider = new HttpProvider(
 //   'https://bicon.net.solidwallet.io/api/v3',
 // );
-
 export const iconService = new IconService(provider);
-export const trackerURL = 'https://tracker.icon.community/address';
-
 // var testNet = "https://bicon.tracker.solidwallet.io/v3/address/info?address="
 // var mainNet = "https://tracker.icon.foundation/v3/address/info?address="
 
@@ -135,7 +143,9 @@ export function signTransaction(walletAddress) {
     //       resolve(signature);
     //       return;
     //   }
-    store.dispatch(signTransactionRequest({ signature: null, signatureRawData: null }));
+    store.dispatch(
+      signTransactionRequest({ signature: null, signatureRawData: null }),
+    );
 
     const payload = getRanHex(51) + new Date().getTime();
     signTransactionFromICONEX(payload, walletAddress);
@@ -152,7 +162,9 @@ export function signTransaction(walletAddress) {
             payload: -1,
           });
         }
-        store.dispatch(signTransactionRequest({ signature, signatureRawData: payload }));
+        store.dispatch(
+          signTransactionRequest({ signature, signatureRawData: payload }),
+        );
         resolve({
           signature,
           payload,

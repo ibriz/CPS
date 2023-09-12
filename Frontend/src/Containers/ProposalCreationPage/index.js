@@ -248,11 +248,12 @@ const ProposalCreationPage = ({
 }) => {
   const { draftProposal, isDraft } = location;
   const { period } = useTimer();
+  const [milestoneCount, setMilestoneCount] = useState(0);
   const [modalShow, setModalShow] = React.useState(false);
   let [submissionConfirmationShow, setSubmissionConfirmationShow] =
     React.useState(false);
   let [draftConfirmationShow, setDraftConfirmationShow] = React.useState(false);
-
+  const isDarkTheme = localStorage.getItem('theme');
   const [editModalShow, setEditModalShow] = React.useState(false);
   const [editModalIndex, setEditModalIndex] = React.useState();
   const [proposalIPFS, setProposalIPFS] = React.useState({});
@@ -299,6 +300,7 @@ const ProposalCreationPage = ({
     sponserPrepName: null,
     description: null,
     milestones: [],
+    milestoneCount: milestoneCount,
     teamName: null,
     teamEmail: null,
     teamSize: null,
@@ -338,7 +340,7 @@ const ProposalCreationPage = ({
     const totalMonths = proposal.milestones.reduce(
       (sum, milestone) => sum + parseInt(milestone.duration),
       0,
-    );
+    )/30;
     setTotalNumberOfMonthsInMilestone(totalMonths);
 
     console.log('proposal.projectDuration', proposal.projectDuration);
@@ -527,6 +529,7 @@ const ProposalCreationPage = ({
   useEffect(() => {
     fetchAvailableFundRequest();
   }, []);
+  console.log({remainingSwapAmount});
   return (
     <div className={styles.proposalCreationPage}>
       {/* <Header title='Create New Proposal' /> */}
@@ -550,6 +553,7 @@ const ProposalCreationPage = ({
                 <Form.Control
                   placeholder='Project Name'
                   size='md'
+                  className={styles.inputBox}
                   value={proposal.projectName}
                   name='projectName'
                   id='projectName'
@@ -571,6 +575,7 @@ const ProposalCreationPage = ({
                 <Form.Control
                   size='md'
                   as='select'
+                  className={styles.inputBox}
                   value={proposal.category}
                   name='category'
                   id='category'
@@ -600,6 +605,7 @@ const ProposalCreationPage = ({
                     value={proposal.projectDuration}
                     name='projectDuration'
                     id='projectDuration'
+                    className={styles.inputBox}
                     onChange={handleChange}
                     min={0}
                     max={12}
@@ -633,6 +639,7 @@ const ProposalCreationPage = ({
                     min={0}
                     max={remainingSwapAmount}
                     type='number'
+                    className={styles.inputBox}
                     value={proposal.totalBudget}
                     name='totalBudget'
                     id='totalBudget'
@@ -668,6 +675,7 @@ const ProposalCreationPage = ({
                 <Form.Control
                   size='md'
                   as='select'
+                  className={styles.inputBox}
                   value={proposal.sponserPrep}
                   name='sponserPrep'
                   id='sponserPrep'
@@ -729,7 +737,7 @@ const ProposalCreationPage = ({
               </Form.Label>
               <Col sm='12'>
                 <Button
-                  variant='dark'
+                  variant={isDarkTheme ==='dark' ? 'dark' : 'light'}
                   onClick={() => setModalShow(true)}
                   style={{ position: 'relative' }}
                 >
@@ -748,6 +756,7 @@ const ProposalCreationPage = ({
                   <tr>
                     <th>Milestone Name</th>
                     <th>Duration</th>
+                    <th>Description</th>
                     <th></th>
                   </tr>
                 </thead>
@@ -757,9 +766,10 @@ const ProposalCreationPage = ({
                       <tr>
                         <td>{milestone.name}</td>
                         <td>
-                          {milestone.duration} month
+                          {milestone.duration} day
                           {milestone.duration > 1 && 's'}
                         </td>
+                        <td>{milestone.description}</td>
                         <td
                           style={{ display: 'flex', justifyContent: 'center' }}
                         >
@@ -792,7 +802,7 @@ const ProposalCreationPage = ({
                         <b>TOTAL</b>
                       </td>
                       <td>
-                        <b>{totalNumberOfMonthsInMilestone} months</b>
+                        <b>{totalNumberOfMonthsInMilestone} month</b>
                       </td>
                     </tr>
                   </>
@@ -809,6 +819,7 @@ const ProposalCreationPage = ({
 
               <Col sm='3' className={styles.inputSameLine}>
                 <Form.Control
+                  className={styles.inputBox}
                   placeholder={'Team Name'}
                   size={'md'}
                   value={proposal.teamName}
@@ -826,6 +837,7 @@ const ProposalCreationPage = ({
 
               <Col sm='2' className={styles.inputSameLine}>
                 <Form.Control
+                  className={styles.inputBox}
                   placeholder={'Team Email'}
                   type='email'
                   size={'md'}
@@ -842,6 +854,7 @@ const ProposalCreationPage = ({
               </Form.Label>
               <Col sm='2' className={styles.inputSameLine}>
                 <Form.Control
+                  className={styles.inputBox}
                   placeholder={'Team Size'}
                   size={'md'}
                   type='number'
@@ -923,6 +936,7 @@ const ProposalCreationPage = ({
           setProposal(prevState => ({
             ...prevState,
             milestones: [...prevState.milestones, milestone],
+            milestoneCount: prevState.milestoneCount+1
           }));
         }}
       />

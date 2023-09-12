@@ -10,7 +10,7 @@ function* fetchProposalVoteResultRequestWorker({ payload }) {
     const response = yield call(callKeyStoreWallet, {
       method: 'getProgressReportResult',
       params: {
-        _report_key: payload.reportKey,
+        reportKey: payload.reportKey,
       },
     });
 

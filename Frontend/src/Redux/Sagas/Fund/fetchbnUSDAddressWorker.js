@@ -7,7 +7,7 @@ import {
 function* fetchbnUSDScoreWorker() {
     try {
         const response = yield call(callKeyStoreWallet, {
-            method: 'get_bnUSD_score'
+            method: 'getBnusdScore'
         });
         yield put(
             fetchbnUSDAddressSuccess(

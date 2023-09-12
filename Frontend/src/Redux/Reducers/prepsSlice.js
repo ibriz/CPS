@@ -1,7 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
+const BigNumber = require('bignumber.js');
 
 const initialState = {
   preps: [],
+  sponsorBondPercentage: null,
   prepsWithStats: null,
   loading: false,
 };
@@ -50,6 +52,19 @@ const prepsSlice = createSlice({
     fetchPrepsWithStatsFailure(state) {
       return;
     },
+    fetchSponsorBondPercentageRequest(state) {
+      return;
+    },
+    fetchSponsorBondPercentageSuccess(state, action) {
+      state.sponsorBondPercentage = BigNumber(action.payload).toFixed() / 100;
+      console.log(
+        '=================================',
+        BigNumber(action.payload).toFixed() / 100,
+      );
+    },
+    fetchSponsorBondPercentageFailure(state, action) {
+      console.log('###################################', action.payload);
+    },
   },
 });
 
@@ -63,5 +78,8 @@ export const {
   unregisterPrep,
   registerPrep,
   payPenalty,
+  fetchSponsorBondPercentageRequest,
+  fetchSponsorBondPercentageSuccess,
+  fetchSponsorBondPercentageFailure,
 } = prepsSlice.actions;
 export default prepsSlice.reducer;

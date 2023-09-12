@@ -249,6 +249,8 @@ function DetailsModal(props) {
       // ipfsKey: proposal.ipfsKey,
       // sponsorBond: proposalDetail.totalBudget * 0.1
     });
+    setSponsorConfirmationShow(true);
+    setSponsorVote('approve');
     // props.onHide();
   };
 
@@ -256,6 +258,8 @@ function DetailsModal(props) {
     rejectSponsorRequest({
       // ipfsKey: proposal.ipfsKey,
     });
+    setSponsorConfirmationShow(true);
+    setSponsorVote('reject');
     // props.onHide();
   };
 
@@ -512,7 +516,7 @@ function DetailsModal(props) {
                 </Col>
 
                 {/* <Col lg="4" className = "d-none d-lg-block"> */}
-                <Col lg='4' xs='12'>
+                <Col lg='12' xs='12'>
                   <Col
                     xs='12'
                     style={{
@@ -602,10 +606,6 @@ function DetailsModal(props) {
                     <Button
                       variant='success'
                       onClick={onClickApproveSponsorRequest}
-                      onClick={() => {
-                        setSponsorConfirmationShow(true);
-                        setSponsorVote('approve');
-                      }}
                     >
                       Approve
                     </Button>
@@ -613,10 +613,6 @@ function DetailsModal(props) {
                       variant='danger'
                       className={styles.rejectButton}
                       onClick={onClickRejectSponsorRequest}
-                      onClick={() => {
-                        setSponsorConfirmationShow(true);
-                        setSponsorVote('reject');
-                      }}
                     >
                       Reject
                     </Button>

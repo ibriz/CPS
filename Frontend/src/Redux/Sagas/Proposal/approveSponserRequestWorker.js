@@ -9,7 +9,7 @@ function* approveSponserRequestWorker({ payload }) {
   const { IconAmount, IconConverter } = IconService;
   yield put(setVotingPhase(VotingPhase.SIGNING));
   const { signature } = yield signTransaction(store.getState().account.address);
-
+  console.log({payload});
   if (signature == '-1' || !signature) {
     return;
   }

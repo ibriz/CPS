@@ -10,7 +10,7 @@ function* fetchProposalByIpfsWorker({ payload }) {
     console.log('IPFS payload', payload);
     const response = yield call(callKeyStoreWallet, {
       method: 'getProgressReportsByHash',
-      params: { _report_key: payload.ipfs_key },
+      params: { reportKey: payload.ipfs_key },
     });
     yield put(
       fetchProgressReportByIpfsSuccess({

@@ -1,0 +1,28 @@
+table{
+    
+    /* width: 100%; */
+    /* border: lightgray solid 1px; */
+    width: 100%; /* Adjust as necessary */
+    border-collapse: collapse;
+    table-layout: auto; 
+}
+th, td {
+    border: 1px solid var(--table-border-color);
+    padding: 8px;
+    text-align: left;
+  }
+  th {
+    background-color: var(--proposal-card-color);
+    color: var(--font-color);
+    font-size: 14px;
+  }
+  td {
+    font-size: 13px;
+  }
+
+ .voted{
+    background-color:var(--green-color);
+ }
+ .notVoted{
+    background-color: rgb(85, 12, 2);
+ }

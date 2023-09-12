@@ -7,7 +7,7 @@ const StatsPage = () => {
   const { period } = useTimer();
 
   const votingTabs = ['Validator stats', 'Platform stats'];
-  const applicationTabs = ['Platform stats'];
+  const applicationTabs = ['Platform stats', 'Validator stats'];
 
   return (
     <Container fluid>
@@ -20,6 +20,7 @@ const StatsPage = () => {
           stateList={applicationTabs}
           initialState={applicationTabs[0]}
         />
+        // <StatsCard stateList={votingTabs} initialState={votingTabs[0]} />
       )}
     </Container>
   );

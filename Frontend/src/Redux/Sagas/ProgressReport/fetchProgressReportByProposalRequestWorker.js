@@ -11,7 +11,7 @@ function* submitProgressReportWorker({ payload }) {
     const response = yield call(callKeyStoreWallet, {
       method: 'getProgressReportsByProposal',
       params: {
-        _ipfs_key: payload.proposalKey,
+        ipfsKey: payload.proposalKey,
       },
     });
 

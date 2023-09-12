@@ -10,9 +10,9 @@ export default function* loginPrepWorker() {
     const getAddress = state => state.account.address;
     const walletAddress = yield select(getAddress);
     let response = yield call(callKeyStoreWallet, {
-      method: 'login_prep',
+      method: 'loginPrep',
       params: {
-        _address: walletAddress,
+        address: walletAddress,
       },
     });
 
