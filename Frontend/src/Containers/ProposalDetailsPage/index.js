@@ -80,6 +80,7 @@ import {
 import BackButton from 'Components/UI/BackButton';
 import '../../Theme/variables.css';
 import MilestoneVoteCard from 'Components/MilestoneVotingCard';
+import MilestoneListCard from 'Components/MilestoneCard';
 
 const milestoneArray = [
   {
@@ -197,6 +198,7 @@ function ProposalDetailsPage(props) {
     voteProposal,
     progressReportByProposal,
     votesByProposal,
+    sponsorBondPercentage,
     fetchVoteResultRequest,
     approvedPercentage,
     fetchProgressReportByProposalRequest,
@@ -437,7 +439,7 @@ function ProposalDetailsPage(props) {
       },
       sponsorBond: IconConverter.toBigNumber(
         proposalDetail?.totalBudget,
-      ).dividedBy(10),
+      ).multipliedBy(sponsorBondPercentage),
       reason: sponsorVoteReason.replace(/&nbsp;/g, ''),
     });
     // props.onHide();
@@ -565,6 +567,11 @@ function ProposalDetailsPage(props) {
                           </div>
                         </Col>
                       </Row>
+                    )}
+                    {proposalDetail?.milestones?.length > 0 && (
+                      <MilestoneListCard
+                        milestoneList={proposalDetail?.milestones}
+                      />
                     )}
 
                     {proposalDetail?.sponserPrep === walletAddress &&
@@ -1287,7 +1294,7 @@ const mapStateToProps = state => ({
   period: state.period.period,
   remainingTime: state.period.remainingTime,
   walletAddress: state.account.address,
-
+  sponsorBondPercentage: state.preps.sponsorBondPercentage,
   preps: state.preps.preps,
   sponsorMessage: state.proposals.sponsorMessage,
   isPrep: state.account.isPrep,

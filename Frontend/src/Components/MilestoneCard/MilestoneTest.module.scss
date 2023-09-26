@@ -1,0 +1,98 @@
+.container {
+  margin-top: 15px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background-color: var(--proposal-card-color);
+}
+
+.heading {
+  font-weight: 600;
+  color: var(--font-color);
+  font-size: 18px;
+}
+
+.leftCol {
+border-right: 0.75px solid #525252;
+}
+
+.icon {
+  font-size: 1rem;
+  margin-top: 0.2rem;
+  margin-right: 0.5rem; /* Add spacing between icon and text */
+  vertical-align: middle; /* Align icon vertically */
+  border-radius: 50%;
+  color: #e9f0f5;
+  background-color: #00563b;
+}
+
+.navItem {
+  width: 100%;
+}
+
+.smallText {
+  font-size: 12px;
+  color: var(--font-color);
+  margin: 0 !important
+}
+.headingText {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--font-color);
+  margin: 0 !important
+}
+
+.milestoneTab {
+  font-size: 13px;
+  color: black;
+  display: flex;
+  border-bottom: 1px solid #ccc;
+  // background-color: red;
+  width: 100%;
+}
+
+.flexColumn {
+  // background-color: red !important;
+  display: flex;
+  gap: 12px;
+  flex-direction: column;
+  justify-content: start;
+  width: 100%;
+}
+.tabContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.description {
+  font-size: 16px;
+  color: var(--font-color);
+  font-weight: 600;
+  margin-left: 10px;
+  margin-top: -5px;
+  // border-left: 1px solid #ccc;
+}
+
+.descContent {
+  font-size: 14px;
+  color: var(--font-color);
+  font-weight: 400;
+  margin-left: 10px;
+  margin-top: 5px;
+  margin-right: 20px;
+  overflow-wrap: normal;
+}
+
+.rightCol {
+  // border-left: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+
+.tab {
+  // background-color: red !important;
+
+  :active {
+    background-color: red !important ;
+  }
+}

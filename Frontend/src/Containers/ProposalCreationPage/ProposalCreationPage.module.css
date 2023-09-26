@@ -106,4 +106,5 @@
 td,th {
   color: var(--font-color);
   font-size: 14px;
+  border: 1px;
 }

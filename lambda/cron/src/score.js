@@ -256,8 +256,8 @@ async function getRemainingProjects(address, type) {
   const project_list = await iconService
     .call(
       icon_call_builder('getRemainingProject', {
-        _project_type: type,
-        _wallet_address: address,
+        projectType: type,
+        walletAddress: address,
       }),
     )
     .execute();

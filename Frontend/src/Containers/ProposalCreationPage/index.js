@@ -730,40 +730,26 @@ const ProposalCreationPage = ({
             </Form.Group>
 
             <Form.Group as={Row}>
-              <Form.Label column sm='12'>
+              <Form.Label  column sm='12'>
                 Milestones
                 <span className={styles.required}></span>
                 {/* <InfoIcon description="Milestone for the project" /> */}
               </Form.Label>
-              <Col sm='12'>
-                <Button
-                  variant={isDarkTheme ==='dark' ? 'dark' : 'light'}
-                  onClick={() => setModalShow(true)}
-                  style={{ position: 'relative' }}
-                >
-                  Add Milestone{' '}
-                  <input
-                    className={styles.milestoneFakeInput}
-                    id='milestones'
-                  />
-                </Button>
-              </Col>
-            </Form.Group>
-
-            {proposal.milestones.length > 0 && (
-              <Table striped bordered hover>
+              <div className="pl-3 pr-3 w-100 overflow-auto mb-4">
+              { (
+              <Table bordered>
                 <thead>
                   <tr>
                     <th>Milestone Name</th>
                     <th>Duration</th>
                     <th>Description</th>
-                    <th></th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
                   <>
                     {proposal.milestones.map((milestone, index) => (
-                      <tr>
+                      <tr style={{height:'100%'}} key={index}>
                         <td>{milestone.name}</td>
                         <td>
                           {milestone.duration} day
@@ -771,11 +757,11 @@ const ProposalCreationPage = ({
                         </td>
                         <td>{milestone.description}</td>
                         <td
-                          style={{ display: 'flex', justifyContent: 'center' }}
+                          style={{ }}
                         >
                           {' '}
                           <AiFillDelete
-                            style={{ cursor: 'pointer' }}
+                            style={{ cursor: 'pointer',fontSize:'20px' }}
                             onClick={() => {
                               setProposal(prevState => {
                                 const newMilestone = [...prevState.milestones];
@@ -788,7 +774,7 @@ const ProposalCreationPage = ({
                             }}
                           />
                           <FiEdit2
-                            style={{ marginLeft: '10px', cursor: 'pointer' }}
+                            style={{ marginLeft: '10px', fontSize:'20px' , cursor: 'pointer' }}
                             onClick={() => {
                               setEditModalShow(true);
                               setEditModalIndex(index);
@@ -809,6 +795,24 @@ const ProposalCreationPage = ({
                 </tbody>
               </Table>
             )}
+              </div>
+             
+              <Col sm='12'>
+                <Button
+                  variant={isDarkTheme ==='dark' ? 'dark' : 'light'}
+                  onClick={() => setModalShow(true)}
+                  style={{ position: 'relative' }}
+                >
+                  Add Milestone{' '}
+                  <input
+                    className={styles.milestoneFakeInput}
+                    id='milestones'
+                  />
+                </Button>
+              </Col>
+            </Form.Group>
+
+            
 
             <Form.Group as={Row}>
               <Form.Label column sm='2'>

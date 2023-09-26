@@ -12,11 +12,15 @@ function* rejectSponserRequestWorker({ payload }) {
       ipfs_hash: payload.ipfsKey,
       vote: '_reject',
       vote_reason: payload.reason,
-    }
+    },
   });
   const getbnUSDAddress = state => state.fund.bnUSDScoreAddress;
   const bnUSDScore = yield select(getbnUSDAddress);
-  const params = { '_to': CPSScore, '_value': IconConverter.toHex(IconAmount.of(0, IconAmount.Unit.ICX).toLoop()), "_data": IconConverter.toHex(data) }
+  const params = {
+    _to: CPSScore,
+    _value: IconConverter.toHex(IconAmount.of(0, IconAmount.Unit.ICX).toLoop()),
+    _data: IconConverter.toHex(data),
+  };
 
   const { signature } = yield signTransaction(store.getState().account.address);
   if (signature == '-1' || !signature) {
@@ -35,8 +39,8 @@ function* rejectSponserRequestWorker({ payload }) {
       projectName: payload.proposal.title,
       address: payload.proposal.contributorAddress,
       sponsorAddress: payload.proposal.sponsorAddress,
-      sponsorAction: 'rejected'
-    })
+      sponsorAction: 'rejected',
+    }),
   );
 
   console.log(params);

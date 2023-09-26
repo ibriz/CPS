@@ -66,7 +66,7 @@ function AddMilestoneModal(props) {
       <Modal.Body>
         <Form onSubmit={handleSubmit}>
           <Form.Group as={Col} controlId='formPlaintextEmail'>
-            <Form.Label sm='6' className={styles.textColor}>
+            <Form.Label column   sm='6' className={styles.textColor}>
               Title
             </Form.Label>
             <Col sm='12' className={styles.inputSameLine}>
@@ -82,19 +82,22 @@ function AddMilestoneModal(props) {
             </Col>
           </Form.Group>
           <Form.Group as={Col} controlId='formPlaintextEmail'>
-            <Form.Label sm='6' className={styles.textColor}>
+          <Form.Label column sm='6' className={styles.textColor}>
               Duration
             </Form.Label>
             <Col sm='12' className={styles.inputSameLine}>
+           
               <Form.Control
                 placeholder='Enter Duration (in days)'
                 size='md'
+                type='number'
                 className={styles.inputBox}
                 value={milestone.duration}
                 name='duration'
                 onChange={handleChange}
                 required
               />
+               
             </Col>
           </Form.Group>
           <Form.Group as={Col} controlId='formPlaintextEmail'>
@@ -102,18 +105,18 @@ function AddMilestoneModal(props) {
               Description
             </Form.Label>
             <Col sm='12' className={styles.inputSameLine}>
-              <InputGroup size='md'>
+             
                 <Form.Control
                   name='description'
                   value={milestone.description}
                   className={styles.inputBox}
                   placeholder='Enter Milestone Description'
                   as='textarea'
-                  rows={3}
+                  rows={5}
                   required
                   onChange={handleChange}
                 />
-              </InputGroup>
+            
             </Col>
           </Form.Group>
           {/* <AppFormLabel column sm="1">

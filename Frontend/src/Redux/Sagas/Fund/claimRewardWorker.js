@@ -10,6 +10,7 @@ function* claimRewardWorker({ payload }) {
     method: 'claimReward',
     scoreAddress: cpsTreasuryScoreAddress,
   });
+  console.log('-----------------ClaimReward---------------------');
 }
 
 export default claimRewardWorker;

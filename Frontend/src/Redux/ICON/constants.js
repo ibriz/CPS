@@ -10,7 +10,7 @@ export default {
   registerPrep: 32008,
   payPrepPenalty: 32009,
   approve_sponsor: 32010,
-  claim_reward: 32011,
-  claim_sponsor_bond: 32012,
+  claimReward: 32011,
+  claimSponsorBond: 32012,
   votePriority: 32013,
 };

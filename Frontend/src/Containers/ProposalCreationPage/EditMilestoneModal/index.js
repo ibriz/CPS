@@ -59,16 +59,20 @@ function EditMilestoneModal(props) {
       size='lg'
       aria-labelledby='contained-modal-title-vcenter'
       centered
+      contentClassName={styles['modal-content']}
     >
       <Modal.Header closeButton>
-        <Modal.Title id='contained-modal-title-vcenter'>Milestone</Modal.Title>
+        <Modal.Title id='contained-modal-title-vcenter'>Edit Milestone</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form onSubmit={handleSubmit} className={styles.form}>
-          <Form.Group as={Row} controlId='formPlaintextEmail'>
-            <AppFormLabel sm='2'>Milestone Name</AppFormLabel>
-            <Col sm='10' className={styles.inputSameLine}>
+        <Form onSubmit={handleSubmit}>
+          <Form.Group as={Col} controlId='formPlaintextEmail'>
+          <Form.Label column sm='6' className={styles.textColor}>
+              Title
+            </Form.Label>
+            <Col sm='12' className={styles.inputSameLine}>
               <Form.Control
+               className={styles.inputBox}
                 placeholder='Enter Milestone Name'
                 size='md'
                 value={milestone.name}
@@ -78,24 +82,23 @@ function EditMilestoneModal(props) {
               />
             </Col>
           </Form.Group>
-          <Form.Group as={Row} controlId='formPlaintextEmail'>
-            <AppFormLabel column sm='2' className={styles.labelSameLine}>
+          <Form.Group as={Col} controlId='formPlaintextEmail'>
+          <Form.Label column sm='6' className={styles.textColor}>
               Duration
-            </AppFormLabel>
-            <Col sm='4' className={styles.inputSameLine}>
+            </Form.Label>
+            <Col sm='12' className={styles.inputSameLine}>
               <InputGroup size='md'>
                 <FormControl
-                  placeholder='Duration'
+                 className={styles.inputBox}
+                  placeholder='Duration in days'
                   type='number'
-                  min={0}
-                  max={12}
                   value={milestone.duration}
                   name='duration'
                   onChange={handleChange}
                   required
                 />
                 <InputGroup.Append>
-                  <InputGroup.Text>Months</InputGroup.Text>
+                  <InputGroup.Text>Days</InputGroup.Text>
                 </InputGroup.Append>
               </InputGroup>
             </Col>
@@ -112,6 +115,25 @@ function EditMilestoneModal(props) {
                                 </InputGroup.Append>
                             </InputGroup>
                         </Col> */}
+          </Form.Group>
+          <Form.Group as={Col} controlId='formPlaintextEmail'>
+            <Form.Label column sm='6' className={styles.textColor}>
+              Description
+            </Form.Label>
+            <Col sm='12' className={styles.inputSameLine}>
+             
+                <Form.Control
+                  name='description'
+                  value={milestone.description}
+                  className={styles.inputBox}
+                  placeholder='Enter Milestone Description'
+                  as='textarea'
+                  rows={5}
+                  required
+                  onChange={handleChange}
+                />
+            
+            </Col>
           </Form.Group>
 
           {/* <Form.Group as={Row} controlId="formPlaintextPassword">

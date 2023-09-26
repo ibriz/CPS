@@ -630,35 +630,13 @@ const ProgressReportCreationPage = ({
               controlId='formPlaintextEmail'
               className={styles.maxWidthLabel}
             >
-              <AppFormLabel column lg='3'>
-                Percentage Completed
-                <span className={styles.required}></span>
-                {/* <InfoIcon description = "The completed percentage of the project"/>   */}
-              </AppFormLabel>
-              <Col lg='2' className={styles.inputSameLine}>
-                <InputGroup size='md'>
-                  <FormControl
-                    placeholder='Percentage Completed'
-                    type='number'
-                    min={0}
-                    max={100}
-                    value={progressReport.percentageCompleted}
-                    name='percentageCompleted'
-                    id='percentageCompleted'
-                    onChange={handleChange}
-                    required
-                  />
-                  <InputGroup.Append>
-                    <InputGroup.Text>%</InputGroup.Text>
-                  </InputGroup.Append>
-                </InputGroup>
-              </Col>
-              <AppFormLabel column lg='3' className={styles.labelSameLine}>
+            
+              <AppFormLabel row lg='3' className={styles.labelSameLine}>
                 Time Remaining to Completion
                 <span className={styles.required}></span>
                 {/* <InfoIcon description = "The estimated remaining time for the project"/>   */}
               </AppFormLabel>
-              <Col lg='3' className={styles.inputSameLine}>
+              <Col lg='9' className={styles.inputSameLine}>
                 <InputGroup size='md'>
                   <FormControl
                     placeholder='Time Remaining'
@@ -668,13 +646,11 @@ const ProgressReportCreationPage = ({
                     id='timeRemainingToCompletion'
                     onChange={handleChange}
                     min={0}
-                    max={6}
-                    disabled
-                    style={{ backgroundColor: 'white' }}
+                    className={styles.inputBox}
                     required
                   />
                   <InputGroup.Append>
-                    <InputGroup.Text>Months</InputGroup.Text>
+                    <InputGroup.Text>Days</InputGroup.Text>
                   </InputGroup.Append>
                 </InputGroup>
               </Col>
@@ -711,16 +687,16 @@ const ProgressReportCreationPage = ({
               </Col>
             </Form.Group>
             <Form.Group
-              as={Col}
+             
               controlId='formPlaintextEmail'
               className={styles.maxWidthLabel}
             >
               <div className='d-flex'>
-                <AppFormLabel sm='12' rows lg='3'>
+                <Form.Label sm='12' column lg='2'>
                   Milestone Report
                   <span className={styles.required}></span>
                   {/* <InfoIcon description = "The completed percentage of the project"/>   */}
-                </AppFormLabel>
+                </Form.Label>
                 <Row>
                   {options.map((option, index) => (
                     <div
@@ -736,7 +712,7 @@ const ProgressReportCreationPage = ({
                         onChange={() => handleCheckboxChange(index)}
                       />{' '}
                       <label
-                        class='custom-control-label w-100 p-0'
+                        class='custom-control-label w-100'
                         for={`customCheck${index}`}
                       >
                         {option.name}
@@ -750,20 +726,21 @@ const ProgressReportCreationPage = ({
                   (option, index) =>
                     option.isChecked && (
                       <div key={index} style={{ margin: '20px 0px  ' }}>
-                        <AppFormLabel
+                        <Form.Label
                           column
                           sm='12'
                           className={styles.labelSameLine}
                         >
                           Description for {option.name}
-                        </AppFormLabel>
-                        <Col sm='12' className={styles.inputSameLine}>
+                        </Form.Label>
+                        <Col column sm='12' className={styles.inputSameLine}>
                           <InputGroup size='md'>
                             <Form.Control
+                            className={styles.inputBox}
                               name='Description'
                               placeholder='Enter Milestone Description'
                               as='textarea'
-                              rows={3}
+                              rows={5}
                               onChange={handleChange}
                             />
                           </InputGroup>

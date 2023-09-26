@@ -95,7 +95,7 @@ export function sendTransaction({
     jsonrpc: '2.0',
     method: 'icx_sendTransaction',
     params: IconConverter.toRawTransaction(txnData),
-    id: id ? constants[id] : constants[method],
+    id: id ? `${constants[id]}` : `${constants[method]}`,
   };
   console.log(txnPayload);
   window.parent.dispatchEvent(

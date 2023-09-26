@@ -17,8 +17,8 @@ function* fetchRemainingVotesRequestWorker({ payload }) {
     const response = yield call(callKeyStoreWallet, {
       method: 'getRemainingProject',
       params: {
-        _wallet_address: walletAddress,
-        _project_type: payload.type,
+        walletAddress: walletAddress,
+        projectType: payload.type,
       },
     });
 
