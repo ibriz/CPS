@@ -61,7 +61,7 @@ function AddMilestoneModal(props) {
       contentClassName={styles['modal-content']}
     >
       <Modal.Header closeButton>
-        <Modal.Title id='contained-modal-title-vcenter'>Milestone</Modal.Title>
+        <Modal.Title id='contained-modal-title-vcenter'>Add Milestone</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmit}>
@@ -86,7 +86,7 @@ function AddMilestoneModal(props) {
               Duration
             </Form.Label>
             <Col sm='12' className={styles.inputSameLine}>
-           
+            <InputGroup size='md'>
               <Form.Control
                 placeholder='Enter Duration (in days)'
                 size='md'
@@ -97,7 +97,10 @@ function AddMilestoneModal(props) {
                 onChange={handleChange}
                 required
               />
-               
+            <InputGroup.Append>
+                  <InputGroup.Text>Days</InputGroup.Text>
+                </InputGroup.Append>
+                </InputGroup>
             </Col>
           </Form.Group>
           <Form.Group as={Col} controlId='formPlaintextEmail'>

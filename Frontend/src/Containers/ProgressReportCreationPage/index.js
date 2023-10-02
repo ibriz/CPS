@@ -9,6 +9,7 @@ import {
   Button,
   Alert,
 } from 'react-bootstrap';
+import ClassNames from 'classnames';
 import styles from './ProposalCreationPage.module.css';
 import {
   fetchCPFTreasuryScoreAddressRequest,
@@ -567,12 +568,12 @@ const ProgressReportCreationPage = ({
               controlId='formPlaintextEmail'
               className={styles.maxWidthLabel}
             >
-              <AppFormLabel column lg='3'>
+              <Form.Label column lg='2'>
                 Project Name
                 <span className={styles.required}></span>
                 {/* <InfoIcon description = "The project for which the progress report is being submitted"/>    */}
-              </AppFormLabel>
-              <Col lg='9' className={styles.inputSameLine}>
+              </Form.Label>
+              <Col lg='10' className={styles.inputSameLine}>
                 <Form.Control
                   size='md'
                   as='select'
@@ -599,20 +600,13 @@ const ProgressReportCreationPage = ({
                 </Form.Control>{' '}
               </Col>
             </Form.Group>
-
-            <Form.Group
-              as={Row}
-              controlId='formPlaintextEmail'
-              className={styles.maxWidthLabel}
-            >
-              <AppFormLabel column lg='3'>
-                Progress Report Name
+            <Form.Group as={Row}>
+              <Form.Label column sm='2'>
+              Progress Report Name
                 <span className={styles.required}></span>
-                <InfoIcon
-                  description={specialCharacterMessage('progress report name')}
-                />
-              </AppFormLabel>
-              <Col lg='9' className={styles.inputSameLine}>
+                {/* <InfoIcon description="The category the project falls into" /> */}
+              </Form.Label>
+              <Col lg='4' className={styles.inputSameLine}>
                 <Form.Control
                   placeholder='Progress Report Name'
                   size='md'
@@ -623,20 +617,13 @@ const ProgressReportCreationPage = ({
                   onChange={handleChange}
                   required
                 />
-              </Col>
-            </Form.Group>
-            <Form.Group
-              as={Row}
-              controlId='formPlaintextEmail'
-              className={styles.maxWidthLabel}
-            >
-            
-              <AppFormLabel row lg='3' className={styles.labelSameLine}>
-                Time Remaining to Completion
+                </Col>
+              <Form.Label column sm='2' className={styles.labelSameLine}>
+              Time Remaining to Completion
                 <span className={styles.required}></span>
-                {/* <InfoIcon description = "The estimated remaining time for the project"/>   */}
-              </AppFormLabel>
-              <Col lg='9' className={styles.inputSameLine}>
+                {/* <InfoIcon description="The expected time (in months) to complete the project (can be upto 12 months)" /> */}
+              </Form.Label>
+              <Col lg='4' className={styles.inputSameLine}>
                 <InputGroup size='md'>
                   <FormControl
                     placeholder='Time Remaining'
@@ -655,6 +642,8 @@ const ProgressReportCreationPage = ({
                 </InputGroup>
               </Col>
             </Form.Group>
+           
+        
 
             <Form.Group as={Row} controlId='formPlaintextPassword'>
               <AppFormLabel column lg='12'>

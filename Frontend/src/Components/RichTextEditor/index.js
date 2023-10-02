@@ -3,8 +3,8 @@ import CKEditor from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import ImageUploadAdapter from '../../Helpers/ImageUploadAdapter';
 import { TiTick } from 'react-icons/ti';
-import editorCss from './editorCss.css';
 import { ImCross } from 'react-icons/im';
+import editorCss from './editorCss.css'
 
 export function modelElementToPlainText(element) {
   if (element.is('text') || element.is('textProxy')) {
