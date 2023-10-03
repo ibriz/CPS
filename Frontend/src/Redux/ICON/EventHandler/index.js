@@ -51,6 +51,7 @@ const {
   registerPrep,
   payPrepPenalty,
   approve_sponsor,
+  claimSponsorBond,
   claim_reward,
   votePriority,
 } = constants;
