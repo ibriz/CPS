@@ -529,7 +529,7 @@ const ProposalCreationPage = ({
   useEffect(() => {
     fetchAvailableFundRequest();
   }, []);
-  console.log({remainingSwapAmount});
+  // console.log({remainingSwapAmount});
   return (
     <div className={styles.proposalCreationPage}>
       {/* <Header title='Create New Proposal' /> */}

@@ -19,6 +19,7 @@ function* submitProposalToScoreWorker({ payload }) {
       project_duration: `${payload.proposal.projectDuration}`,
       total_budget: parseInt(payload.proposal.totalBudget).toFixed(),
       sponsor_address: payload.proposal.sponserPrep,
+      isMilestone: `0x${Number(!!payload.proposal.milestoneCount)}`,
       ipfs_link: `https://gateway.ipfs.io/ipfs/${payload.response.hash}`,
       milestoneCount: `${payload.proposal.milestoneCount}`,
       token: 'bnUSD',
@@ -32,17 +33,17 @@ function* submitProposalToScoreWorker({ payload }) {
   });
 
   console.log(params);
-
-  //     const response = yield call(submitProposal, payload.proposal);
-  //     yield put(submitProposalSuccess(
-  //       {
-  //         response,
-  //         proposal: payload.proposal
-  //       }
-  //     ));
-  //   } catch (error) {
-  //     yield put(submitProposalFailure());
-  //   }
+// try{
+//       const response = yield call(submitProposal, payload.proposal);
+//       yield put(submitProposalSuccess(
+//         {
+//           response,
+//           proposal: payload.proposal
+//         }
+//       ));
+//     } catch (error) {
+//       yield put(submitProposalFailure());
+//     }
 }
 
 export default submitProposalToScoreWorker;

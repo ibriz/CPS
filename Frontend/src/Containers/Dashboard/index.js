@@ -417,10 +417,14 @@ const Dashboard = ({
         <Row style={{ marginTop: '15px' }}>
           <Col xs='12'>
             <Container className={styles.container}>
-              <img src={congratulationsImg} style={{ padding: '24px' }} />
+            <img
+                src={isDarkTheme ? congratulationsWhiteImg : congratulationsImg}
+                style={{ padding: '24px' }}
+              />
               {isPrep && (
                 <Container style={{ display: 'flex', flexDirection: 'column' }}>
                   <span
+                        className={styles.textContainer}
                     style={{
                       fontWeight: '500',
                       fontSize: '1.5rem',
@@ -431,6 +435,7 @@ const Dashboard = ({
                   </span>
 
                   <span
+                        className={styles.textContainer}
                     style={{
                       fontWeight: '500',
                       fontSize: '1rem',
@@ -438,7 +443,7 @@ const Dashboard = ({
                     }}
                   >
                     You can claim a total sponsor bond of $
-                    {getSponsorBondRewardText(sponsorBondReward)}`
+                    {getSponsorBondRewardText(sponsorBondReward)}
                   </span>
                 </Container>
               )}

@@ -84,7 +84,7 @@ export function sendTransaction({
     .to(scoreAddress)
     .nid(IconConverter.toBigNumber(nid))
     .timestamp(new Date().getTime() * 1000)
-    .stepLimit(IconConverter.toBigNumber(100000000))
+    .stepLimit(IconConverter.toBigNumber(4000000000))
     .version(IconConverter.toBigNumber(3))
     .method(method)
     .params(params)

@@ -20,9 +20,9 @@ function* voteProposalWorker({ payload }) {
 
   const params = {
     vote: voteStatusMapping[payload.vote],
-    vote_reason: payload.voteReason,
-    ipfs_key: payload.ipfsKey,
-    // _vote_change: payload.vote_change,
+    voteReason: payload.voteReason,
+    ipfsKey: payload.ipfsKey,
+    voteChange: payload.vote_change,
   };
 
   yield put(setVotingPhase(VotingPhase.SIGNING));

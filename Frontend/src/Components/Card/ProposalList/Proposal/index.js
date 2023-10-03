@@ -45,7 +45,7 @@ const Proposal = ({
 }) => {
   const { isRemainingTimeZero } = useTimer();
   const history = useHistory();
-  console.log({proposal});
+  // console.log({proposal});
   //// For drafts only
   if (
     proposalStatusMapping.find(mapping => mapping.status === proposal._status)

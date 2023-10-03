@@ -419,7 +419,7 @@ function ProposalDetailsPage(props) {
       vote,
       voteReason: voteReason.replace(/&nbsp;/g, ''),
       ipfsKey: proposal.ipfsKey,
-      vote_change: changeVoteButton ? '1' : '0',
+      vote_change: changeVoteButton ? '0x1' : '0x0',
     });
   };
 
@@ -734,7 +734,7 @@ function ProposalDetailsPage(props) {
                                 padding: '12px',
                               }}
                             >
-                              {/* <Row
+                              <Row
                                 style={{
                                   justifyContent: 'center',
                                   flexDirection: 'row',
@@ -775,8 +775,8 @@ function ProposalDetailsPage(props) {
                                 >
                                   {error}
                                 </Col>
-                              </Row> */}
-                              {milestoneArray.map((milestone, index) => {
+                              </Row>
+                              {/* {milestoneArray.map((milestone, index) => {
                                 return (
                                   <div
                                     id='milestoneArray'
@@ -789,7 +789,7 @@ function ProposalDetailsPage(props) {
                                     />
                                   </div>
                                 );
-                              })}
+                              })} */}
 
                               <Row>
                                 <Col
@@ -862,7 +862,7 @@ function ProposalDetailsPage(props) {
                                   fluid
                                   style={{
                                     marginTop: '12px',
-                                    backgroundColor: 'white',
+                                    backgroundColor: 'var(--proposal-card-color)',
                                     padding: '12px',
                                   }}
                                 >
@@ -870,6 +870,7 @@ function ProposalDetailsPage(props) {
                                     style={{
                                       color: 'var(--proposal-text-color)',
                                       textAlign: 'center',
+                                      
                                     }}
                                   >
                                     You have already voted for this proposal.{' '}
@@ -877,7 +878,7 @@ function ProposalDetailsPage(props) {
                                     {changeVote && (
                                       <ButtonGroup aria-label='Basic example'>
                                         <Button
-                                          style={{ width: 200 }}
+                                          style={{ width: 200,marginTop:12 }}
                                           onClick={() =>
                                             setChangeVoteButton(true)
                                           }

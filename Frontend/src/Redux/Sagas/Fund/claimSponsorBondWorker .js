@@ -3,7 +3,7 @@ import { select } from "redux-saga/effects";
 
 function* claimSponsorBondWorker({ payload }) {
   sendTransaction({
-    method: "claim_sponsor_bond",
+    method: "claimSponsorBond",
   });
 }
 
