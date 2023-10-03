@@ -553,16 +553,16 @@ export default event => {
           NotificationManager.info('Reward Claim Request Sent');
           break;
 
-        // case claim_sponsor_bond:
-        //   getResult({
-        //     txHash: payload.result,
-        //     failureMessage: 'Sponsor Bond Claim Failed',
-        //     successMessage: 'Sponsor Bond Claimed Successfully',
-        //   });
+        case claimSponsorBond:
+          getResult({
+            txHash: payload.result,
+            failureMessage: 'Sponsor Bond Claim Failed',
+            successMessage: 'Sponsor Bond Claimed Successfully',
+          });
 
-        //   // window.location.reload();
-        //   NotificationManager.info('Sponsor bond claimed successfully');
-        //   break;
+          // window.location.reload();
+          NotificationManager.info('Sponsor bond claimed successfully');
+          break;
 
         case votePriority:
           getResult(
