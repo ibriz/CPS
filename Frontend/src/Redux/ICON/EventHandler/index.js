@@ -141,14 +141,15 @@ export default event => {
       break;
 
     case 'RESPONSE_JSON-RPC':
-      console.log(payload);
+      console.log("==================payload===========================",payload);
 
       if (payload.code) {
         NotificationManager.error(payload.message, 'Transaction Failed');
         return;
       }
+      console.log('==================payload. id====================',payload.id,submitProposal);
 
-      switch (payload.id) {
+      switch (Number(payload.id)) {
         case submitProposal:
           console.log('history');
           history.push('/dashboard');
@@ -156,7 +157,6 @@ export default event => {
           // history.push('/proposals');
           history.goBack();
           history.goForward();
-
           // window.location.reload();
           NotificationManager.info('Proposal Creation Request Sent');
 

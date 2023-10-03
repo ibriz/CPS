@@ -97,7 +97,7 @@ export function sendTransaction({
     params: IconConverter.toRawTransaction(txnData),
     id: id ? `${constants[id]}` : `${constants[method]}`,
   };
-  console.log(txnPayload);
+  console.log("-----------------txnPayload----------------",txnPayload);
   window.parent.dispatchEvent(
     new CustomEvent('ICONEX_RELAY_REQUEST', {
       detail: {
