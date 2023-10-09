@@ -57,6 +57,7 @@ const Main = ({
           style={{
             paddingLeft: '25px',
             paddingRight: '25px',
+     
             height:
               !address && window.location.pathname === '/dashboard'
                 ? '100%'

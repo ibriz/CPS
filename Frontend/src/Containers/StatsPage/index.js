@@ -10,7 +10,7 @@ const StatsPage = () => {
   const applicationTabs = ['Platform stats'];
 
   return (
-    <Container fluid>
+    <Container fluid style={{minHeight:'50vh'}}>
       {period === 'VOTING' && (
         <StatsCard stateList={votingTabs} initialState={votingTabs[0]} />
       )}

@@ -154,27 +154,28 @@ const MyProposalCard = ({
   return (
     <>
       <Row className={styles.proposalCard}>
-        <Col>
+        <Container fluid>
           <Card className={styles.card}>
             <Card.Body className={styles.cardBody}>
               <Container
+                fluid
                 style={{
-                  width: '100%',
                   display: 'flex',
-
                   alignItems: 'center',
                   padding: '0px 0px 10px 0px',
                 }}
               >
-                <div
-                  style={{
-                    width: '100%',
-                    fontWeight: 'bold',
-                    fontSize: '1.1rem',
-                    whiteSpace: 'nowrap',
-                  }}
-                >
-                  My Proposals
+                <Container fluid>
+                  <h5
+                    style={{
+                      width: '100%',
+                      fontWeight: 'bold',
+                      fontSize: '1.1rem',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    My Proposals
+                  </h5>
                   <TabBar
                     selectedTab={selectedTab}
                     setSelectedTab={setSelectedTab}
@@ -184,7 +185,7 @@ const MyProposalCard = ({
                     placeholder='Search Proposal'
                     maxWidth
                   />
-                </div>
+                </Container>
               </Container>
 
               <hr style={{ marginTop: '-9px' }} />
@@ -225,7 +226,7 @@ const MyProposalCard = ({
               )} */}
             </Card.Body>
           </Card>
-        </Col>
+        </Container>
       </Row>
     </>
   );

@@ -769,14 +769,7 @@ const ProgressReportCreationPage = ({
                               />
                             </InputGroup>
                           </Col>
-                          <Button
-                            variant='outline-info'
-                            onClick={() => {
-                              // setprogressReportMilestone([...progressReportMilestone,])
-                            }}
-                          >
-                            SAVE
-                          </Button>
+                      
                         </div>
                       )
                     );

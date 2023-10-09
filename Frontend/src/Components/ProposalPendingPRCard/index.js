@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Card, Col } from 'react-bootstrap';
+import { Row, Card, Col, Container } from 'react-bootstrap';
 import styles from './ProposalCard.module.scss';
 import TabBar from 'Components/Card/TabBar';
 import ProposalList from 'Components/Card/ProposalList';
@@ -124,7 +124,7 @@ const ProposalPendingPRCard = ({
 
   return (
     <>
-      <Row className={styles.proposalCard}>
+      <Container className={styles.proposalCard}>
         <Col>
           <Card className={styles.card}>
             <Card.Body className={styles.cardBody}>
@@ -171,7 +171,7 @@ const ProposalPendingPRCard = ({
             </Card.Body>
           </Card>
         </Col>
-      </Row>
+      </Container>
     </>
   );
 };

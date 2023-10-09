@@ -319,7 +319,7 @@ const Dashboard = ({
   }, [isPrep]);
 
   return address ? (
-    <Container>
+    <Container fluid style={{minHeight:'50vh'}}>
       {/* < Header title='Dashboard' /> */}
       <Row style={{ marginTop: '30px' }}>
         <Col xs='12'>
@@ -416,7 +416,7 @@ const Dashboard = ({
         parseFloat(sponsorBondReward.bnUSD) > 0) && (
         <Row style={{ marginTop: '15px' }}>
           <Col xs='12'>
-            <Container className={styles.container}>
+            <Container fluid className={styles.container}>
             <img
                 src={isDarkTheme ? congratulationsWhiteImg : congratulationsImg}
                 style={{ padding: '24px' }}

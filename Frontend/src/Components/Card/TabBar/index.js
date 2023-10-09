@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './ProposalNavBar.module.scss';
 import NavBarTitle from '../../UI/LowerCardNavBar/NavBarTitle';
 import NavBarInputGroup from '../../UI/LowerCardNavBar/NavBarInputGroup';
-import { Nav } from 'react-bootstrap';
+import { Container, Nav } from 'react-bootstrap';
 
 const TabBar = ({
   selectedTab,
@@ -16,12 +16,13 @@ const TabBar = ({
   hideSearch = false,
 }) => {
   return (
-    <div
+    <Container 
+    fluid
       className={styles.proposalNavBar}
       style={{
-        width: '100%',
         display: 'flex',
         justifyContent: 'space-between',
+        alignItems:'center'
       }}
     >
       {/* {
@@ -70,7 +71,7 @@ const TabBar = ({
           />
         )}
       </div>
-    </div>
+    </Container>
   );
 };
 

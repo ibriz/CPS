@@ -121,7 +121,7 @@ const UpperCard = ({
       <Col>
         <Card className={styles.upperCard}>
           <Card.Body>
-            <Container className={styles.desktopContainer}>
+            <Container fluid className={styles.desktopContainer}>
               <Row
                 style={{
                   display: 'flex',
