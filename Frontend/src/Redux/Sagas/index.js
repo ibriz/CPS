@@ -37,6 +37,7 @@ import {
   fetchChangeVoteWorker,
   submitPriorityVotingWorker,
   fetchPriorityVotingStatusWorker,
+  fetchSelectedProposalForProgressReportWorker,
 } from './Proposal/index';
 
 import {
@@ -118,6 +119,7 @@ import {
   fetchPriorityVotingRequest,
   fetchSortPriorityProposalListRequest,
   fetchProposalHistoryRequest,
+  fetchSelectedProposalForProgressReportRequest,
 } from '../Reducers/proposalSlice';
 import {
   submitProgressReportRequest,
@@ -216,6 +218,7 @@ function* rootSaga() {
   yield takeEvery(fetchPrepsWithStatsRequest.type, fetchPrepsWithStatsWorker);
 
   yield takeEvery(fetchProposalDetailRequest.type, fetchProposalDetailWorker);
+  yield takeEvery(fetchSelectedProposalForProgressReportRequest.type, fetchSelectedProposalForProgressReportWorker);
   yield takeEvery(
     fetchProgressReportDetailRequest.type,
     fetchProgressReportDetailWorker,

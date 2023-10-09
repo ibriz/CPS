@@ -16,6 +16,8 @@ import { NotificationManager } from 'react-notifications';
 export const getAddress = state => state.account.address;
 
 function* submitProgressReportWorker({ payload }) {
+  // console.log("subbmitting to ipfs");
+  console.log(payload);
   try {
     if (!payload.progressReport.projectTermRevision) {
       payload.progressReport = {

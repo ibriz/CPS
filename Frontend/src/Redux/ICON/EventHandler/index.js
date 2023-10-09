@@ -39,7 +39,7 @@ import {
 
 // import { loginSuccess } from 'Redux/Reducers/accountSlice';
 
-const {
+const {    
   submitProposal,
   submitProgressReport,
   sponsor_vote,
@@ -52,7 +52,7 @@ const {
   payPrepPenalty,
   approve_sponsor,
   claimSponsorBond,
-  claim_reward,
+  claimReward,
   votePriority,
 } = constants;
 
@@ -183,8 +183,8 @@ export default event => {
 
         case submitProgressReport:
           console.log('history');
-          history.push('/voting');
-          history.push('/voting');
+          history.push('/dashboard');
+          history.push('/dashboard');
           history.goBack();
           history.goForward();
           getResult(
@@ -269,7 +269,10 @@ export default event => {
 
         case approve_sponsor:
           console.log('history');
-          history.push('/');
+          history.push('/dashboard');
+          history.push('/dashboard');
+          history.goBack();
+          history.goForward();
           NotificationManager.info('Sponsor request approval request sent');
 
           getResult(
@@ -385,6 +388,8 @@ export default event => {
 
         case voteProposal:
           console.group('voteProposal');
+          history.push('/dashboard')
+          history.push('/dashboard')
           console.log('voteProposal', payload);
 
           console.groupEnd();
@@ -521,7 +526,7 @@ export default event => {
           NotificationManager.info('Prep Penalty Sent');
           break;
 
-        case claim_reward:
+        case claimReward:
           getResult(
             {
               txHash: payload.result,

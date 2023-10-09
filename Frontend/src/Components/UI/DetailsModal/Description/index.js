@@ -5,6 +5,7 @@ const Description1 = styled.div`
   color: var(--proposal-text-color);
   font-size: 0.9rem;
   padding: 0px 25px;
+  margin-top:20px;
 `;
 
 const DescriptionTitle = styled.div`

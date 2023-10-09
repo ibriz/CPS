@@ -6,6 +6,7 @@ import submitProposalToIPFSWorker from './submitProposalWorker';
 import updateProposalStatusWorker from './updateProposalStatusWorker';
 import fetchProposalDetailWorker from './fetchProposalDetailWorker';
 import emptyProposalDetailWorker from './emptyProposalDetailWorker';
+import fetchSelectedProposalForProgressReportWorker from './fetchSelectedProposalForProgressReportWorker'
 import fetchSponsorRequestsListWorker from './fetchSponsorRequestsListWorker';
 import approveSponserRequestWorker from './approveSponserRequestWorker';
 import rejectSponserRequestWorker from './rejectSponserRequestWorker'
@@ -49,5 +50,6 @@ export {
     fetchChangeVoteWorker,
     submitPriorityVotingWorker,
     fetchPriorityVotingStatusWorker,
-		fetchSortPriorityProposalListWorker
+		fetchSortPriorityProposalListWorker,
+    fetchSelectedProposalForProgressReportWorker,
 }

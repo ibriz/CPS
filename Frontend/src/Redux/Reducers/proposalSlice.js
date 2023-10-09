@@ -12,7 +12,8 @@ const PARAMS = {
   timestamp: 'timestamp',
   sponsoredTimestamp: 'sponsored_timestamp',
   proposalHash: 'ipfs_hash',
-
+  isMilestone:'isMilestone',
+  milestoneCount:'milestoneCount',
   approvedVotes: 'approved_votes',
   approvedReports: 'approved_reports',
   totalVotes: 'total_votes',
@@ -30,7 +31,7 @@ const PARAMS = {
   sponsorVoteReason: 'sponsor_vote_reason',
   projectDuration: 'project_duration',
   token: 'token',
-  submitProgressReport: 'submitProgressReport',
+  submitProgressReport: 'submit_progress_report',
 };
 
 export const VotingPhase = {
@@ -155,6 +156,7 @@ const initialState = {
   sponsorRequestProposalTitle: '',
   sponsorRequestProposal: null,
   selectedProposal: {},
+  selectedProposalDetailForProgressReport:{},
   token: '',
   error: '',
   changeVote: false,
@@ -409,11 +411,21 @@ const proposalSlice = createSlice({
     fetchProposalDetailRequest() {
       return;
     },
-
     fetchProposalDetailSuccess(state, payload) {
       state.proposalDetail = payload.payload.response;
     },
     fetchProposalDetailFailure(state) {
+      state.error = true;
+    },
+    fetchSelectedProposalForProgressReportRequest() {
+      console.log("reached here")
+      return;
+    },
+
+    fetchSelectedProposalForProgressReportSuccess(state, payload) {
+      state.selectedProposalDetailForProgressReport = payload.payload.response;
+    },
+    fetchSelectedProposalForProgressReportFailure(state) {
       state.error = true;
     },
     emptyProposalDetailRequest() {
@@ -852,6 +864,8 @@ const proposalSlice = createSlice({
         _status: proposal[PARAMS.status],
         _proposal_title: proposal[PARAMS.proposalTitle],
         _contributor_address: proposal[PARAMS.contributorAddress],
+        _milestone_count:proposal[PARAMS.milestoneCount],
+        _is_milestone:proposal[PARAMS.isMilestone],
         // budget: parseInt(proposal[PARAMS.totalBudget]),
         budget: IconConverter.toBigNumber(
           proposal[PARAMS.totalBudget],
@@ -963,6 +977,9 @@ export const {
   fetchProposalDetailRequest,
   fetchProposalDetailSuccess,
   fetchProposalDetailFailure,
+  fetchSelectedProposalForProgressReportRequest,
+  fetchSelectedProposalForProgressReportSuccess,
+  fetchSelectedProposalForProgressReportFailure,
   fetchSponsorRequestsListRequest,
   fetchSponsorRequestsListSuccess,
   fetchSponsorRequestsListFailure,

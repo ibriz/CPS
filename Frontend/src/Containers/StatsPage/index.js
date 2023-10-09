@@ -7,7 +7,7 @@ const StatsPage = () => {
   const { period } = useTimer();
 
   const votingTabs = ['Validator stats', 'Platform stats'];
-  const applicationTabs = ['Platform stats', 'Validator stats'];
+  const applicationTabs = ['Platform stats'];
 
   return (
     <Container fluid>

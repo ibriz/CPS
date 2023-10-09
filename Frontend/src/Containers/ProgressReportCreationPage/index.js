@@ -10,6 +10,8 @@ import {
   Alert,
 } from 'react-bootstrap';
 import ClassNames from 'classnames';
+import { put, call } from 'redux-saga/effects';
+import { callKeyStoreWallet } from '../../Redux/ICON/utils';
 import styles from './ProposalCreationPage.module.css';
 import {
   fetchCPFTreasuryScoreAddressRequest,
@@ -34,6 +36,7 @@ import {
   fetchProposalByIpfsRequest,
   fetchProposalListRequest,
   fetchProposalByAddressRequest,
+  fetchSelectedProposalForProgressReportRequest,
 } from 'Redux/Reducers/proposalSlice';
 import { updateProposalStatus } from 'Redux/Reducers/proposalSlice';
 import { NotificationManager } from 'react-notifications';
@@ -221,12 +224,14 @@ const ProgressReportCreationPage = ({
   cpfTreasuryScoreAddress,
   cpfRemainingFunds,
   selectedProposal,
+  fetchSelectedProposalForProgressReportRequest,
   fetchProposalByIpfsRequest,
   isMaintenanceMode,
   fetchMaintenanceModeRequest,
+  selectedProposalForProgressReport,
 }) => {
   const { draftProgressReport, isDraft, ipfsKey } = location;
-  const [progressReport, setProposal] = useState({
+  const [progressReport, setProgressReport] = useState({
     progressReportTitle: null,
     projectName: null,
     percentageCompleted: null,
@@ -235,13 +240,18 @@ const ProgressReportCreationPage = ({
     projectTermRevision: false,
     additionalBudget: null,
     additionalTime: null,
+    completedMilestone: [],
     revisionDescription: null,
     additionalResources: null,
     isLastProgressReport: false,
   });
   const { period } = useTimer();
   const [progressReportIPFS, setProgressReportIPFS] = React.useState({});
+  const [selectedItems, setSelectedItems] = React.useState([]);
   let [draftConfirmationShow, setDraftConfirmationShow] = React.useState(false);
+  const [progressReportMilestone, setprogressReportMilestone] = React.useState(
+    [],
+  );
 
   const isTimeRemainingNotZero =
     progressReport.timeRemainingToCompletion &&
@@ -260,37 +270,33 @@ const ProgressReportCreationPage = ({
     React.useState(0);
   const [revisionDescriptionCharacters, setRevisionDescriptionCharacters] =
     React.useState(0);
+  useEffect(() => {
+    if (progressReport.projectName) {
+      // console.log("this is hash", progressReport.projectName);
+      fetchProposalByIpfsRequest({ ipfs_key: progressReport.projectName });
+      console.log('executing this line');
+      fetchSelectedProposalForProgressReportRequest({
+        hash: progressReport.projectName,
+      });
+    }
+  }, [progressReport.projectName]);
 
-  const [options, setOptions] = React.useState([
-    {
-      name: 'Milestone 1',
-      description: 'lorem ipsum dolor sit amet,',
-      isChecked: false,
-    },
-    {
-      name: 'Milestone 2',
-      description: 'lorem ipsum  ',
-      isChecked: false,
-    },
-  ]);
-  const handleCheckboxChange = index => {
-    setOptions(prevOptions =>
-      prevOptions.map((option, i) =>
-        i === index ? { ...option, isChecked: !option.isChecked } : option,
-      ),
-    );
-  };
-
-  const handleDescriptionChange = (index, description) => {
-    setOptions(prevOptions =>
-      prevOptions.map((option, i) =>
-        i === index ? { ...option, description } : option,
-      ),
-    );
-  };
-
-  const handleMilestoneSubmit = index => {
-    console.log('Submitted data:', options[index]);
+  useEffect(() => {
+    if (progressReport.projectName) {
+      console.log('executing this line');
+      fetchSelectedProposalForProgressReportRequest({
+        hash: progressReport.projectName,
+      });
+    }
+  }, []);
+  const handleCheckboxChange = id => {
+    setSelectedItems(prev => {
+      if (prev.includes(id)) {
+        return prev.filter(item => item !== id);
+      } else {
+        return [...prev, id];
+      }
+    });
   };
 
   useEffect(() => {
@@ -307,7 +313,7 @@ const ProgressReportCreationPage = ({
   }, [fetchMaintenanceModeRequest]);
 
   useEffect(() => {
-    setProposal(prevState => ({
+    setProgressReport(prevState => ({
       ...prevState,
       isLastProgressReport: isLastReport,
     }));
@@ -382,7 +388,7 @@ const ProgressReportCreationPage = ({
   }
 
   useEffect(() => {
-    setProposal(proposal => ({
+    setProgressReport(progressReport => ({
       ...progressReport,
       projectName: ipfsKey,
     }));
@@ -408,7 +414,7 @@ const ProgressReportCreationPage = ({
 
   useEffect(() => {
     if (isDraft) {
-      setProposal(prevState => ({
+      setProgressReport(prevState => ({
         ...progressReport,
         ...draftProgressReport,
         ...progressReportIPFS,
@@ -432,7 +438,7 @@ const ProgressReportCreationPage = ({
           proposal => proposal.ipfsKey === progressReport.projectName,
         )?._proposal_title,
         callBackAfterSigning: () => {
-          history.push('/progress-reports');
+          history.push('/');
         },
       });
     } else {
@@ -444,7 +450,7 @@ const ProgressReportCreationPage = ({
           proposal => proposal.ipfsKey === progressReport.projectName,
         )?._proposal_title,
         callBackAfterSigning: () => {
-          history.push('/progress-reports');
+          history.push('/');
         },
       });
     }
@@ -452,6 +458,10 @@ const ProgressReportCreationPage = ({
 
   const handleSubmit = event => {
     event.preventDefault();
+    setProgressReport({
+      ...progressReport,
+      completedMilestone: progressReportMilestone,
+    });
     setSubmissionConfirmationShow(true);
   };
 
@@ -472,7 +482,7 @@ const ProgressReportCreationPage = ({
     let name = event.target.name;
     let value = event.target.value;
 
-    setProposal(prevState => ({
+    setProgressReport(prevState => ({
       ...prevState,
       [name]: value,
     }));
@@ -482,17 +492,11 @@ const ProgressReportCreationPage = ({
   };
 
   useEffect(() => {
-    if (progressReport.projectName) {
-      fetchProposalByIpfsRequest({ ipfs_key: progressReport.projectName });
-    }
-  }, [progressReport.projectName]);
-
-  useEffect(() => {
     if (
       selectedProposal?.approvedReports &&
       selectedProposal?.projectDuration
     ) {
-      setProposal(prevState => ({
+      setProgressReport(prevState => ({
         ...prevState,
         timeRemainingToCompletion:
           Number(selectedProposal?.projectDuration) -
@@ -500,15 +504,15 @@ const ProgressReportCreationPage = ({
       }));
     }
   }, [selectedProposal]);
-  const handleCheckedChange = event => {
-    let name = event.target.name;
-    let value = event.target.checked;
+  // const handleCheckedChange = event => {
+  //   let name = event.target.name;
+  //   let value = event.target.checked;
 
-    setProposal(prevState => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
+  //   setProgressReport(prevState => ({
+  //     ...prevState,
+  //     [name]: value,
+  //   }));
+  // };
 
   useEffect(() => {
     const minimumNumberOfWords = 10;
@@ -556,6 +560,19 @@ const ProgressReportCreationPage = ({
     revisionDescriptionWords,
   ]);
 
+  const handleDescriptionChange = (index, e, oldMilestone) => {
+    // console.log(oldMilestone)
+    const updatedTextareaData = [...progressReportMilestone];
+    const dataIndex = updatedTextareaData.findIndex(v=>v.id===oldMilestone.id);
+    const arrayIndex = dataIndex>=0? dataIndex :updatedTextareaData.length
+    updatedTextareaData[arrayIndex] = {
+      ...oldMilestone,
+      milestoneDescription: e.target.value,
+    };
+    // console.log("updatedTextareaData",updatedTextareaData);
+    setprogressReportMilestone(updatedTextareaData);
+  };
+
   return (
     <div className={styles.proposalCreationPage}>
       {/* <Header title='Create New Progress Report' /> */}
@@ -580,7 +597,7 @@ const ProgressReportCreationPage = ({
                   className={styles.inputBox}
                   value={progressReport.projectName}
                   name='projectName'
-                  id='projectName'
+                  controlId='projectName'
                   onChange={handleChange}
                   required
                 >
@@ -589,8 +606,9 @@ const ProgressReportCreationPage = ({
                   </option>
                   {/* <option value="dasd">New Project</option> */}
 
-                  {currentUserActiveProposals.map(proposal => (
+                  {currentUserActiveProposals.map((proposal, index) => (
                     <option
+                      key={index}
                       value={proposal.ipfsKey}
                       disabled={!proposal.newProgressReport}
                     >
@@ -602,7 +620,7 @@ const ProgressReportCreationPage = ({
             </Form.Group>
             <Form.Group as={Row}>
               <Form.Label column sm='2'>
-              Progress Report Name
+                Progress Report Name
                 <span className={styles.required}></span>
                 {/* <InfoIcon description="The category the project falls into" /> */}
               </Form.Label>
@@ -613,13 +631,13 @@ const ProgressReportCreationPage = ({
                   className={styles.inputBox}
                   value={progressReport.progressReportTitle}
                   name='progressReportTitle'
-                  id='progressReportTitle'
+                  controlId='progressReportTitle'
                   onChange={handleChange}
                   required
                 />
-                </Col>
+              </Col>
               <Form.Label column sm='2' className={styles.labelSameLine}>
-              Time Remaining to Completion
+                Time Remaining to Completion
                 <span className={styles.required}></span>
                 {/* <InfoIcon description="The expected time (in months) to complete the project (can be upto 12 months)" /> */}
               </Form.Label>
@@ -630,7 +648,7 @@ const ProgressReportCreationPage = ({
                     type='number'
                     value={progressReport.timeRemainingToCompletion}
                     name='timeRemainingToCompletion'
-                    id='timeRemainingToCompletion'
+                    controlId='timeRemainingToCompletion'
                     onChange={handleChange}
                     min={0}
                     className={styles.inputBox}
@@ -642,8 +660,6 @@ const ProgressReportCreationPage = ({
                 </InputGroup>
               </Col>
             </Form.Group>
-           
-        
 
             <Form.Group as={Row} controlId='formPlaintextPassword'>
               <AppFormLabel column lg='12'>
@@ -656,7 +672,7 @@ const ProgressReportCreationPage = ({
                   required
                   initialData={progressReport.description ?? initialDescription}
                   onChange={data =>
-                    setProposal(prevState => ({
+                    setProgressReport(prevState => ({
                       ...prevState,
                       description: data,
                     }))
@@ -676,8 +692,7 @@ const ProgressReportCreationPage = ({
               </Col>
             </Form.Group>
             <Form.Group
-             
-              controlId='formPlaintextEmail'
+              controlId='formPlaintext'
               className={styles.maxWidthLabel}
             >
               <div className='d-flex'>
@@ -687,188 +702,88 @@ const ProgressReportCreationPage = ({
                   {/* <InfoIcon description = "The completed percentage of the project"/>   */}
                 </Form.Label>
                 <Row>
-                  {options.map((option, index) => (
-                    <div
-                      key={index}
-                      class='d-flex custom-control custom-checkbox pl-4 pr-4'
-                    >
-                      <input
-                        type='checkbox'
-                        class='custom-control-input'
-                        value={option.name} // Changed from option.value to option.name
-                        checked={option.isChecked}
-                        id={`customCheck${index}`}
-                        onChange={() => handleCheckboxChange(index)}
-                      />{' '}
-                      <label
-                        class='custom-control-label w-100'
-                        for={`customCheck${index}`}
-                      >
-                        {option.name}
-                      </label>
-                    </div>
-                  ))}
+                  {selectedProposalForProgressReport?.milestones?.map(
+                    (option, index) => {
+                      // try{
+                      //   const response = call(callKeyStoreWallet, {
+                      //     method: 'getMileststoneStatusOf',
+                      //     params: {
+                      //       proposalKey: selectedProposal.ipfsKey,
+                      //       milestoneId: `${option.id}`,
+                      //     },
+                      //   });
+                      
+                      // }catch(e){
+                      //   console.log("milestone status fetching error")
+                      // }
+                      return (
+                        <div
+                          key={index}
+                          class='d-flex custom-control custom-checkbox pl-4 pr-4'
+                        >
+                          <input
+                            type='checkbox'
+                            class='custom-control-input'
+                            value={option.name} // Changed from option.value to option.name
+                            // checked={option.isChecked}
+                            id={`customCheck${index}`}
+                            onChange={() => handleCheckboxChange(option.id)}
+                          />{' '}
+                          <label
+                            class='custom-control-label w-100'
+                            for={`customCheck${index}`}
+                          >
+                            {option.name}
+                          </label>
+                        </div>
+                      );
+                    },
+                  )}
                 </Row>
               </div>
               <div>
-                {options.map(
-                  (option, index) =>
-                    option.isChecked && (
-                      <div key={index} style={{ margin: '20px 0px  ' }}>
-                        <Form.Label
-                          column
-                          sm='12'
-                          className={styles.labelSameLine}
-                        >
-                          Description for {option.name}
-                        </Form.Label>
-                        <Col column sm='12' className={styles.inputSameLine}>
-                          <InputGroup size='md'>
-                            <Form.Control
-                            className={styles.inputBox}
-                              name='Description'
-                              placeholder='Enter Milestone Description'
-                              as='textarea'
-                              rows={5}
-                              onChange={handleChange}
-                            />
-                          </InputGroup>
-                        </Col>
-                        <Button
-                          size='sm'
-                          variant='info'
-                          type='submit'
-                          disabled
-                          style={{ pointerEvents: 'none', marginTop: '8px' }}
-                          onClick={() => handleMilestoneSubmit(index)}
-                        >
-                          Save
-                        </Button>
-                      </div>
-                    ),
+                {selectedProposalForProgressReport?.milestones?.map(
+                  (option, index) => {
+                    const inputMilestone = progressReportMilestone.find(m=>m.id === option.id)
+                    return (
+                      selectedItems.includes(option.id) && (
+                        <div key={index} style={{ margin: '20px 0px  ' }}>
+                          <Form.Label sm='12' className={styles.labelSameLine}>
+                            Description for {option.name}
+                          </Form.Label>
+                          <Col sm='12' className={styles.inputSameLine}>
+                            <InputGroup size='md'>
+                              <Form.Control
+                                controlId='description'
+                                className={styles.inputBox}
+                                value={
+                                  inputMilestone?.milestoneDescription ?? ''
+                                }
+                                name='Description'
+                                placeholder='Enter Milestone Description'
+                                as='textarea'
+                                rows={5}
+                                onChange={e =>
+                                  handleDescriptionChange(index, e, option)
+                                }
+                              />
+                            </InputGroup>
+                          </Col>
+                          <Button
+                            variant='outline-info'
+                            onClick={() => {
+                              // setprogressReportMilestone([...progressReportMilestone,])
+                            }}
+                          >
+                            SAVE
+                          </Button>
+                        </div>
+                      )
+                    );
+                  },
                 )}
               </div>
             </Form.Group>
-
-            {/* <Form.Group as={Row} controlId="formPlaintextEmail">
-                            <AppFormLabel column lg="2">
-                                Additional Resources
-                            </AppFormLabel>
-
-                            <Col lg="4" className={styles.inputSameLine}>
-                                <Form.Control placeholder={"Link to additional resources on IPFS"} size={"md"} value={progressReport.additionalResources} name="additionalResources" onChange={handleChange} required />
-                            </Col>
-
-
-                        </Form.Group> */}
-
-            {/* <Form.Group
-              as={Row}
-              controlId='formPlaintextPassword'
-              className={styles.maxWidthLabelPTR}
-            >
-              <AppFormLabel column lg='3'>
-                Project Terms Revision
-                <span className={styles.required}></span>
-                <InfoIcon description='Whether the project requires additional budget or additional time for completion' />
-              </AppFormLabel>
-              <Col lg='4' className={styles.inputSameLine}>
-                <Form.Check
-                  checked={progressReport.projectTermRevision}
-                  onChange={handleCheckedChange}
-                  name='projectTermRevision'
-                  id='projectTermRevision'
-                  type='switch'
-                  id='custom-switch'
-                  label=''
-                  size='lg'
-                />
-              </Col>
-            </Form.Group>
-
-            {progressReport.projectTermRevision && (
-              <>
-                <Form.Group as={Row} controlId='formPlaintextPassword'>
-                  <AppFormLabel column lg='2'>
-                    Additional Budget
-                    <span className={styles.required}></span>
-                  </AppFormLabel>
-                  <Col lg='4' className={styles.inputSameLine}>
-                    <InputGroup size='md'>
-                      <FormControl
-                        placeholder='Additional Budget'
-                        type='number'
-                        value={progressReport.additionalBudget}
-                        name='additionalBudget'
-                        onChange={handleChange}
-                        min={0}
-                        required
-                        id='additionalBudget'
-                      />
-                      <InputGroup.Append>
-                        <InputGroup.Text>ICX</InputGroup.Text>
-                      </InputGroup.Append>
-                    </InputGroup>
-                  </Col>
-
-                  <AppFormLabel column lg='2' className={styles.labelSameLine}>
-                    Additional Time
-                    <span className={styles.required}></span>
-                  </AppFormLabel>
-                  <Col lg='4' className={styles.inputSameLine}>
-                    <InputGroup size='md'>
-                      <FormControl
-                        placeholder='Additional Time'
-                        type='number'
-                        value={progressReport.additionalTime}
-                        name='additionalTime'
-                        id='additionalTime'
-                        onChange={handleChange}
-                        min={0}
-                        max={6}
-                        required
-                      />
-                      <InputGroup.Append>
-                        <InputGroup.Text>Months</InputGroup.Text>
-                      </InputGroup.Append>
-                    </InputGroup>
-                  </Col>
-                </Form.Group>
-
-                <Form.Group as={Row} controlId='formPlaintextPassword'>
-                  <AppFormLabel column lg='12'>
-                    Revision Description
-                    <span className={styles.required}></span>
-                    <InfoIcon description='Reason for requiring additional time and additional budget (minimum 10 words)' />
-                  </AppFormLabel>
-                  <Col lg='12'>
-                    <RichTextEditor
-                      required
-                      initialData={progressReport.revisionDescription ?? null}
-                      onChange={data =>
-                        setProposal(prevState => ({
-                          ...prevState,
-                          revisionDescription: data,
-                        }))
-                      }
-                      setWords={setRevisionDescriptionWords}
-                      setCharacters={setRevisionDescriptionCharacters}
-                      onBlur={() => {
-                        document
-                          .getElementById('revisionDescription')
-                          .reportValidity();
-                      }}
-                      minimumNumberOfWords={10}
-                    />
-                    <input
-                      className={styles.fakeInput}
-                      style={{ left: '15px' }}
-                      id='revisionDescription'
-                    />
-                  </Col>
-                </Form.Group>
-              </>
-            )} */}
 
             <Alert variant={'info'}>{signingInfoMessage}</Alert>
 
@@ -1023,7 +938,8 @@ const mapDispatchToProps = dispatch => ({
   saveDraftRequest: payload => dispatch(saveDraftRequest(payload)),
   fetchProposalByAddressRequest: payload =>
     dispatch(fetchProposalByAddressRequest(payload)),
-
+  fetchSelectedProposalForProgressReportRequest: payload =>
+    dispatch(fetchSelectedProposalForProgressReportRequest(payload)),
   fetchCPFTreasuryScoreAddressRequest: payload =>
     dispatch(fetchCPFTreasuryScoreAddressRequest(payload)),
   fetchCPFRemainingFundRequest: payload =>
@@ -1035,6 +951,8 @@ const mapDispatchToProps = dispatch => ({
 
 const mapStateToProps = state => ({
   submittingProgressReport: state.progressReport.submittingProgressReport,
+  selectedProposalForProgressReport:
+    state.proposals.selectedProposalDetailForProgressReport,
   // currentUserActiveProposals: [...state.proposals.proposalByAddress, {
   //     ipfsKey: 'adas',
   //     _proposal_title: 'New Proposal',

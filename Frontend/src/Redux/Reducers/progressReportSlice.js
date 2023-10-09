@@ -161,8 +161,8 @@ const proposalSlice = createSlice({
     setSubmittingProgressReport(state) {
       state.submittingProgressReport = true;
     },
-
-    fetchProgressReportListRequest(state) {
+    
+fetchProgressReportListRequest(state) {
       return;
     },
     fetchProgressReportListSuccess(state, action) {

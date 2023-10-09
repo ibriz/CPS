@@ -18,7 +18,7 @@ function* voteProgressReportWorker({ payload }) {
   const walletAddress = yield select(getAddress);
 
   const params = {
-    vote: voteStatusMapping[payload.vote],
+    votes: voteStatusMapping[payload.vote],
     budgetAdjustmentVote: voteStatusMapping[payload.voteProjectTermRevision],
     voteReason: payload.voteReason,
     // ipfs_key: payload.proposalKey,

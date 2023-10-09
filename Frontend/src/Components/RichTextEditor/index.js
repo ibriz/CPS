@@ -89,9 +89,9 @@ const RichTextEditor = ({
             onBlur();
           }
         }}
-        onFocus={(event, editor) => {
-          console.log('Focus.', editor);
-        }}
+        // onFocus={(event, editor) => {
+        //   console.log('Focus.', editor);
+        // }}
         config={{
           allowedContent: true,
           plugins: [...ClassicEditor.builtinPlugins, ImageUploadAdapter],

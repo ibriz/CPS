@@ -14,13 +14,14 @@ import RichTextEditor from '../../../Components/RichTextEditor';
 import AppFormLabel from '../../../Components/UI/AppFormLabel';
 
 function AddMilestoneModal(props) {
+  const id = Number(Date.now().toString().slice(-5));
   const [milestone, setMilestone] = useState({
+    id: null,
     name: null,
     duration: null,
     // budget: null,
     description: null,
   });
-
   useEffect(() => {
     setMilestone({
       name: null,
@@ -37,6 +38,7 @@ function AddMilestoneModal(props) {
     setMilestone(prevState => ({
       ...prevState,
       [name]: value,
+      id: id
     }));
   };
 

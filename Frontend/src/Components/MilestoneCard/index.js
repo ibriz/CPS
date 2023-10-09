@@ -8,31 +8,15 @@ import styles from './MilestoneTest.module.scss';
 import './style.css';
 
 const MilestoneListCard = ({ milestoneList }) => {
-  const milestones = [
-    {
-      name: 'Name 1',
-      description:
-        'description1description1description1description1description1description1description1description1description1description1description1',
-    },
-    {
-      name: 'Name 2',
-      description:
-        'description2description2description2description2description2description2description2description2description2description2description2',
-    },
-    {
-      name: 'Name 3',
-      description:
-        'description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3description3',
-    },
-  ];
+
   console.log({ milestoneList });
   return (
     <div className={`${styles.container} milestone-test`}>
       <div className={styles.heading}>MILESTONES</div>
       <Tab.Container id='left-tabs-example' defaultActiveKey='tab1'>
-        <Row>
+        <Row style={{gap:16}}>
           {/* left column */}
-          <Col sm={12} lg={4} className={styles.leftCol}>
+          <Col sm={12} lg={3} className={styles.leftCol}>
             <Nav
               variant='pills'
               contentClassName={styles['tab']}
