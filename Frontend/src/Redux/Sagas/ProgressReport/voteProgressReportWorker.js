@@ -18,13 +18,14 @@ function* voteProgressReportWorker({ payload }) {
   const walletAddress = yield select(getAddress);
 
   const params = {
-    votes: voteStatusMapping[payload.vote],
+    votes: payload.vote,
     budgetAdjustmentVote: voteStatusMapping[payload.voteProjectTermRevision],
     voteReason: payload.voteReason,
     // ipfs_key: payload.proposalKey,
     reportKey: payload.reportKey,
-    voteChange: payload.vote_change,
+    voteChange: `0x${payload.vote_change}`,
   };
+  console.log("vote submit params",params)
 
   yield put(setVotingPhase(VotingPhase.SIGNING));
   const { signature } = yield signTransaction(walletAddress);
@@ -43,7 +44,7 @@ function* voteProgressReportWorker({ payload }) {
     setBackendTriggerData({
       eventType: 'voteProgressReport',
       data: {
-        vote: voteStatusMapping[payload.vote],
+        vote: payload.vote,
         userAddress: walletAddress,
         voteReason: payload.voteReason,
         proposalIpfsHash: payload.proposalKey,

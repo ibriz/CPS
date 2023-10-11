@@ -51,11 +51,33 @@ export function call({ scoreAddress = CPSScore, method, params = {}, id }) {
   window.dispatchEvent(customRequestRPC(jsonRpc));
 }
 
+// export const hasWalletParticipated = async () => {
+//   return new Promise(async (resolve, reject) => {
+//     let callBuilder = new IconBuilder.CallBuilder();
+//       try {
+//           const call = callBuilder
+//               .to(CPSScore)
+//               .method("getMilestoneVoteResult")
+//               .params({
+//                 reportKey: `bafybeifrvpj33rmqbrrzqq3pbbsyhxsatctq67arsq6mawv7z6ttpod3mq`,
+//                 milestoneID:`0x${Number(65720).toString(16)}`
+//               })
+//               .build();
+//           const status = await iconService.call(call).execute();
+//           resolve(status);
+//       } catch (e) {
+//           console.log(e);
+//           resolve(0);
+//       }
+//   });
+// };
+
 export async function callKeyStoreWallet({
   scoreAddress = CPSScore,
   method,
   params = {},
 }) {
+  // console.log("check in callkeystore",scoreAddress,method,params)
   // console.log("cpsTreasuryScoreAddressKeyStore", scoreAddress);
   let callBuilder = new IconBuilder.CallBuilder();
 
@@ -65,7 +87,7 @@ export async function callKeyStoreWallet({
   // console.log("callKeyStoreWallet start");
   const response = await iconService.call(call).execute();
   // console.log("callKeyStoreWallet");
-  // console.log(response);
+  // console.log("response of the callkeystore",response);
   return response;
 }
 

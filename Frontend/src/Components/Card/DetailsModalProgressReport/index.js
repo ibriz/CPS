@@ -808,7 +808,7 @@ function DetailsModal(props) {
                       <>
                         {status === 'Voting' && (
                           <p style={{ color: '#262626', textAlign: 'center' }}>
-                            You have already voted for this progress report.{' '}
+                            You have already voted for this progress report. {' '}
                             <br />{' '}
                             {changeVote && (
                               <ButtonGroup aria-label='Basic example'>

@@ -197,16 +197,15 @@ const Aside = ({
                 style={getHighlightedStyle(['/dashboard'])}
               >
                 {
-                  <span style={{ position: 'relative' }}>
+                  <span style={{ display:'flex',justifyContent:'space-between' }}>
                     Dashboard
                     {period === 'VOTING' && (
                       <span
                         style={{
-                          position: 'absolute',
-                          top: '-3px',
-                          right: '-24px',
-                          fontSize: '10px',
-                          padding: '1px 4px',
+                         height:'fit-content',
+                          fontSize: '12px',
+                          fontWeight:'600',
+                          padding: '1px 6px',
                           backgroundColor: '#fa3e3e',
                           borderRadius: '2px',
                         }}

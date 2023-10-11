@@ -351,12 +351,14 @@ const Dashboard = ({
         parseFloat(withDrawAmountProposalGrant.bnUSD) > 0) && (
         <Row style={{ marginTop: '15px' }}>
           <Col xs='12'>
-            <Container className={styles.container}>
+            <Container fluid className={styles.container}>
+            
               <img
                 src={isDarkTheme ? congratulationsWhiteImg : congratulationsImg}
                 style={{ padding: '24px' }}
               />
               <Container
+              fluid
                 style={{
                   display: 'flex',
                   flexDirection: 'column',

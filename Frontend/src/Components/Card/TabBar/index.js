@@ -16,8 +16,7 @@ const TabBar = ({
   hideSearch = false,
 }) => {
   return (
-    <Container 
-    fluid
+    <Container fluid
       className={styles.proposalNavBar}
       style={{
         display: 'flex',

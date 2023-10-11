@@ -13,7 +13,7 @@ function* fetchChangeVoteWorker({ payload }) {
       params: {
         ipfsHash: payload.ipfs_key,
         address: payload.address,
-        proposalType: 'progress_report',
+        proposalType: 'progress_reports',
       },
     });
     yield put(

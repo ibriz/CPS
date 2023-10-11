@@ -8,7 +8,7 @@ import {
 function* fetchProposalVoteResultRequestWorker({ payload }) {
   try {
     const response = yield call(callKeyStoreWallet, {
-      method: 'getProgressReportResult',
+      method: 'getProgressReportVoters',
       params: {
         reportKey: payload.reportKey,
       },

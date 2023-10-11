@@ -144,7 +144,7 @@ const initialState = {
   changeVote: false,
 };
 
-const proposalSlice = createSlice({
+const progressReportSlice = createSlice({
   name: 'progressReport',
   initialState,
   reducers: {
@@ -163,6 +163,12 @@ const proposalSlice = createSlice({
     },
     
 fetchProgressReportListRequest(state) {
+      return;
+    },
+    fetchMilstoneVoteResultRequest(state){
+      return;
+    },
+    fetchMilstoneVoteResultSuccess(state,action){
       return;
     },
     fetchProgressReportListSuccess(state, action) {
@@ -290,6 +296,7 @@ fetchProgressReportListRequest(state) {
     fetchVoteResultSuccess(state, action) {
       state.votesByProgressReport = action.payload.response.data.map(vote => ({
         sponsorAddress: vote.address,
+        milestoneId:IconConverter.toBigNumber(vote.milestoneId),
         status: progressReportMapping.find(
           mapping => mapping.status === vote.vote,
         )?.name,
@@ -506,6 +513,7 @@ fetchProgressReportListRequest(state) {
     },
     fetchChangeVoteSuccess(state, action) {
       const status = Number(action.payload.response);
+      // console.log("Progress Report change vote", status)
       if (!status) {
         state.changeVote = true;
       } else {
@@ -557,5 +565,5 @@ export const {
   fetchChangeVoteRequestProgressReport,
   fetchChangeVoteSuccess,
   fetchChangeVoteFailure,
-} = proposalSlice.actions;
-export default proposalSlice.reducer;
+} = progressReportSlice.actions;
+export default progressReportSlice.reducer;

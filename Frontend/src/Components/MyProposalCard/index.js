@@ -162,13 +162,11 @@ const MyProposalCard = ({
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  padding: '0px 0px 10px 0px',
                 }}
               >
                 <Container fluid>
                   <h5
                     style={{
-                      width: '100%',
                       fontWeight: 'bold',
                       fontSize: '1.1rem',
                       whiteSpace: 'nowrap',

@@ -5,15 +5,15 @@ const InformationCard = ({ title, data }) => {
   return (
     <div style={{ width:'100%'}}>
       <h3 className={styles.cardHeader}>{title}</h3>
-      <div className='row mt-4'>
+      <div className='row mt-2 pb-2'>
         {data.map((row, index) => (
           <div
             key={index}
-            className={styles.data}
-            class='d-flex flex-column col-xl-4 col-lg-6 col-12'
+            style={{gap:10}}
+            className='d-flex p-2 col-xl-4 col-lg-6 col-12'
           >
-            <h4 className={styles.key}>{row.key}</h4>
-            <p className={styles.value}>{row.value}</p>
+            <div className={styles.key}>{`${row.key} : `}</div>
+            <div className={styles.value}>{row.value}</div>
           </div>
         ))}
       </div>

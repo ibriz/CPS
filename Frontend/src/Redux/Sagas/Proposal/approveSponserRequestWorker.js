@@ -18,7 +18,7 @@ function* approveSponserRequestWorker({ payload }) {
     return;
   }
   const data = JSON.stringify({
-    method: 'sponsor_vote',
+    method: 'sponsorVote',
     params: {
       ipfs_hash: payload.ipfsKey,
       vote: '_accept',

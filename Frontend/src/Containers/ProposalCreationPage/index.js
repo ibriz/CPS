@@ -98,43 +98,6 @@ const initialDescription = `
 
 <p>Expected start date: <em>start date</em></p>
 
-<p><strong>Roadmap</strong>
-
-<table>
-<thead>
-  <tr>
-    <th>Name</th>
-    <th>Time [days]</th>
-    <th>Completion Date</th>
-		<th>Explanation</th>
-		<th>Dependants</th>
-  </tr>
-</thead>
-<tbody>
-  <tr>
-    <td>Milestone 1</td>
-    <td>20 days</td>
-    <td>August 1</td>
-		<td>This provides deliverable 1</td>
-		<td>Milestone 2, Milestone 3</td>
-  </tr>
-	<tr>
-		<td>Milestone 2</td>
-		<td>10 days</td>
-		<td>August 20</td>
-		<td>This is where we will perform marketing and initial user onboarding</td>
-		<td>None</td>
-	</tr>
-	<tr>
-		<td>Milestone 3</td>
-		<td>10 days</td>
-		<td>September 1</td>
-		<td>This is where we perform debugging and maintenance services</td>
-		<td>None</td>
-	</tr>
-</tbody>
-</table>
-
 <h4 id="deliverables">Deliverables</h4>
 
 <p><em>Deliverables projected for project</em></p>

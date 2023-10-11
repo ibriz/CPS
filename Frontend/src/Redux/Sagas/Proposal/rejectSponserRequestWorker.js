@@ -7,7 +7,7 @@ import store from 'Redux/Store';
 function* rejectSponserRequestWorker({ payload }) {
   const { IconAmount, IconConverter } = IconService;
   const data = JSON.stringify({
-    method: 'sponsor_vote',
+    method: 'sponsorVote',
     params: {
       ipfs_hash: payload.ipfsKey,
       vote: '_reject',
