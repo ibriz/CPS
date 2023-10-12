@@ -348,7 +348,7 @@ const proposalSlice = createSlice({
           budget: IconConverter.toBigNumber(
             proposal[PARAMS.totalBudget],
           ).dividedBy(10 ** 18),
-          _timestamp: proposal[PARAMS.timestamp],
+          _timestamp: IconConverter.toBigNumber(proposal[PARAMS.timestamp]),
           _sponsored_timestamp: proposal[PARAMS.sponsoredTimestamp],
           ipfsHash: proposal[PARAMS.proposalHash],
           ipfsKey: proposal[PARAMS.proposalHash],

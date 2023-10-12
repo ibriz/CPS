@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const Description1 = styled.div`
   color: var(--proposal-text-color);
   font-size: 0.9rem;
-  padding: 0px 25px;
+  padding: 0px 8px;
   margin-top:20px;
 `;
 
@@ -15,7 +15,6 @@ const DescriptionTitle = styled.div`
   line-height: 17px;
   color: var(--proposal-text-color);
   margin-bottom: 5px;
-  padding: 0px 10px;
 `;
 
 const Description = ({ description, title = 'DESCRIPTION' }) => {

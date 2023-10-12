@@ -42,6 +42,10 @@ const ProposalHistoryCard = ({
   proposalHistoryListCount,
   fetchProposalHistoryRequest,
 }) => {
+  const data = [...proposalHistoryList];
+  const sortedProposalList =data.reverse();
+  // console.log(sortedProposalList);
+  // console.log(sortedProposalList);
   const [filteredProposalList, setFilteredProposalList] =
     useState(proposalHistoryList);
   const [selectedProposal, setSelectedProposal] = React.useState();
@@ -78,7 +82,7 @@ const ProposalHistoryCard = ({
   }, []);
 
   useEffect(() => {
-    let flattenedProposals = proposalHistoryList;
+    let flattenedProposals = sortedProposalList;
     flattenedProposals = flattenedProposals.filter(proposal =>
       proposal?._proposal_title
         ?.toLowerCase()

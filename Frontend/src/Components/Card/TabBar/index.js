@@ -16,7 +16,7 @@ const TabBar = ({
   hideSearch = false,
 }) => {
   return (
-    <Container fluid
+    <div
       className={styles.proposalNavBar}
       style={{
         display: 'flex',
@@ -70,7 +70,7 @@ const TabBar = ({
           />
         )}
       </div>
-    </Container>
+    </div>
   );
 };
 

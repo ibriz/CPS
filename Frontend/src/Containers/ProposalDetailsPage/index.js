@@ -496,7 +496,12 @@ function ProposalDetailsPage(props) {
                   </Col>
                 </Row>
               </Container>
-              <Col style={{backgroundColor:'var(--proposal-card-color)', borderRadius:4, marginBottom:12, paddingTop:'16px'}}>
+              <Col style={{
+                  backgroundColor: 'var(--proposal-card-color)',
+                  borderRadius: 4,
+                  marginBottom:16,
+                  padding: '16px',
+                }}>
               <InformationCard
                       title={'Project Details'}
                       data={[

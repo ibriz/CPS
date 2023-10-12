@@ -66,7 +66,7 @@ function App({
     // const defaultDark =
     //   storedTheme === 'dark' || (storedTheme === null && prefersDark);
 
-    if (prefersDark) {
+    if (storedTheme === 'light') {
       setDark();
     } else {
       setLight();

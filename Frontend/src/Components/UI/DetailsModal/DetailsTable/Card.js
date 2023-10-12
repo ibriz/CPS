@@ -5,7 +5,7 @@ const InformationCard = ({ title, data }) => {
   return (
     <div style={{ width:'100%'}}>
       <h3 className={styles.cardHeader}>{title}</h3>
-      <div className='row mt-2 pb-2'>
+      <div className='d-flex flex-wrap mt-2 pb-2'>
         {data.map((row, index) => (
           <div
             key={index}

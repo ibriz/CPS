@@ -157,14 +157,13 @@ const MyProposalCard = ({
         <Container fluid>
           <Card className={styles.card}>
             <Card.Body className={styles.cardBody}>
-              <Container
-                fluid
+              <div
                 style={{
                   display: 'flex',
                   alignItems: 'center',
                 }}
               >
-                <Container fluid>
+                <div style={{width:'100%'}}>
                   <h5
                     style={{
                       fontWeight: 'bold',
@@ -183,8 +182,8 @@ const MyProposalCard = ({
                     placeholder='Search Proposal'
                     maxWidth
                   />
-                </Container>
-              </Container>
+                </div>
+              </div>
 
               <hr style={{ marginTop: '-9px' }} />
 
