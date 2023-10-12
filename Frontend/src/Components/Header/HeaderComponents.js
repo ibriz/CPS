@@ -60,8 +60,8 @@ const HeaderComponents = ({
   const { isRemainingTimeZero } = useTimer();
   useVerification();
 
-  const onLogout = () => {
-    logout();
+  const onLogout = async() => {
+   await logout();
     history.push('/');
   };
 
