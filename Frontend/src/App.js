@@ -59,18 +59,15 @@ function App({
     };
 
     const storedTheme = localStorage.getItem('theme');
-    const prefersDark =
-      window.matchMedia &&
-      window.matchMedia('(prefers-color-scheme: dark)').matches;
 
     // const defaultDark =
     //   storedTheme === 'dark' || (storedTheme === null && prefersDark);
 
     if (storedTheme === 'light') {
-      setDark();
-    } else {
       setLight();
-    }
+    } else {
+      setDark();
+    } 
   };
 
   setThemeAtStartup();
