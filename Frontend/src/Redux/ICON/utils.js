@@ -21,7 +21,7 @@ import frontEndWallet from './FrontEndWallet';
 // export const trackerURL = 'https://tracker.icon.community/address';
 
 //test net
-export const CPSScore = 'cx01762d753ae9aadaf27fe43330d7b12cc46a9a05';
+export const CPSScore = 'cxf48e561f0918a5a7d718179d739b70a80c5ed302';
 var nid = 2;
 export const provider = new HttpProvider(
   'https://lisbon.net.solidwallet.io/api/v3',

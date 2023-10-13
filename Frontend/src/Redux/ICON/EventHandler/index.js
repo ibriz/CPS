@@ -185,8 +185,6 @@ export default event => {
           console.log('history');
           history.push('/dashboard');
           history.push('/dashboard');
-          history.goBack();
-          history.goForward();
           getResult(
             {
               txHash: payload.result,
@@ -271,8 +269,6 @@ export default event => {
           console.log('history');
           history.push('/dashboard');
           history.push('/dashboard');
-          history.goBack();
-          history.goForward();
           NotificationManager.info('Sponsor request approval request sent');
 
           getResult(
@@ -527,6 +523,7 @@ export default event => {
           break;
 
         case claimReward:
+          window.location.reload();
           getResult(
             {
               txHash: payload.result,
@@ -560,6 +557,8 @@ export default event => {
           break;
 
         case claimSponsorBond:
+          window.location.reload();
+          // history.push('/dashboard')
           getResult({
             txHash: payload.result,
             failureMessage: 'Sponsor Bond Claim Failed',

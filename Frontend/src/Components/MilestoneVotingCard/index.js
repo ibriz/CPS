@@ -11,6 +11,7 @@ import { IconConverter } from 'icon-sdk-js';
 import { CPSScore, call, callKeyStoreWallet } from 'Redux/ICON/utils';
 import ProgressBarCombined from 'Components/Card/ProgressBarCombined';
 import VoteProgressBar from 'Components/VoteProgressBar';
+import { useParams } from 'react-router-dom';
 
 const MilestoneVoteCard = ({
   id,
@@ -22,16 +23,17 @@ const MilestoneVoteCard = ({
   votesByProgressReport,
 }) => {
   const [data, setData] = React.useState();
-
+  const params = useParams();
+  // console.log("parameters",params);
   useEffect(() => {
     let isMounted = true;
     try {
       callKeyStoreWallet({
         method: 'getMilestoneVoteResult',
         params: {
-          reportKey: `bafybeifrvpj33rmqbrrzqq3pbbsyhxsatctq67arsq6mawv7z6ttpod3mq`,
+          reportKey: `${reportKey}`,
           // milestoneID: `0x${Number(id).toString(16)}`
-          milestoneID: `${id}`,
+          milestoneId: `${id}`,
         },
       }).then(res => {
         if (isMounted) setData(res); // add conditional check
@@ -44,7 +46,7 @@ const MilestoneVoteCard = ({
     };
   }, [id]);
 
-  console.log(data);
+  // console.log(data);
 
   return (
     <>

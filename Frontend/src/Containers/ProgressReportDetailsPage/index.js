@@ -172,7 +172,7 @@ function ProgressReportDetailsPage(props) {
 
   useEffect(() => {
     if (selectedProgressReportByIpfs?.ipfsHash) {
-      console.log('Here', { selectedProgressReportByIpfs });
+      // console.log('Here', { selectedProgressReportByIpfs });
       setProgressReport(selectedProgressReportByIpfs);
       setTimeout(() => {}, 300);
     }
@@ -183,6 +183,7 @@ function ProgressReportDetailsPage(props) {
   )?.name;
 
   const progressReportIpfsKey = useParams()?.id;
+  // console.log("progressReportIpfsKey",progressReportIpfsKey);
   useEffect(() => {
     if (progressReportIpfsKey) {
       fetchProgressReportByIpfsRequest({
@@ -711,7 +712,7 @@ function ProgressReportDetailsPage(props) {
                                       <MilestoneVoteCard
                                         id={milestone?.id}
                                         reportKey={
-                                          selectedProgressReportByIpfs?.reportKey
+                                         progressReportIpfsKey
                                         }
                                         name={milestone?.name}
                                         votesByProgressReport={votesByProgressReport?.filter(
