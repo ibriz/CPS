@@ -114,7 +114,7 @@ const HeaderComponents = ({
       </div>
 
       <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
-        <button
+        {/* <button
           style={{ padding: '4px 8px', border: 'none', borderRadius: 6,backgroundColor: isDark ? '#1b1b1b' : '#f1f1f1', }}
           onClick={() => {
             isDark
@@ -128,7 +128,7 @@ const HeaderComponents = ({
             ) : (
             <BsMoon size={20} style={{ color: '#27aab9' }} />
           )}
-        </button>
+        </button> */}
 
         {address ? (
           <span

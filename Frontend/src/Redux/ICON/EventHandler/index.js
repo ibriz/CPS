@@ -518,12 +518,12 @@ export default event => {
             },
           );
 
-          // window.location.reload();
           NotificationManager.info('Prep Penalty Sent');
+          window.location.reload();
           break;
 
         case claimReward:
-          window.location.reload();
+         
           getResult(
             {
               txHash: payload.result,
@@ -551,22 +551,19 @@ export default event => {
               return true;
             },
           );
-
-          // window.location.reload();
           NotificationManager.info('Reward Claim Request Sent');
+          window.location.reload();
           break;
 
         case claimSponsorBond:
-          window.location.reload();
-          // history.push('/dashboard')
           getResult({
             txHash: payload.result,
             failureMessage: 'Sponsor Bond Claim Failed',
             successMessage: 'Sponsor Bond Claimed Successfully',
           });
 
-          // window.location.reload();
-          NotificationManager.info('Sponsor bond claimed successfully');
+          NotificationManager.info('Sponsor bond claim Request Sent');
+          window.location.reload();
           break;
 
         case votePriority:

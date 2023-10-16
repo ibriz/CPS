@@ -325,7 +325,7 @@ function ProgressReportDetailsPage(props) {
   const [voteLoading, setVoteLoading] = React.useState(false);
 
   const onSubmitVote = () => {
-    if (vote.length !== progressDetail?.completedMilestone?.length) {
+    if (vote.length !== progressDetail?.completedMilestone?.length && !changeVoteButton) {
       NotificationManager.error('You need to vote on all Milestone Reports');
     } else {
       voteProgressReport({

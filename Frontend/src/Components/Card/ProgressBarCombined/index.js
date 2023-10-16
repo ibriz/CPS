@@ -17,7 +17,8 @@ const ProgressBarCombined = ({
       <ProgressBar striped variant='success' now={approvedPercentage} key={1} />
       <ProgressBar striped variant='danger' now={rejectedPercentage} key={2} />
       <ProgressBar
-        variant='light'
+        variant='info'
+        striped 
         now={100 - approvedPercentage - rejectedPercentage}
         key={3}
       />

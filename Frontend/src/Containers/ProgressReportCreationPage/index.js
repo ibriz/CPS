@@ -47,6 +47,7 @@ import InfoIcon from 'Components/InfoIcon';
 import Popup from 'Components/Popup';
 import useTimer from 'Hooks/useTimer';
 import { specialCharacterMessage } from 'Constants';
+import { miniSerializeError } from '@reduxjs/toolkit';
 
 const signingInfoMessage = (
   <div className='text-information'>
@@ -262,6 +263,7 @@ const ProgressReportCreationPage = ({
   const isLastReport = currentUserActiveProposals.find(
     proposal => proposal.ipfsKey === progressReport.projectName,
   )?.lastProgressReport;
+  // const [milestoneStatus, setMilestoneStatus]= useState();
 
   const [descriptionWords, setDescriptionWords] = React.useState(0);
   const [descriptionCharacters, setDescriptionCharacters] = React.useState(0);
@@ -563,8 +565,10 @@ const ProgressReportCreationPage = ({
   const handleDescriptionChange = (index, e, oldMilestone) => {
     // console.log(oldMilestone)
     const updatedTextareaData = [...progressReportMilestone];
-    const dataIndex = updatedTextareaData.findIndex(v=>v.id===oldMilestone.id);
-    const arrayIndex = dataIndex>=0? dataIndex :updatedTextareaData.length
+    const dataIndex = updatedTextareaData.findIndex(
+      v => v.id === oldMilestone.id,
+    );
+    const arrayIndex = dataIndex >= 0 ? dataIndex : updatedTextareaData.length;
     updatedTextareaData[arrayIndex] = {
       ...oldMilestone,
       milestoneDescription: e.target.value,
@@ -704,28 +708,33 @@ const ProgressReportCreationPage = ({
                 <Row>
                   {selectedProposalForProgressReport?.milestones?.map(
                     (option, index) => {
-                      // try{
-                      //   const response = call(callKeyStoreWallet, {
-                      //     method: 'getMileststoneStatusOf',
-                      //     params: {
-                      //       proposalKey: selectedProposal.ipfsKey,
-                      //       milestoneId: `${option.id}`,
-                      //     },
-                      //   });
-                      
-                      // }catch(e){
-                      //   console.log("milestone status fetching error")
-                      // }
+                      var milestoneStatus;
+                      callKeyStoreWallet({
+                        method: 'getMileststoneStatusOf',
+                        params: {
+                          proposalKey: `${selectedProposalForProgressReport.ipfsHash}`,
+                          milestoneId: `${option.id}`,
+                        },
+                      })
+                        .then(res => {
+                          milestoneStatus = res;
+                          // console.log('inside', milestoneStatus);
+                          //  return res;
+                        })
+                        .catch(e => {
+                          console.log(e);
+                        });
+                        console.log('outside', milestoneStatus);
                       return (
                         <div
-                          key={index}
+                          key={option.id}
                           class='d-flex custom-control custom-checkbox pl-4 pr-4'
                         >
                           <input
                             type='checkbox'
                             class='custom-control-input'
-                            value={option.name} // Changed from option.value to option.name
-                            // checked={option.isChecked}
+                            value={option.name} 
+                            disabled={milestoneStatus === '0x3' || milestoneStatus === '0x0'}
                             id={`customCheck${index}`}
                             onChange={() => handleCheckboxChange(option.id)}
                           />{' '}
@@ -744,7 +753,9 @@ const ProgressReportCreationPage = ({
               <div>
                 {selectedProposalForProgressReport?.milestones?.map(
                   (option, index) => {
-                    const inputMilestone = progressReportMilestone.find(m=>m.id === option.id)
+                    const inputMilestone = progressReportMilestone.find(
+                      m => m.id === option.id,
+                    );
                     return (
                       selectedItems.includes(option.id) && (
                         <div key={index} style={{ margin: '20px 0px  ' }}>
@@ -769,7 +780,6 @@ const ProgressReportCreationPage = ({
                               />
                             </InputGroup>
                           </Col>
-                      
                         </div>
                       )
                     );

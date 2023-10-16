@@ -9,6 +9,8 @@ import {
   AiFillFacebook,
   AiFillRedditCircle,
 } from 'react-icons/ai';
+import { BsSun, BsMoon } from 'react-icons/bs';
+import { MdWbSunny } from 'react-icons/md';
 import { FaDiscord } from 'react-icons/fa';
 import { SiFacebook } from 'react-icons/si';
 import iconCPSImg from '../../Assets/Images/iconCPSlogo-light.svg';
@@ -114,7 +116,7 @@ const Footer = ({ console = false, width = undefined, footerRef }) => {
   const footerColumnStyles = console
     ? styles.footerColumnConsole
     : styles.footerColumn;
-
+  const isDark = localStorage.getItem('theme') === 'dark';
   const consoleColor = 'var(--console-color)';
   const storedTheme = localStorage.getItem('theme');
   const cpsLogo = console
@@ -227,19 +229,43 @@ const Footer = ({ console = false, width = undefined, footerRef }) => {
             textAlign: width && width <= 991 ? 'center' : 'right',
             paddingRight: width && width <= 991 ? '0px' : '42px',
           }}
+        > <div style={{padding:'12px 24px'}}>
+        <button
+          style={{
+            padding: '4px 8px',
+            border: 'none',
+            borderRadius: 6,
+            backgroundColor: isDark ? '#1b1b1b' : '#f1f1f1',
+          }}
+          onClick={() => {
+            isDark
+              ? localStorage.setItem('theme', 'light')
+              : localStorage.setItem('theme', 'dark');
+            window.location.reload();
+          }}
         >
+          {isDark ? (
+            <MdWbSunny size={20} style={{ color: ' white' }} />
+          ) : (
+            <BsMoon size={20} style={{ color: '#27aab9' }} />
+          )}
+        </button>
+      </div>
           <img src={cpsLogo} style={{ width: '45%' }} />
           <div
             style={{ marginTop: '20px', fontSize: '14px', fontWeight: '600' }}
           >
-            Built by:{' '}
-            <a
-              href='https://iconosphere.io/'
-              style={console ? { color: consoleColor } : { color: 'white' }}
-              target='_blank'
-            >
-              ICONOsphere P-Rep
-            </a>
+           
+            <div>
+              Built by:{' '}
+              <a
+                href='https://iconosphere.io/'
+                style={console ? { color: consoleColor } : { color: 'white' }}
+                target='_blank'
+              >
+                ICONOsphere P-Rep
+              </a>
+            </div>
           </div>
           <div
             style={{ marginTop: '5px', fontSize: '14px', fontWeight: '600' }}
