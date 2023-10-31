@@ -156,6 +156,7 @@ const initialState = {
   sponsorRequestProposalTitle: '',
   sponsorRequestProposal: null,
   selectedProposal: {},
+  selectedProposalForMigration:{},
   selectedProposalDetailForProgressReport:{},
   token: '',
   error: '',
@@ -172,6 +173,13 @@ const proposalSlice = createSlice({
       state.submittingProposal = false;
     },
     submitProposalFailure(state) {
+      state.submittingProposal = false;
+    },
+    submitMigrationProposalRequest(state) {},
+    submitMigrationProposalSuccess(state) {
+      state.submittingProposal = false;
+    },
+    submitMigrationProposalFailure(state) {
       state.submittingProposal = false;
     },
 
@@ -860,6 +868,7 @@ const proposalSlice = createSlice({
     fetchProposalByIpfsSuccess(state, action) {
       console.log('Response', action.payload.response);
       let proposal = action.payload.response;
+      state.selectedProposalForMigration = action.payload.response;
       state.selectedProposal = {
         _status: proposal[PARAMS.status],
         _proposal_title: proposal[PARAMS.proposalTitle],
@@ -1031,5 +1040,8 @@ export const {
   fetchPriorityVotingSuccess,
   fetchPriorityVotingFailure,
   setVotingPhase,
+  submitMigrationProposalFailure,
+  submitMigrationProposalSuccess,
+  submitMigrationProposalRequest,
 } = proposalSlice.actions;
 export default proposalSlice.reducer;

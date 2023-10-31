@@ -2,7 +2,9 @@ import fetchProposalListWorker from './fetchProposalListWorker';
 import fetchMyProposalListWorker from './fetchMyProposalListWorker';
 
 import submitProposalToScoreWorker from './submitProposalToScoreWorker';
+import submitMigrationProposalToScoreWorker from './submitMigrationProposalToScoreWorker';
 import submitProposalToIPFSWorker from './submitProposalWorker';
+import submitMigrationProposalWorker from './submitMigrationProposalWorker';
 import updateProposalStatusWorker from './updateProposalStatusWorker';
 import fetchProposalDetailWorker from './fetchProposalDetailWorker';
 import emptyProposalDetailWorker from './emptyProposalDetailWorker';
@@ -31,6 +33,8 @@ export {
     fetchProposalListWorker,
     fetchMyProposalListWorker,
     submitProposalToScoreWorker,
+    submitMigrationProposalWorker,
+    submitMigrationProposalToScoreWorker,
     submitProposalToIPFSWorker,
     updateProposalStatusWorker,
     fetchProposalDetailWorker,

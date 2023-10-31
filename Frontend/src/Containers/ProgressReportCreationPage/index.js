@@ -248,6 +248,7 @@ const ProgressReportCreationPage = ({
   });
   const { period } = useTimer();
   const [progressReportIPFS, setProgressReportIPFS] = React.useState({});
+  const [progressReportStatus, setprogressReportStatus] = React.useState({});
   const [selectedItems, setSelectedItems] = React.useState([]);
   let [draftConfirmationShow, setDraftConfirmationShow] = React.useState(false);
   const [progressReportMilestone, setprogressReportMilestone] = React.useState(
@@ -264,6 +265,7 @@ const ProgressReportCreationPage = ({
     proposal => proposal.ipfsKey === progressReport.projectName,
   )?.lastProgressReport;
   // const [milestoneStatus, setMilestoneStatus]= useState();
+  console.log("response status of milestone", progressReportStatus);
 
   const [descriptionWords, setDescriptionWords] = React.useState(0);
   const [descriptionCharacters, setDescriptionCharacters] = React.useState(0);
@@ -708,23 +710,21 @@ const ProgressReportCreationPage = ({
                 <Row>
                   {selectedProposalForProgressReport?.milestones?.map(
                     (option, index) => {
-                      var milestoneStatus;
-                      callKeyStoreWallet({
-                        method: 'getMileststoneStatusOf',
-                        params: {
-                          proposalKey: `${selectedProposalForProgressReport.ipfsHash}`,
-                          milestoneId: `${option.id}`,
-                        },
-                      })
-                        .then(res => {
-                          milestoneStatus = res;
-                          // console.log('inside', milestoneStatus);
-                          //  return res;
-                        })
-                        .catch(e => {
-                          console.log(e);
-                        });
-                        console.log('outside', milestoneStatus);
+                      // callKeyStoreWallet({
+                      //   method: 'getMileststoneStatusOf',
+                      //   params: {
+                      //     proposalKey: `${selectedProposalForProgressReport.ipfsHash}`,
+                      //     milestoneId: `${option.id}`,
+                      //   },
+                      // })
+                      //   .then(res => {
+                      //     // let array = [`${option.id}`, res];
+                      //     // const keyValueObject = Object.fromEntries(array);
+                      //     // setprogressReportStatus({...progressReportStatus,status: res})
+                      //   })
+                      //   .catch(e => {
+                      //     console.log(e);
+                      //   });
                       return (
                         <div
                           key={option.id}
@@ -734,10 +734,10 @@ const ProgressReportCreationPage = ({
                             type='checkbox'
                             class='custom-control-input'
                             value={option.name} 
-                            disabled={milestoneStatus === '0x3' || milestoneStatus === '0x0'}
+                            // disabled={milestoneStatus === '0x3' || milestoneStatus === '0x0'}
                             id={`customCheck${index}`}
                             onChange={() => handleCheckboxChange(option.id)}
-                          />{' '}
+                          />
                           <label
                             class='custom-control-label w-100'
                             for={`customCheck${index}`}

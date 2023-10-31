@@ -23,8 +23,10 @@ import {
 } from 'Redux/Reducers/fundSlice';
 
 import {
-  submitProposalRequest,
+  submitMigrationProposalRequest,
+  fetchProposalByIpfsRequest,
   saveDraftRequest,
+    fetchProposalByAddressRequest,
 } from 'Redux/Reducers/proposalSlice';
 import { fetchPrepsRequest } from '../../Redux/Reducers/prepsSlice';
 import { connect } from 'react-redux';
@@ -188,15 +190,18 @@ const initialDescription = `
 
 `;
 
-const ProposalCreationPage = ({
-  submitProposal,
+const MigrationForm = ({
+  submitMigrationProposal,
   history,
   submittingProposal,
+  currentUserActiveProposals,
   fetchPrepsRequest,
   preps,
   saveDraftRequest,
   walletAddress,
   location,
+  fetchProposalByAddressRequest,
+  fetchProposalByIpfsRequest,
   fetchCPFTreasuryScoreAddressRequest,
   fetchCPFRemainingFundRequest,
   cpfTreasuryScoreAddress,
@@ -211,22 +216,42 @@ const ProposalCreationPage = ({
 }) => {
   const { draftProposal, isDraft } = location;
   const { period } = useTimer();
-  const [milestoneCount, setMilestoneCount] = useState(0);
   const [modalShow, setModalShow] = React.useState(false);
   let [submissionConfirmationShow, setSubmissionConfirmationShow] =
-    React.useState(false);
+  React.useState(false);
   let [draftConfirmationShow, setDraftConfirmationShow] = React.useState(false);
   const isDarkTheme = localStorage.getItem('theme');
   const [editModalShow, setEditModalShow] = React.useState(false);
   const [editModalIndex, setEditModalIndex] = React.useState();
   const [proposalIPFS, setProposalIPFS] = React.useState({});
-
+  const [selectedIPFSHash,setSelectedIPFSHash] = React.useState();
   const [descriptionWords, setDescriptionWords] = React.useState(0);
   const [descriptionCharacters, setDescriptionCharacters] = React.useState(0);
   const [totalNumberOfMonthsInMilestone, setTotalNumberOfMonthsInMilestone] =
-    React.useState(0);
+  React.useState(0);
   let [prepList, setPrepList] = React.useState([]);
+  // const [milestoneCount, setMilestoneCount] = useState(proposal.milestones.length);
+  const [proposal, setProposal] = useState({
+    oldIpfsKey:null,
+    projectName: null,
+    category: null,
+    projectDuration: null,
+    totalBudget: null,
+    sponserPrep: null,
+    sponserPrepName: null,
+    description: null,
+    milestones: [],
+    teamName: null,
+    teamEmail: null,
+    teamSize: null,
+  });
 
+
+  useEffect(() => {
+    fetchProposalByAddressRequest({
+      walletAddress,
+    });
+  }, []);
   useEffect(() => {
     fetchCPFRemainingFundRequest();
   }, [fetchCPFRemainingFundRequest]);
@@ -254,20 +279,18 @@ const ProposalCreationPage = ({
     setPrepList(prepList);
   }, [preps]);
 
-  const [proposal, setProposal] = useState({
-    projectName: null,
-    category: null,
-    projectDuration: null,
-    totalBudget: null,
-    sponserPrep: null,
-    sponserPrepName: null,
-    description: null,
-    milestones: [],
-    milestoneCount: milestoneCount,
-    teamName: null,
-    teamEmail: null,
-    teamSize: null,
-  });
+
+
+  useEffect(() => {
+    if (proposal.projectName) {
+      // console.log("this is hash", progressReport.projectName);
+      fetchProposalByIpfsRequest({ ipfs_key: proposal.projectName });
+      console.log('executing this line');
+      // fetchSelectedProposalForProgressReportRequest({
+      //   hash: progressReport.projectName,
+      // });
+    }
+  }, [proposal.projectName]);
 
   useEffect(() => {
     setProposal(proposal => ({
@@ -348,15 +371,14 @@ const ProposalCreationPage = ({
     }
   }, [proposal.description, descriptionWords]);
 
-  async function fetchDraft() {
+  async function fetchIPFSProposal() {
     const proposalIPFS = await requestIPFS({
-      hash: draftProposal.ipfsHash,
-      //   method: 'GET'
+      hash: selectedIPFSHash,
     });
 
     setProposalIPFS(proposalIPFS);
   }
-
+ 
   useEffect(() => {
     document.getElementById('teamEmail').onfocus = () => {
       document.getElementById('teamEmail').onblur = () => {
@@ -370,20 +392,20 @@ const ProposalCreationPage = ({
   }, []);
 
   useEffect(() => {
-    if (isDraft) {
+    if (proposalIPFS) {
       setProposal(prevState => ({
         ...proposal,
         ...proposalIPFS,
-        ...draftProposal,
       }));
     }
-  }, [location, proposalIPFS]);
+  }, [ proposalIPFS]);
 
   useEffect(() => {
-    if (isDraft) {
-      fetchDraft();
+    if (selectedIPFSHash) {
+      fetchIPFSProposal();
+      console.log("==================================",selectedIPFSHash);
     }
-  }, [location]);
+  }, [selectedIPFSHash]);
 
   // const [proposal, setProposal] = useState(
   //     {
@@ -403,63 +425,64 @@ const ProposalCreationPage = ({
 
   const handleSubmit = event => {
     event.preventDefault();
+    console.log(proposal);
     setSubmissionConfirmationShow(true);
   };
 
-  const onClickSaveDraft = () => {
-    let allGood = true;
-    Object.keys(proposal).map(key => {
-      if (
-        document.getElementById(key) &&
-        key !== 'description' &&
-        key !== 'milestones'
-      ) {
-        console.log(
-          'keyProposal',
-          key,
-          proposal[key],
-          document.getElementById(key).checkValidity(),
-        );
-        if (
-          (!Array.isArray(proposal[key]) && proposal[key]) ||
-          (Array.isArray(proposal[key]) && proposal[key].length > 0)
-        ) {
-          if (!document.getElementById(key).checkValidity()) {
-            document.getElementById(key).reportValidity();
-            allGood = false;
-          }
-        }
-      } else {
-        console.log('keyProposalNot', key);
-      }
-    });
-    if (!allGood) {
-      return;
-    }
-    setDraftConfirmationShow(true);
-  };
+  // const onClickSaveDraft = () => {
+  //   let allGood = true;
+  //   Object.keys(proposal).map(key => {
+  //     if (
+  //       document.getElementById(key) &&
+  //       key !== 'description' &&
+  //       key !== 'milestones'
+  //     ) {
+  //       console.log(
+  //         'keyProposal',
+  //         key,
+  //         proposal[key],
+  //         document.getElementById(key).checkValidity(),
+  //       );
+  //       if (
+  //         (!Array.isArray(proposal[key]) && proposal[key]) ||
+  //         (Array.isArray(proposal[key]) && proposal[key].length > 0)
+  //       ) {
+  //         if (!document.getElementById(key).checkValidity()) {
+  //           document.getElementById(key).reportValidity();
+  //           allGood = false;
+  //         }
+  //       }
+  //     } else {
+  //       console.log('keyProposalNot', key);
+  //     }
+  //   });
+  //   if (!allGood) {
+  //     return;
+  //   }
+  //   setDraftConfirmationShow(true);
+  // };
 
-  const saveChanges = () => {
-    if (isDraft) {
-      saveDraftRequest({
-        ...proposal,
-        address: walletAddress,
-        proposalKey: proposal.ipfsKey,
-        callBackAfterSigning: () => {
-          history.push('/dashboard');
-        },
-      });
-    } else {
-      saveDraftRequest({
-        ...proposal,
-        address: walletAddress,
-        callBackAfterSigning: () => {
-          history.push('/dashboard');
-        },
-      });
-    }
-    // history.push('/proposals');
-  };
+  // const saveChanges = () => {
+  //   if (isDraft) {
+  //     saveDraftRequest({
+  //       ...proposal,
+  //       address: walletAddress,
+  //       proposalKey: proposal.ipfsKey,
+  //       callBackAfterSigning: () => {
+  //         history.push('/dashboard');
+  //       },
+  //     });
+  //   } else {
+  //     saveDraftRequest({
+  //       ...proposal,
+  //       address: walletAddress,
+  //       callBackAfterSigning: () => {
+  //         history.push('/dashboard');
+  //       },
+  //     });
+  //   }
+  //   // history.push('/proposals');
+  // };
 
   // useEffect(() => {
   //     ClassicEditor
@@ -473,11 +496,33 @@ const ProposalCreationPage = ({
   //             console.error(error);
   //         });
   // }, [])
+  // const currentUserActiveProposals=[
+  //   {
+  //     ipfsKey:"adf42ttstg",
+  //     _proposal_title:"CPS REfurbished",
+  //     newProgressReport:false
+  //   },
+  //   {
+  //     ipfsKey:"sdfgsdfg",
+  //     _proposal_title:"Grant System",
+  //     newProgressReport:false
+  //   },
+  //   {
+  //     ipfsKey:"fhjmshsnh",
+  //     _proposal_title:"UI System",
+  //     newProgressReport:false
+  //   },
+  // ]
 
   const handleChange = event => {
     let name = event.target.name;
     let value = event.target.value;
 
+    if(name==='projectName'){
+      setSelectedIPFSHash(value);
+      setProposal({...proposal,oldIpfsKey:value})
+    }
+     console.log(name,value);
     setProposal(prevState => ({
       ...prevState,
       [name]: value,
@@ -513,16 +558,31 @@ const ProposalCreationPage = ({
               </Form.Label>
 
               <Col sm='10' className={styles.inputSameLine}>
-                <Form.Control
-                  placeholder='Project Name'
+              <Form.Control
                   size='md'
+                  as='select'
                   className={styles.inputBox}
                   value={proposal.projectName}
                   name='projectName'
-                  id='projectName'
+                  controlId='projectName'
                   onChange={handleChange}
                   required
-                />
+                >
+                  <option selected disabled value=''>
+                    Select Project
+                  </option>
+                  {/* <option value="dasd">New Project</option> */}
+
+                  {currentUserActiveProposals.map((proposal, index) => (
+                    <option
+                      key={index}
+                      value={proposal.ipfsKey}
+                      disabled={!proposal.newProgressReport}
+                    >
+                      {proposal._proposal_title}
+                    </option>
+                  ))}
+                </Form.Control>{' '}
               </Col>
             </Form.Group>
             <Form.Group as={Row}>
@@ -837,7 +897,7 @@ const ProposalCreationPage = ({
             <Alert variant={'info'}>{signingInfoMessage}</Alert>
 
             <Form.Group as={Row}>
-              <Col className={styles.draftButton}>
+              {/* <Col className={styles.draftButton}>
                 <Popup
                   component={
                     <Button variant='outline-info' onClick={onClickSaveDraft}>
@@ -847,7 +907,7 @@ const ProposalCreationPage = ({
                   popOverText='Save changes and continue later.'
                   placement='right'
                 />
-              </Col>
+              </Col> */}
               <Col className={styles.saveButton}>
                 {period !== 'VOTING' && !isMaintenanceMode && (
                   <Button variant='info' type='submit'>
@@ -903,7 +963,7 @@ const ProposalCreationPage = ({
           setProposal(prevState => ({
             ...prevState,
             milestones: [...prevState.milestones, milestone],
-            milestoneCount: prevState.milestoneCount+1
+            // milestoneCount: prevState.milestoneCount+1
           }));
         }}
       />
@@ -936,7 +996,7 @@ const ProposalCreationPage = ({
         heading={'Proposal Submission Confirmation'}
         size='mdxl'
         onConfirm={() => {
-          submitProposal({
+          submitMigrationProposal({
             proposal,
           });
         }}
@@ -949,7 +1009,7 @@ const ProposalCreationPage = ({
         }
       </ConfirmationModal>
 
-      <ConfirmationModal
+      {/* <ConfirmationModal
         show={draftConfirmationShow}
         onHide={() => setDraftConfirmationShow(false)}
         heading={'Draft Submission Confirmation'}
@@ -962,16 +1022,17 @@ const ProposalCreationPage = ({
             <div>Are you sure you want to save the changes?</div>
           </>
         }
-      </ConfirmationModal>
+      </ConfirmationModal> */}
     </div>
   );
 };
 
 const mapDispatchToProps = dispatch => ({
-  submitProposal: payload => dispatch(submitProposalRequest(payload)),
+  submitMigrationProposal: payload => dispatch(submitMigrationProposalRequest(payload)),
   fetchPrepsRequest: payload => dispatch(fetchPrepsRequest(payload)),
   saveDraftRequest: payload => dispatch(saveDraftRequest(payload)),
-
+  fetchProposalByIpfsRequest: payload =>
+  dispatch(fetchProposalByIpfsRequest(payload)),
   fetchCPFTreasuryScoreAddressRequest: () =>
     dispatch(fetchCPFTreasuryScoreAddressRequest()),
   fetchCPFRemainingFundRequest: payload =>
@@ -980,12 +1041,15 @@ const mapDispatchToProps = dispatch => ({
     dispatch(fetchAvailableFundRequest(payload)),
   fetchRemainingSwapAmountRequest: () =>
     dispatch(fetchRemainingSwapAmountRequest()),
+    fetchProposalByAddressRequest: payload =>
+    dispatch(fetchProposalByAddressRequest(payload)),
   fetchMaintenanceModeRequest: () => dispatch(fetchMaintenanceModeRequest()),
 });
 
 const mapStateToProps = state => ({
   submittingProposal: state.proposals.submittingProposal,
   preps: state.preps.preps,
+  currentUserActiveProposals: state.proposals.proposalByAddress,
   walletAddress: state.account.address,
   cpfRemainingFunds: state.fund.cpfRemainingFunds,
   cpfTreasuryScoreAddress: state.fund.cpfTreasuryScoreAddress,
@@ -996,5 +1060,5 @@ const mapStateToProps = state => ({
 });
 
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(ProposalCreationPage),
+  connect(mapStateToProps, mapDispatchToProps)(MigrationForm),
 );

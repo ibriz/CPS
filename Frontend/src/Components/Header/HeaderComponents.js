@@ -55,7 +55,7 @@ const HeaderComponents = ({
   const [initialPrompt, setInitialPrompt] = React.useState(false);
   // const [isEnabled, setIsEnabled] = useState(false);
   const isDark = localStorage.getItem('theme') === 'dark';
-  console.log('store', isDark);
+  // console.log('store', isDark);
 
   const { isRemainingTimeZero } = useTimer();
   useVerification();

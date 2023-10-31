@@ -16,6 +16,8 @@ import {
 import {
   submitProposalToIPFSWorker,
   submitProposalToScoreWorker,
+  submitMigrationProposalWorker,
+  submitMigrationProposalToScoreWorker,
   fetchProposalListWorker,
   fetchSortPriorityProposalListWorker,
   fetchMyProposalListWorker,
@@ -96,6 +98,8 @@ import {
 
 import {
   submitProposalRequest,
+  submitMigrationProposalRequest,
+  submitMigrationProposalSuccess,
   submitProposalSuccess,
   fetchProposalListRequest,
   fetchMyProposalListRequest,
@@ -182,6 +186,8 @@ function* rootSaga() {
 
   yield takeEvery(submitProposalRequest.type, submitProposalToIPFSWorker);
   yield takeEvery(submitProposalSuccess.type, submitProposalToScoreWorker);
+  yield takeEvery(submitMigrationProposalRequest.type, submitMigrationProposalWorker);
+  yield takeEvery(submitMigrationProposalSuccess.type, submitMigrationProposalToScoreWorker);
 
   yield takeEvery(fetchProposalListRequest.type, fetchProposalListWorker);
   yield takeEvery(fetchProposalHistoryRequest.type, fetchProposalHistoryWorker);

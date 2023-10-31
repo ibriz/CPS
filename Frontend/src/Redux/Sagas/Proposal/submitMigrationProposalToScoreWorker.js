@@ -1,8 +1,8 @@
 import { sendTransaction } from '../../ICON/utils';
 
-function* submitProposalToScoreWorker({ payload }) {
-  console.log('submitProposalToScoreWorker');
-  console.log(payload);
+function* submitMigrationProposalToScoreWorker({ payload }) {
+  console.log('submitMigrationProposalToScoreWorker');
+  console.log("payload",payload);
 
   // const params = {
   //     _title: payload.proposal.projectName,
@@ -13,7 +13,8 @@ function* submitProposalToScoreWorker({ payload }) {
   // }
 
   const params = {
-    proposals: {
+    oldHash:payload.proposal.oldIpfsKey,
+    newProposal: {
       ipfs_hash: payload.response.hash,
       project_title: payload.proposal.projectName,
       project_duration: `${payload.proposal.projectDuration}`,
@@ -24,12 +25,12 @@ function* submitProposalToScoreWorker({ payload }) {
       milestoneCount: `${payload.proposal.milestones.length}`,
       token: 'bnUSD',
     },
+    milestones:payload.proposal.milestones.map((x)=> x?.id)
   };
 
   sendTransaction({
-    method: 'submitProposal',
-    params,
-    icxAmount: 50,
+    method: 'submitProposalMock',
+    params
   });
 
   console.log(params);
@@ -46,4 +47,4 @@ function* submitProposalToScoreWorker({ payload }) {
 //     }
 }
 
-export default submitProposalToScoreWorker;
+export default submitMigrationProposalToScoreWorker;

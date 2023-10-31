@@ -142,13 +142,11 @@ export default event => {
       break;
 
     case 'RESPONSE_JSON-RPC':
-      console.log("==================payload===========================",payload);
 
       if (payload.code) {
         NotificationManager.error(payload.message, 'Transaction Failed');
         return;
       }
-      console.log('==================payload. id====================',payload.id,submitProposal);
 
       switch (Number(payload.id)) {
         case submitProposal:
