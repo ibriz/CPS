@@ -15,18 +15,18 @@ import frontEndWallet from './FrontEndWallet';
 // export const CPSScore = 'cx7b98401aa6578296abd311b4cb70e90812e9ebae';
 
 //main net
-export const CPSScore = 'cx9f4ab72f854d3ccdc59aa6f2c3e2215dd62e879f';
-var nid = 1;
-export const provider = new HttpProvider('https://ctz.solidwallet.io/api/v3');
-export const trackerURL = 'https://tracker.icon.community/address';
+// export const CPSScore = 'cx9f4ab72f854d3ccdc59aa6f2c3e2215dd62e879f';
+// var nid = 1;
+// export const provider = new HttpProvider('https://ctz.solidwallet.io/api/v3');
+// export const trackerURL = 'https://tracker.icon.community/address';
 
 //test net
-// export const CPSScore = 'cxf48e561f0918a5a7d718179d739b70a80c5ed302';
-// var nid = 2;
-// export const provider = new HttpProvider(
-//   'https://lisbon.net.solidwallet.io/api/v3',
-// );
-// export const trackerURL = 'https://tracker.lisbon.icon.community/address';
+export const CPSScore = 'cxf48e561f0918a5a7d718179d739b70a80c5ed302';
+var nid = 2;
+export const provider = new HttpProvider(
+  'https://lisbon.net.solidwallet.io/api/v3',
+);
+export const trackerURL = 'https://tracker.lisbon.icon.community/address';
 
 // export const provider = new HttpProvider(
 //   'https://bicon.net.solidwallet.io/api/v3',
