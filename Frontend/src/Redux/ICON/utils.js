@@ -7,35 +7,28 @@ import constants from './constants';
 import { signTransaction as signTransactionRequest } from 'Redux/Reducers/accountSlice';
 import frontEndWallet from './FrontEndWallet';
 
-// var CPSScore = 'cx724a3cf07c91a12dd7fd4987be130f383168b631';
-// var CPSScore = 'cxdf3c1ea6ba87e21957c63b21a54151a38a6ecb80';
-// var CPSScore = 'cx00c1e2d9b009fca69002c53c1ce3ed377708381e';
-// var CPSScore = 'cx6bb0e6683dd326165d42289c12b6bd0eaa596cc9';
-// var CPSScore = 'cx9f4ab72f854d3ccdc59aa6f2c3e2215dd62e879f';
-// export const CPSScore = 'cx7b98401aa6578296abd311b4cb70e90812e9ebae';
-
-//main net
+// Mainnet Envs
 // export const CPSScore = 'cx9f4ab72f854d3ccdc59aa6f2c3e2215dd62e879f';
 // var nid = 1;
 // export const provider = new HttpProvider('https://ctz.solidwallet.io/api/v3');
 // export const trackerURL = 'https://tracker.icon.community/address';
+// var mainNet = "https://tracker.icon.foundation/v3/address/info?address="
 
-//test net
-export const CPSScore = 'cxf48e561f0918a5a7d718179d739b70a80c5ed302';
+// Testnet Envs Berlin
+// export const CPSScore = 'cx2fb89997316a8f0d73003c0bb829af319d0df717';
+// var nid = 7;
+// export const trackerURL = 'https://tracker.berlin.icon.community/address';
+// export const provider = new HttpProvider('https://berlin.net.solidwallet.io/api/v3');
+
+// Testnet Envs Lisbon
+export const CPSScore = 'cx2fb89997316a8f0d73003c0bb829af319d0df717';
 var nid = 2;
+export const trackerURL = 'https://tracker.lisbon.icon.community/address';
 export const provider = new HttpProvider(
   'https://lisbon.net.solidwallet.io/api/v3',
 );
-export const trackerURL = 'https://tracker.lisbon.icon.community/address';
 
-// export const provider = new HttpProvider(
-//   'https://bicon.net.solidwallet.io/api/v3',
-// );
 export const iconService = new IconService(provider);
-// var testNet = "https://bicon.tracker.solidwallet.io/v3/address/info?address="
-// var mainNet = "https://tracker.icon.foundation/v3/address/info?address="
-
-// buyIcxAmount = IconAmount.of(IconAmount.of(Object.values(Object.values(tableData)[i])[2], IconAmount.Unit.LOOP).convertUnit(IconAmount.Unit.ICX)).toString();
 
 export function call({ scoreAddress = CPSScore, method, params = {}, id }) {
   let callBuilder = new IconBuilder.CallBuilder();
@@ -119,7 +112,7 @@ export function sendTransaction({
     params: IconConverter.toRawTransaction(txnData),
     id: id ? `${constants[id]}` : `${constants[method]}`,
   };
-  console.log("-----------------txnPayload----------------",txnPayload);
+  console.log('-----------------txnPayload----------------', txnPayload);
   window.parent.dispatchEvent(
     new CustomEvent('ICONEX_RELAY_REQUEST', {
       detail: {
