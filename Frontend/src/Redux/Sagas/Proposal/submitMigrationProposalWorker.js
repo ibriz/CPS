@@ -21,7 +21,7 @@ function* submitMigrationProposalWorker({ payload }) {
     //   signature,
     //   payload: hash
     // } = yield signTransaction();
-    const {oldIpfsKey, ...rest} = payload.proposal;
+    const {oldIpfsKey, ipfsKey, ...rest} = payload.proposal;
     console.log("excpet old ipfs hash",rest)
     const getAddress = state => state.account.address;
     const walletAddress = yield select(getAddress);
@@ -31,11 +31,7 @@ function* submitMigrationProposalWorker({ payload }) {
     yield signTransaction(address);
     console.log("payload in ipfs worker",payload);
     const response = yield call(request, {
-      body: {
-        rest,
-        address,
-        type: 'proposal',
-      },
+      body: rest,
       url: PROPOSAL_ADD_URL,
       failureMessage: 'Submit Proposal Failed',
       signature: store.getState().account.signature,

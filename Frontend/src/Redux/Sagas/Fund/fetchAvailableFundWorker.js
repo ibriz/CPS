@@ -8,7 +8,7 @@ import {
 function* fetchAvailableFundWorker() {
   try {
     const response = yield call(callKeyStoreWallet, {
-      method: 'getTotalFunds',
+      method: 'getRemainingFund',
     });
     yield put(fetchAvailableFundSuccess(response));
   } catch (error) {

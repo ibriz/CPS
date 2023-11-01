@@ -43,7 +43,8 @@ const ProposalHistoryCard = ({
   fetchProposalHistoryRequest,
 }) => {
   const data = [...proposalHistoryList];
-  const sortedProposalList =data.reverse();
+  const sortedProposalList =data.sort((a,b)=>Number(b._timestamp) - Number(a._timestamp));
+  // const sortedProposalList =data;
   // console.log(sortedProposalList);
   // console.log(sortedProposalList);
   const [filteredProposalList, setFilteredProposalList] =

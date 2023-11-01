@@ -54,6 +54,7 @@ const {
   claimSponsorBond,
   claimReward,
   votePriority,
+  submitProposalMock,
 } = constants;
 
 function setTimeoutPromise() {
@@ -108,6 +109,7 @@ async function getResult({ txHash, successMessage, failureMessage }, callBack) {
 
 export default event => {
   const { type, payload } = event.detail;
+  console.log("submit migration id", payload.id);
   window.icon = true;
 
   switch (type) {
@@ -152,10 +154,10 @@ export default event => {
         case submitProposal:
           console.log('history');
           history.push('/dashboard');
-          history.push('/dashboard');
+          // history.push('/dashboard');
           // history.push('/proposals');
-          history.goBack();
-          history.goForward();
+          // history.goBack();
+          // history.goForward();
           // window.location.reload();
           NotificationManager.info('Proposal Creation Request Sent');
 
@@ -178,11 +180,40 @@ export default event => {
           );
 
           break;
+        case submitProposalMock:
+          console.log('history');
+          history.push('/dashboard');
+          history.push('/dashboard');
+          // history.push('/proposals');
+          // history.goBack();
+          // history.goForward();
+          // window.location.reload();
+          NotificationManager.info('Migration Request Sent');
+
+          getResult(
+            {
+              txHash: payload.result,
+              failureMessage: 'Migration Failed',
+              successMessage: 'Migration Successful',
+            },
+            function () {
+              store.dispatch(
+                fetchProposalListRequest({
+                  status: 'Pending',
+                  walletAddress: store.getState().account.address,
+                  pageNumber: 1,
+                }),
+              );
+              return true;
+            },
+          );
+
+          break;
 
         case submitProgressReport:
           console.log('history');
           history.push('/dashboard');
-          history.push('/dashboard');
+          // history.push('/dashboard');
           getResult(
             {
               txHash: payload.result,
@@ -224,7 +255,7 @@ export default event => {
 
         case sponsor_vote:
           console.log('history');
-          history.push('/');
+          history.push('/dashboard');
           NotificationManager.info('Sponsor Vote Request Sent');
 
           getResult(

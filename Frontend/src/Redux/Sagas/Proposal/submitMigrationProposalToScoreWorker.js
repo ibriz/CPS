@@ -25,7 +25,7 @@ function* submitMigrationProposalToScoreWorker({ payload }) {
       milestoneCount: `${payload.proposal.milestones.length}`,
       token: 'bnUSD',
     },
-    milestones:payload.proposal.milestones.map((x)=> x?.id)
+    milestones:payload.proposal.milestones.map((x)=> String(x?.id))
   };
 
   sendTransaction({

@@ -13,4 +13,5 @@ export default {
   claimReward: 32011,
   claimSponsorBond: 32012,
   votePriority: 32013,
+  submitProposalMock: 32014,
 };

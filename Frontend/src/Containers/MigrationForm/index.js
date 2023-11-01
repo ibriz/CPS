@@ -67,17 +67,13 @@ const signingInfoMessage = (
       before creating a proposal on the CPS platform.
     </div>
     <div className='intendation'>
-      2) You need to transfer 50 ICX to submit a proposal.
-    </div>
-    <div className='intendation'>
-      3) You need to sign the transaction two times-
+      2) You need to sign the transaction two times-
       <div className='intendation'>
         i) First time: to verify the user identity while submitting the proposal
         data to the Backend (IPFS).
       </div>
       <div className='intendation'>
         ii) Second time: to verify the user identity while saving the ipfs hash
-        and to submit 50 ICX fee to the blockchain.
       </div>
     </div>
   </div>
@@ -993,7 +989,7 @@ const MigrationForm = ({
       <ConfirmationModal
         show={submissionConfirmationShow}
         onHide={() => setSubmissionConfirmationShow(false)}
-        heading={'Proposal Submission Confirmation'}
+        heading={'Migration Confirmation'}
         size='mdxl'
         onConfirm={() => {
           submitMigrationProposal({
@@ -1003,7 +999,7 @@ const MigrationForm = ({
       >
         {
           <>
-            <div>Are you sure you want to submit the proposal?</div>
+            <div>Are you sure you want to submit the proposal for migration?</div>
             {signingInfoMessage}
           </>
         }
