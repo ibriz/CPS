@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useCallback } from 'react';
 import {
   Row,
   Card,
@@ -10,6 +10,7 @@ import {
   Alert,
 } from 'react-bootstrap';
 import ClassNames from 'classnames';
+import Checkbox from './checkbox';
 import { put, call } from 'redux-saga/effects';
 import { callKeyStoreWallet } from '../../Redux/ICON/utils';
 import styles from './ProposalCreationPage.module.css';
@@ -248,7 +249,8 @@ const ProgressReportCreationPage = ({
   });
   const { period } = useTimer();
   const [progressReportIPFS, setProgressReportIPFS] = React.useState({});
-  const [progressReportStatus, setprogressReportStatus] = React.useState({});
+  // const [milestoneId, setMilestoneId] = React.useState();
+  // const [progressReportStatus, setprogressReportStatus] = React.useState({});
   const [selectedItems, setSelectedItems] = React.useState([]);
   let [draftConfirmationShow, setDraftConfirmationShow] = React.useState(false);
   const [progressReportMilestone, setprogressReportMilestone] = React.useState(
@@ -265,7 +267,7 @@ const ProgressReportCreationPage = ({
     proposal => proposal.ipfsKey === progressReport.projectName,
   )?.lastProgressReport;
   // const [milestoneStatus, setMilestoneStatus]= useState();
-  console.log("response status of milestone", progressReportStatus);
+  // console.log("response status of milestone", progressReportStatus);
 
   const [descriptionWords, setDescriptionWords] = React.useState(0);
   const [descriptionCharacters, setDescriptionCharacters] = React.useState(0);
@@ -390,6 +392,34 @@ const ProgressReportCreationPage = ({
 
     setProgressReportIPFS(progressReportIPFS);
   }
+
+
+  const checkStats = useCallback(
+    (proposalKey,milestoneId) => {
+      const statusReponse = callKeyStoreWallet({
+        method: 'getMileststoneStatusOf',
+        params: {
+          proposalKey,
+          milestoneId:milestoneId
+        },
+      });
+      if(statusReponse === '0x0') return true;
+      return false
+    },
+    [],
+  )
+  
+
+  // async function checkStatus(proposalKey,milestoneId){
+  //   const statusReponse = await callKeyStoreWallet({
+  //     method: 'getMileststoneStatusOf',
+  //     params: {
+  //       proposalKey,
+  //       milestoneId
+  //     },
+  //   });
+  //   return statusReponse;
+  // }
 
   useEffect(() => {
     setProgressReport(progressReport => ({
@@ -661,7 +691,7 @@ const ProgressReportCreationPage = ({
                     required
                   />
                   <InputGroup.Append>
-                    <InputGroup.Text>Days</InputGroup.Text>
+                    <InputGroup.Text>Month</InputGroup.Text>
                   </InputGroup.Append>
                 </InputGroup>
               </Col>
@@ -710,30 +740,16 @@ const ProgressReportCreationPage = ({
                 <Row>
                   {selectedProposalForProgressReport?.milestones?.map(
                     (option, index) => {
-                      // callKeyStoreWallet({
-                      //   method: 'getMileststoneStatusOf',
-                      //   params: {
-                      //     proposalKey: `${selectedProposalForProgressReport.ipfsHash}`,
-                      //     milestoneId: `${option.id}`,
-                      //   },
-                      // })
-                      //   .then(res => {
-                      //     // let array = [`${option.id}`, res];
-                      //     // const keyValueObject = Object.fromEntries(array);
-                      //     // setprogressReportStatus({...progressReportStatus,status: res})
-                      //   })
-                      //   .catch(e => {
-                      //     console.log(e);
-                      //   });
                       return (
                         <div
                           key={option.id}
                           class='d-flex custom-control custom-checkbox pl-4 pr-4'
                         >
-                          <input
-                            type='checkbox'
-                            class='custom-control-input'
+                          <Checkbox
+                            proposalKey={`${selectedProposalForProgressReport.ipfsHash}`}
+                            milestoneId={`${option.id}`}
                             value={option.name} 
+                            // disabled={ checkStats(`${selectedProposalForProgressReport.ipfsHash}`,`${option.id}`)}
                             // disabled={milestoneStatus === '0x3' || milestoneStatus === '0x0'}
                             id={`customCheck${index}`}
                             onChange={() => handleCheckboxChange(option.id)}

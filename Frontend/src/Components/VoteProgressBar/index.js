@@ -7,6 +7,7 @@ const VoteProgressBar = ({
   voterCount,
   approvedPercentage = 0,
   rejectedPercentage = 0,
+  abstainedPercentage = 0,
   proposal = false,
   noProgressBar = false,
   budgetAdjustment,
@@ -25,7 +26,7 @@ const VoteProgressBar = ({
     approvedPercentage ? approvedPercentage.toFixed() : '0'
   }% approved, ${
     rejectedPercentage ? rejectedPercentage.toFixed() : '0'
-  }% rejected, ${approvedPercentage+rejectedPercentage !==100 && `${100-approvedPercentage-rejectedPercentage}% abstained`} ${budgetAdjustment ? ' (Budget Change Request)' : ''}`;
+  }% rejected ${abstainedPercentage ? `,${abstainedPercentage.toFixed()} % abstained` :''}  ${budgetAdjustment ? ' (Budget Change Request)' : ''}`;
   const description = !voterCount
     ? `Percentage of total stakes of the voters that have approved / rejected the ${type} (calculated based on the total P-Reps that have already participated in the voting for this ${type}).`
     : `Percentage of the total voters that have approved / rejected the ${type} (calculated based on the total possible P-Reps regardless of whether they have already participated in the voting or not for this ${type}).`;

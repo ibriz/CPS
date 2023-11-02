@@ -26,6 +26,7 @@ function EditMilestoneModal(props) {
   useEffect(() => {
     props.milestone &&
       setMilestone({
+        id: props.milestone.id,
         name: props.milestone.name,
         duration: props.milestone.duration,
         // budget: props.milestone.budget,

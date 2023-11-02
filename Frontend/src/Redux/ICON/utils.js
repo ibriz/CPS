@@ -12,7 +12,6 @@ import frontEndWallet from './FrontEndWallet';
 // var nid = 1;
 // export const provider = new HttpProvider('https://ctz.solidwallet.io/api/v3');
 // export const trackerURL = 'https://tracker.icon.community/address';
-// var mainNet = "https://tracker.icon.foundation/v3/address/info?address="
 
 // Testnet Envs Berlin
 // export const CPSScore = 'cx2fb89997316a8f0d73003c0bb829af319d0df717';
@@ -23,10 +22,10 @@ import frontEndWallet from './FrontEndWallet';
 // Testnet Envs Lisbon
 export const CPSScore = 'cx2fb89997316a8f0d73003c0bb829af319d0df717';
 var nid = 2;
-export const trackerURL = 'https://tracker.lisbon.icon.community/address';
 export const provider = new HttpProvider(
   'https://lisbon.net.solidwallet.io/api/v3',
 );
+export const trackerURL = 'https://tracker.lisbon.icon.community/address';
 
 export const iconService = new IconService(provider);
 

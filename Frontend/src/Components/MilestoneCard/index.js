@@ -60,7 +60,7 @@ const MilestoneListCard = ({ milestoneList }) => {
                   eventKey={`tab${index + 1}`}
                   className={styles.descContent}
                 >
-                  {milestone.description}
+                  {milestone.description ?? "No description found" }
                 </Tab.Pane>
               ))}
             </Tab.Content>

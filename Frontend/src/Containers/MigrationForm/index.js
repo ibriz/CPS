@@ -26,7 +26,7 @@ import {
   submitMigrationProposalRequest,
   fetchProposalByIpfsRequest,
   saveDraftRequest,
-    fetchProposalByAddressRequest,
+  fetchProposalByAddressRequest,
 } from 'Redux/Reducers/proposalSlice';
 import { fetchPrepsRequest } from '../../Redux/Reducers/prepsSlice';
 import { connect } from 'react-redux';
@@ -214,21 +214,22 @@ const MigrationForm = ({
   const { period } = useTimer();
   const [modalShow, setModalShow] = React.useState(false);
   let [submissionConfirmationShow, setSubmissionConfirmationShow] =
-  React.useState(false);
+    React.useState(false);
   let [draftConfirmationShow, setDraftConfirmationShow] = React.useState(false);
+  const [filled, setFilled] = React.useState(false);
   const isDarkTheme = localStorage.getItem('theme');
   const [editModalShow, setEditModalShow] = React.useState(false);
   const [editModalIndex, setEditModalIndex] = React.useState();
   const [proposalIPFS, setProposalIPFS] = React.useState({});
-  const [selectedIPFSHash,setSelectedIPFSHash] = React.useState();
+  const [selectedIPFSHash, setSelectedIPFSHash] = React.useState();
   const [descriptionWords, setDescriptionWords] = React.useState(0);
   const [descriptionCharacters, setDescriptionCharacters] = React.useState(0);
   const [totalNumberOfMonthsInMilestone, setTotalNumberOfMonthsInMilestone] =
-  React.useState(0);
+    React.useState(0);
   let [prepList, setPrepList] = React.useState([]);
   // const [milestoneCount, setMilestoneCount] = useState(proposal.milestones.length);
   const [proposal, setProposal] = useState({
-    oldIpfsKey:null,
+    oldIpfsKey: null,
     projectName: null,
     category: null,
     projectDuration: null,
@@ -241,7 +242,6 @@ const MigrationForm = ({
     teamEmail: null,
     teamSize: null,
   });
-
 
   useEffect(() => {
     fetchProposalByAddressRequest({
@@ -274,8 +274,6 @@ const MigrationForm = ({
     });
     setPrepList(prepList);
   }, [preps]);
-
-
 
   useEffect(() => {
     if (proposal.projectName) {
@@ -319,10 +317,11 @@ const MigrationForm = ({
   useEffect(() => {
     const minimumNumberOfWords = 2;
     // const maximumNumberOfMilestones = 6;
-    const totalMonths = proposal.milestones.reduce(
-      (sum, milestone) => sum + parseInt(milestone.duration),
-      0,
-    )/30;
+    const totalMonths =
+      proposal.milestones.reduce(
+        (sum, milestone) => sum + parseInt(milestone.duration),
+        0,
+      ) / 30;
     setTotalNumberOfMonthsInMilestone(totalMonths);
 
     console.log('proposal.projectDuration', proposal.projectDuration);
@@ -374,7 +373,7 @@ const MigrationForm = ({
 
     setProposalIPFS(proposalIPFS);
   }
- 
+
   useEffect(() => {
     document.getElementById('teamEmail').onfocus = () => {
       document.getElementById('teamEmail').onblur = () => {
@@ -389,35 +388,21 @@ const MigrationForm = ({
 
   useEffect(() => {
     if (proposalIPFS) {
+      // console.log("proposalIPFS",proposalIPFS,proposal)
+      const {milestones, ...rest} = proposalIPFS;
       setProposal(prevState => ({
         ...proposal,
-        ...proposalIPFS,
+        ...rest,
       }));
     }
-  }, [ proposalIPFS]);
+  }, [proposalIPFS]);
 
   useEffect(() => {
     if (selectedIPFSHash) {
       fetchIPFSProposal();
-      console.log("==================================",selectedIPFSHash);
+      console.log('==================================', selectedIPFSHash);
     }
   }, [selectedIPFSHash]);
-
-  // const [proposal, setProposal] = useState(
-  //     {
-  //         projectName: "AVC",
-  //         category: "Development",
-  //         projectDescription: null,
-  //         projectDuration: 3,
-  //         totalBudget: 10000,
-  //         sponserPrep: 'hx0b047c751658f7ce1b2595da34d57a0e7dad357d',
-  //         description: null,
-  //         milestone: null,
-  //         teamName: "sdasd",
-  //         teamEmail: "dsfds@dfgsg",
-  //         teamSize: 13,
-  //     }
-  // );
 
   const handleSubmit = event => {
     event.preventDefault();
@@ -425,100 +410,16 @@ const MigrationForm = ({
     setSubmissionConfirmationShow(true);
   };
 
-  // const onClickSaveDraft = () => {
-  //   let allGood = true;
-  //   Object.keys(proposal).map(key => {
-  //     if (
-  //       document.getElementById(key) &&
-  //       key !== 'description' &&
-  //       key !== 'milestones'
-  //     ) {
-  //       console.log(
-  //         'keyProposal',
-  //         key,
-  //         proposal[key],
-  //         document.getElementById(key).checkValidity(),
-  //       );
-  //       if (
-  //         (!Array.isArray(proposal[key]) && proposal[key]) ||
-  //         (Array.isArray(proposal[key]) && proposal[key].length > 0)
-  //       ) {
-  //         if (!document.getElementById(key).checkValidity()) {
-  //           document.getElementById(key).reportValidity();
-  //           allGood = false;
-  //         }
-  //       }
-  //     } else {
-  //       console.log('keyProposalNot', key);
-  //     }
-  //   });
-  //   if (!allGood) {
-  //     return;
-  //   }
-  //   setDraftConfirmationShow(true);
-  // };
-
-  // const saveChanges = () => {
-  //   if (isDraft) {
-  //     saveDraftRequest({
-  //       ...proposal,
-  //       address: walletAddress,
-  //       proposalKey: proposal.ipfsKey,
-  //       callBackAfterSigning: () => {
-  //         history.push('/dashboard');
-  //       },
-  //     });
-  //   } else {
-  //     saveDraftRequest({
-  //       ...proposal,
-  //       address: walletAddress,
-  //       callBackAfterSigning: () => {
-  //         history.push('/dashboard');
-  //       },
-  //     });
-  //   }
-  //   // history.push('/proposals');
-  // };
-
-  // useEffect(() => {
-  //     ClassicEditor
-  //         .create(document.querySelector('#editor1'), {
-  //             ckfinder: {
-  //                 uploadUrl: '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files&responseType=json',
-  //             },
-  //             toolbar: ['ckfinder', 'imageUpload', '|', 'heading', '|', 'bold', 'italic', '|', 'undo', 'redo']
-  //         })
-  //         .catch(error => {
-  //             console.error(error);
-  //         });
-  // }, [])
-  // const currentUserActiveProposals=[
-  //   {
-  //     ipfsKey:"adf42ttstg",
-  //     _proposal_title:"CPS REfurbished",
-  //     newProgressReport:false
-  //   },
-  //   {
-  //     ipfsKey:"sdfgsdfg",
-  //     _proposal_title:"Grant System",
-  //     newProgressReport:false
-  //   },
-  //   {
-  //     ipfsKey:"fhjmshsnh",
-  //     _proposal_title:"UI System",
-  //     newProgressReport:false
-  //   },
-  // ]
-
   const handleChange = event => {
     let name = event.target.name;
     let value = event.target.value;
 
-    if(name==='projectName'){
+    if (name === 'projectName') {
       setSelectedIPFSHash(value);
-      setProposal({...proposal,oldIpfsKey:value})
+      setProposal({ ...proposal, oldIpfsKey: value });
+      setFilled(true);
     }
-     console.log(name,value);
+    console.log(name, value);
     setProposal(prevState => ({
       ...prevState,
       [name]: value,
@@ -554,7 +455,7 @@ const MigrationForm = ({
               </Form.Label>
 
               <Col sm='10' className={styles.inputSameLine}>
-              <Form.Control
+                <Form.Control
                   size='md'
                   as='select'
                   className={styles.inputBox}
@@ -596,6 +497,7 @@ const MigrationForm = ({
                   as='select'
                   className={styles.inputBox}
                   value={proposal.category}
+                  disabled={filled}
                   name='category'
                   id='category'
                   onChange={handleChange}
@@ -622,6 +524,7 @@ const MigrationForm = ({
                     placeholder='Project Duration'
                     type='number'
                     value={proposal.projectDuration}
+                    disabled={filled}
                     name='projectDuration'
                     id='projectDuration'
                     className={styles.inputBox}
@@ -656,6 +559,7 @@ const MigrationForm = ({
                     //   );
                     // }}
                     min={0}
+                    disabled={filled}
                     max={remainingSwapAmount}
                     type='number'
                     className={styles.inputBox}
@@ -696,6 +600,7 @@ const MigrationForm = ({
                   as='select'
                   className={styles.inputBox}
                   value={proposal.sponserPrep}
+                  disabled={filled}
                   name='sponserPrep'
                   id='sponserPrep'
                   onChange={handleChange}
@@ -749,76 +654,80 @@ const MigrationForm = ({
             </Form.Group>
 
             <Form.Group as={Row}>
-              <Form.Label  column sm='12'>
+              <Form.Label column sm='12'>
                 Milestones
                 <span className={styles.required}></span>
                 {/* <InfoIcon description="Milestone for the project" /> */}
               </Form.Label>
-              <div className="pl-3 pr-3 w-100 overflow-auto mb-4">
-              { (
-              <Table bordered>
-                <thead>
-                  <tr>
-                    <th>Milestone Name</th>
-                    <th>Duration</th>
-                    <th>Description</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <>
-                    {proposal.milestones.map((milestone, index) => (
-                      <tr style={{height:'100%'}} key={index}>
-                        <td>{milestone.name}</td>
-                        <td>
-                          {milestone.duration} day
-                          {milestone.duration > 1 && 's'}
-                        </td>
-                        <td>{milestone.description}</td>
-                        <td
-                          style={{ }}
-                        >
-                          {' '}
-                          <AiFillDelete
-                            style={{ cursor: 'pointer',fontSize:'20px' }}
-                            onClick={() => {
-                              setProposal(prevState => {
-                                const newMilestone = [...prevState.milestones];
-                                newMilestone.splice(index, 1);
-                                return {
-                                  ...prevState,
-                                  milestones: newMilestone,
-                                };
-                              });
-                            }}
-                          />
-                          <FiEdit2
-                            style={{ marginLeft: '10px', fontSize:'20px' , cursor: 'pointer' }}
-                            onClick={() => {
-                              setEditModalShow(true);
-                              setEditModalIndex(index);
-                            }}
-                          />
-                        </td>
+              <div className='pl-3 pr-3 w-100 overflow-auto mb-4'>
+                {
+                  <Table bordered>
+                    <thead>
+                      <tr>
+                        <th>Milestone Name</th>
+                        <th>Duration</th>
+                        <th>Description</th>
+                        <th>Action</th>
                       </tr>
-                    ))}
-                    <tr>
-                      <td>
-                        <b>TOTAL</b>
-                      </td>
-                      <td>
-                        <b>{totalNumberOfMonthsInMilestone} month</b>
-                      </td>
-                    </tr>
-                  </>
-                </tbody>
-              </Table>
-            )}
+                    </thead>
+                    <tbody>
+                      <>
+                        {proposal.milestones.map((milestone, index) => (
+                          <tr style={{ height: '100%' }} key={index}>
+                            <td>{milestone.name}</td>
+                            <td>
+                              {milestone.duration} day
+                              {milestone.duration > 1 && 's'}
+                            </td>
+                            <td>{milestone.description}</td>
+                            <td style={{}}>
+                              {' '}
+                              <AiFillDelete
+                                style={{ cursor: 'pointer', fontSize: '20px' }}
+                                onClick={() => {
+                                  setProposal(prevState => {
+                                    const newMilestone = [
+                                      ...prevState.milestones,
+                                    ];
+                                    newMilestone.splice(index, 1);
+                                    return {
+                                      ...prevState,
+                                      milestones: newMilestone,
+                                    };
+                                  });
+                                }}
+                              />
+                              <FiEdit2
+                                style={{
+                                  marginLeft: '10px',
+                                  fontSize: '20px',
+                                  cursor: 'pointer',
+                                }}
+                                onClick={() => {
+                                  setEditModalShow(true);
+                                  setEditModalIndex(index);
+                                }}
+                              />
+                            </td>
+                          </tr>
+                        ))}
+                        <tr>
+                          <td>
+                            <b>TOTAL</b>
+                          </td>
+                          <td>
+                            <b>{totalNumberOfMonthsInMilestone} month</b>
+                          </td>
+                        </tr>
+                      </>
+                    </tbody>
+                  </Table>
+                }
               </div>
-             
+
               <Col sm='12'>
                 <Button
-                  variant={isDarkTheme ==='dark' ? 'dark' : 'light'}
+                  variant={isDarkTheme === 'dark' ? 'dark' : 'light'}
                   onClick={() => setModalShow(true)}
                   style={{ position: 'relative' }}
                 >
@@ -830,8 +739,6 @@ const MigrationForm = ({
                 </Button>
               </Col>
             </Form.Group>
-
-            
 
             <Form.Group as={Row}>
               <Form.Label column sm='2'>
@@ -845,6 +752,7 @@ const MigrationForm = ({
                   className={styles.inputBox}
                   placeholder={'Team Name'}
                   size={'md'}
+                  disabled={filled}
                   value={proposal.teamName}
                   name='teamName'
                   id='teamName'
@@ -864,6 +772,7 @@ const MigrationForm = ({
                   placeholder={'Team Email'}
                   type='email'
                   size={'md'}
+                  disabled={filled}
                   value={proposal.teamEmail}
                   name='teamEmail'
                   id='teamEmail'
@@ -882,6 +791,7 @@ const MigrationForm = ({
                   size={'md'}
                   type='number'
                   value={proposal.teamSize}
+                  disabled={filled}
                   name='teamSize'
                   min={0}
                   id='teamSize'
@@ -893,59 +803,19 @@ const MigrationForm = ({
             <Alert variant={'info'}>{signingInfoMessage}</Alert>
 
             <Form.Group as={Row}>
-              {/* <Col className={styles.draftButton}>
-                <Popup
-                  component={
-                    <Button variant='outline-info' onClick={onClickSaveDraft}>
-                      SAVE AS DRAFT
-                    </Button>
-                  }
-                  popOverText='Save changes and continue later.'
-                  placement='right'
-                />
-              </Col> */}
               <Col className={styles.saveButton}>
-                {period !== 'VOTING' && !isMaintenanceMode && (
-                  <Button variant='info' type='submit'>
-                    SUBMIT
-                  </Button>
-                )}
-                {period === 'VOTING' && (
-                  <Popup
-                    component={
-                      <span className='d-inline-block'>
-                        <Button
-                          variant='info'
-                          type='submit'
-                          disabled
-                          style={{ pointerEvents: 'none' }}
-                        >
-                          SUBMIT
-                        </Button>
-                      </span>
-                    }
-                    popOverText='You can submit in the next application period.'
-                    placement='left'
-                  />
-                )}
-                {isMaintenanceMode && period !== 'VOTING' && (
-                  <Popup
-                    component={
-                      <span className='d-inline-block'>
-                        <Button
-                          variant='info'
-                          type='submit'
-                          disabled
-                          style={{ pointerEvents: 'none' }}
-                        >
-                          SUBMIT
-                        </Button>
-                      </span>
-                    }
-                    popOverText='You can submit after maintenance mode is over.'
-                    placement='left'
-                  />
-                )}
+                {
+                  <span className='d-inline-block'>
+                    <Button
+                      variant='info'
+                      type='submit'
+                      // disabled={isMaintenanceMode}
+                      style={{ pointerEvents: 'cursor' }}
+                    >
+                      SUBMIT
+                    </Button>
+                  </span>
+                }
               </Col>
             </Form.Group>
           </Form>
@@ -999,7 +869,9 @@ const MigrationForm = ({
       >
         {
           <>
-            <div>Are you sure you want to submit the proposal for migration?</div>
+            <div>
+              Are you sure you want to submit the proposal for migration?
+            </div>
             {signingInfoMessage}
           </>
         }
@@ -1024,11 +896,12 @@ const MigrationForm = ({
 };
 
 const mapDispatchToProps = dispatch => ({
-  submitMigrationProposal: payload => dispatch(submitMigrationProposalRequest(payload)),
+  submitMigrationProposal: payload =>
+    dispatch(submitMigrationProposalRequest(payload)),
   fetchPrepsRequest: payload => dispatch(fetchPrepsRequest(payload)),
   saveDraftRequest: payload => dispatch(saveDraftRequest(payload)),
   fetchProposalByIpfsRequest: payload =>
-  dispatch(fetchProposalByIpfsRequest(payload)),
+    dispatch(fetchProposalByIpfsRequest(payload)),
   fetchCPFTreasuryScoreAddressRequest: () =>
     dispatch(fetchCPFTreasuryScoreAddressRequest()),
   fetchCPFRemainingFundRequest: payload =>
@@ -1037,7 +910,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(fetchAvailableFundRequest(payload)),
   fetchRemainingSwapAmountRequest: () =>
     dispatch(fetchRemainingSwapAmountRequest()),
-    fetchProposalByAddressRequest: payload =>
+  fetchProposalByAddressRequest: payload =>
     dispatch(fetchProposalByAddressRequest(payload)),
   fetchMaintenanceModeRequest: () => dispatch(fetchMaintenanceModeRequest()),
 });

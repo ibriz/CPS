@@ -7,6 +7,7 @@ import { logout } from '../../Redux/Reducers/accountSlice';
 import { unregisterPrep, registerPrep } from 'Redux/Reducers/prepsSlice';
 import { fetchPeriodCountRequest } from 'Redux/Reducers/periodSlice';
 import timingImg from '../../Assets/Images/timing-blue.png';
+import maintainImg from '../../Assets/Images/mein.svg';
 import { BsSun, BsMoon } from 'react-icons/bs';
 import { MdWbSunny } from 'react-icons/md';
 import ConfirmationModal from 'Components/UI/ConfirmationModal';
@@ -18,6 +19,7 @@ import EmailConfirmationModal from './EmailConfirmationModal';
 import useVerification from 'Hooks/useVerification';
 import { setUserDataSubmitSuccess } from 'Redux/Reducers/userSlice';
 import { withRouter } from 'react-router-dom';
+import {fetchMaintenanceModeRequest} from 'Redux/Reducers/fundSlice';
 import { useLogin } from 'Hooks/useLogin';
 import { setTheme } from 'Redux/Reducers/themeSlice';
 import { Switch } from '@headlessui/react';
@@ -35,6 +37,7 @@ const HeaderComponents = ({
   firstName,
   lastName,
   walletBalance,
+  isMaintenanceMode,
   landingPage,
   loginButtonClicked,
   setLoginButtonClicked,
@@ -60,8 +63,8 @@ const HeaderComponents = ({
   const { isRemainingTimeZero } = useTimer();
   useVerification();
 
-  const onLogout = async() => {
-   await logout();
+  const onLogout = async () => {
+    await logout();
     history.push('/');
   };
 
@@ -111,6 +114,11 @@ const HeaderComponents = ({
         <p>
           Funding Cycle &nbsp;<span>{periodCount}</span>
         </p>
+        {isMaintenanceMode && (
+          <div style={{display:'flex', gap:6, alignItems:'center'}}>
+            <img src={maintainImg} width={40} /> <p>Maintainance Mode</p>
+          </div>
+        )}
       </div>
 
       <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
@@ -287,6 +295,7 @@ const mapStateToProps = state => ({
 
   initialPromptRedux: state.user.initialPrompt,
   periodCount: state.period.periodCount,
+  isMaintenanceMode: state.fund.isMaintenanceMode,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -298,6 +307,7 @@ const mapDispatchToProps = dispatch => ({
   setUserDataSubmitSuccess: payload =>
     dispatch(setUserDataSubmitSuccess(payload)),
   fetchPeriodCount: () => dispatch(fetchPeriodCountRequest()),
+  fetchMaintenanceModeRequest: () => dispatch(fetchMaintenanceModeRequest()),
 });
 
 export default withRouter(
