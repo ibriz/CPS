@@ -638,6 +638,7 @@ function ProposalDetailsPage(props) {
                                     <ProgressBarCombined
                                       approvedPercentage={approvedPercentage}
                                       rejectedPercentage={rejectedPercentage}
+                                      // abstainedPercentage={}
                                     />
 
                                     {

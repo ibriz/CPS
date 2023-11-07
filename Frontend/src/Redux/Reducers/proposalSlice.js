@@ -15,16 +15,15 @@ const PARAMS = {
   isMilestone:'isMilestone',
   milestoneCount:'milestoneCount',
   approvedVotes: 'approved_votes',
+  abstainedVotes: 'abstained_votes',
+  abstainVoters: 'abstain_voters',
   approvedReports: 'approved_reports',
   totalVotes: 'total_votes',
   rejectedVotes: 'rejected_votes',
-
   approvedVoters: 'approve_voters',
   totalVoters: 'total_voters',
   rejectedVoters: 'reject_voters',
-
   percentageCompleted: 'percentage_completed',
-
   newProgressReport: 'new_progress_report',
   lastProgressReport: 'last_progress_report',
 
@@ -632,26 +631,6 @@ const proposalSlice = createSlice({
       }));
       state.votesByProposal = state.votesByProposal.filter(vote => vote.status);
 
-      state.approvedVotes = IconConverter.toBigNumber(
-        action.payload.response.approved_votes,
-      );
-      state.totalVotes = IconConverter.toBigNumber(
-        action.payload.response.total_votes,
-      );
-      state.rejectedVotes = IconConverter.toBigNumber(
-        action.payload.response.rejected_votes,
-      );
-
-      state.approvedVoters = IconConverter.toBigNumber(
-        action.payload.response.approve_voters,
-      );
-      state.rejectedVoters = IconConverter.toBigNumber(
-        action.payload.response.reject_voters,
-      );
-      state.totalVoters = IconConverter.toBigNumber(
-        action.payload.response.total_voters,
-      );
-
       return;
     },
     fetchVoteResultFailure() {
@@ -734,6 +713,14 @@ const proposalSlice = createSlice({
           approvedVotesPercentageCount: calculatePercentage({
             total: proposal[PARAMS.totalVoters],
             actual: proposal[PARAMS.approvedVoters],
+          }),
+          abstainedPercentage: calculatePercentage({
+            total: proposal[PARAMS.totalVotes],
+            actual: proposal[PARAMS.abstainedVotes],
+          }),
+          abstainVotesPercentageCount: calculatePercentage({
+            total: proposal[PARAMS.totalVoters],
+            actual: proposal[PARAMS.abstainVoters],
           }),
 
           rejectedPercentage: calculatePercentage({
@@ -893,7 +880,14 @@ const proposalSlice = createSlice({
 
         sponsorVoteReason: proposal[PARAMS.sponsorVoteReason],
         // approvedPercentage: (!proposal[PARAMS.totalVotes] || parseInt(proposal[PARAMS.totalVotes]) === 0) ? 0 : ((proposal[PARAMS.approvedVotes] / proposal[PARAMS.totalVotes]) * 100),
-
+        abstainedPercentage: calculatePercentage({
+          total: proposal[PARAMS.totalVotes],
+          actual: proposal[PARAMS.abstainedVotes],
+        }),
+        abstainVotesPercentageCount: calculatePercentage({
+          total: proposal[PARAMS.totalVoters],
+          actual: proposal[PARAMS.abstainVoters],
+        }),
         approvedPercentage: calculatePercentage({
           total: proposal[PARAMS.totalVotes],
           actual: proposal[PARAMS.approvedVotes],
@@ -919,6 +913,31 @@ const proposalSlice = createSlice({
         approvedReports: proposal['approved_reports'],
         projectDuration: proposal['project_duration'],
       };
+      state.abstainedVotes = IconConverter.toBigNumber(
+        action.payload.response.abstained_votes,
+      );
+      state.abstainVoters = IconConverter.toBigNumber(
+        action.payload.response.abstain_voters,
+      );
+      state.approvedVotes = IconConverter.toBigNumber(
+        action.payload.response.approved_votes,
+      );
+      state.totalVotes = IconConverter.toBigNumber(
+        action.payload.response.total_votes,
+      );
+      state.rejectedVotes = IconConverter.toBigNumber(
+        action.payload.response.rejected_votes,
+      );
+
+      state.approvedVoters = IconConverter.toBigNumber(
+        action.payload.response.approve_voters,
+      );
+      state.rejectedVoters = IconConverter.toBigNumber(
+        action.payload.response.reject_voters,
+      );
+      state.totalVoters = IconConverter.toBigNumber(
+        action.payload.response.total_voters,
+      );
       return;
     },
     fetchProposalByIpfsFailure(state) {

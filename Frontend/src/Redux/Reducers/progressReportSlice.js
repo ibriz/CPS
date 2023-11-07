@@ -136,7 +136,6 @@ const initialState = {
   votesByProgressReport: [],
 
   votesBudgetChangeByProgressReport: [],
-
   progressReportByProposal: [],
   remainingVotes: [],
   selectedProgressReport: {},
@@ -307,25 +306,7 @@ fetchProgressReportListRequest(state) {
       state.votesByProgressReport = state.votesByProgressReport.filter(
         vote => vote.status,
       );
-      state.approvedVotes = IconConverter.toBigNumber(
-        action.payload.response.approved_votes,
-      );
-      state.totalVotes = IconConverter.toBigNumber(
-        action.payload.response.total_votes,
-      );
-      state.rejectedVotes = IconConverter.toBigNumber(
-        action.payload.response.rejected_votes,
-      );
 
-      state.approvedVoters = IconConverter.toBigNumber(
-        action.payload.response.approve_voters,
-      );
-      state.rejectedVoters = IconConverter.toBigNumber(
-        action.payload.response.reject_voters,
-      );
-      state.totalVoters = IconConverter.toBigNumber(
-        action.payload.response.total_voters,
-      );
 
       return;
     },
@@ -471,8 +452,28 @@ fetchProgressReportListRequest(state) {
     fetchProgressReportByIpfsSuccess(state, action) {
       console.log('Response', action.payload.response);
       let progressReport = action.payload.response;
+      state.approvedVotes = IconConverter.toBigNumber(
+        action.payload.response.approved_votes,
+      );
+      state.totalVotes = IconConverter.toBigNumber(
+        action.payload.response.total_votes,
+      );
+      state.rejectedVotes = IconConverter.toBigNumber(
+        action.payload.response.rejected_votes,
+      );
+
+      state.approvedVoters = IconConverter.toBigNumber(
+        action.payload.response.approve_voters,
+      );
+      state.rejectedVoters = IconConverter.toBigNumber(
+        action.payload.response.reject_voters,
+      );
+      state.totalVoters = IconConverter.toBigNumber(
+        action.payload.response.total_voters,
+      );
       state.selectedProgressReport = {
         status: progressReport[PARAMS.status],
+        hasMilestone:progressReport[PARAMS.hasMilestone],
         progressReportTitle: progressReport[PARAMS.progressReportTitle],
         projectTitle: progressReport[PARAMS.proposalTitle],
         contributorAddress: progressReport[PARAMS.contributorAddress],

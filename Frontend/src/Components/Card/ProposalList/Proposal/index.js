@@ -253,6 +253,7 @@ const Proposal = ({
                     <VoteProgressBar
                       approvedPercentage={proposal.approvedPercentage}
                       rejectedPercentage={proposal.rejectedPercentage}
+                      abstainedPercentage={proposal.abstainedPercentage}
                       proposal
                     />
                   )}
@@ -268,6 +269,7 @@ const Proposal = ({
                   <VoteProgressBar
                     approvedPercentage={proposal.approvedVotesPercentageCount}
                     rejectedPercentage={proposal.rejectedVotesPercentageCount}
+                    abstainedPercentage={proposal.abstainVotesPercentageCount }
                     proposal
                     voterCount
                   />

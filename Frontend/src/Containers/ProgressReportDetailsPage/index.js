@@ -13,9 +13,7 @@ import {
 import {
   Header,
   Address,
-  DetailsTable,
   Description,
-  MilestoneTable,
   ListTitle,
 } from 'Components/UI/DetailsModal';
 import styles from './ProgressReportDetailsPage.module.css';
@@ -450,6 +448,78 @@ function ProgressReportDetailsPage(props) {
                         progressReport?.timestamp / 1000,
                       ).toLocaleDateString()}`,
                     },
+                    {
+                      key: 'Stake',
+                      value: ['Voting', 'Approved', 'Rejected'].includes(
+                        status,
+                      ) ? (
+                        <div
+                          style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'space-between',
+                          }}
+                        >
+                          
+                          <ProgressBarCombined
+                            approvedPercentage={approvedPercentage}
+                            rejectedPercentage={rejectedPercentage}
+                          />
+
+                          {
+
+                            <Container
+                              style={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                              }}
+                            >
+                              <VoteProgressBar
+                                approvedPercentage={approvedPercentage}
+                                rejectedPercentage={rejectedPercentage}
+                                noProgressBar
+                                placement='bottom'
+                              />
+                            </Container>
+                          }
+                        </div>
+                      ) : null,
+                    },
+                    {
+                      key: 'Voter Count',
+                      value: ['Voting', 'Approved', 'Rejected'].includes(
+                        status,
+                      ) ? (
+                        <div
+                          style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'space-between',
+                          }}
+                        >
+                          <ProgressBarCombined
+                            approvedPercentage={approvedVoterPercentage}
+                            rejectedPercentage={rejectedVotersPercentage}
+                          />
+
+                          <Container
+                            style={{
+                              display: 'flex',
+                              flexDirection: 'row',
+                            }}
+                          >
+                            <VoteProgressBar
+                              approvedPercentage={approvedVoterPercentage}
+                              rejectedPercentage={
+                                rejectedVotersPercentage
+                              }
+                              noProgressBar
+                              voterCount
+                            />
+                          </Container>
+                        </div>
+                      ) : null,
+                    }
                   ]}
                 />
 
@@ -975,7 +1045,7 @@ function ProgressReportDetailsPage(props) {
 
                   {!sponsorRequest && (
                     <>
-                      {/* <Row>
+                      <Row>
                           <Col xs='12'>
                             {votesByProgressReport?.length ? (
                               <div
@@ -1011,7 +1081,7 @@ function ProgressReportDetailsPage(props) {
                               </div>
                             ) : null}
                           </Col>
-                        </Row> */}
+                        </Row>
 
                       <Row>
                         <Col xs='12'>
@@ -1115,6 +1185,7 @@ const mapStateToProps = state => ({
   changeVote: state.progressReport.changeVote,
   votingPRep: state.account.votingPRep,
   isMaintenanceMode: state.fund.isMaintenanceMode,
+  hasMilestone:state.progressReport.selectedProgressReport.hasMilestone,
   selectedProgressReportByIpfs: state.progressReport.selectedProgressReport,
   votingPhase: state.proposals.votingPhase,
 });
