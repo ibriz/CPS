@@ -46,6 +46,8 @@ import VoteList from 'Components/Card/DetailsModal/VoteList';
 import RichTextEditor from 'Components/RichTextEditor';
 import ConfirmationModal from 'Components/UI/ConfirmationModal';
 import {
+  getProposalAbstainVotersPercentage,
+  getProposalAbstainedPercentage,
   getProposalApprovedPercentage,
   getProposalApprovedVotersPercentage,
   getProposalRejectedPercentage,
@@ -201,6 +203,8 @@ function ProposalDetailsPage(props) {
     sponsorBondPercentage,
     fetchVoteResultRequest,
     approvedPercentage,
+    abstainedPercentage,
+    abstainVoterPercentage,
     fetchProgressReportByProposalRequest,
     period,
     remainingTime,
@@ -638,7 +642,7 @@ function ProposalDetailsPage(props) {
                                     <ProgressBarCombined
                                       approvedPercentage={approvedPercentage}
                                       rejectedPercentage={rejectedPercentage}
-                                      // abstainedPercentage={}
+                                      abstainedPercentage={abstainedPercentage}
                                     />
 
                                     {
@@ -659,6 +663,8 @@ function ProposalDetailsPage(props) {
                                           rejectedPercentage={
                                             rejectedPercentage
                                           }
+                                      abstainedPercentage={abstainedPercentage}
+
                                           noProgressBar
                                           placement='bottom'
                                         />
@@ -688,6 +694,9 @@ function ProposalDetailsPage(props) {
                                       rejectedPercentage={
                                         rejectedVoterPercentage
                                       }
+                                      abstainedPercentage={
+                                        abstainVoterPercentage
+                                      }
                                     />
 
                                     <Container
@@ -702,6 +711,9 @@ function ProposalDetailsPage(props) {
                                         }
                                         rejectedPercentage={
                                           rejectedVoterPercentage
+                                        }
+                                        abstainedPercentage={
+                                          abstainVoterPercentage
                                         }
                                         noProgressBar
                                         voterCount
@@ -1252,7 +1264,8 @@ const mapStateToProps = state => ({
   votesByProposal: state.proposals.votesByProposal,
   approvedPercentage: getProposalApprovedPercentage(state),
   approvedVoterPercentage: getProposalApprovedVotersPercentage(state),
-
+  abstainedPercentage : getProposalAbstainedPercentage(state),
+  abstainVoterPercentage:getProposalAbstainVotersPercentage(state),
   rejectedPercentage: getProposalRejectedPercentage(state),
   rejectedVoterPercentage: getProposalRejectedVotersPercentage(state),
 

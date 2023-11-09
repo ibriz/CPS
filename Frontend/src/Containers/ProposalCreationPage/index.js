@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import {findFutureMonth} from '../../utils'
 import {
   Row,
   Card,
@@ -225,6 +226,9 @@ const ProposalCreationPage = ({
   const [descriptionCharacters, setDescriptionCharacters] = React.useState(0);
   const [totalNumberOfMonthsInMilestone, setTotalNumberOfMonthsInMilestone] =
     React.useState(0);
+  const [totalMilestoneBudget, setTotalMilestoneBudget] = React.useState(0);
+  const [totalInputBudget, setTotalInputBudget] = React.useState(0);
+  const [remainingBudget, setRemainingBudget] = React.useState(0);
   let [prepList, setPrepList] = React.useState([]);
 
   useEffect(() => {
@@ -297,29 +301,64 @@ const ProposalCreationPage = ({
     }
   }, [proposal.totalBudget, remainingSwapAmount]);
 
+  // useEffect(() => {
+  //   const minimumNumberOfWords = 2;
+  //   // const maximumNumberOfMilestones = 6;
+  //   const totalMonths =
+  //     proposal.milestones.reduce(
+  //       (sum, milestone) => sum + parseInt(milestone.duration),
+  //       0,
+  //     );
+  //   setTotalNumberOfMonthsInMilestone(totalMonths);
+
+  //   console.log('proposal.projectDuration', proposal.projectDuration);
+  //   if (proposal.milestones.length < 1) {
+  //     document
+  //       .getElementById('milestones')
+  //       .setCustomValidity(`Please add milestones`);
+  //   } else if (parseInt(totalMonths) !== parseInt(proposal.projectDuration)) {
+  //     document.getElementById('milestones').setCustomValidity(
+  //         `The total duration in milestones should equal to the project duration (currently ${
+  //           proposal.projectDuration || 0
+  //         } months)`,
+  //       );
+  //   } else {
+  //     document.getElementById('milestones').setCustomValidity(``);
+  //   }
+  // }, [proposal.milestones, proposal.projectDuration]);
+
   useEffect(() => {
-    const minimumNumberOfWords = 2;
-    // const maximumNumberOfMilestones = 6;
-    const totalMonths = proposal.milestones.reduce(
-      (sum, milestone) => sum + parseInt(milestone.duration),
-      0,
-    )/30;
+    const totalMonths =
+      proposal.milestones.reduce(
+        (sum, milestone) => sum + parseInt(milestone.completionPeriod),
+        0,
+      );
     setTotalNumberOfMonthsInMilestone(totalMonths);
 
-    console.log('proposal.projectDuration', proposal.projectDuration);
+    const milestoneBudget = proposal.totalBudget - 0.1 * proposal.totalBudget;
+    setTotalMilestoneBudget(milestoneBudget);
+    const inputBudget = proposal.milestones.reduce(
+      (sum, milestone) => sum + parseInt(milestone.budget),
+      0,
+    );
+    setTotalInputBudget(inputBudget);
+    setRemainingBudget(milestoneBudget - inputBudget);
+    // console.log(milestoneBudget, inputBudget);
+    // console.log(totalInputBudget, totalMilestoneBudget);
     if (proposal.milestones.length < 1) {
       document
-        .getElementById('milestones')
-        .setCustomValidity(`Please add milestones`);
-    } else if (parseInt(totalMonths) != parseInt(proposal.projectDuration)) {
-      console.log(
-        'mielstone',
-        parseInt(totalMonths),
-        parseInt(proposal.projectDuration),
-      );
+      .getElementById('milestones')
+      .setCustomValidity(`Please add milestones`);
+    } else if (parseInt(inputBudget) !== parseInt(milestoneBudget)) {
       document
         .getElementById('milestones')
         .setCustomValidity(
+          `The total budget in milestones should equal to the project budget (currently ${
+            milestoneBudget || 0
+          } bnUSD)`,
+        );
+    } else if (parseInt(totalMonths) !== parseInt(proposal.projectDuration)) {
+      document.getElementById('milestones').setCustomValidity(
           `The total duration in milestones should equal to the project duration (currently ${
             proposal.projectDuration || 0
           } months)`,
@@ -327,7 +366,7 @@ const ProposalCreationPage = ({
     } else {
       document.getElementById('milestones').setCustomValidity(``);
     }
-  }, [proposal.milestones, proposal.projectDuration]);
+  }, [proposal.totalBudget, proposal.milestones,proposal.projectDuration]);
 
   useEffect(() => {
     const minimumNumberOfWords = 10;
@@ -693,76 +732,98 @@ const ProposalCreationPage = ({
             </Form.Group>
 
             <Form.Group as={Row}>
-              <Form.Label  column sm='12'>
+              <Form.Label column sm='12'>
                 Milestones
                 <span className={styles.required}></span>
                 {/* <InfoIcon description="Milestone for the project" /> */}
               </Form.Label>
-              <div className="pl-3 pr-3 w-100 overflow-auto mb-4">
-              { (
-              <Table bordered>
-                <thead>
-                  <tr>
-                    <th>Milestone Name</th>
-                    <th>Duration</th>
-                    <th>Description</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <>
-                    {proposal.milestones.map((milestone, index) => (
-                      <tr style={{height:'100%'}} key={index}>
-                        <td>{milestone.name}</td>
-                        <td>
-                          {milestone.duration} day
-                          {milestone.duration > 1 && 's'}
-                        </td>
-                        <td>{milestone.description}</td>
-                        <td
-                          style={{ }}
-                        >
-                          {' '}
-                          <AiFillDelete
-                            style={{ cursor: 'pointer',fontSize:'20px' }}
-                            onClick={() => {
-                              setProposal(prevState => {
-                                const newMilestone = [...prevState.milestones];
-                                newMilestone.splice(index, 1);
-                                return {
-                                  ...prevState,
-                                  milestones: newMilestone,
-                                };
-                              });
-                            }}
-                          />
-                          <FiEdit2
-                            style={{ marginLeft: '10px', fontSize:'20px' , cursor: 'pointer' }}
-                            onClick={() => {
-                              setEditModalShow(true);
-                              setEditModalIndex(index);
-                            }}
-                          />
-                        </td>
+              <div className='pl-3 pr-3 w-100 overflow-auto mb-4'>
+                {
+                  <Table bordered>
+                    <thead>
+                      <tr>
+                        <th>Milestone Name</th>
+                        <th>Duration</th>
+                        <th>Budget</th>
+                        <th>Description</th>
+                        <th>Action</th>
                       </tr>
-                    ))}
-                    <tr>
-                      <td>
-                        <b>TOTAL</b>
-                      </td>
-                      <td>
-                        <b>{totalNumberOfMonthsInMilestone} month</b>
-                      </td>
-                    </tr>
-                  </>
-                </tbody>
-              </Table>
-            )}
+                    </thead>
+                    <tbody>
+                      <>
+                        {proposal.milestones.map((milestone, index) => (
+                          <tr style={{ height: '100%' }} key={index}>
+                            <td>{milestone.name}</td>
+                            <td>
+                            Next {findFutureMonth(milestone.completionPeriod)} after
+                              {milestone.completionPeriod} {' '} Month
+                              {milestone.completionPeriod > 1 && 's'}
+                            </td>
+                            <td>{milestone.budget} bnUSD</td>
+                            <td>{milestone.description}</td>
+                            <td style={{}}>
+                              {' '}
+                              <AiFillDelete
+                                style={{ cursor: 'pointer', fontSize: '20px' }}
+                                onClick={() => {
+                                  setProposal(prevState => {
+                                    const newMilestone = [
+                                      ...prevState.milestones,
+                                    ];
+                                    newMilestone.splice(index, 1);
+                                    return {
+                                      ...prevState,
+                                      milestones: newMilestone,
+                                    };
+                                  });
+                                }}
+                              />
+                              <FiEdit2
+                                style={{
+                                  marginLeft: '10px',
+                                  fontSize: '20px',
+                                  cursor: 'pointer',
+                                }}
+                                onClick={() => {
+                                  setEditModalShow(true);
+                                  setEditModalIndex(index);
+                                }}
+                              />
+                            </td>
+                          </tr>
+                        ))}
+                        <tr>
+                          <td colspan='2'>
+                            <p>Pre-Payment Amount (10% of Budget)</p>
+                          </td>
+
+                          <td>
+                            <p>
+                              {/* <b>300 bnUSD</b> */}
+                              <b>{0.1*proposal.totalBudget} bnUSD</b>
+                            </p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <b>Total</b>
+                          </td>
+                          <td>
+                            <b>{totalNumberOfMonthsInMilestone} month</b>
+                          </td>
+                          <td>
+                            <b>{totalInputBudget + 0.1*proposal.totalBudget} bnUSD</b>
+                          </td>
+                        </tr>
+                      </>
+                    </tbody>
+                  </Table>
+                }
               </div>
-             
+
               <Col sm='12'>
                 <Button
-                  variant={isDarkTheme ==='dark' ? 'dark' : 'light'}
+                  variant={isDarkTheme === 'dark' ? 'dark' : 'light'}
                   onClick={() => setModalShow(true)}
                   style={{ position: 'relative' }}
                 >
@@ -774,8 +835,6 @@ const ProposalCreationPage = ({
                 </Button>
               </Col>
             </Form.Group>
-
-            
 
             <Form.Group as={Row}>
               <Form.Label column sm='2'>
@@ -899,17 +958,19 @@ const ProposalCreationPage = ({
       <AddMilestoneModal
         show={modalShow}
         onHide={() => setModalShow(false)}
+        remainingBudget={remainingBudget}
         onAddMilestone={milestone => {
           setProposal(prevState => ({
             ...prevState,
             milestones: [...prevState.milestones, milestone],
-            milestoneCount: prevState.milestoneCount+1
+            milestoneCount: prevState.milestoneCount + 1,
           }));
         }}
       />
 
       <EditMileStoneModal
         show={editModalShow}
+        remainingBudget={remainingBudget}
         onHide={() => setEditModalShow(false)}
         milestone={proposal.milestones[editModalIndex]}
         onAddMilestone={milestone => {

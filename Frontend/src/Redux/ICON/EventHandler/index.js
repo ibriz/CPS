@@ -297,7 +297,6 @@ export default event => {
         case approve_sponsor:
           console.log('history');
           history.push('/dashboard');
-          history.push('/dashboard');
           NotificationManager.info('Sponsor request approval request sent');
 
           getResult(
@@ -362,7 +361,7 @@ export default event => {
 
         case reject_sponsor:
           console.log('history');
-          history.push('/');
+          history.push('/dashboard');
           NotificationManager.info('Sponsor request rejection request sent');
 
           getResult(
@@ -581,7 +580,7 @@ export default event => {
             },
           );
           NotificationManager.info('Reward Claim Request Sent');
-          window.location.reload();
+          // window.location.reload();
           break;
 
         case claimSponsorBond:
@@ -592,7 +591,7 @@ export default event => {
           });
 
           NotificationManager.info('Sponsor bond claim Request Sent');
-          window.location.reload();
+          // window.location.reload();
           break;
 
         case votePriority:

@@ -631,6 +631,32 @@ const proposalSlice = createSlice({
       }));
       state.votesByProposal = state.votesByProposal.filter(vote => vote.status);
 
+      state.abstainedVotes = IconConverter.toBigNumber(
+        action.payload.response.abstained_votes,
+      );
+      state.abstainVoters = IconConverter.toBigNumber(
+        action.payload.response.abstain_voters,
+      );
+      state.approvedVotes = IconConverter.toBigNumber(
+        action.payload.response.approved_votes,
+      );
+      state.totalVotes = IconConverter.toBigNumber(
+        action.payload.response.total_votes,
+      );
+      state.rejectedVotes = IconConverter.toBigNumber(
+        action.payload.response.rejected_votes,
+      );
+
+      state.approvedVoters = IconConverter.toBigNumber(
+        action.payload.response.approve_voters,
+      );
+      state.rejectedVoters = IconConverter.toBigNumber(
+        action.payload.response.reject_voters,
+      );
+      state.totalVoters = IconConverter.toBigNumber(
+        action.payload.response.total_voters,
+      );
+
       return;
     },
     fetchVoteResultFailure() {
