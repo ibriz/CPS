@@ -226,6 +226,7 @@ const MigrationForm = ({
   const [descriptionCharacters, setDescriptionCharacters] = React.useState(0);
   const [totalNumberOfMonthsInMilestone, setTotalNumberOfMonthsInMilestone] =
     React.useState(0);
+    const [totalInputBudget, setTotalInputBudget] = React.useState(0);
   let [prepList, setPrepList] = React.useState([]);
   // const [milestoneCount, setMilestoneCount] = useState(proposal.milestones.length);
   const [proposal, setProposal] = useState({
@@ -321,9 +322,13 @@ const MigrationForm = ({
       proposal.milestones.reduce(
         (sum, milestone) => sum + parseInt(milestone.duration),
         0,
-      ) / 30;
+      );
     setTotalNumberOfMonthsInMilestone(totalMonths);
-
+    const inputBudget = proposal.milestones.reduce(
+      (sum, milestone) => sum + parseInt(milestone.budget),
+      0,
+    );
+    setTotalInputBudget(inputBudget);
     console.log('proposal.projectDuration', proposal.projectDuration);
     if (proposal.milestones.length < 1) {
       document
@@ -666,6 +671,7 @@ const MigrationForm = ({
                       <tr>
                         <th>Milestone Name</th>
                         <th>Duration</th>
+                        <th>Budget</th>
                         <th>Description</th>
                         <th>Action</th>
                       </tr>
@@ -676,9 +682,10 @@ const MigrationForm = ({
                           <tr style={{ height: '100%' }} key={index}>
                             <td>{milestone.name}</td>
                             <td>
-                              {milestone.duration} day
-                              {milestone.duration > 1 && 's'}
+                              {milestone.completionPeriod} Month
+                              {milestone.completionPeriod > 1 && 's'}
                             </td>
+                            <td>{milestone.budget} bnUSD</td>
                             <td>{milestone.description}</td>
                             <td style={{}}>
                               {' '}
@@ -717,6 +724,9 @@ const MigrationForm = ({
                           </td>
                           <td>
                             <b>{totalNumberOfMonthsInMilestone} month</b>
+                          </td>
+                          <td>
+                            <b>{totalInputBudget} bnUsd</b>
                           </td>
                         </tr>
                       </>

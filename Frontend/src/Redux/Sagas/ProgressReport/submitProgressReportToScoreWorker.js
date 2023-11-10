@@ -20,12 +20,16 @@ function* submitProgressReportToScoreWorker({ payload }) {
         payload.progressReport.additionalBudget,
       ).toFixed(),
       additional_month: `${payload.progressReport.additionalTime ?? 0}`,
-      milestoneCompleted: payload?.progressReport?.completedMilestone?.map((x)=> String(x?.id)), //takes milestone array
+      // milestoneCompleted: payload?.progressReport?.completedMilestone?.map((x)=> String(x?.id)), //takes milestone array
       // isMilestone: payload.isMilestone, //bollean which indicates whether milestoneCompletedArray has value
       //   percentage_completed: `${
       //     payload.progressReport.percentageCompleted || 0
       //   }`,
     },
+    milestoneSubmissions:payload?.progressReport?.completedMilestone?.map((x)=> {
+      const {status,id,...rest} = x;
+      return {status,id};
+    })
   };
 
   sendTransaction({

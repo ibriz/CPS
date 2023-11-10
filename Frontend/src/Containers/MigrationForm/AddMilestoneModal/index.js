@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
+import {findFutureMonth} from '../../../utils'
 import {
   Modal,
   Button,
@@ -14,19 +14,19 @@ import RichTextEditor from '../../../Components/RichTextEditor';
 import AppFormLabel from '../../../Components/UI/AppFormLabel';
 
 function AddMilestoneModal(props) {
-  const id = Number(Date.now().toString().slice(-6));
+  const id = Date.now().toString().slice(-6);
   const [milestone, setMilestone] = useState({
     id: null,
     name: null,
-    duration: null,
-    // budget: null,
+    completionPeriod: null,
+    budget: null,
     description: null,
   });
   useEffect(() => {
     setMilestone({
       name: null,
-      duration: null,
-      // budget: null,
+      completionPeriod: null,
+      budget: null,
       description: null,
     });
   }, [props.show]);
@@ -83,27 +83,53 @@ function AddMilestoneModal(props) {
               />
             </Col>
           </Form.Group>
-          <Form.Group as={Col} controlId='formPlaintextEmail'>
-          <Form.Label column sm='6' className={styles.textColor}>
-              Duration
-            </Form.Label>
-            <Col sm='12' className={styles.inputSameLine}>
-            <InputGroup size='md'>
-              <Form.Control
-                placeholder='Enter Duration (in days)'
-                size='md'
-                type='number'
-                className={styles.inputBox}
-                value={milestone.duration}
-                name='duration'
-                onChange={handleChange}
-                required
-              />
-            <InputGroup.Append>
-                  <InputGroup.Text>Days</InputGroup.Text>
-                </InputGroup.Append>
+          <Form.Group as={Col} controlId='budgetandduration'>
+            <Form.Group as={Row} controlId='formPlaintextEmail'>
+            <Form.Group as={Col} controlId='formPlaintextEmail'>
+              <Form.Label column className={styles.textColor}>
+                Budget {`${props.remainingBudget ? `( remaining: ${props.remainingBudget} bnUSD)`:''}`}
+              </Form.Label>
+              <Col  className={styles.inputSameLine}>
+                <InputGroup>
+                  <Form.Control
+                    placeholder='Enter Budget'
+                    size='md'
+                    type='number'
+                    className={styles.inputBox}
+                    value={milestone.budget}
+                    name='budget'
+                    onChange={handleChange}
+                    required
+                  />
+                  <InputGroup.Append>
+                    <InputGroup.Text>bnUSD</InputGroup.Text>
+                  </InputGroup.Append>
                 </InputGroup>
-            </Col>
+              </Col>
+            </Form.Group>
+            <Form.Group as={Col} controlId='formPlaintextEmail'>
+              <Form.Label column className={styles.textColor}>
+                Delivery Month
+              </Form.Label>
+              <Col className={styles.inputSameLine}>
+                <InputGroup size='md'>
+                  <Form.Control
+                    placeholder='Enter duration'
+                    size='md'
+                    type='number'
+                    className={styles.inputBox}
+                    value={milestone.completionPeriod}
+                    name='completionPeriod'
+                    onChange={handleChange}
+                    required
+                  />
+                  <InputGroup.Append>
+                    <InputGroup.Text>{findFutureMonth(milestone.completionPeriod)}</InputGroup.Text>
+                  </InputGroup.Append>
+                </InputGroup>
+              </Col>
+            </Form.Group>
+          </Form.Group>
           </Form.Group>
           <Form.Group as={Col} controlId='formPlaintextEmail'>
             <Form.Label column sm='6' className={styles.textColor}>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Row,
   Card,
@@ -6,6 +6,7 @@ import {
   Form,
   InputGroup,
   FormControl,
+  ButtonGroup,
   Button,
   Alert,
 } from 'react-bootstrap';
@@ -248,6 +249,12 @@ const ProgressReportCreationPage = ({
     isLastProgressReport: false,
   });
   const { period } = useTimer();
+  const isDarkTheme = localStorage.getItem('theme') === 'dark';  
+  const [milestoneCompletedStatus, setMilestoneCompletedStatus] = useState();
+  const voteOptions = [
+    { title: 'Completed', bgColor: 'success', value: '0x1' },
+    { title: 'Not Completed', bgColor: 'danger', value: '0x4' },
+  ];
   const [progressReportIPFS, setProgressReportIPFS] = React.useState({});
   // const [milestoneId, setMilestoneId] = React.useState();
   // const [progressReportStatus, setprogressReportStatus] = React.useState({});
@@ -393,22 +400,17 @@ const ProgressReportCreationPage = ({
     setProgressReportIPFS(progressReportIPFS);
   }
 
-
-  const checkStats = useCallback(
-    (proposalKey,milestoneId) => {
-      const statusReponse = callKeyStoreWallet({
-        method: 'getMileststoneStatusOf',
-        params: {
-          proposalKey,
-          milestoneId:milestoneId
-        },
-      });
-      if(statusReponse === '0x0') return true;
-      return false
-    },
-    [],
-  )
-  
+  const checkStats = useCallback((proposalKey, milestoneId) => {
+    const statusReponse = callKeyStoreWallet({
+      method: 'getMileststoneStatusOf',
+      params: {
+        proposalKey,
+        milestoneId: milestoneId,
+      },
+    });
+    if (statusReponse === '0x0') return true;
+    return false;
+  }, []);
 
   // async function checkStatus(proposalKey,milestoneId){
   //   const statusReponse = await callKeyStoreWallet({
@@ -601,9 +603,28 @@ const ProgressReportCreationPage = ({
       v => v.id === oldMilestone.id,
     );
     const arrayIndex = dataIndex >= 0 ? dataIndex : updatedTextareaData.length;
+    const selected = updatedTextareaData[arrayIndex];
     updatedTextareaData[arrayIndex] = {
       ...oldMilestone,
+      ...selected,
       milestoneDescription: e.target.value,
+    };
+    // console.log("updatedTextareaData",updatedTextareaData);
+    setprogressReportMilestone(updatedTextareaData);
+  };
+  const handleMilestoneStatusChange = (oldMilestone,status) => {
+    // console.log(oldMilestone)
+    const updatedTextareaData = [...progressReportMilestone];
+    const dataIndex = updatedTextareaData.findIndex(
+      v => v.id === oldMilestone.id,
+    );
+    console.log(status);
+    const arrayIndex = dataIndex >= 0 ? dataIndex : updatedTextareaData.length;
+    const selected = updatedTextareaData[arrayIndex];
+    updatedTextareaData[arrayIndex] = {
+      ...oldMilestone,
+      ...selected,
+      status: status,
     };
     // console.log("updatedTextareaData",updatedTextareaData);
     setprogressReportMilestone(updatedTextareaData);
@@ -748,7 +769,7 @@ const ProgressReportCreationPage = ({
                           <Checkbox
                             proposalKey={`${selectedProposalForProgressReport.ipfsHash}`}
                             milestoneId={`${option.id}`}
-                            value={option.name} 
+                            value={option.name}
                             // disabled={ checkStats(`${selectedProposalForProgressReport.ipfsHash}`,`${option.id}`)}
                             // disabled={milestoneStatus === '0x3' || milestoneStatus === '0x0'}
                             id={`customCheck${index}`}
@@ -774,12 +795,35 @@ const ProgressReportCreationPage = ({
                     );
                     return (
                       selectedItems.includes(option.id) && (
-                        <div key={index} style={{ margin: '20px 0px  ' }}>
-                          <Form.Label sm='12' className={styles.labelSameLine}>
+                        <Form.Group as={Col} key={index} >
+                          <Form.Label sm='12' className={styles.labelSameLine}  style={{display:'flex', justifyContent:'space-between'}}>
                             Description for {option.name}
+                            <ButtonGroup required size='sm' aria-label='Basic example'>
+                              {voteOptions.map((voteOption,index) => (
+                                <Button
+                                key={index}
+                                aria-required="true"
+                                  variant={
+                                    progressReportMilestone[progressReportMilestone.findIndex(
+                                      v =>
+                                        v.id ===
+                                        option.id.toString(),
+                                    )]?.status === voteOption.value
+                                    ? voteOption.bgColor
+                                    : isDarkTheme
+                                    ? 'dark'
+                                    : 'light'
+                                  }
+                                  onClick={() =>
+                                    handleMilestoneStatusChange(option,voteOption.value)
+                                  }
+                                >
+                                  {voteOption.title}
+                                </Button>
+                              ))}
+                            </ButtonGroup>
                           </Form.Label>
-                          <Col sm='12' className={styles.inputSameLine}>
-                            <InputGroup size='md'>
+                        
                               <Form.Control
                                 controlId='description'
                                 className={styles.inputBox}
@@ -794,9 +838,8 @@ const ProgressReportCreationPage = ({
                                   handleDescriptionChange(index, e, option)
                                 }
                               />
-                            </InputGroup>
-                          </Col>
-                        </div>
+                         
+                        </Form.Group>
                       )
                     );
                   },

@@ -20,7 +20,7 @@ import frontEndWallet from './FrontEndWallet';
 // export const provider = new HttpProvider('https://berlin.net.solidwallet.io/api/v3');
 
 // Testnet Envs Lisbon
-export const CPSScore = 'cx2fb89997316a8f0d73003c0bb829af319d0df717';
+export const CPSScore = 'cx8e7b5c925a0e72f79ff1161a3e74a86da78934d5';
 var nid = 2;
 export const provider = new HttpProvider(
   'https://lisbon.net.solidwallet.io/api/v3',

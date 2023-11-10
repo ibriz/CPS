@@ -14,7 +14,7 @@ import RichTextEditor from '../../../Components/RichTextEditor';
 import AppFormLabel from '../../../Components/UI/AppFormLabel';
 
 function AddMilestoneModal(props) {
-  const id = Date.now().toString().slice(-5);
+  const id = Date.now().toString().slice(-6);
   const [milestone, setMilestone] = useState({
     id: null,
     name: null,
@@ -87,8 +87,8 @@ function AddMilestoneModal(props) {
           </Form.Group>
 
           <Form.Group as={Col} controlId='budgetandduration'>
-            <Form.Group as={Row} controlId='formPlaintextEmail'>
-            <Form.Group as={Col} controlId='formPlaintextEmail'>
+            <Form.Group as={Row} controlId='bndRow'>
+            <Form.Group as={Col} controlId='budgetRow'>
               <Form.Label column className={styles.textColor}>
                 Budget {`( remaining: ${props.remainingBudget} bnUSD)`}
               </Form.Label>
@@ -108,9 +108,10 @@ function AddMilestoneModal(props) {
                     <InputGroup.Text>bnUSD</InputGroup.Text>
                   </InputGroup.Append>
                 </InputGroup>
+               {props.remainingBudget < milestone.budget && <div style={{padding:4,fontSize:14, color:'#ff0000'}}>Budget cannot be greater than remaining budget</div>} 
               </Col>
             </Form.Group>
-            <Form.Group as={Col} controlId='formPlaintextEmail'>
+            <Form.Group as={Col} controlId='durationRow'>
               <Form.Label column className={styles.textColor}>
                 Delivery Month
               </Form.Label>
