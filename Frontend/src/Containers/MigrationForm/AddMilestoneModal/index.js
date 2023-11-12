@@ -114,7 +114,7 @@ function AddMilestoneModal(props) {
               <Col className={styles.inputSameLine}>
                 <InputGroup size='md'>
                   <Form.Control
-                    placeholder='Enter duration'
+                    placeholder='Enter completion period'
                     size='md'
                     type='number'
                     className={styles.inputBox}

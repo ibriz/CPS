@@ -16,6 +16,7 @@ import saveDraftRequestWorker from './saveDraftRequestWorker';
 import fetchDraftRequestWorker from './fetchDraftRequestWorker';
 import voteProposalWorker from './voteProposalWorker';
 import fetchProposalByAddressWorker from './fetchProposalByAddressWorker';
+import fetchMigrationProposalByAddressWorker from './fetchMigrationProposalByAddressWorker';
 import fetchProposalVoteResultRequestWorker from './fetchProposalVoteResultRequestWorker';
 import fetchProjectAmountsWorker from './fetchProjectAmountsWorker';
 import fetchRemainingVotesRequestWorker from './fetchRemainingVotesRequestWorker';
@@ -40,6 +41,7 @@ export {
     fetchProposalDetailWorker,
     emptyProposalDetailWorker,
     fetchSponsorRequestsListWorker,
+    fetchMigrationProposalByAddressWorker,
     approveSponserRequestWorker,
     rejectSponserRequestWorker,
     saveDraftRequestWorker,

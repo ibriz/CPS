@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {findFutureMonth} from '../../../utils'
+import { findFutureMonth } from '../../../utils';
 import {
   Modal,
   Button,
@@ -88,52 +88,58 @@ function AddMilestoneModal(props) {
 
           <Form.Group as={Col} controlId='budgetandduration'>
             <Form.Group as={Row} controlId='bndRow'>
-            <Form.Group as={Col} controlId='budgetRow'>
-              <Form.Label column className={styles.textColor}>
-                Budget {`( remaining: ${props.remainingBudget} bnUSD)`}
-              </Form.Label>
-              <Col  className={styles.inputSameLine}>
-                <InputGroup>
-                  <Form.Control
-                    placeholder='Enter Budget'
-                    size='md'
-                    type='number'
-                    className={styles.inputBox}
-                    value={milestone.budget}
-                    name='budget'
-                    onChange={handleChange}
-                    required
-                  />
-                  <InputGroup.Append>
-                    <InputGroup.Text>bnUSD</InputGroup.Text>
-                  </InputGroup.Append>
-                </InputGroup>
-               {props.remainingBudget < milestone.budget && <div style={{padding:4,fontSize:14, color:'#ff0000'}}>Budget cannot be greater than remaining budget</div>} 
-              </Col>
+              <Form.Group as={Col} controlId='budgetRow'>
+                <Form.Label column className={styles.textColor}>
+                  Budget {`( remaining: ${props.remainingBudget} bnUSD)`}
+                </Form.Label>
+                <Col className={styles.inputSameLine}>
+                  <InputGroup>
+                    <Form.Control
+                      placeholder='Enter Budget'
+                      size='md'
+                      type='number'
+                      className={styles.inputBox}
+                      value={milestone.budget}
+                      name='budget'
+                      onChange={handleChange}
+                      required
+                    />
+                    <InputGroup.Append>
+                      <InputGroup.Text>bnUSD</InputGroup.Text>
+                    </InputGroup.Append>
+                  </InputGroup>
+                  {props.remainingBudget < milestone.budget && (
+                    <div style={{ padding: 4, fontSize: 14, color: '#ff0000' }}>
+                      Budget cannot be greater than remaining budget
+                    </div>
+                  )}
+                </Col>
+              </Form.Group>
+              <Form.Group as={Col} controlId='durationRow'>
+                <Form.Label column className={styles.textColor}>
+                  Delivery Month
+                </Form.Label>
+                <Col className={styles.inputSameLine}>
+                  <InputGroup size='md'>
+                    <Form.Control
+                      placeholder='Enter duration'
+                      size='md'
+                      type='number'
+                      className={styles.inputBox}
+                      value={milestone.completionPeriod}
+                      name='completionPeriod'
+                      onChange={handleChange}
+                      required
+                    />
+                    <InputGroup.Append>
+                      <InputGroup.Text>
+                        {findFutureMonth(milestone.completionPeriod)}
+                      </InputGroup.Text>
+                    </InputGroup.Append>
+                  </InputGroup>
+                </Col>
+              </Form.Group>
             </Form.Group>
-            <Form.Group as={Col} controlId='durationRow'>
-              <Form.Label column className={styles.textColor}>
-                Delivery Month
-              </Form.Label>
-              <Col className={styles.inputSameLine}>
-                <InputGroup size='md'>
-                  <Form.Control
-                    placeholder='Enter duration'
-                    size='md'
-                    type='number'
-                    className={styles.inputBox}
-                    value={milestone.completionPeriod}
-                    name='completionPeriod'
-                    onChange={handleChange}
-                    required
-                  />
-                  <InputGroup.Append>
-                    <InputGroup.Text>{findFutureMonth(milestone.completionPeriod)}</InputGroup.Text>
-                  </InputGroup.Append>
-                </InputGroup>
-              </Col>
-            </Form.Group>
-          </Form.Group>
           </Form.Group>
           <Form.Group as={Col} controlId='formPlaintextEmail'>
             <Form.Label column sm='6' className={styles.textColor}>

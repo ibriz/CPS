@@ -743,7 +743,7 @@ const ProposalCreationPage = ({
                     <thead>
                       <tr>
                         <th>Milestone Name</th>
-                        <th>Duration</th>
+                        <th>Completion Period</th>
                         <th>Budget</th>
                         <th>Description</th>
                         <th>Action</th>
@@ -755,7 +755,7 @@ const ProposalCreationPage = ({
                           <tr style={{ height: '100%' }} key={index}>
                             <td>{milestone.name}</td>
                             <td>
-                            Next {findFutureMonth(milestone.completionPeriod)} after
+                             {findFutureMonth(milestone.completionPeriod)}{' '} after
                               {milestone.completionPeriod} {' '} Month
                               {milestone.completionPeriod > 1 && 's'}
                             </td>

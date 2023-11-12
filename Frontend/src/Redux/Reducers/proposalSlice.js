@@ -115,6 +115,7 @@ const initialState = {
   },
 
   proposalByAddress: [],
+  migrationProposalByAddress: [],
 
   votesByProposal: [],
 
@@ -606,6 +607,25 @@ const proposalSlice = createSlice({
     fetchProposalByAddressFailure(state) {
       return;
     },
+    fetchMigrationProposalByAddressRequest(state) {
+      return;
+    },
+
+    fetchMigrationProposalByAddressSuccess(state, action) {
+      console.group('fetchProposalByAddressSuccess');
+      console.log('fetchProposalByAddressSuccess');
+      console.groupEnd();
+      state.migrationProposalByAddress = action.payload.response.data.map(proposal => ({
+        _proposal_title: proposal[PARAMS.proposalTitle],
+        ipfsKey: proposal[PARAMS.proposalHash],
+        contributorAddress:proposal[PARAMS.contributorAddress]
+      }));
+      return;
+    },
+
+    fetchMigrationProposalByAddressFailure(state) {
+      return;
+    },
     setModalShowSponsorRequests(state, action) {
       state.modalShowSponsorRequests = action.payload;
     },
@@ -1049,6 +1069,9 @@ export const {
   fetchProposalByAddressRequest,
   fetchProposalByAddressSuccess,
   fetchProposalByAddressFailure,
+  fetchMigrationProposalByAddressRequest,
+  fetchMigrationProposalByAddressSuccess,
+  fetchMigrationProposalByAddressFailure,
   setModalShowSponsorRequests,
   setModalShowVoting,
   fetchVoteResultRequest,

@@ -30,6 +30,7 @@ import {
   fetchDraftRequestWorker,
   voteProposalWorker,
   fetchProposalByAddressWorker,
+  fetchMigrationProposalByAddressWorker,
   fetchProposalVoteResultRequestWorker,
   fetchProjectAmountsWorker,
   fetchRemainingVotesRequestWorker,
@@ -112,6 +113,7 @@ import {
   fetchDraftsRequest,
   voteProposal,
   fetchProposalByAddressRequest,
+  fetchMigrationProposalByAddressRequest,
   fetchVoteResultRequest as fetchProposalVoteResultRequest,
   fetchProjectAmountsRequest,
   fetchRemainingVotesRequest,
@@ -256,6 +258,10 @@ function* rootSaga() {
   yield takeEvery(
     fetchProposalByAddressRequest.type,
     fetchProposalByAddressWorker,
+  );
+  yield takeEvery(
+    fetchMigrationProposalByAddressRequest.type,
+    fetchMigrationProposalByAddressWorker,
   );
 
   yield takeEvery(voteProgressReport.type, voteProgressReportWorker);

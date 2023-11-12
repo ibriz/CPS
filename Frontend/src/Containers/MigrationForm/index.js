@@ -26,7 +26,7 @@ import {
   submitMigrationProposalRequest,
   fetchProposalByIpfsRequest,
   saveDraftRequest,
-  fetchProposalByAddressRequest,
+  fetchMigrationProposalByAddressRequest,
 } from 'Redux/Reducers/proposalSlice';
 import { fetchPrepsRequest } from '../../Redux/Reducers/prepsSlice';
 import { connect } from 'react-redux';
@@ -197,6 +197,7 @@ const MigrationForm = ({
   walletAddress,
   location,
   fetchProposalByAddressRequest,
+  fetchMigrationProposalByAddressRequest,
   fetchProposalByIpfsRequest,
   fetchCPFTreasuryScoreAddressRequest,
   fetchCPFRemainingFundRequest,
@@ -223,6 +224,7 @@ const MigrationForm = ({
   const [proposalIPFS, setProposalIPFS] = React.useState({});
   const [selectedIPFSHash, setSelectedIPFSHash] = React.useState();
   const [descriptionWords, setDescriptionWords] = React.useState(0);
+  const [remainingBudget, setRemainingBudget] = React.useState(0);
   const [descriptionCharacters, setDescriptionCharacters] = React.useState(0);
   const [totalNumberOfMonthsInMilestone, setTotalNumberOfMonthsInMilestone] =
     React.useState(0);
@@ -245,7 +247,7 @@ const MigrationForm = ({
   });
 
   useEffect(() => {
-    fetchProposalByAddressRequest({
+    fetchMigrationProposalByAddressRequest({
       walletAddress,
     });
   }, []);
@@ -320,20 +322,32 @@ const MigrationForm = ({
     // const maximumNumberOfMilestones = 6;
     const totalMonths =
       proposal.milestones.reduce(
-        (sum, milestone) => sum + parseInt(milestone.duration),
+        (sum, milestone) => sum + parseInt(milestone.completionPeriod),
         0,
       );
     setTotalNumberOfMonthsInMilestone(totalMonths);
+    const milestoneBudget = proposal.totalBudget - 0.1 * proposal.totalBudget;
+    // setTotalMilestoneBudget(milestoneBudget);
     const inputBudget = proposal.milestones.reduce(
       (sum, milestone) => sum + parseInt(milestone.budget),
       0,
     );
     setTotalInputBudget(inputBudget);
+    setRemainingBudget(milestoneBudget - inputBudget);
+    // setTotalInputBudget(inputBudget);
     console.log('proposal.projectDuration', proposal.projectDuration);
     if (proposal.milestones.length < 1) {
       document
         .getElementById('milestones')
         .setCustomValidity(`Please add milestones`);
+    } else if (parseInt(inputBudget) !== parseInt(milestoneBudget)) {
+      document
+        .getElementById('milestones')
+        .setCustomValidity(
+          `The total budget in milestones should equal to the project budget (currently ${
+            milestoneBudget || 0
+          } bnUSD)`,
+        );
     } else if (parseInt(totalMonths) != parseInt(proposal.projectDuration)) {
       console.log(
         'mielstone',
@@ -670,7 +684,7 @@ const MigrationForm = ({
                     <thead>
                       <tr>
                         <th>Milestone Name</th>
-                        <th>Duration</th>
+                        <th>Completion Period</th>
                         <th>Budget</th>
                         <th>Description</th>
                         <th>Action</th>
@@ -682,7 +696,8 @@ const MigrationForm = ({
                           <tr style={{ height: '100%' }} key={index}>
                             <td>{milestone.name}</td>
                             <td>
-                              {milestone.completionPeriod} Month
+                            {findFutureMonth(milestone.completionPeriod)}{' '} after
+                            {milestone.completionPeriod} Month
                               {milestone.completionPeriod > 1 && 's'}
                             </td>
                             <td>{milestone.budget} bnUSD</td>
@@ -835,6 +850,7 @@ const MigrationForm = ({
       <AddMilestoneModal
         show={modalShow}
         onHide={() => setModalShow(false)}
+        remainingBudget={remainingBudget}
         onAddMilestone={milestone => {
           setProposal(prevState => ({
             ...prevState,
@@ -847,6 +863,7 @@ const MigrationForm = ({
       <EditMileStoneModal
         show={editModalShow}
         onHide={() => setEditModalShow(false)}
+        remainingBudget={remainingBudget}
         milestone={proposal.milestones[editModalIndex]}
         onAddMilestone={milestone => {
           console.log('start');
@@ -920,8 +937,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(fetchAvailableFundRequest(payload)),
   fetchRemainingSwapAmountRequest: () =>
     dispatch(fetchRemainingSwapAmountRequest()),
-  fetchProposalByAddressRequest: payload =>
-    dispatch(fetchProposalByAddressRequest(payload)),
+  fetchMigrationProposalByAddressRequest: payload =>
+    dispatch(fetchMigrationProposalByAddressRequest(payload)),
   fetchMaintenanceModeRequest: () => dispatch(fetchMaintenanceModeRequest()),
 });
 
