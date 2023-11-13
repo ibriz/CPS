@@ -330,7 +330,7 @@ const MigrationForm = ({
       (sum, milestone) => sum + Number(milestone.budget),
       0,
     );
-    setTotalInputBudget(inputBudget);
+    // setTotalInputBudget(inputBudget);
     setRemainingBudget(proposal.totalBudget - inputBudget);
     // setTotalInputBudget(inputBudget);
     console.log('proposal.projectDuration', proposal.projectDuration);
@@ -741,7 +741,7 @@ const MigrationForm = ({
                             <b></b>
                           </td>
                           <td>
-                            <b>{totalInputBudget} bnUsd</b>
+                            <b></b>
                           </td>
                         </tr>
                       </>
