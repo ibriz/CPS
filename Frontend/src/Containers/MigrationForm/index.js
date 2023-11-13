@@ -735,7 +735,7 @@ const MigrationForm = ({
                         ))}
                         <tr>
                           <td>
-                            <b>TOTAL</b>
+                            <b></b>
                           </td>
                           <td>
                             <b></b>
