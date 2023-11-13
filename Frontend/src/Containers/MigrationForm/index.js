@@ -343,7 +343,7 @@ const MigrationForm = ({
         .getElementById('milestones')
         .setCustomValidity(
           `The total budget in milestones should equal to the project budget (currently ${
-            milestoneBudget || 0
+            proposal.totalBudget || 0
           } bnUSD)`,
         );
     } else if (parseInt(proposal.milestones[proposal.milestones.length-1].completionPeriod) !== parseInt(proposal.projectDuration)) {
