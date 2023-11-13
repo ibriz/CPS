@@ -330,7 +330,7 @@ const MigrationForm = ({
       (sum, milestone) => sum + Number(milestone.budget),
       0,
     );
-    // setTotalInputBudget(inputBudget);
+    setTotalInputBudget(inputBudget);
     setRemainingBudget(proposal.totalBudget - inputBudget);
     // setTotalInputBudget(inputBudget);
     console.log('proposal.projectDuration', proposal.projectDuration);
@@ -338,15 +338,17 @@ const MigrationForm = ({
       document
         .getElementById('milestones')
         .setCustomValidity(`Please add milestones`);
-    } else if (parseInt(inputBudget) !== parseInt(proposal.totalBudget)) {
-      document
-        .getElementById('milestones')
-        .setCustomValidity(
-          `The total budget in milestones should equal to the project budget (currently ${
-            proposal.totalBudget || 0
-          } bnUSD)`,
-        );
-    } else if (parseInt(proposal.milestones[proposal.milestones.length-1].completionPeriod) !== parseInt(proposal.projectDuration)) {
+    } 
+    // else if (parseInt(inputBudget) !== parseInt(proposal.totalBudget)) {
+    //   document
+    //     .getElementById('milestones')
+    //     .setCustomValidity(
+    //       `The total budget in milestones should equal to the project budget (currently ${
+    //         proposal.totalBudget || 0
+    //       } bnUSD)`,
+    //     );
+    // } 
+    else if (parseInt(proposal.milestones[proposal.milestones.length-1].completionPeriod) !== parseInt(proposal.projectDuration)) {
       console.log(
         'mielstone',
         parseInt(totalMonths),

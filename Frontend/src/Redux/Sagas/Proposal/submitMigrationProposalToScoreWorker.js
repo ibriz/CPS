@@ -27,7 +27,7 @@ function* submitMigrationProposalToScoreWorker({ payload }) {
     },
     milestones: payload.proposal.milestones.map((x)=>{
       const {description,name,budget, ...rest} = x;
-      const updatedBudget = budget * 10**18;
+      const updatedBudget = budget;
       return {budget:updatedBudget.toString(),...rest};
     }),
   };
