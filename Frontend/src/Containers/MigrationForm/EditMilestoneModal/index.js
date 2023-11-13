@@ -91,7 +91,7 @@ function EditMilestoneModal(props) {
             <Form.Group as={Row} controlId='bndRow'>
               <Form.Group as={Col} controlId='budgetRow'>
                 <Form.Label column className={styles.textColor}>
-                  Budget {`( remaining: ${props.remainingBudget} bnUSD)`}
+                  Budget
                 </Form.Label>
                 <Col className={styles.inputSameLine}>
                   <InputGroup>
@@ -109,11 +109,7 @@ function EditMilestoneModal(props) {
                       <InputGroup.Text>bnUSD</InputGroup.Text>
                     </InputGroup.Append>
                   </InputGroup>
-                  {props.remainingBudget < milestone.budget && (
-                    <div style={{ padding: 4, fontSize: 14, color: '#ff0000' }}>
-                      Budget cannot be greater than remaining budget
-                    </div>
-                  )}
+  
                 </Col>
               </Form.Group>
               <Form.Group as={Col} controlId='durationRow'>

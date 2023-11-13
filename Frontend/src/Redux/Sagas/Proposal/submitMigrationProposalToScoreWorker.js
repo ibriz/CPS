@@ -25,7 +25,11 @@ function* submitMigrationProposalToScoreWorker({ payload }) {
       milestoneCount: `${payload.proposal.milestones.length}`,
       token: 'bnUSD',
     },
-    milestones:payload.proposal.milestones.map((x)=> String(x?.id))
+    milestones: payload.proposal.milestones.map((x)=>{
+      const {description,name,budget, ...rest} = x;
+      const updatedBudget = budget * 10**18;
+      return {budget:updatedBudget.toString(),...rest};
+    }),
   };
 
   sendTransaction({
@@ -34,17 +38,6 @@ function* submitMigrationProposalToScoreWorker({ payload }) {
   });
 
   console.log(params);
-// try{
-//       const response = yield call(submitProposal, payload.proposal);
-//       yield put(submitProposalSuccess(
-//         {
-//           response,
-//           proposal: payload.proposal
-//         }
-//       ));
-//     } catch (error) {
-//       yield put(submitProposalFailure());
-//     }
 }
 
 export default submitMigrationProposalToScoreWorker;

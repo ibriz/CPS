@@ -327,7 +327,7 @@ const MigrationForm = ({
     const milestoneBudget = proposal.totalBudget - 0.1 * proposal.totalBudget;
     // setTotalMilestoneBudget(milestoneBudget);
     const inputBudget = proposal.milestones.reduce(
-      (sum, milestone) => sum + parseInt(milestone.budget),
+      (sum, milestone) => sum + Number(milestone.budget),
       0,
     );
     setTotalInputBudget(inputBudget);
@@ -346,7 +346,7 @@ const MigrationForm = ({
             milestoneBudget || 0
           } bnUSD)`,
         );
-    } else if (parseInt(totalMonths) != parseInt(proposal.projectDuration)) {
+    } else if (parseInt(proposal.milestones[proposal.milestones.length-1].completionPeriod) !== parseInt(proposal.projectDuration)) {
       console.log(
         'mielstone',
         parseInt(totalMonths),

@@ -87,7 +87,7 @@ function AddMilestoneModal(props) {
             <Form.Group as={Row} controlId='formPlaintextEmail'>
             <Form.Group as={Col} controlId='formPlaintextEmail'>
               <Form.Label column className={styles.textColor}>
-                Budget {`${props.remainingBudget ? `( remaining: ${props.remainingBudget} bnUSD)`:''}`}
+                Budget 
               </Form.Label>
               <Col  className={styles.inputSameLine}>
                 <InputGroup>
