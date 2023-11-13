@@ -324,21 +324,21 @@ const MigrationForm = ({
         0,
       );
     setTotalNumberOfMonthsInMilestone(totalMonths);
-    const milestoneBudget = proposal.totalBudget - 0.1 * proposal.totalBudget;
+    // const milestoneBudget = proposal.totalBudget - 0.1 * proposal.totalBudget;
     // setTotalMilestoneBudget(milestoneBudget);
     const inputBudget = proposal.milestones.reduce(
       (sum, milestone) => sum + Number(milestone.budget),
       0,
     );
-    setTotalInputBudget(inputBudget);
-    setRemainingBudget(milestoneBudget - inputBudget);
+    // setTotalInputBudget(inputBudget);
+    setRemainingBudget(proposal.totalBudget - inputBudget);
     // setTotalInputBudget(inputBudget);
     console.log('proposal.projectDuration', proposal.projectDuration);
     if (proposal.milestones.length < 1) {
       document
         .getElementById('milestones')
         .setCustomValidity(`Please add milestones`);
-    } else if (parseInt(inputBudget) !== parseInt(milestoneBudget)) {
+    } else if (parseInt(inputBudget) !== parseInt(proposal.totalBudget)) {
       document
         .getElementById('milestones')
         .setCustomValidity(
@@ -736,7 +736,7 @@ const MigrationForm = ({
                             <b>TOTAL</b>
                           </td>
                           <td>
-                            <b>{totalNumberOfMonthsInMilestone} month</b>
+                            <b></b>
                           </td>
                           <td>
                             <b>{totalInputBudget} bnUsd</b>

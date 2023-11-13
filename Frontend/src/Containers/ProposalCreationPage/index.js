@@ -809,7 +809,7 @@ const ProposalCreationPage = ({
                             <b>Total</b>
                           </td>
                           <td>
-                            <b>{totalNumberOfMonthsInMilestone} month</b>
+                            <b></b>
                           </td>
                           <td>
                             <b>{totalInputBudget + 0.1*proposal.totalBudget} bnUSD</b>
