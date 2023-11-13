@@ -17,7 +17,7 @@ import styles from './ProposalCreationPage.module.css';
 import {
   fetchCPFTreasuryScoreAddressRequest,
   fetchCPFRemainingFundRequest,
-  fetchAvailableFundRequest,
+  fetchAvailableFundRequest,  
   fetchRemainingSwapAmountRequest,
   fetchMaintenanceModeRequest,
 } from 'Redux/Reducers/fundSlice';
@@ -247,9 +247,7 @@ const MigrationForm = ({
   });
 
   useEffect(() => {
-    fetchMigrationProposalByAddressRequest({
-      walletAddress,
-    });
+    fetchMigrationProposalByAddressRequest();
   }, []);
   useEffect(() => {
     fetchCPFRemainingFundRequest();
@@ -493,7 +491,7 @@ const MigrationForm = ({
                     <option
                       key={index}
                       value={proposal.ipfsKey}
-                      disabled={!proposal.newProgressReport}
+                      // disabled={!proposal.newProgressReport}
                     >
                       {proposal._proposal_title}
                     </option>
@@ -696,8 +694,8 @@ const MigrationForm = ({
                           <tr style={{ height: '100%' }} key={index}>
                             <td>{milestone.name}</td>
                             <td>
-                            {findFutureMonth(milestone.completionPeriod)}{' '} after
-                            {milestone.completionPeriod} Month
+                            {findFutureMonth(milestone.completionPeriod)}{' '}after
+                            {' '} {milestone.completionPeriod} Month
                               {milestone.completionPeriod > 1 && 's'}
                             </td>
                             <td>{milestone.budget} bnUSD</td>
@@ -945,7 +943,7 @@ const mapDispatchToProps = dispatch => ({
 const mapStateToProps = state => ({
   submittingProposal: state.proposals.submittingProposal,
   preps: state.preps.preps,
-  currentUserActiveProposals: state.proposals.proposalByAddress,
+  currentUserActiveProposals: state.proposals.migrationProposalByAddress,
   walletAddress: state.account.address,
   cpfRemainingFunds: state.fund.cpfRemainingFunds,
   cpfTreasuryScoreAddress: state.fund.cpfTreasuryScoreAddress,
