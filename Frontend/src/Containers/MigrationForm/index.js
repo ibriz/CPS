@@ -433,10 +433,10 @@ const MigrationForm = ({
     let name = event.target.name;
     let value = event.target.value;
 
-    if (name === 'projectName') {
+    if (name === 'oldIpfsKey') {
       setSelectedIPFSHash(value);
-      setProposal({ ...proposal, oldIpfsKey: value });
       setFilled(true);
+      // setProposal({ ...proposal, oldIpfsKey: value });
     }
     console.log(name, value);
     setProposal(prevState => ({
@@ -456,11 +456,6 @@ const MigrationForm = ({
   // console.log({remainingSwapAmount});
   return (
     <div className={styles.proposalCreationPage}>
-      {/* <Header title='Create New Proposal' /> */}
-
-      {/* <Row className={styles.newProposal}>
-                Create New Proposal
-            </Row> */}
       <Row className={styles.cardContainer}>
         <Card className={styles.card}>
           <Form onSubmit={handleSubmit} id='form'>
@@ -478,9 +473,9 @@ const MigrationForm = ({
                   size='md'
                   as='select'
                   className={styles.inputBox}
-                  value={proposal.projectName}
-                  name='projectName'
-                  controlId='projectName'
+                  value={proposal.oldIpfsKey}
+                  name='oldIpfsKey'
+                  controlId='oldIpfsKey'
                   onChange={handleChange}
                   required
                 >
@@ -495,7 +490,7 @@ const MigrationForm = ({
                       value={proposal.ipfsKey}
                       // disabled={!proposal.newProgressReport}
                     >
-                      {proposal._proposal_title}
+                      {proposal.proposalTitle}
                     </option>
                   ))}
                 </Form.Control>{' '}
@@ -733,7 +728,7 @@ const MigrationForm = ({
                             </td>
                           </tr>
                         ))}
-                        <tr>
+                        {/* <tr>
                           <td>
                             <b></b>
                           </td>
@@ -743,7 +738,7 @@ const MigrationForm = ({
                           <td>
                             <b></b>
                           </td>
-                        </tr>
+                        </tr> */}
                       </>
                     </tbody>
                   </Table>

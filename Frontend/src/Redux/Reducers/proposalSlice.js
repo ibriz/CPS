@@ -614,7 +614,7 @@ const proposalSlice = createSlice({
     fetchMigrationProposalByAddressSuccess(state, action) {
       console.log("migration proposal list",action.payload.response)
       state.migrationProposalByAddress = action.payload.response?.data.map(proposal => ({
-        _proposal_title: proposal[PARAMS.proposalTitle],
+        proposalTitle: proposal[PARAMS.proposalTitle],
         ipfsKey: proposal[PARAMS.proposalHash],
         contributorAddress:proposal[PARAMS.contributorAddress]
       }));
