@@ -703,7 +703,7 @@ const proposalSlice = createSlice({
           },
           count: parseInt(
             IconConverter.toBigNumber(
-              action.payload[proposalStatus.status]?._count ?? 0,
+              action.payload[proposalStatus.status]?.count ?? 0,
             ),
           ),
         };
