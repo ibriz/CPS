@@ -17,7 +17,7 @@ const PARAMS = {
   approvedVotes: 'approved_votes',
   totalVotes: 'total_votes',
   rejectedVotes: 'rejected_votes',
-
+  hasMilestone :'isMilestone',
   approvedVoters: 'approve_voters',
   totalVoters: 'total_voters',
   rejectedVoters: 'reject_voters',
@@ -109,7 +109,7 @@ const progressReportStatusMapping = {
 
 const initialState = {
   numberOfSubmittedProgressReports: 29,
-
+  selectedProgressReportHasMilestone: false,
   numberOfApprovedProgressReports: 29,
 
   // numberOfPendingProposals: 235,
@@ -295,7 +295,7 @@ fetchProgressReportListRequest(state) {
     fetchVoteResultSuccess(state, action) {
       state.votesByProgressReport = action.payload.response.data.map(vote => ({
         sponsorAddress: vote.address,
-        milestoneId:IconConverter.toBigNumber(vote.milestoneId),
+        milestoneId:IconConverter.toBigNumber(vote.milestoneID),
         status: progressReportMapping.find(
           mapping => mapping.status === vote.vote,
         )?.name,
@@ -452,6 +452,9 @@ fetchProgressReportListRequest(state) {
     fetchProgressReportByIpfsSuccess(state, action) {
       console.log('Response', action.payload.response);
       let progressReport = action.payload.response;
+      if(progressReport[PARAMS.hasMilestone] === '0x1'){
+        state.selectedProgressReportHasMilestone=true;
+      }
       state.approvedVotes = IconConverter.toBigNumber(
         action.payload.response.approved_votes,
       );

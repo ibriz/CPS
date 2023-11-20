@@ -24,7 +24,7 @@ const MilestoneVoteCard = ({
 }) => {
   const [data, setData] = React.useState();
   const params = useParams();
-  // console.log("parameters",params);
+  // console.log("parameters",votesByProgressReport);
   useEffect(() => {
     let isMounted = true;
     try {
@@ -100,7 +100,7 @@ const MilestoneVoteCard = ({
                         }}
                       >
                         {' '}
-                        {`${duration} days`}
+                        {`${duration} Month`}
                       </p>
                     </div>
                   </div>
@@ -146,97 +146,103 @@ const MilestoneVoteCard = ({
               }}
             >
               <ListTitle>
-                <div style={{display:'flex', justifyContent:'space-between'}}>
-                <div style={{ padding: '10px', display: 'flex' }}>
-                  <span
-                    style={{
-                      marginRight: '4px',
-                      color: 'var(--proposal-text-color)',
-                    }}
-                  >
-                    VOTES
-                  </span>
-                  <InfoIcon
-                    description={'Click on a vote to view more details'}
-                  />
-                  
-                </div>
                 <div
-        style={{ display: 'flex', gap: 24,padding:'4px 16px' }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-          }}
-        >
-          <ProgressBarCombined
-            approvedPercentage={IconConverter.toBigNumber(data?.approved_votes)}
-            rejectedPercentage={IconConverter.toBigNumber(data?.rejected_votes)}
-          />
+                  style={{ display: 'flex', justifyContent: 'space-between' }}
+                >
+                  <div style={{ padding: '10px', display: 'flex' }}>
+                    <span
+                      style={{
+                        marginRight: '4px',
+                        color: 'var(--proposal-text-color)',
+                      }}
+                    >
+                      VOTES
+                    </span>
+                    <InfoIcon
+                      description={'Click on a vote to view more details'}
+                    />
+                  </div>
+                  <div
+                    style={{ display: 'flex', gap: 24, padding: '4px 16px' }}
+                  >
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between',
+                      }}
+                    >
+                      <ProgressBarCombined
+                        approvedPercentage={IconConverter.toBigNumber(
+                          data?.approved_votes,
+                        )}
+                        rejectedPercentage={IconConverter.toBigNumber(
+                          data?.rejected_votes,
+                        )}
+                      />
 
-          <Container
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-            }}
-          >
-            <VoteProgressBar
-              approvedPercentage={IconConverter.toBigNumber(
-                data?.approved_votes,
-              )}
-              rejectedPercentage={IconConverter.toBigNumber(
-                data?.rejected_votes,
-              )}
-              noProgressBar
-              // budgetAdjustment
-            />
-          </Container>
-        </div>
+                      <Container
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'row',
+                        }}
+                      >
+                        <VoteProgressBar
+                          approvedPercentage={IconConverter.toBigNumber(
+                            data?.approved_votes,
+                          )}
+                          rejectedPercentage={IconConverter.toBigNumber(
+                            data?.rejected_votes,
+                          )}
+                          noProgressBar
+                          // budgetAdjustment
+                        />
+                      </Container>
+                    </div>
 
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-          }}
-        >
-          <ProgressBarCombined
-            approvedPercentage={IconConverter.toBigNumber(data?.approve_voters)}
-            rejectedPercentage={IconConverter.toBigNumber(data?.reject_voters)}
-          />
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between',
+                      }}
+                    >
+                      <ProgressBarCombined
+                        approvedPercentage={IconConverter.toBigNumber(
+                          data?.approve_voters,
+                        )}
+                        rejectedPercentage={IconConverter.toBigNumber(
+                          data?.reject_voters,
+                        )}
+                      />
 
-          <Container
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-            }}
-          >
-            <VoteProgressBar
-              approvedPercentage={IconConverter.toBigNumber(
-                data?.approve_voters,
-              )}
-              rejectedPercentage={IconConverter.toBigNumber(
-                data?.reject_voters,
-              )}
-              noProgressBar
-              // budgetAdjustment
-              voterCount
-            />
-          </Container>
-        </div>
-      </div>
-
+                      <Container
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'row',
+                        }}
+                      >
+                        <VoteProgressBar
+                          approvedPercentage={IconConverter.toBigNumber(
+                            data?.approve_voters,
+                          )}
+                          rejectedPercentage={IconConverter.toBigNumber(
+                            data?.reject_voters,
+                          )}
+                          noProgressBar
+                          // budgetAdjustment
+                          voterCount
+                        />
+                      </Container>
+                    </div>
+                  </div>
                 </div>
               </ListTitle>
-              {}
               <VoteList votes={votesByProgressReport} progressReport />
             </div>
           ) : null}
         </Col>
       </Row>
-    
     </>
   );
 };

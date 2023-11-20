@@ -128,6 +128,7 @@ function ProgressReportDetailsPage(props) {
   const history = useHistory();
   const {
     progressDetail,
+    selectedProgressReportHasMilestone,
     proposal,
     sponsorRequest = false,
     approveSponserRequest,
@@ -323,7 +324,10 @@ function ProgressReportDetailsPage(props) {
   const [voteLoading, setVoteLoading] = React.useState(false);
 
   const onSubmitVote = () => {
-    if (vote.length !== progressDetail?.completedMilestone?.length && !changeVoteButton) {
+    if (
+      vote.length !== progressDetail?.completedMilestone?.length &&
+      !changeVoteButton
+    ) {
       NotificationManager.error('You need to vote on all Milestone Reports');
     } else {
       voteProgressReport({
@@ -429,7 +433,26 @@ function ProgressReportDetailsPage(props) {
               <div>
                 <InformationCard
                   title={'Project Details'}
-                  data={[
+                  data={selectedProgressReportHasMilestone?[
+                    {
+                      key: 'Percentage Completed',
+                      value: progressDetail?.percentageCompleted
+                        ? `${progressDetail?.percentageCompleted}%`
+                        : 'N/A',
+                    },
+                    {
+                      key: 'Time Remaining',
+                      value: progressDetail?.timeRemainingToCompletion
+                        ? `${progressDetail?.timeRemainingToCompletion} months`
+                        : 'N/A',
+                    },
+                    {
+                      key: 'Submitted On',
+                      value: `${new Date(
+                        progressReport?.timestamp / 1000,
+                      ).toLocaleDateString()}`,
+                    },
+                  ]: [
                     {
                       key: 'Percentage Completed',
                       value: progressDetail?.percentageCompleted
@@ -460,14 +483,12 @@ function ProgressReportDetailsPage(props) {
                             justifyContent: 'space-between',
                           }}
                         >
-                          
                           <ProgressBarCombined
                             approvedPercentage={approvedPercentage}
                             rejectedPercentage={rejectedPercentage}
                           />
 
                           {
-
                             <Container
                               style={{
                                 display: 'flex',
@@ -510,16 +531,14 @@ function ProgressReportDetailsPage(props) {
                           >
                             <VoteProgressBar
                               approvedPercentage={approvedVoterPercentage}
-                              rejectedPercentage={
-                                rejectedVotersPercentage
-                              }
+                              rejectedPercentage={rejectedVotersPercentage}
                               noProgressBar
                               voterCount
                             />
                           </Container>
                         </div>
                       ) : null,
-                    }
+                    },
                   ]}
                 />
 
@@ -713,6 +732,157 @@ function ProgressReportDetailsPage(props) {
                         </Button>
                       </Row>
                     )}
+                  {/* Container
+                        fluid
+                        style={{
+                          marginTop: '12px',
+                          backgroundColor: 'var(--proposal-card-color)',
+                          padding: '12px',
+                        }} */}
+
+                  {!sponsorRequest && (
+                    <>
+                      <Container
+                        fluid
+                        style={{
+                          color: 'var(--proposal-text-color)',
+                          backgroundColor: 'var(--proposal-card-color)',
+                          marginTop: 16,
+                          paddingTop: 8,
+                        }}
+                      >
+                        {selectedProgressReportHasMilestone ? (
+                          progressDetail?.completedMilestone?.map(
+                            (milestone, index) => {
+                              // console.log("votes of each milestones",votesByProgressReport.filter(x=>Number(x.milestoneId) === milestone.id))
+                              return (
+                                <div
+                                  key={index}
+                                  id='milestoneArray'
+                                  className='d-flex flex-column'
+                                >
+                                  <MilestoneVoteCard
+                                    id={milestone?.id}
+                                    reportKey={progressReportIpfsKey}
+                                    name={milestone?.name}
+                                    votesByProgressReport={votesByProgressReport?.filter(
+                                      x =>
+                                        x?.milestoneId.toString() ===
+                                        milestone?.id,
+                                    )}
+                                    duration={milestone.completionPeriod}
+                                    button={
+                                      isPrep &&
+                                      votingPRep &&
+                                      (!votesByProgressReport.some(
+                                        vote =>
+                                          vote.sponsorAddress === walletAddress,
+                                      ) ||
+                                        changeVoteButton) && (
+                                        <ButtonGroup aria-label='Basic example'>
+                                          {voteOptions.map(voteOption => (
+                                            <Button
+                                              key={voteOption.value}
+                                              variant={
+                                                vote[
+                                                  vote.findIndex(
+                                                    v =>
+                                                      v.id ===
+                                                      milestone.id.toString(),
+                                                  )
+                                                ]?.vote === voteOption.value
+                                                  ? voteOption.bgColor
+                                                  : isDarkTheme
+                                                  ? 'dark'
+                                                  : 'light'
+                                              }
+                                              onClick={() => {
+                                                const updatedVote = [...vote];
+                                                const dataIndex =
+                                                  updatedVote.findIndex(
+                                                    v =>
+                                                      v.id ===
+                                                      milestone.id.toString(),
+                                                  );
+                                                const arrayIndex =
+                                                  dataIndex >= 0
+                                                    ? dataIndex
+                                                    : updatedVote.length;
+                                                updatedVote[arrayIndex] = {
+                                                  vote: voteOption.value,
+                                                  id: milestone.id.toString(),
+                                                };
+                                                setVote(updatedVote);
+                                                console.log(vote);
+                                              }}
+                                            >
+                                              {voteOption.title}
+                                            </Button>
+                                          ))}
+                                        </ButtonGroup>
+                                      )
+                                    }
+                                    description={milestone.milestoneDescription}
+                                  />
+                                </div>
+                              );
+                            },
+                          )
+                        ) : votesByProgressReport?.length ? (
+                          <div
+                            style={{
+                              marginTop: '12px',
+                              backgroundColor: 'var(--proposal-card-color)',
+                              padding: '12px',
+                            }}
+                          >
+                            <ListTitle>
+                              <div style={{ padding: '10px', display: 'flex' }}>
+                                <span
+                                  style={{
+                                    marginRight: '4px',
+                                    color: 'var(--proposal-text-color)',
+                                  }}
+                                >
+                                  VOTES
+                                </span>
+                                <InfoIcon
+                                  description={
+                                    'Click on a vote to view more details'
+                                  }
+                                />
+                              </div>
+                            </ListTitle>
+                            <VoteList
+                              votes={votesByProgressReport}
+                              progressReport
+                            />
+                          </div>
+                        ) : null}
+                      </Container>
+
+                      <Row>
+                        <Col xs='12'>
+                          {progressDetail?.projectTermRevision ? (
+                            <div
+                              style={{
+                                marginTop: '12px',
+                                backgroundColor: 'var(--proposal-card-color)',
+                                padding: '12px',
+                              }}
+                            >
+                              <ListTitle>BUDGET CHANGE REQUEST VOTES</ListTitle>
+                              <VoteList
+                                votes={votesByBudgetChange}
+                                progressReport
+                                budgetChange
+                              />
+                            </div>
+                          ) : null}
+                        </Col>
+                      </Row>
+                    </>
+                  )}
 
                   {period === 'VOTING' &&
                     status === 'Voting' &&
@@ -769,7 +939,7 @@ function ProgressReportDetailsPage(props) {
                                 }}
                               ></Col>
                             </Row>
-                            {progressDetail?.completedMilestone &&
+                            {selectedProgressReportHasMilestone &&
                               progressDetail?.completedMilestone?.map(
                                 (milestone, index) => {
                                   // console.log("votes of each milestones",votesByProgressReport.filter(x=>Number(x.milestoneId) === milestone.id))
@@ -781,16 +951,14 @@ function ProgressReportDetailsPage(props) {
                                     >
                                       <MilestoneVoteCard
                                         id={milestone?.id}
-                                        reportKey={
-                                         progressReportIpfsKey
-                                        }
+                                        reportKey={progressReportIpfsKey}
                                         name={milestone?.name}
                                         votesByProgressReport={votesByProgressReport?.filter(
                                           x =>
                                             Number(x.milestoneId) ===
                                             milestone.id,
                                         )}
-                                        duration={milestone.duration}
+                                        duration={milestone.completionPeriod}
                                         button={
                                           isPrep &&
                                           votingPRep &&
@@ -1043,69 +1211,6 @@ function ProgressReportDetailsPage(props) {
                       </Container>
                     ))}
 
-                  {!sponsorRequest && (
-                    <>
-                      <Row>
-                          <Col xs='12'>
-                            {votesByProgressReport?.length ? (
-                              <div
-                                style={{
-                                  marginTop: '12px',
-                                  backgroundColor: 'var(--proposal-card-color)',
-                                  padding: '12px',
-                                }}
-                              >
-                                <ListTitle>
-                                  <div
-                                    style={{ padding: '10px', display: 'flex' }}
-                                  >
-                                    <span
-                                      style={{
-                                        marginRight: '4px',
-                                        color: 'var(--proposal-text-color)',
-                                      }}
-                                    >
-                                      VOTES
-                                    </span>
-                                    <InfoIcon
-                                      description={
-                                        'Click on a vote to view more details'
-                                      }
-                                    />
-                                  </div>
-                                </ListTitle>
-                                <VoteList
-                                  votes={votesByProgressReport}
-                                  progressReport
-                                />
-                              </div>
-                            ) : null}
-                          </Col>
-                        </Row>
-
-                      <Row>
-                        <Col xs='12'>
-                          {progressDetail?.projectTermRevision ? (
-                            <div
-                              style={{
-                                marginTop: '12px',
-                                backgroundColor: 'white',
-                                padding: '12px',
-                              }}
-                            >
-                              <ListTitle>BUDGET CHANGE REQUEST VOTES</ListTitle>
-                              <VoteList
-                                votes={votesByBudgetChange}
-                                progressReport
-                                budgetChange
-                              />
-                            </div>
-                          ) : null}
-                        </Col>
-                      </Row>
-                    </>
-                  )}
-
                   <ConfirmationModal
                     show={sponsorConfirmationShow}
                     onHide={() => setSponsorConfirmationShow(false)}
@@ -1160,6 +1265,8 @@ function ProgressReportDetailsPage(props) {
 }
 
 const mapStateToProps = state => ({
+  selectedProgressReportHasMilestone:
+    state.progressReport.selectedProgressReportHasMilestone,
   progressDetail: state.progressReport.progressReportDetail,
   votesByProgressReport: state.progressReport.votesByProgressReport,
   votesByBudgetChange: state.progressReport.votesBudgetChangeByProgressReport,
@@ -1185,7 +1292,6 @@ const mapStateToProps = state => ({
   changeVote: state.progressReport.changeVote,
   votingPRep: state.account.votingPRep,
   isMaintenanceMode: state.fund.isMaintenanceMode,
-  hasMilestone:state.progressReport.selectedProgressReport.hasMilestone,
   selectedProgressReportByIpfs: state.progressReport.selectedProgressReport,
   votingPhase: state.proposals.votingPhase,
 });
