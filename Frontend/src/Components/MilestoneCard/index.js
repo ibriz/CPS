@@ -36,7 +36,7 @@ const MilestoneListCard = ({ milestoneList }) => {
                           Milestone {index + 1}
                         </h6>
                       </div>
-                        <h6 className={styles.smallText}>{milestone.budget/(10**18)} bnUSD</h6>
+                        <h6 className={styles.smallText}>{Number(milestone.budget/(10**18)).toFixed(2)} bnUSD</h6>
                       </div>
 
                       {/* <div className={styles.tabContainer}> */}
