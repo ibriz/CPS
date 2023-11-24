@@ -116,7 +116,7 @@ const MilestoneVoteCard = ({
                         }}
                       >
                         {' '}
-                        {`${Number(milestone.budget/(10**18)).toFixed(2)} bnUSD`}
+                        {`${Number(budget/(10**18)).toFixed(2)} bnUSD`}
                       </p>
                     </div>
                   </div>
