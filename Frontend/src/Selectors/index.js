@@ -215,10 +215,10 @@ export const getProposalPendingProgressReport = createSelector(
   (proposalByAddress, myProposals) => {
     const pendingProposalIPFSList = [];
 
-    const activePausedProposals = myProposals.filter(proposal => {
+    const activePausedProposals = myProposals?.filter(proposal => {
       const status = proposalStatusMapping.find(
         mapping => mapping.status === proposal._status,
-      ).name;
+      )?.name;
       return status === 'Active' || status === 'Paused';
     });
     const proposalPendingProgressReport = activePausedProposals
