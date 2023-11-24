@@ -154,11 +154,12 @@ export default event => {
         case submitProposal:
           console.log('history');
           history.push('/dashboard');
+          history.push('/dashboard');
+          history.goBack();
+          history.goForward();
+          // window.location.reload();
           // history.push('/dashboard');
           // history.push('/proposals');
-          // history.goBack();
-          // history.goForward();
-          // window.location.reload();
           NotificationManager.info('Proposal Creation Request Sent');
 
           getResult(
@@ -184,6 +185,8 @@ export default event => {
           console.log('history');
           history.push('/dashboard');
           history.push('/dashboard');
+          history.goBack();
+          history.goForward();
           // history.push('/proposals');
           // history.goBack();
           // history.goForward();
@@ -213,6 +216,9 @@ export default event => {
         case submitProgressReport:
           console.log('history');
           history.push('/dashboard');
+          history.push('/dashboard');
+          history.goBack();
+          history.goForward();
           // history.push('/dashboard');
           getResult(
             {
@@ -256,6 +262,9 @@ export default event => {
         case sponsor_vote:
           console.log('history');
           history.push('/dashboard');
+          history.push('/dashboard');
+          history.goBack();
+          history.goForward();
           NotificationManager.info('Sponsor Vote Request Sent');
 
           getResult(
@@ -297,6 +306,9 @@ export default event => {
         case approve_sponsor:
           console.log('history');
           history.push('/dashboard');
+          history.push('/dashboard');
+          history.goBack();
+          history.goForward();
           NotificationManager.info('Sponsor request approval request sent');
 
           getResult(
@@ -362,6 +374,9 @@ export default event => {
         case reject_sponsor:
           console.log('history');
           history.push('/dashboard');
+          history.push('/dashboard');
+          history.goBack();
+          history.goForward();
           NotificationManager.info('Sponsor request rejection request sent');
 
           getResult(
@@ -412,8 +427,10 @@ export default event => {
 
         case voteProposal:
           console.group('voteProposal');
-          history.push('/dashboard')
-          history.push('/dashboard')
+          history.push('/dashboard');
+          history.push('/dashboard');
+          history.goBack();
+          history.goForward();
           console.log('voteProposal', payload);
 
           console.groupEnd();
@@ -447,6 +464,10 @@ export default event => {
           // result = await iconService.getTransactionResult().execute();
           break;
         case voteProgressReport:
+          history.push('/dashboard');
+          history.push('/dashboard');
+          history.goBack();
+          history.goForward();
           getResult(
             {
               txHash: payload.result,
@@ -551,7 +572,10 @@ export default event => {
           break;
 
         case claimReward:
-         
+          history.push('/dashboard');
+          history.push('/dashboard');
+          history.goBack();
+          history.goForward();
           getResult(
             {
               txHash: payload.result,
@@ -584,6 +608,9 @@ export default event => {
           break;
 
         case claimSponsorBond:
+          history.push('/dashboard');
+          history.goBack();
+          history.goForward();
           getResult({
             txHash: payload.result,
             failureMessage: 'Sponsor Bond Claim Failed',

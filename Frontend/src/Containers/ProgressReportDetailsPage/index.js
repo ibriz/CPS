@@ -433,113 +433,119 @@ function ProgressReportDetailsPage(props) {
               <div>
                 <InformationCard
                   title={'Project Details'}
-                  data={selectedProgressReportHasMilestone?[
-                    {
-                      key: 'Percentage Completed',
-                      value: progressDetail?.percentageCompleted
-                        ? `${progressDetail?.percentageCompleted}%`
-                        : 'N/A',
-                    },
-                    {
-                      key: 'Time Remaining',
-                      value: progressDetail?.timeRemainingToCompletion
-                        ? `${progressDetail?.timeRemainingToCompletion} months`
-                        : 'N/A',
-                    },
-                    {
-                      key: 'Submitted On',
-                      value: `${new Date(
-                        progressReport?.timestamp / 1000,
-                      ).toLocaleDateString()}`,
-                    },
-                  ]: [
-                    {
-                      key: 'Percentage Completed',
-                      value: progressDetail?.percentageCompleted
-                        ? `${progressDetail?.percentageCompleted}%`
-                        : 'N/A',
-                    },
-                    {
-                      key: 'Time Remaining',
-                      value: progressDetail?.timeRemainingToCompletion
-                        ? `${progressDetail?.timeRemainingToCompletion} months`
-                        : 'N/A',
-                    },
-                    {
-                      key: 'Submitted On',
-                      value: `${new Date(
-                        progressReport?.timestamp / 1000,
-                      ).toLocaleDateString()}`,
-                    },
-                    {
-                      key: 'Stake',
-                      value: ['Voting', 'Approved', 'Rejected'].includes(
-                        status,
-                      ) ? (
-                        <div
-                          style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'space-between',
-                          }}
-                        >
-                          <ProgressBarCombined
-                            approvedPercentage={approvedPercentage}
-                            rejectedPercentage={rejectedPercentage}
-                          />
-
+                  data={
+                    selectedProgressReportHasMilestone
+                      ? [
+                          // {
+                          //   key: 'Percentage Completed',
+                          //   value: progressDetail?.percentageCompleted
+                          //     ? `${progressDetail?.percentageCompleted}%`
+                          //     : 'N/A',
+                          // },
                           {
-                            <Container
-                              style={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                              }}
-                            >
-                              <VoteProgressBar
-                                approvedPercentage={approvedPercentage}
-                                rejectedPercentage={rejectedPercentage}
-                                noProgressBar
-                                placement='bottom'
-                              />
-                            </Container>
-                          }
-                        </div>
-                      ) : null,
-                    },
-                    {
-                      key: 'Voter Count',
-                      value: ['Voting', 'Approved', 'Rejected'].includes(
-                        status,
-                      ) ? (
-                        <div
-                          style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'space-between',
-                          }}
-                        >
-                          <ProgressBarCombined
-                            approvedPercentage={approvedVoterPercentage}
-                            rejectedPercentage={rejectedVotersPercentage}
-                          />
+                            key: 'Time Remaining',
+                            value: progressDetail?.timeRemainingToCompletion
+                              ? `${progressDetail?.timeRemainingToCompletion} months`
+                              : 'N/A',
+                          },
+                          {
+                            key: 'Submitted On',
+                            value: `${new Date(
+                              progressReport?.timestamp / 1000,
+                            ).toLocaleDateString()}`,
+                          },
+                        ]
+                      : [
+                          // {
+                          //   key: 'Percentage Completed',
+                          //   value: progressDetail?.percentageCompleted
+                          //     ? `${progressDetail?.percentageCompleted}%`
+                          //     : 'N/A',
+                          // },
+                          {
+                            key: 'Time Remaining',
+                            value: progressDetail?.timeRemainingToCompletion
+                              ? `${progressDetail?.timeRemainingToCompletion} months`
+                              : 'N/A',
+                          },
+                          {
+                            key: 'Submitted On',
+                            value: `${new Date(
+                              progressReport?.timestamp / 1000,
+                            ).toLocaleDateString()}`,
+                          },
+                          {
+                            key: 'Stake',
+                            value: ['Voting', 'Approved', 'Rejected'].includes(
+                              status,
+                            ) ? (
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  flexDirection: 'column',
+                                  justifyContent: 'space-between',
+                                }}
+                              >
+                                <ProgressBarCombined
+                                  approvedPercentage={approvedPercentage}
+                                  rejectedPercentage={rejectedPercentage}
+                                />
 
-                          <Container
-                            style={{
-                              display: 'flex',
-                              flexDirection: 'row',
-                            }}
-                          >
-                            <VoteProgressBar
-                              approvedPercentage={approvedVoterPercentage}
-                              rejectedPercentage={rejectedVotersPercentage}
-                              noProgressBar
-                              voterCount
-                            />
-                          </Container>
-                        </div>
-                      ) : null,
-                    },
-                  ]}
+                                {
+                                  <Container
+                                    style={{
+                                      display: 'flex',
+                                      flexDirection: 'row',
+                                    }}
+                                  >
+                                    <VoteProgressBar
+                                      approvedPercentage={approvedPercentage}
+                                      rejectedPercentage={rejectedPercentage}
+                                      noProgressBar
+                                      placement='bottom'
+                                    />
+                                  </Container>
+                                }
+                              </div>
+                            ) : null,
+                          },
+                          {
+                            key: 'Voter Count',
+                            value: ['Voting', 'Approved', 'Rejected'].includes(
+                              status,
+                            ) ? (
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  flexDirection: 'column',
+                                  justifyContent: 'space-between',
+                                }}
+                              >
+                                <ProgressBarCombined
+                                  approvedPercentage={approvedVoterPercentage}
+                                  rejectedPercentage={rejectedVotersPercentage}
+                                />
+
+                                <Container
+                                  style={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                  }}
+                                >
+                                  <VoteProgressBar
+                                    approvedPercentage={approvedVoterPercentage}
+                                    rejectedPercentage={
+                                      rejectedVotersPercentage
+                                    }
+                                    noProgressBar
+                                    voterCount
+                                  />
+                                </Container>
+                              </div>
+                            ) : null,
+                          },
+                        ]
+                  }
                 />
 
                 {progressDetail?.projectTermRevision && (
@@ -669,43 +675,6 @@ function ProgressReportDetailsPage(props) {
                     ) : null}
                   </Col>
 
-                  {status === 'Voting' && (
-                    <Row>
-                      <Col xs='12'>
-                        <div
-                          style={{
-                            color: 'var(--proposal-text-color)',
-                            backgroundColor: 'var(--proposal-card-color)',
-                            marginBottom: '5px',
-                            marginTop: '16px',
-                            fontSize: '1.5rem',
-                            lineHeight: '36px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            flexDirection: 'column',
-                            textAlign: 'center',
-                            paddingTop: '50px',
-                            paddingBottom: '50px',
-                            width: '100%',
-                          }}
-                        >
-                          <div>
-                            {period !== 'VOTING'
-                              ? 'Voting starts in '
-                              : 'Voting ends in '}
-                          </div>
-                          <div>
-                            <b>{remainingTimer.day}</b> days{' '}
-                            <b>{remainingTimer.hour}</b> hours{' '}
-                            <b>{remainingTimer.minute}</b> minutes{' '}
-                            <b>{remainingTimer.second}</b> seconds
-                          </div>
-                        </div>
-                      </Col>
-                    </Row>
-                  )}
-
                   {progressDetail?.contributor_address === walletAddress &&
                     status === 'Pending' && (
                       <Row style={{ justifyContent: 'center' }}>
@@ -748,7 +717,7 @@ function ProgressReportDetailsPage(props) {
                           color: 'var(--proposal-text-color)',
                           backgroundColor: 'var(--proposal-card-color)',
                           marginTop: 16,
-                          paddingTop: 8,
+                          padding: '8px 8px',
                         }}
                       >
                         {selectedProgressReportHasMilestone ? (
@@ -771,6 +740,8 @@ function ProgressReportDetailsPage(props) {
                                         milestone?.id,
                                     )}
                                     duration={milestone.completionPeriod}
+                                    budget={milestone.budget}
+                                    status = {milestone.status}
                                     button={
                                       isPrep &&
                                       votingPRep &&
@@ -882,6 +853,43 @@ function ProgressReportDetailsPage(props) {
                         </Col>
                       </Row>
                     </>
+                  )}
+
+                  {status === 'Voting' && (
+                    <Row>
+                      <Col xs='12'>
+                        <div
+                          style={{
+                            color: 'var(--proposal-text-color)',
+                            backgroundColor: 'var(--proposal-card-color)',
+                            marginBottom: '5px',
+                            marginTop: '16px',
+                            fontSize: '1.5rem',
+                            lineHeight: '36px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            flexDirection: 'column',
+                            textAlign: 'center',
+                            paddingTop: '50px',
+                            paddingBottom: '50px',
+                            width: '100%',
+                          }}
+                        >
+                          <div>
+                            {period !== 'VOTING'
+                              ? 'Voting starts in '
+                              : 'Voting ends in '}
+                          </div>
+                          <div>
+                            <b>{remainingTimer.day}</b> days{' '}
+                            <b>{remainingTimer.hour}</b> hours{' '}
+                            <b>{remainingTimer.minute}</b> minutes{' '}
+                            <b>{remainingTimer.second}</b> seconds
+                          </div>
+                        </div>
+                      </Col>
+                    </Row>
                   )}
 
                   {period === 'VOTING' &&

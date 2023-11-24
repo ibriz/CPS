@@ -19,6 +19,8 @@ const MilestoneVoteCard = ({
   name,
   description,
   duration,
+  status,
+  budget,
   button,
   votesByProgressReport,
 }) => {
@@ -80,6 +82,7 @@ const MilestoneVoteCard = ({
                     <MdStars className={styles.icon} />
                   </div>
                   <div className='d-flex flex-column pl-2 pr-4'>
+                  <div style={{gap:16}} className='d-flex pt-2'>
                     <h6
                       style={{
                         fontSize: '18',
@@ -91,7 +94,20 @@ const MilestoneVoteCard = ({
                     >
                       {name}
                     </h6>
-                    <div className='d-flex pt-2'>
+                    <p
+                        style={{
+                          marginBottom: '0',
+                          fontSize: '18',
+                          lineHeight: '1.2',
+                          fontWeight: '600',
+                          color: status ==='0x1'? 'green' : 'red',
+                        }}
+                      >
+                        {`( ${status ==='0x1'? "Completed":"Inomplete"} )`}
+                      </p>
+                  </div>
+
+                    <div style={{gap:16}} className='d-flex pt-2'>
                       <p
                         style={{
                           marginBottom: '0',
@@ -100,7 +116,7 @@ const MilestoneVoteCard = ({
                         }}
                       >
                         {' '}
-                        {`${duration} Month`}
+                        {`${budget/(10**18)} bnUSD`}
                       </p>
                     </div>
                   </div>

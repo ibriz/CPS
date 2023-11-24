@@ -192,6 +192,7 @@ function ProposalDetailsPage(props) {
 
   const {
     proposalDetail,
+    selectedProposalDetailsByHash,
     selectedProposalByIpfs,
     sponsorRequest = false,
     approveSponserRequest,
@@ -479,7 +480,7 @@ function ProposalDetailsPage(props) {
                 <Row xs='12'>
                   <Col>
                     <Header>
-                      {(proposalDetail && proposalDetail.projectName) || 'N/A'}
+                      {(selectedProposalDetailsByHash && selectedProposalDetailsByHash.project_title) || 'N/A'}
                     </Header>
                   </Col>
                 </Row>
@@ -1260,6 +1261,7 @@ function ProposalDetailsPage(props) {
 
 const mapStateToProps = state => ({
   proposalDetail: state.proposals.proposalDetail,
+  selectedProposalDetailsByHash: state.proposals.selectedProposalDetailsbyHash,
   progressReportByProposal: state.progressReport.progressReportByProposal,
   votesByProposal: state.proposals.votesByProposal,
   approvedPercentage: getProposalApprovedPercentage(state),

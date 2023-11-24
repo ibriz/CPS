@@ -25,9 +25,8 @@ function* submitProposalToScoreWorker({ payload }) {
       token: 'bnUSD',
     },
     milestones: payload.proposal.milestones.map((x)=>{
-      const {description,name,budget, ...rest} = x;
-      const updatedBudget = budget * 10**18;
-      return {budget:updatedBudget.toString(),...rest};
+      const {description,name, ...rest} = x;
+      return {...rest};
     }),
   };
 

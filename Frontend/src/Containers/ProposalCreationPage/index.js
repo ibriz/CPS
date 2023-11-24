@@ -755,8 +755,7 @@ const ProposalCreationPage = ({
                           <tr style={{ height: '100%' }} key={index}>
                             <td>{milestone.name}</td>
                             <td>
-                             {findFutureMonth(milestone.completionPeriod)}{' '} after
-                              {milestone.completionPeriod} {' '} Month
+                              {`${findFutureMonth(milestone.completionPeriod)} after ${milestone.completionPeriod} month`}
                               {milestone.completionPeriod > 1 && 's'}
                             </td>
                             <td>{milestone.budget} bnUSD</td>
@@ -998,7 +997,11 @@ const ProposalCreationPage = ({
         size='mdxl'
         onConfirm={() => {
           submitProposal({
-            proposal,
+            proposal: {...proposal,milestones:proposal.milestones.map((x)=>{
+              const {budget, ...rest} = x;
+              const updatedBudget = budget * 10**18;
+              return {budget:updatedBudget.toString(),...rest};
+            })  }
           });
         }}
       >

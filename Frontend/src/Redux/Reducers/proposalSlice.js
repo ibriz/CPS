@@ -41,6 +41,7 @@ export const VotingPhase = {
 };
 
 const initialState = {
+  selectedProposalDetailsbyHash:{},
   numberOfSubmittedProposals: 29,
   totalSubmittedProposalBudget: 1240000,
 
@@ -900,6 +901,7 @@ const proposalSlice = createSlice({
       console.log('Response', action.payload.response);
       let proposal = action.payload.response;
       state.selectedProposalForMigration = action.payload.response;
+      state.selectedProposalDetailsbyHash = action.payload.response;
       state.selectedProposal = {
         _status: proposal[PARAMS.status],
         _proposal_title: proposal[PARAMS.proposalTitle],
