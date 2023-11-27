@@ -49,6 +49,8 @@ import useTimer from 'Hooks/useTimer';
 import Popup from 'Components/Popup';
 import { specialCharacterMessage } from 'Constants';
 
+import IconService from 'icon-sdk-js';
+
 const signingInfoMessage = (
   <div className='text-information'>
     <div>Note:</div>
@@ -230,6 +232,8 @@ const ProposalCreationPage = ({
   const [totalInputBudget, setTotalInputBudget] = React.useState(0);
   const [remainingBudget, setRemainingBudget] = React.useState(0);
   let [prepList, setPrepList] = React.useState([]);
+
+  const {IconConverter} = IconService;
 
   useEffect(() => {
     fetchCPFRemainingFundRequest();
@@ -995,12 +999,13 @@ const ProposalCreationPage = ({
         onHide={() => setSubmissionConfirmationShow(false)}
         heading={'Proposal Submission Confirmation'}
         size='mdxl'
+
         onConfirm={() => {
           submitProposal({
             proposal: {...proposal,milestones:proposal.milestones.map((x)=>{
               const {budget, ...rest} = x;
-              const updatedBudget = budget * 10**18;
-              return {budget:updatedBudget.toString(),...rest};
+              const updatedBudget = IconConverter.toBigNumber(budget*1e18);
+              return {budget:IconConverter.toHex(updatedBudget),...rest};
             })  }
           });
         }}
