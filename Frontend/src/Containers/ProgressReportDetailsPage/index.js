@@ -717,7 +717,6 @@ function ProgressReportDetailsPage(props) {
                           color: 'var(--proposal-text-color)',
                           backgroundColor: 'var(--proposal-card-color)',
                           marginTop: 16,
-                          padding: '8px 8px',
                         }}
                       >
                         {selectedProgressReportHasMilestone ? (
@@ -741,7 +740,7 @@ function ProgressReportDetailsPage(props) {
                                     )}
                                     duration={milestone.completionPeriod}
                                     budget={milestone.budget}
-                                    status = {milestone.status}
+                                    status={milestone.status}
                                     button={
                                       isPrep &&
                                       votingPRep &&
@@ -912,13 +911,33 @@ function ProgressReportDetailsPage(props) {
                         style={{
                           marginTop: '12px',
                           backgroundColor: 'var(--proposal-card-color)',
-                          padding: '12px',
                         }}
                       >
-                        {
+                        {progressDetail?.projectTermRevision && (
+                          <Row>
+                            <Col
+                              xs='12'
+                              style={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                              }}
+                            >
+                              <span
+                                style={{
+                                  color: 'var(--proposal-text-color)',
+                                  fontWeight: 600,
+                                }}
+                              >
+                                Progress Report:
+                              </span>
+                            </Col>
+                          </Row>
+                        )}
+
+                        {progressDetail?.projectTermRevision && (
                           <>
-                            {progressDetail?.projectTermRevision && (
-                              <Row>
+                            <Col xs='12'>
+                              <Row style={{ marginTop: '10px' }}>
                                 <Col
                                   xs='12'
                                   style={{
@@ -932,11 +951,11 @@ function ProgressReportDetailsPage(props) {
                                       fontWeight: 600,
                                     }}
                                   >
-                                    Progress Report:
+                                    Budget Adjustment:
                                   </span>
                                 </Col>
                               </Row>
-                            )}
+                            </Col>
 
                             <Row>
                               <Col
@@ -945,243 +964,124 @@ function ProgressReportDetailsPage(props) {
                                   display: 'flex',
                                   justifyContent: 'center',
                                 }}
-                              ></Col>
-                            </Row>
-                            {selectedProgressReportHasMilestone &&
-                              progressDetail?.completedMilestone?.map(
-                                (milestone, index) => {
-                                  // console.log("votes of each milestones",votesByProgressReport.filter(x=>Number(x.milestoneId) === milestone.id))
-                                  return (
-                                    <div
-                                      key={index}
-                                      id='milestoneArray'
-                                      className='d-flex flex-column'
-                                    >
-                                      <MilestoneVoteCard
-                                        id={milestone?.id}
-                                        reportKey={progressReportIpfsKey}
-                                        name={milestone?.name}
-                                        votesByProgressReport={votesByProgressReport?.filter(
-                                          x =>
-                                            Number(x.milestoneId) ===
-                                            milestone.id,
-                                        )}
-                                        duration={milestone.completionPeriod}
-                                        button={
-                                          isPrep &&
-                                          votingPRep &&
-                                          (!votesByProgressReport.some(
-                                            vote =>
-                                              vote.sponsorAddress ===
-                                              walletAddress,
-                                          ) ||
-                                            changeVoteButton) && (
-                                            <ButtonGroup aria-label='Basic example'>
-                                              {voteOptions.map(voteOption => (
-                                                <Button
-                                                  key={voteOption.value}
-                                                  variant={
-                                                    vote[
-                                                      vote.findIndex(
-                                                        v =>
-                                                          v.id ===
-                                                          milestone.id.toString(),
-                                                      )
-                                                    ]?.vote === voteOption.value
-                                                      ? voteOption.bgColor
-                                                      : isDarkTheme
-                                                      ? 'dark'
-                                                      : 'light'
-                                                  }
-                                                  onClick={() => {
-                                                    const updatedVote = [
-                                                      ...vote,
-                                                    ];
-                                                    const dataIndex =
-                                                      updatedVote.findIndex(
-                                                        v =>
-                                                          v.id ===
-                                                          milestone.id.toString(),
-                                                      );
-                                                    const arrayIndex =
-                                                      dataIndex >= 0
-                                                        ? dataIndex
-                                                        : updatedVote.length;
-                                                    updatedVote[arrayIndex] = {
-                                                      vote: voteOption.value,
-                                                      id: milestone.id.toString(),
-                                                    };
-                                                    setVote(updatedVote);
-                                                    console.log(vote);
-                                                  }}
-                                                >
-                                                  {voteOption.title}
-                                                </Button>
-                                              ))}
-                                            </ButtonGroup>
-                                          )
-                                        }
-                                        description={
-                                          milestone.milestoneDescription
-                                        }
-                                      />
-                                    </div>
-                                  );
-                                },
-                              )}
-
-                            {progressDetail?.projectTermRevision && (
-                              <>
-                                <Col xs='12'>
-                                  <Row style={{ marginTop: '10px' }}>
-                                    <Col
-                                      xs='12'
-                                      style={{
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                      }}
-                                    >
-                                      <span
-                                        style={{
-                                          color: 'var(--proposal-text-color)',
-                                          fontWeight: 600,
-                                        }}
-                                      >
-                                        Budget Adjustment:
-                                      </span>
-                                    </Col>
-                                  </Row>
-                                </Col>
-
-                                <Row>
-                                  <Col
-                                    xs='12'
-                                    style={{
-                                      display: 'flex',
-                                      justifyContent: 'center',
-                                    }}
-                                  >
-                                    <ButtonGroup aria-label='Basic example'>
-                                      {voteOptions.map(voteOption => (
-                                        <Button
-                                          variant={
-                                            vote === voteOption.title
-                                              ? voteOption.bgColor
-                                              : isDarkTheme
-                                              ? 'dark'
-                                              : 'light'
-                                          }
-                                          onClick={() =>
-                                            setVoteProjectTermRevision(
-                                              voteOption.title,
-                                            )
-                                          }
-                                        >
-                                          {voteOption.title}
-                                        </Button>
-                                      ))}
-                                    </ButtonGroup>
-                                  </Col>
-                                </Row>
-                              </>
-                            )}
-                            <Col
-                              xs={24}
-                              style={{
-                                width: '100%',
-                                textAlign: 'center',
-                                color: '#ff0000',
-                              }}
-                            >
-                              {error}
-                            </Col>
-
-                            {isPrep &&
-                              votingPRep &&
-                              (!votesByProgressReport.some(
-                                vote => vote.sponsorAddress === walletAddress,
-                              ) ||
-                                changeVoteButton) && (
-                                <Row style={{ marginTop: '10px' }}>
-                                  <Col xs='12'>
-                                    <span
-                                      style={{
-                                        color: 'var(--proposal-text-color)',
-                                        fontWeight: 600,
-                                      }}
-                                    >
-                                      Explain in brief the reason behind your
-                                      decision:
-                                    </span>
-                                    <InfoIcon
-                                      description={specialCharacterMessage()}
-                                    />
-                                  </Col>
-
-                                  <Col xs='12'>
-                                    <RichTextEditor
-                                      initialData={voteReason}
-                                      required
-                                      onChange={data => setVoteReason(data)}
-                                    />
-                                    <input
-                                      className={styles.fakeInput}
-                                      style={{ left: '15px' }}
-                                      id='voteReason'
-                                    />
-                                  </Col>
-                                </Row>
-                              )}
-                            {progressDetail?.isLastProgressReport && (
-                              <Alert
-                                variant='info'
-                                style={{ marginTop: '10px' }}
                               >
-                                Note: This is the last progress report for this
-                                proposal.
-                              </Alert>
-                            )}
-
-                            {isPrep &&
-                              votingPRep &&
-                              (!votesByProgressReport.some(
-                                vote => vote.sponsorAddress === walletAddress,
-                              ) ||
-                                changeVoteButton) && (
-                                <Row style={{ justifyContent: 'center' }}>
-                                  {!isMaintenanceMode ? (
+                                <ButtonGroup aria-label='Basic example'>
+                                  {voteOptions.map(voteOption => (
                                     <Button
-                                      variant='primary'
-                                      onClick={() => handleVoteSubmission()}
-                                      style={{
-                                        marginTop: '10px',
-                                        width: '150px',
-                                      }}
-                                    >
-                                      Submit Vote
-                                    </Button>
-                                  ) : (
-                                    <Popup
-                                      component={
-                                        <span className='d-inline-block'>
-                                          <Button
-                                            variant='info'
-                                            type='submit'
-                                            disabled
-                                            style={{ pointerEvents: 'none' }}
-                                          >
-                                            SUBMIT
-                                          </Button>
-                                        </span>
+                                      variant={
+                                        vote === voteOption.title
+                                          ? voteOption.bgColor
+                                          : isDarkTheme
+                                          ? 'dark'
+                                          : 'light'
                                       }
-                                      popOverText='You can submit a vote after the maintenance period is over.'
-                                      placement='left'
-                                    />
-                                  )}
-                                </Row>
-                              )}
+                                      onClick={() =>
+                                        setVoteProjectTermRevision(
+                                          voteOption.title,
+                                        )
+                                      }
+                                    >
+                                      {voteOption.title}
+                                    </Button>
+                                  ))}
+                                </ButtonGroup>
+                              </Col>
+                            </Row>
                           </>
-                        }
+                        )}
+                       {error &&  <Col
+                          xs={24}
+                          style={{
+                            width: '100%',
+                            textAlign: 'center',
+                            color: '#ff0000',
+                          }}
+                        >
+                          {error}
+                        </Col> }
+
+                        {isPrep &&
+                          votingPRep &&
+                          (!votesByProgressReport.some(
+                            vote => vote.sponsorAddress === walletAddress,
+                          ) ||
+                            changeVoteButton) && (
+                            <Row style={{ marginTop: '10px' }}>
+                              <Col xs='12'>
+                                <span
+                                  style={{
+                                    color: 'var(--proposal-text-color)',
+                                    fontWeight: 600,
+                                  }}
+                                >
+                                  Explain in brief the reason behind your
+                                  decision:
+                                </span>
+                                <InfoIcon
+                                  description={specialCharacterMessage()}
+                                />
+                              </Col>
+
+                              <Col xs='12'>
+                                <RichTextEditor
+                                  initialData={voteReason}
+                                  required
+                                  onChange={data => setVoteReason(data)}
+                                />
+                                <input
+                                  className={styles.fakeInput}
+                                  style={{ left: '15px' }}
+                                  id='voteReason'
+                                />
+                              </Col>
+                            </Row>
+                          )}
+                        {progressDetail?.isLastProgressReport && (
+                          <Alert variant='info' style={{ marginTop: '10px' }}>
+                            Note: This is the last progress report for this
+                            proposal.
+                          </Alert>
+                        )}
+
+                        {isPrep &&
+                          votingPRep &&
+                          (!votesByProgressReport.some(
+                            vote => vote.sponsorAddress === walletAddress,
+                          ) ||
+                            changeVoteButton) && (
+                            <Row style={{ justifyContent: 'center' }}>
+                              {!isMaintenanceMode ? (
+                                <Button
+                                  variant='primary'
+                                  onClick={() => handleVoteSubmission()}
+                                  style={{
+                                    marginTop: '10px',
+                                    width: '150px',
+                                  }}
+                                >
+                                  Submit Vote
+                                </Button>
+                              ) : (
+                                <Popup
+                                  component={
+                                    <span className='d-inline-block'>
+                                      <Button
+                                        variant='info'
+                                        type='submit'
+                                        disabled
+                                        style={{ pointerEvents: 'none' }}
+                                      >
+                                        SUBMIT
+                                      </Button>
+                                    </span>
+                                  }
+                                  popOverText='You can submit a vote after the maintenance period is over.'
+                                  placement='left'
+                                />
+                              )}
+                            </Row>
+                          )}
+
                         {votesByProgressReport.some(
                           vote => vote.sponsorAddress === walletAddress,
                         ) &&

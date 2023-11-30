@@ -103,7 +103,7 @@ const MilestoneVoteCard = ({
                           color: status ==='0x1'? 'green' : 'red',
                         }}
                       >
-                        {`( ${status ==='0x1'? "Completed":"Inomplete"} )`}
+                        {`( ${status ==='0x1'? "Completed":"Incomplete"} )`}
                       </p>
                   </div>
 
