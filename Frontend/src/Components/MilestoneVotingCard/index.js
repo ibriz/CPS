@@ -147,11 +147,7 @@ const MilestoneVoteCard = ({
                 </p>
                 <p>{description}</p>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <Row>
+              <Row>
         <Col xs='12'>
           {votesByProgressReport?.length ? (
             <div
@@ -178,9 +174,15 @@ const MilestoneVoteCard = ({
                       description={'Click on a vote to view more details'}
                     />
                   </div>
-                  <div
-                    style={{ display: 'flex', gap: 24, padding: '4px 16px' }}
+                  
+                </div>
+              </ListTitle>
+              
+              <VoteList votes={votesByProgressReport} progressReport />
+              <div
+                    style={{width:'100%', alignItems:'center', justifyContent:'center', display: 'flex', gap: 24, padding: '4px 16px' }}
                   >
+                    <p>Stake:</p>
                     <div
                       style={{
                         display: 'flex',
@@ -216,8 +218,11 @@ const MilestoneVoteCard = ({
                       </Container>
                     </div>
 
+                    <p>Voters:</p>
+
                     <div
                       style={{
+                   
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'space-between',
@@ -252,13 +257,15 @@ const MilestoneVoteCard = ({
                       </Container>
                     </div>
                   </div>
-                </div>
-              </ListTitle>
-              <VoteList votes={votesByProgressReport} progressReport />
             </div>
           ) : null}
         </Col>
       </Row>
+            </div>
+          </div>
+        </div>
+      </div>
+     
     </>
   );
 };
