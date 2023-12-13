@@ -190,10 +190,10 @@ const MilestoneVoteCard = ({
                     >
                       <ProgressBarCombined
                         approvedPercentage={IconConverter.toBigNumber(
-                          data?.approved_votes,
+                          ((data?.approved_votes)*100/data?.total_votes).toFixed(2),
                         )}
                         rejectedPercentage={IconConverter.toBigNumber(
-                          data?.rejected_votes,
+                          ((data?.rejected_votes)*100/data?.total_votes).toFixed(2),
                         )}
                       />
 
@@ -205,10 +205,10 @@ const MilestoneVoteCard = ({
                       >
                         <VoteProgressBar
                           approvedPercentage={IconConverter.toBigNumber(
-                            data?.approved_votes,
+                            ((data?.approved_votes)*100/data?.total_votes).toFixed(2),
                           )}
                           rejectedPercentage={IconConverter.toBigNumber(
-                            data?.rejected_votes,
+                            ((data?.rejected_votes)*100/data?.total_votes).toFixed(2),
                           )}
                           noProgressBar
                           // budgetAdjustment
@@ -225,10 +225,10 @@ const MilestoneVoteCard = ({
                     >
                       <ProgressBarCombined
                         approvedPercentage={IconConverter.toBigNumber(
-                          data?.approve_voters,
+                          ((data?.approve_voters)*100/data?.total_voters).toFixed(2),
                         )}
                         rejectedPercentage={IconConverter.toBigNumber(
-                          data?.reject_voters,
+                          ((data?.reject_voters)*100/data?.total_voters).toFixed(2),
                         )}
                       />
 
@@ -240,10 +240,10 @@ const MilestoneVoteCard = ({
                       >
                         <VoteProgressBar
                           approvedPercentage={IconConverter.toBigNumber(
-                            data?.approve_voters,
+                            ((data?.approve_voters)*100/data?.total_voters).toFixed(2),
                           )}
                           rejectedPercentage={IconConverter.toBigNumber(
-                            data?.reject_voters,
+                            ((data?.reject_voters)*100/data?.total_voters).toFixed(2),
                           )}
                           noProgressBar
                           // budgetAdjustment
