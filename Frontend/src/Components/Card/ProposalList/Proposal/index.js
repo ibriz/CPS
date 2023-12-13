@@ -34,6 +34,7 @@ const badgeColor = {
 const Proposal = ({
   proposal,
   selectedTab,
+  sponsorBondPercentage,
   onClick,
   proposalPendingPR = false,
   proposalPendingPRSameList = false,
@@ -45,7 +46,7 @@ const Proposal = ({
 }) => {
   const { isRemainingTimeZero } = useTimer();
   const history = useHistory();
-  // console.log({proposal});
+  console.log({proposal});
   //// For drafts only
   if (
     proposalStatusMapping.find(mapping => mapping.status === proposal._status)
@@ -125,7 +126,7 @@ const Proposal = ({
                   </Budget>
                   {sponsorRequest && (
                     <Budget>
-                      Sponsor bond: {icxFormat(proposal.budget / 10)}{' '}
+                      Sponsor bond:{icxFormat(proposal.budget / 10)}{' '}
                       {proposal.token}
                     </Budget>
                   )}
@@ -154,7 +155,7 @@ const Proposal = ({
                       </Budget>
                       {sponsorRequest && (
                         <Budget>
-                          Sponsor bond: {icxFormat(proposal.budget / 10)}{' '}
+                          Sponsor bond:{icxFormat(proposal.budget / 10)}{' '}
                           {proposal.token}
                         </Budget>
                       )}
@@ -487,6 +488,7 @@ const Proposal = ({
 
 const mapStateToProps = state => ({
   period: state.period.period,
+  sponsorBondPercentage: state.period.sponsorBondPercentage,
 });
 
 export default connect(mapStateToProps)(Proposal);

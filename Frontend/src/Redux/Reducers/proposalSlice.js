@@ -11,6 +11,9 @@ const PARAMS = {
   totalBudget: 'total_budget',
   timestamp: 'timestamp',
   sponsoredTimestamp: 'sponsored_timestamp',
+  sponsorAddress: 'sponsor_address',
+  sponsorDepositAmount: 'sponsor_deposit_amount',
+  sponsorDepositStatus: 'sponsor_deposit_status',
   proposalHash: 'ipfs_hash',
   isMilestone:'isMilestone',
   milestoneCount:'milestoneCount',
@@ -460,26 +463,6 @@ const proposalSlice = createSlice({
       return;
     },
     fetchSponsorRequestsListSuccess(state, action) {
-      // state.proposalList[action.payload.status][action.payload.pageNumber - 1] = action.payload.response.data.map (
-      //     proposal => (
-      //         {
-      //             _status: proposal._status,
-      //             _proposal_title: proposal._proposal_title,
-      //             _contributor_address: proposal._contributor_address,
-      //             budget: proposal.budget,
-      //             _timestamp: proposal._timestamp,
-      //             ipfsHash: proposal._ipfs_hash,
-      //             ipfsKey: proposal._ipfs_key
-      //         }
-      //     )
-      // );
-      // console.log(fetchProposalListSuccess);
-      // // console.log(Math.ceil(IconConverter.toNumber(action.payload.response[0].count) / 10));
-      // console.log(action.payload.status);
-      // // state.totalPages[action.payload.status] = Math.ceil(IconConverter.toNumber(action.payload.response[0].count) / 10)
-      // state.totalPages[action.payload.status] = Math.ceil(IconConverter.toNumber(action.payload.response.count) / 10)
-      // return;
-
       state.sponsorRequestsList[action.payload.status][
         action.payload.pageNumber - 1
       ] = action.payload.response.data
@@ -492,8 +475,13 @@ const proposalSlice = createSlice({
             proposal[PARAMS.totalBudget],
           ).dividedBy(10 ** 18),
 
-          _timestamp: proposal[PARAMS.timestamp],
-          _sponsored_timestamp: proposal[PARAMS.sponsoredTimestamp],
+          timestamp: proposal[PARAMS.timestamp],
+          sponsored_address: proposal[PARAMS.sponsorAddress],
+          sponsored_deposit_amount: IconConverter.toBigNumber(
+            proposal[PARAMS.sponsorDepositAmount],
+          ).dividedBy(10 ** 18),
+          sponsored_deposit_status: proposal[PARAMS.sponsorDepositStatus],
+          sponsored_timestamp: proposal[PARAMS.sponsoredTimestamp],
           ipfsHash: proposal[PARAMS.proposalHash],
           ipfsKey: proposal[PARAMS.proposalHash],
           projectDuration: IconConverter.toBigNumber(

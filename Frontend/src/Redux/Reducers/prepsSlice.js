@@ -57,10 +57,6 @@ const prepsSlice = createSlice({
     },
     fetchSponsorBondPercentageSuccess(state, action) {
       state.sponsorBondPercentage = BigNumber(action.payload).toFixed() / 100;
-      console.log(
-        '=================================',
-        BigNumber(action.payload).toFixed() / 100,
-      );
     },
     fetchSponsorBondPercentageFailure(state, action) {
       console.log('###################################', action.payload);

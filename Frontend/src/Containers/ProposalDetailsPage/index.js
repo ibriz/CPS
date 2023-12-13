@@ -120,36 +120,80 @@ const LoadingDiv = styled.div`
   width: 100%;
 `;
 
-const sponsorNote = (
-  <div className='text-information' style={{ fontSize: '0.9rem' }}>
-    <div>Note:</div>
-    <div className='intendation'>
-      1) If you accept the sponsor request you will need to submit 10% of the
-      total budget as sponsor bond.{' '}
-    </div>
-    <div className='intendation'>
-      2) If the proposal gets rejected in the voting period you will get your
-      sponsor bond back
-    </div>
-    <div className='intendation'>
-      3) If the proposal gets accepted in the voting period, you will get
-      sponsor reward every month for the project duration.{' '}
-    </div>
-    <div className='intendation'>
-      4) If the proposal gets paused (if the progress report for the proposal
-      gets rejected), you will stop receiving the sponsor reward.
-    </div>
-    <div className='intendation'>
-      5) If the proposal gets disqualified (if the progress report for the
-      proposal gets rejected 2 times in a row), you will stop receiving the
-      sponsor reward and will lose the sponsor bond you initially submitted.{' '}
-    </div>
-  </div>
-);
+
 
 function ProposalDetailsPage(props) {
+  const {
+    proposalDetail,
+    selectedProposalDetailsByHash,
+    selectedProposalByIpfs,
+    sponsorRequest = false,
+    approveSponserRequest,
+    rejectSponsorRequest,
+    voting = false,
+    voteProposal,
+    progressReportByProposal,
+    votesByProposal,
+    fetchVoteResultRequest,
+    approvedPercentage,
+    sponsorBondPercentage,
+    abstainedPercentage,
+    abstainVoterPercentage,
+    fetchProgressReportByProposalRequest,
+    period,
+    remainingTime,
+    approvedVoterPercentage,
+    fetchProposalDetail,
+    walletAddress,
+    rejectedPercentage,
+    rejectedVoterPercentage,
+    fetchPrepsRequest,
+    preps,
+    sponsorMessage,
+    isPrep,
+    emptyProgressReportDetailRequest,
+    emptyProposalDetailRequest,
+    ipfsError,
+    changeVote,
+    fetchChangeVoteRequest,
+    votingPRep,
+    isMaintenanceMode,
+    fetchMaintenanceModeRequest,
+    fetchProposalByIpfsRequest,
+    votingPhase,
+    ...remainingProps
+  } = props;
   // const isDark = useSelector(state => state.theme.isDark);
   // console.log({ isDark });
+
+  const sponsorNote = (
+    <div className='text-information' style={{ fontSize: '0.9rem' }}>
+      <div>Note:</div>
+      <div className='intendation'>
+        1) If you accept the sponsor request you will need to submit {sponsorBondPercentage*100}% of the
+        total budget as sponsor bond.{' '}
+      </div>
+      <div className='intendation'>
+        2) If the proposal gets rejected in the voting period you will get your
+        sponsor bond back
+      </div>
+      <div className='intendation'>
+        3) If the proposal gets accepted in the voting period, you will get
+        sponsor reward every month for the project duration.{' '}
+      </div>
+      <div className='intendation'>
+        4) If the proposal gets paused (if the progress report for the proposal
+        gets rejected), you will stop receiving the sponsor reward.
+      </div>
+      <div className='intendation'>
+        5) If the proposal gets disqualified (if the progress report for the
+        proposal gets rejected 2 times in a row), you will stop receiving the
+        sponsor reward and will lose the sponsor bond you initially submitted.{' '}
+      </div>
+    </div>
+  );
+
+
   const isDarkTheme = localStorage.getItem('theme') === 'dark';
   const voteOptions = [
     { title: 'Approve', bgColor: 'success' },
@@ -190,46 +234,7 @@ function ProposalDetailsPage(props) {
     setSelectedProgressReport(porgressReport);
   };
 
-  const {
-    proposalDetail,
-    selectedProposalDetailsByHash,
-    selectedProposalByIpfs,
-    sponsorRequest = false,
-    approveSponserRequest,
-    rejectSponsorRequest,
-    voting = false,
-    voteProposal,
-    progressReportByProposal,
-    votesByProposal,
-    sponsorBondPercentage,
-    fetchVoteResultRequest,
-    approvedPercentage,
-    abstainedPercentage,
-    abstainVoterPercentage,
-    fetchProgressReportByProposalRequest,
-    period,
-    remainingTime,
-    approvedVoterPercentage,
-    fetchProposalDetail,
-    walletAddress,
-    rejectedPercentage,
-    rejectedVoterPercentage,
-    fetchPrepsRequest,
-    preps,
-    sponsorMessage,
-    isPrep,
-    emptyProgressReportDetailRequest,
-    emptyProposalDetailRequest,
-    ipfsError,
-    changeVote,
-    fetchChangeVoteRequest,
-    votingPRep,
-    isMaintenanceMode,
-    fetchMaintenanceModeRequest,
-    fetchProposalByIpfsRequest,
-    votingPhase,
-    ...remainingProps
-  } = props;
+ 
 
   const proposalIpfsKey = useParams().id;
 
@@ -1209,6 +1214,7 @@ function ProposalDetailsPage(props) {
                             Are you sure you want to accept the sponsor request?
                           </div>
                           {sponsorNote}
+                         {proposal?.budget && <p style={{fontSize:18, marginTop:16}}>You will deposit <strong>{Number(proposal?.budget)*sponsorBondPercentage} bnUSD</strong>.</p> }
                         </>
                       ) : (
                         <span>
