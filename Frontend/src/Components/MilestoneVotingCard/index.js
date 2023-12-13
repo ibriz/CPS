@@ -147,11 +147,7 @@ const MilestoneVoteCard = ({
                 </p>
                 <p>{description}</p>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <Row>
+              <Row>
         <Col xs='12'>
           {votesByProgressReport?.length ? (
             <div
@@ -178,9 +174,15 @@ const MilestoneVoteCard = ({
                       description={'Click on a vote to view more details'}
                     />
                   </div>
-                  <div
-                    style={{ display: 'flex', gap: 24, padding: '4px 16px' }}
+                  
+                </div>
+              </ListTitle>
+              
+              <VoteList votes={votesByProgressReport} progressReport />
+              <div
+                    style={{width:'100%', alignItems:'center', justifyContent:'center', display: 'flex', gap: 24, padding: '4px 16px' }}
                   >
+                    <p>Stake:</p>
                     <div
                       style={{
                         display: 'flex',
@@ -190,10 +192,10 @@ const MilestoneVoteCard = ({
                     >
                       <ProgressBarCombined
                         approvedPercentage={IconConverter.toBigNumber(
-                          data?.approved_votes,
+                          ((data?.approved_votes)*100/data?.total_votes).toFixed(2),
                         )}
                         rejectedPercentage={IconConverter.toBigNumber(
-                          data?.rejected_votes,
+                          ((data?.rejected_votes)*100/data?.total_votes).toFixed(2),
                         )}
                       />
 
@@ -205,10 +207,10 @@ const MilestoneVoteCard = ({
                       >
                         <VoteProgressBar
                           approvedPercentage={IconConverter.toBigNumber(
-                            data?.approved_votes,
+                            ((data?.approved_votes)*100/data?.total_votes).toFixed(2),
                           )}
                           rejectedPercentage={IconConverter.toBigNumber(
-                            data?.rejected_votes,
+                            ((data?.rejected_votes)*100/data?.total_votes).toFixed(2),
                           )}
                           noProgressBar
                           // budgetAdjustment
@@ -216,8 +218,11 @@ const MilestoneVoteCard = ({
                       </Container>
                     </div>
 
+                    <p>Voters:</p>
+
                     <div
                       style={{
+                   
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'space-between',
@@ -225,10 +230,10 @@ const MilestoneVoteCard = ({
                     >
                       <ProgressBarCombined
                         approvedPercentage={IconConverter.toBigNumber(
-                          data?.approve_voters,
+                          ((data?.approve_voters)*100/data?.total_voters).toFixed(2),
                         )}
                         rejectedPercentage={IconConverter.toBigNumber(
-                          data?.reject_voters,
+                          ((data?.reject_voters)*100/data?.total_voters).toFixed(2),
                         )}
                       />
 
@@ -240,10 +245,10 @@ const MilestoneVoteCard = ({
                       >
                         <VoteProgressBar
                           approvedPercentage={IconConverter.toBigNumber(
-                            data?.approve_voters,
+                            ((data?.approve_voters)*100/data?.total_voters).toFixed(2),
                           )}
                           rejectedPercentage={IconConverter.toBigNumber(
-                            data?.reject_voters,
+                            ((data?.reject_voters)*100/data?.total_voters).toFixed(2),
                           )}
                           noProgressBar
                           // budgetAdjustment
@@ -252,13 +257,15 @@ const MilestoneVoteCard = ({
                       </Container>
                     </div>
                   </div>
-                </div>
-              </ListTitle>
-              <VoteList votes={votesByProgressReport} progressReport />
             </div>
           ) : null}
         </Col>
       </Row>
+            </div>
+          </div>
+        </div>
+      </div>
+     
     </>
   );
 };
