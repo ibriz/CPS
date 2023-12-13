@@ -40,6 +40,7 @@ const VoteProgressBar = ({
         <ProgressBarCombined
           approvedPercentage={approvedPercentage}
           rejectedPercentage={rejectedPercentage}
+          abstainedPercentage={abstainedPercentage}
         />
       )}
     </>

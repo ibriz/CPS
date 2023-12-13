@@ -300,6 +300,14 @@ const proposalSlice = createSlice({
               total: proposal[PARAMS.totalVoters],
               actual: proposal[PARAMS.approvedVoters],
             }),
+            abstainedPercentage: calculatePercentage({
+              total: proposal[PARAMS.totalVotes],
+              actual: proposal[PARAMS.abstainedVotes],
+            }),
+            abstainVotesPercentageCount: calculatePercentage({
+              total: proposal[PARAMS.totalVoters],
+              actual: proposal[PARAMS.abstainVoters],
+            }),
 
             rejectedPercentage: calculatePercentage({
               total: proposal[PARAMS.totalVotes],
