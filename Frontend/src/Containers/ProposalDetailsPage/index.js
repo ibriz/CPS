@@ -906,6 +906,7 @@ function ProposalDetailsPage(props) {
                             style={{ marginTop: '15px' }}
                           >
                             {sponsorNote}
+                            {proposal?.budget && <p style={{fontSize:18, marginTop:16, color: 'var(--card-comment-color)'}}>Sponsor Bond Amount:   <strong>{Number(proposal?.budget)*sponsorBondPercentage} bnUSD</strong></p> }
                           </Alert>
 
                           <Row style={{ justifyContent: 'center' }}>
@@ -1214,7 +1215,7 @@ function ProposalDetailsPage(props) {
                             Are you sure you want to accept the sponsor request?
                           </div>
                           {sponsorNote}
-                         {proposal?.budget && <p style={{fontSize:18, marginTop:16}}>You will deposit <strong>{Number(proposal?.budget)*sponsorBondPercentage} bnUSD</strong>.</p> }
+                         {proposal?.budget && <p style={{fontSize:18, marginTop:16}}>Sponsor Bond Amount:  <strong>{Number(proposal?.budget)*sponsorBondPercentage} bnUSD</strong>.</p> }
                         </>
                       ) : (
                         <span>
