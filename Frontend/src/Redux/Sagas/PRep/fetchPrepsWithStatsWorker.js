@@ -26,16 +26,16 @@ function* fetchPrepsWithStatsWorker({ payload }) {
       const remainingProposal = yield call(callKeyStoreWallet, {
         method: 'getRemainingProject',
         params: {
-          _wallet_address: prep.address,
-          _project_type: 'proposal',
+          walletAddress: prep.address,
+          projectType: 'proposal',
         },
       });
 
       const remainingPR = yield call(callKeyStoreWallet, {
         method: 'getRemainingProject',
         params: {
-          _wallet_address: prep.address,
-          _project_type: 'progress_reports',
+          walletAddress: prep.address,
+          projectType: 'progress_reports',
         },
       });
 
