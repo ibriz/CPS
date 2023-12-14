@@ -126,8 +126,7 @@ const Proposal = ({
                   </Budget>
                   {sponsorRequest && (
                     <Budget>
-                      Sponsor bond:{icxFormat(proposal.budget / 10)}{' '}
-                      {proposal.token}
+                      {proposal.sponsored_deposit_amount > 0 ? "Sponsor Bond: "+ icxFormat(proposal.sponsored_deposit_amount) + " " + proposal.token  : ''}
                     </Budget>
                   )}
                 </>
@@ -155,8 +154,7 @@ const Proposal = ({
                       </Budget>
                       {sponsorRequest && (
                         <Budget>
-                          Sponsor bond:{icxFormat(proposal.budget / 10)}{' '}
-                          {proposal.token}
+                          {proposal.budget > 0 ? "Sponsor Bond: "+ icxFormat(proposal.budget / 10) + ' ' + proposal.token : ''}
                         </Budget>
                       )}
                     </>
@@ -338,8 +336,7 @@ const Proposal = ({
                       </Budget>
                       {sponsorRequest && (
                         <Budget>
-                          Sponsor bond: {icxFormat(proposal.budget / 10)}{' '}
-                          {proposal.token}
+                          {proposal.budget > 0 ? "Sponsor Bond: "+ icxFormat(proposal.budget / 10) + ' ' + proposal.token : ''}
                         </Budget>
                       )}
                     </>
