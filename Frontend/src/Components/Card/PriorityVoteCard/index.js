@@ -51,9 +51,11 @@ const PriorityVoteCard = ({
             {emptyListMessage || `No ${selectedTab} Proposals`}
           </span>
         )}
-        <Alert variant='info'>
-          Note: 1 = Highest Priority ... N = Lowest Priority
-        </Alert>
+        {Boolean(proposals.length !==0) && (
+          <Alert variant='info'>
+            Note: 1 = Highest Priority ... N = Lowest Priority
+          </Alert>
+        )}
         {priorityVoteList.length > 0 && (
           <div style={{ width: '100%', textAlign: 'end' }}>
             <Button

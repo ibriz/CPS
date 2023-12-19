@@ -183,7 +183,7 @@ const Dashboard = ({
             ? totalCountSponsorRequests.Pending
             : priorityVote
             ? remainingVotesProposal.length + remainingVotesPR.length
-            : remainingVotesProposal.length + remainingVotesPR.length + 1,
+            : remainingVotesProposal.length + remainingVotesPR.length,
       },
       {
         title: `Remaining Time in ${

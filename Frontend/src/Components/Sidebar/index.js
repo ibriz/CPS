@@ -56,7 +56,7 @@ const Aside = ({
     setNotificationsCount(
       priorityVote
         ? remainingVotesProposal.length + remainingVotesPR.length
-        : remainingVotesProposal.length + remainingVotesPR.length + 1,
+        : remainingVotesProposal.length + remainingVotesPR.length,
     );
   }, [priorityVote, remainingVotesPR, remainingVotesProposal, period]);
 
@@ -199,7 +199,7 @@ const Aside = ({
                 {
                   <span style={{ display:'flex',justifyContent:'space-between' }}>
                     Dashboard
-                    {period === 'VOTING' && (
+                    {period === 'VOTING' && notificationsCount!==0 && (
                       <span
                         style={{
                          height:'fit-content',
