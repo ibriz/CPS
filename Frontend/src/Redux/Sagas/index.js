@@ -72,6 +72,7 @@ import {
   fetchAvailableFundWorker,
   fetchSponsorDepositAmountWorker,
   fetchRemainingSwapAmountWorker,
+  fetchPrePaymentAmountWorker,
 } from './Fund';
 
 import {
@@ -169,6 +170,7 @@ import {
   fetchSponsorDepositAmountRequest,
   fetchMaintenanceModeRequest,
   fetchRemainingSwapAmountRequest,
+  fetchPrePaymentAmountRequest,
 } from '../Reducers/fundSlice';
 import {
   fetchUserDataRequest,
@@ -388,6 +390,7 @@ function* rootSaga() {
     fetchPriorityVotingRequest.type,
     fetchPriorityVotingStatusWorker,
   );
+  yield takeEvery(fetchPrePaymentAmountRequest.type, fetchPrePaymentAmountWorker);
 }
 
 export default rootSaga;

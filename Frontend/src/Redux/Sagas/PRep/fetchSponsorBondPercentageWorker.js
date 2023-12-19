@@ -6,7 +6,6 @@ import {
 import { callKeyStoreWallet } from '../../ICON/utils';
 
 function* fetchSponsorBondPercentageWorker() {
-  console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
   try {
     const response = yield call(callKeyStoreWallet, {
       method: 'getSponsorBondPercentage',

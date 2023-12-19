@@ -1,11 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { IconConverter } from 'icon-sdk-js';
+const BigNumber = require('bignumber.js');
 
 const initialState = {
   cpfRemainingFunds: { icx: 0, bnUSD: 0 },
   isMaintenanceMode: false,
   remainingSwapAmount: 0,
-
+  prePaymentPercentage: 0,
   cpsTreasuryScoreAddress: null,
   cpfTreasuryScoreAddress: null,
 
@@ -25,6 +26,19 @@ const fundSlice = createSlice({
   name: 'fund',
   initialState,
   reducers: {
+    fetchPrePaymentAmountRequest(state) {
+      return;
+    },
+    fetchPrePaymentAmountSuccess(state, action) {
+      console.log('Prepayment', action.payload)
+      state.prePaymentPercentage = BigNumber(action.payload).toFixed() / 100;
+      
+
+      return;
+    },
+    fetchPrePaymentAmountFailure(state) {
+      return;
+    },
     fetchCPFTreasuryScoreAddressRequest() {
       return;
     },
@@ -287,5 +301,8 @@ export const {
   fetchSponsorDepositAmountRequest,
   fetchSponsorDepositAmountSuccess,
   fetchSponsorDepositAmountFailure,
+  fetchPrePaymentAmountRequest,
+  fetchPrePaymentAmountSuccess,
+  fetchPrePaymentAmountFailure
 } = fundSlice.actions;
 export default fundSlice.reducer;

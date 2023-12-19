@@ -11,7 +11,7 @@ import Footer from 'Components/Footer';
 import { Helmet } from 'react-helmet';
 import UnsubscribePage from 'Containers/UnsubscribePage';
 import VerifiedPage from 'Containers/VerifiedPage';
-import { fetchbnUSDAddressRequest } from './Redux/Reducers/fundSlice';
+import { fetchbnUSDAddressRequest,fetchPrePaymentAmountRequest,  fetchCPSTreasuryScoreAddressRequest, } from './Redux/Reducers/fundSlice';
 import LandingPage from './Containers/LandingPage';
 import { useDispatch } from 'react-redux';
 import { setTheme } from './Redux/Reducers/themeSlice';
@@ -20,7 +20,10 @@ import { fetchSponsorBondPercentageRequest } from './Redux/Reducers/prepsSlice';
 function App({
   address,
   fetchUserDataRequest,
+  fetchCPSTreasuryScoreAddressRequest,
+  cpsTreasuryScoreAddress,
   fetchSponsorBondPercentageRequest,
+  fetchPrePaymentAmountRequest,
   fetchUserPromptRequest,
   fetchbnUSDAddressRequest,
 }) {
@@ -72,9 +75,14 @@ function App({
 
   setThemeAtStartup();
   useEffect(() => {
+    fetchCPSTreasuryScoreAddressRequest();
     fetchSponsorBondPercentageRequest();
     fetchbnUSDAddressRequest();
+  
   }, []);
+  useEffect(() => {
+    fetchPrePaymentAmountRequest();
+  }, [cpsTreasuryScoreAddress]);
   return (
     <>
       <Switch>
@@ -118,6 +126,7 @@ function App({
 const mapStateToProps = state => {
   return {
     address: state.account.address,
+    cpsTreasuryScoreAddress: state.fund.cpsTreasuryScoreAddress,
   };
 };
 
@@ -125,7 +134,9 @@ const mapDispatchToProps = {
   fetchUserDataRequest,
   fetchUserPromptRequest,
   fetchSponsorBondPercentageRequest,
+  fetchCPSTreasuryScoreAddressRequest,
   fetchbnUSDAddressRequest,
+  fetchPrePaymentAmountRequest
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

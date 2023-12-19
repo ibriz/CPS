@@ -211,6 +211,7 @@ const ProposalCreationPage = ({
   isMaintenanceMode,
   fetchMaintenanceModeRequest,
   remainingSwapAmount,
+  prePaymentPercentage,
 }) => {
   const { draftProposal, isDraft } = location;
   const { period } = useTimer();
@@ -339,7 +340,7 @@ const ProposalCreationPage = ({
       );
     setTotalNumberOfMonthsInMilestone(totalMonths);
 
-    const milestoneBudget = proposal.totalBudget - 0.1 * proposal.totalBudget;
+    const milestoneBudget = proposal.totalBudget - (prePaymentPercentage * proposal.totalBudget);
     setTotalMilestoneBudget(milestoneBudget);
     const inputBudget = proposal.milestones.reduce(
       (sum, milestone) => sum + Number(milestone.budget),
@@ -797,13 +798,13 @@ const ProposalCreationPage = ({
                         ))}
                         <tr>
                           <td colspan='2'>
-                            <p>Pre-Payment Amount (10% of Budget)</p>
+                            <p>{`Pre-Payment Amount (${prePaymentPercentage*100}% of Budget)`}</p>
                           </td>
 
                           <td>
                             <p>
                               {/* <b>300 bnUSD</b> */}
-                              <b>{0.1*proposal.totalBudget} bnUSD</b>
+                              <b>{prePaymentPercentage*proposal.totalBudget} bnUSD</b>
                             </p>
                           </td>
                         </tr>
@@ -815,7 +816,7 @@ const ProposalCreationPage = ({
                             <b></b>
                           </td>
                           <td>
-                            <b>{totalInputBudget + 0.1*proposal.totalBudget} bnUSD</b>
+                            <b>{totalInputBudget + (prePaymentPercentage*proposal.totalBudget)} bnUSD</b>
                           </td>
                         </tr>
                       </>
@@ -1053,6 +1054,8 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const mapStateToProps = state => ({
+  sponsorBondPercentage:state.preps.sponsorBondPercentage,
+  prePaymentPercentage:state.fund.prePaymentPercentage,
   submittingProposal: state.proposals.submittingProposal,
   preps: state.preps.preps,
   walletAddress: state.account.address,

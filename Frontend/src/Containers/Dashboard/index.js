@@ -14,6 +14,7 @@ import {
   claimReward,
   fetchSponsorBondRequest,
   claimSponsorBondReward,
+  fetchPrePaymentAmountRequest,
   fetchSponsorDepositAmountRequest,
 } from 'Redux/Reducers/fundSlice';
 import {
@@ -27,7 +28,6 @@ import SponsorRequestsCard from 'Components/SponsorRequestsCard';
 import VotingCard from 'Components/VotingCard';
 import {
   fetchExpectedGrantRequest,
-  fetchCPSTreasuryScoreAddressRequest,
 } from 'Redux/Reducers/fundSlice';
 import { setLoginButtonClicked } from 'Redux/Reducers/accountSlice';
 import congratulationsImg from '../../Assets/Images/congratulations.png';
@@ -225,11 +225,10 @@ const Dashboard = ({
   useEffect(() => {
     fetchCPFTreasuryScoreAddressRequest();
     fetchProjectAmountsRequest();
-    fetchCPSTreasuryScoreAddressRequest();
   }, [
-    fetchCPFTreasuryScoreAddressRequest,
     fetchProjectAmountsRequest,
     fetchExpectedGrantRequest,
+
   ]);
 
   useEffect(() => {
@@ -653,7 +652,6 @@ const mapDispatchToProps = {
   fetchCPFRemainingFundRequest,
   fetchProjectAmountsRequest,
   fetchExpectedGrantRequest,
-  fetchCPSTreasuryScoreAddressRequest,
   claimReward,
   claimSponsorBondReward,
   fetchSponsorBondRequest,
