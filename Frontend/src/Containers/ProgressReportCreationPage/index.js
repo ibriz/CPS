@@ -960,9 +960,14 @@ const ProgressReportCreationPage = ({
         heading={'Progress Report Submission Confirmation'}
         size='mdxl'
         onConfirm={() => {
-          submitProgressReport({
-            progressReport,
-          });
+          if(progressReport.completedMilestone.length === 0){
+            NotificationManager.error('Please select atleast one milestone');
+            return;
+          }else{
+            submitProgressReport({
+              progressReport,
+            });
+          }
         }}
       >
         {
