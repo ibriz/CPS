@@ -129,6 +129,7 @@ function ProgressReportDetailsPage(props) {
   const {
     progressDetail,
     selectedProgressReportHasMilestone,
+    selectedProgressReportCompletedMilestone,
     proposal,
     sponsorRequest = false,
     approveSponserRequest,
@@ -854,43 +855,6 @@ function ProgressReportDetailsPage(props) {
                     </>
                   )}
 
-                  {status === 'Voting' && (
-                    <Row>
-                      <Col xs='12'>
-                        <div
-                          style={{
-                            color: 'var(--proposal-text-color)',
-                            backgroundColor: 'var(--proposal-card-color)',
-                            marginBottom: '5px',
-                            marginTop: '16px',
-                            fontSize: '1.5rem',
-                            lineHeight: '36px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            flexDirection: 'column',
-                            textAlign: 'center',
-                            paddingTop: '50px',
-                            paddingBottom: '50px',
-                            width: '100%',
-                          }}
-                        >
-                          <div>
-                            {period !== 'VOTING'
-                              ? 'Voting starts in '
-                              : 'Voting ends in '}
-                          </div>
-                          <div>
-                            <b>{remainingTimer.day}</b> days{' '}
-                            <b>{remainingTimer.hour}</b> hours{' '}
-                            <b>{remainingTimer.minute}</b> minutes{' '}
-                            <b>{remainingTimer.second}</b> seconds
-                          </div>
-                        </div>
-                      </Col>
-                    </Row>
-                  )}
-
                   {period === 'VOTING' &&
                     status === 'Voting' &&
                     remainingTime > 0 &&
@@ -910,6 +874,7 @@ function ProgressReportDetailsPage(props) {
                         fluid
                         style={{
                           marginTop: '12px',
+                          padding: '16px',
                           backgroundColor: 'var(--proposal-card-color)',
                         }}
                       >
@@ -989,24 +954,52 @@ function ProgressReportDetailsPage(props) {
                             </Row>
                           </>
                         )}
-                       {error &&  <Col
-                          xs={24}
-                          style={{
-                            width: '100%',
-                            textAlign: 'center',
-                            color: '#ff0000',
-                          }}
-                        >
-                          {error}
-                        </Col> }
+                        {error && (
+                          <Col
+                            xs={24}
+                            style={{
+                              width: '100%',
+                              textAlign: 'center',
+                              color: '#ff0000',
+                            }}
+                          >
+                            {error}
+                          </Col>
+                        )}
 
+                        {selectedProgressReportCompletedMilestone === '0x0' && (
+                          <Row
+                            style={{
+                              color: 'var(--proposal-text-color)',
+                              backgroundColor: 'var(--proposal-card-color)',
+                              marginBottom: '5px',
+                              marginTop: '16px',
+                              fontSize: '1.5rem',
+                              lineHeight: '36px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              flexDirection: 'column',
+                              textAlign: 'center',
+                              paddingTop: '50px',
+                              paddingBottom: '50px',
+                              width: '100%',
+                            }}
+                          >
+                            This progress report doesnot have any completed
+                            milestone.So, you are not required to vote this
+                            progress report.
+                          </Row>
+                        )}
                         {isPrep &&
                           votingPRep &&
                           (!votesByProgressReport.some(
                             vote => vote.sponsorAddress === walletAddress,
                           ) ||
-                            changeVoteButton) && (
-                            <Row style={{ marginTop: '10px' }}>
+                            changeVoteButton) &&
+                          selectedProgressReportCompletedMilestone !==
+                            '0x0' && (
+                            <Row>
                               <Col xs='12'>
                                 <span
                                   style={{
@@ -1034,16 +1027,60 @@ function ProgressReportDetailsPage(props) {
                                   id='voteReason'
                                 />
                               </Col>
+                              <Row
+                                style={{
+                                  width: '100%',
+                                  display: 'flex',
+                                  justifyContent: 'center',
+                                }}
+                              >
+                                {!isMaintenanceMode ? (
+                                  <Button
+                                    variant='primary'
+                                    onClick={() => handleVoteSubmission()}
+                                    style={{
+                                      marginTop: '10px',
+                                      width: '150px',
+                                    }}
+                                  >
+                                    Submit Vote
+                                  </Button>
+                                ) : (
+                                  <Popup
+                                    component={
+                                      <span className='d-inline-block'>
+                                        <Button
+                                          variant='info'
+                                          type='submit'
+                                          disabled
+                                          style={{ pointerEvents: 'none' }}
+                                        >
+                                          SUBMIT
+                                        </Button>
+                                      </span>
+                                    }
+                                    popOverText='You can submit a vote after the maintenance period is over.'
+                                    placement='left'
+                                  />
+                                )}
+                              </Row>
                             </Row>
                           )}
                         {progressDetail?.isLastProgressReport && (
-                          <Alert variant='info' style={{ marginTop: '10px' }}>
+                          <Alert
+                            variant='info'
+                            style={{
+                              marginTop: '10px',
+                              display: 'flex',
+                              justifyContent: 'center',
+                            }}
+                          >
                             Note: This is the last progress report for this
                             proposal.
                           </Alert>
                         )}
 
-                        {isPrep &&
+                        {/* {isPrep &&
                           votingPRep &&
                           (!votesByProgressReport.some(
                             vote => vote.sponsorAddress === walletAddress,
@@ -1080,7 +1117,7 @@ function ProgressReportDetailsPage(props) {
                                 />
                               )}
                             </Row>
-                          )}
+                          )} */}
 
                         {votesByProgressReport.some(
                           vote => vote.sponsorAddress === walletAddress,
@@ -1118,6 +1155,43 @@ function ProgressReportDetailsPage(props) {
                           )}
                       </Container>
                     ))}
+
+                  {status === 'Voting' && (
+                    <Row>
+                      <Col xs='12'>
+                        <div
+                          style={{
+                            color: 'var(--proposal-text-color)',
+                            backgroundColor: 'var(--proposal-card-color)',
+                            marginBottom: '5px',
+                            marginTop: '16px',
+                            fontSize: '1.5rem',
+                            lineHeight: '36px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            flexDirection: 'column',
+                            textAlign: 'center',
+                            paddingTop: '50px',
+                            paddingBottom: '50px',
+                            width: '100%',
+                          }}
+                        >
+                          <div>
+                            {period !== 'VOTING'
+                              ? 'Voting starts in '
+                              : 'Voting ends in '}
+                          </div>
+                          <div>
+                            <b>{remainingTimer.day}</b> days{' '}
+                            <b>{remainingTimer.hour}</b> hours{' '}
+                            <b>{remainingTimer.minute}</b> minutes{' '}
+                            <b>{remainingTimer.second}</b> seconds
+                          </div>
+                        </div>
+                      </Col>
+                    </Row>
+                  )}
 
                   <ConfirmationModal
                     show={sponsorConfirmationShow}
@@ -1173,6 +1247,8 @@ function ProgressReportDetailsPage(props) {
 }
 
 const mapStateToProps = state => ({
+  selectedProgressReportCompletedMilestone:
+    state.progressReport.selectedProgressReportCompletedMilestone,
   selectedProgressReportHasMilestone:
     state.progressReport.selectedProgressReportHasMilestone,
   progressDetail: state.progressReport.progressReportDetail,
