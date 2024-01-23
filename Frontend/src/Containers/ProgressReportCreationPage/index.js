@@ -764,7 +764,7 @@ const ProgressReportCreationPage = ({
                       return (
                         <div
                           key={option.id}
-                          class='d-flex custom-control custom-checkbox pl-4 pr-4'
+                          className='d-flex custom-control custom-checkbox pl-4 pr-4'
                         >
                           <Checkbox
                             proposalKey={`${selectedProposalForProgressReport.ipfsHash}`}
@@ -776,7 +776,7 @@ const ProgressReportCreationPage = ({
                             onChange={() => handleCheckboxChange(option.id)}
                           />
                           <label
-                            class='custom-control-label w-100'
+                            className='custom-control-label w-100'
                             for={`customCheck${index}`}
                           >
                             {option.name}

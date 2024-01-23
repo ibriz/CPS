@@ -26,7 +26,7 @@ const Checkbox = ({ proposalKey, milestoneId, value, id, onChange }) => {
   return (
     <input
       type='checkbox'
-      class='custom-control-input'
+      className='custom-control-input'
       value={value}
       disabled={isDisabled}
       // disabled={milestoneStatus === '0x3' || milestoneStatus === '0x0'}

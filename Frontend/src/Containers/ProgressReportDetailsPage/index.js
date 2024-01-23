@@ -725,10 +725,15 @@ function ProgressReportDetailsPage(props) {
                             (milestone, index) => {
                               // console.log("votes of each milestones",votesByProgressReport.filter(x=>Number(x.milestoneId) === milestone.id))
                               return (
-                                <div
+                                <Container
+                                fluid
                                   key={index}
                                   id='milestoneArray'
-                                  className='d-flex flex-column'
+                                  style={{
+                                    display:'flex',
+                                    flexDirection:'column',
+                                    padding: '16px 8px',
+                                  }}
                                 >
                                   <MilestoneVoteCard
                                     id={milestone?.id}
@@ -795,7 +800,7 @@ function ProgressReportDetailsPage(props) {
                                     }
                                     description={milestone.milestoneDescription}
                                   />
-                                </div>
+                                </Container>
                               );
                             },
                           )
@@ -870,14 +875,7 @@ function ProgressReportDetailsPage(props) {
                         </LoadingDiv>
                       </Container>
                     ) : (
-                      <Container
-                        fluid
-                        style={{
-                          marginTop: '12px',
-                          padding: '16px',
-                          backgroundColor: 'var(--proposal-card-color)',
-                        }}
-                      >
+                      <>
                         {progressDetail?.projectTermRevision && (
                           <Row>
                             <Col
@@ -967,30 +965,34 @@ function ProgressReportDetailsPage(props) {
                           </Col>
                         )}
 
-                        {selectedProgressReportCompletedMilestone === '0x0' && (
-                          <Row
-                            style={{
-                              color: 'var(--proposal-text-color)',
-                              backgroundColor: 'var(--proposal-card-color)',
-                              marginBottom: '5px',
-                              marginTop: '16px',
-                              fontSize: '1.5rem',
-                              lineHeight: '36px',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              flexDirection: 'column',
-                              textAlign: 'center',
-                              paddingTop: '50px',
-                              paddingBottom: '50px',
-                              width: '100%',
-                            }}
-                          >
-                            This progress report doesnot have any completed
-                            milestone.So, you are not required to vote this
-                            progress report.
-                          </Row>
-                        )}
+                        {isPrep &&
+                          votingPRep &&
+                          selectedProgressReportCompletedMilestone ===
+                            '0x0' && (
+                            <Container
+                              fluid
+                              style={{
+                                color: 'var(--proposal-text-color)',
+                                backgroundColor: 'var(--proposal-card-color)',
+                                marginBottom: '5px',
+                                marginTop: '16px',
+                                fontSize: '1.5rem',
+                                lineHeight: '36px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                flexDirection: 'column',
+                                textAlign: 'center',
+                                paddingTop: '50px',
+                                paddingBottom: '50px',
+                                width: '100%',
+                              }}
+                            >
+                              This progress report doesnot have any completed
+                              milestone. <br />
+                              So, No vote required for this progress report.
+                            </Container>
+                          )}
                         {isPrep &&
                           votingPRep &&
                           (!votesByProgressReport.some(
@@ -999,7 +1001,14 @@ function ProgressReportDetailsPage(props) {
                             changeVoteButton) &&
                           selectedProgressReportCompletedMilestone !==
                             '0x0' && (
-                            <Row>
+                            <Container
+                              fluid
+                              style={{
+                                marginTop: '12px',
+                                padding: '16px 8px',
+                                backgroundColor: 'var(--proposal-card-color)',
+                              }}
+                            >
                               <Col xs='12'>
                                 <span
                                   style={{
@@ -1064,7 +1073,7 @@ function ProgressReportDetailsPage(props) {
                                   />
                                 )}
                               </Row>
-                            </Row>
+                            </Container>
                           )}
                         {progressDetail?.isLastProgressReport && (
                           <Alert
@@ -1123,7 +1132,13 @@ function ProgressReportDetailsPage(props) {
                           vote => vote.sponsorAddress === walletAddress,
                         ) &&
                           !changeVoteButton && (
-                            <>
+                            <Container
+                            fluid
+                            style={{
+                              marginTop: '12px',
+                              padding: '16px 8px',
+                              backgroundColor: 'var(--proposal-card-color)',
+                            }}>
                               {status === 'Voting' && (
                                 <p
                                   style={{
@@ -1151,9 +1166,9 @@ function ProgressReportDetailsPage(props) {
                                   )}
                                 </p>
                               )}
-                            </>
+                            </Container>
                           )}
-                      </Container>
+                      </>
                     ))}
 
                   {status === 'Voting' && (
