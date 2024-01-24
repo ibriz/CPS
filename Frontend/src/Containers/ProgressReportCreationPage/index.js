@@ -961,7 +961,7 @@ const ProgressReportCreationPage = ({
         size='mdxl'
         onConfirm={() => {
           if(progressReport.completedMilestone.length === 0){
-            NotificationManager.error('Please select atleast one milestone');
+            NotificationManager.error('Please select atleast one milestone!');
             return;
           }else{
             submitProgressReport({
