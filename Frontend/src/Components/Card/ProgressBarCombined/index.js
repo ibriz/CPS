@@ -4,6 +4,7 @@ import { ProgressBar } from 'react-bootstrap';
 const ProgressBarCombined = ({
   approvedPercentage = 0,
   rejectedPercentage = 0,
+  abstainedPercentage = 0,
 }) => {
   return (
     <ProgressBar
@@ -16,11 +17,7 @@ const ProgressBarCombined = ({
     >
       <ProgressBar striped variant='success' now={approvedPercentage} key={1} />
       <ProgressBar striped variant='danger' now={rejectedPercentage} key={2} />
-      <ProgressBar
-        variant='light'
-        now={100 - approvedPercentage - rejectedPercentage}
-        key={3}
-      />
+      <ProgressBar variant='info' striped now={abstainedPercentage} key={3} />
     </ProgressBar>
   );
 };

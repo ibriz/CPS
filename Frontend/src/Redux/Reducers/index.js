@@ -6,6 +6,8 @@ import prepsSlice from './prepsSlice';
 import periodSlice from './periodSlice';
 import fundSlice from './fundSlice';
 import userSlice from './userSlice';
+import miscSlice from './miscSlice';
+import themeSlice from './themeSlice';
 
 const rootReducer = combineReducers({
   proposals: proposalsReducer,
@@ -15,6 +17,8 @@ const rootReducer = combineReducers({
   period: periodSlice,
   fund: fundSlice,
   user: userSlice,
+  theme: themeSlice,
+  misc: miscSlice,
 });
 
 export default rootReducer;

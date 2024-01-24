@@ -11,7 +11,7 @@ function* fetchPeriodDetailsRequestWorker({ payload }) {
     // console.log("fetchPeriodDetailsRequestWorker");
 
     const response = yield call(callKeyStoreWallet, {
-      method: 'get_period_status',
+      method: 'getPeriodStatus',
     });
 
     // const response = {

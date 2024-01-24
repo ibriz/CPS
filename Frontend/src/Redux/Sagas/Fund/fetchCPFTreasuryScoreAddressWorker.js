@@ -8,7 +8,7 @@ import { callKeyStoreWallet } from '../../ICON/utils';
 function* fetchCPFTreasuryScoreAddressWorker({ payload }) {
   try {
     const response = yield call(callKeyStoreWallet, {
-      method: 'get_cpf_treasury_score',
+      method: 'getCpfTreasuryScore',
     });
 
     yield put(

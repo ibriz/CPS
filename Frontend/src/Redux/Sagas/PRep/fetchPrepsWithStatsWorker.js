@@ -11,7 +11,7 @@ function* fetchPrepsWithStatsWorker({ payload }) {
       fetchPrepsWithStatsSuccess({ prepsWithStats: [], loading: true }),
     );
     const preps = yield call(callKeyStoreWallet, {
-      method: 'get_PReps',
+      method: 'getPReps',
     });
 
     const getAddress = state => state.account.address;
@@ -24,18 +24,18 @@ function* fetchPrepsWithStatsWorker({ payload }) {
     for (let i = 0; i < preps.length; i++) {
       const prep = preps[i];
       const remainingProposal = yield call(callKeyStoreWallet, {
-        method: 'get_remaining_project',
+        method: 'getRemainingProject',
         params: {
-          _wallet_address: prep.address,
-          _project_type: 'proposal',
+          walletAddress: prep.address,
+          projectType: 'proposal',
         },
       });
 
       const remainingPR = yield call(callKeyStoreWallet, {
-        method: 'get_remaining_project',
+        method: 'getRemainingProject',
         params: {
-          _wallet_address: prep.address,
-          _project_type: 'progress_reports',
+          walletAddress: prep.address,
+          projectType: 'progress_reports',
         },
       });
 

@@ -1,0 +1,17 @@
+.milestone-test {
+    .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+        color: #fff;
+        background-color: #1EB6BF !important;
+    
+        .MilestoneTest_smallText__7qe2C {
+            font-size: 14px;
+            color: white;
+            margin-left: 38px;
+        }
+    
+        :hover {
+            background-color: #1EB6BF !important;
+        }
+    }
+}
+

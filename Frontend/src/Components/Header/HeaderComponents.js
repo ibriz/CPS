@@ -7,7 +7,9 @@ import { logout } from '../../Redux/Reducers/accountSlice';
 import { unregisterPrep, registerPrep } from 'Redux/Reducers/prepsSlice';
 import { fetchPeriodCountRequest } from 'Redux/Reducers/periodSlice';
 import timingImg from '../../Assets/Images/timing-blue.png';
-
+import maintainImg from '../../Assets/Images/mein.svg';
+import { BsSun, BsMoon } from 'react-icons/bs';
+import { MdWbSunny } from 'react-icons/md';
 import ConfirmationModal from 'Components/UI/ConfirmationModal';
 import UserInfoFormModal from './UserInfoFormModal';
 import useTimer from 'Hooks/useTimer';
@@ -17,7 +19,11 @@ import EmailConfirmationModal from './EmailConfirmationModal';
 import useVerification from 'Hooks/useVerification';
 import { setUserDataSubmitSuccess } from 'Redux/Reducers/userSlice';
 import { withRouter } from 'react-router-dom';
+import {fetchMaintenanceModeRequest} from 'Redux/Reducers/fundSlice';
 import { useLogin } from 'Hooks/useLogin';
+import { setTheme } from 'Redux/Reducers/themeSlice';
+import { Switch } from '@headlessui/react';
+import store from 'Redux/Store';
 const HeaderComponents = ({
   address,
   logout,
@@ -31,6 +37,7 @@ const HeaderComponents = ({
   firstName,
   lastName,
   walletBalance,
+  isMaintenanceMode,
   landingPage,
   loginButtonClicked,
   setLoginButtonClicked,
@@ -39,6 +46,7 @@ const HeaderComponents = ({
   setUserDataSubmitSuccess,
   previousEmail,
   email,
+  setTheme,
   initialPromptRedux,
   history,
   periodCount,
@@ -48,12 +56,15 @@ const HeaderComponents = ({
     React.useState(false);
   const [modalShow, setModalShow] = React.useState(false);
   const [initialPrompt, setInitialPrompt] = React.useState(false);
+  // const [isEnabled, setIsEnabled] = useState(false);
+  const isDark = localStorage.getItem('theme') === 'dark';
+  // console.log('store', isDark);
 
   const { isRemainingTimeZero } = useTimer();
   useVerification();
 
-  const onLogout = () => {
-    logout();
+  const onLogout = async () => {
+    await logout();
     history.push('/');
   };
 
@@ -64,7 +75,7 @@ const HeaderComponents = ({
   }, []);
 
   useEffect(() => {
-    console.log('userDataSubmitSuccess', userDataSubmitSuccess);
+    // console.log('userDataSubmitSuccess', userDataSubmitSuccess);
     if (userDataSubmitSuccess && !verified && previousEmail !== email) {
       setUserDataSubmitSuccess({
         status: false,
@@ -103,9 +114,30 @@ const HeaderComponents = ({
         <p>
           Funding Cycle &nbsp;<span>{periodCount}</span>
         </p>
+        {isMaintenanceMode && (
+          <div style={{display:'flex', gap:6, alignItems:'center'}}>
+            <img src={maintainImg} width={40} /> <p>Maintainance Mode</p>
+          </div>
+        )}
       </div>
 
-      <div>
+      <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
+        {/* <button
+          style={{ padding: '4px 8px', border: 'none', borderRadius: 6,backgroundColor: isDark ? '#1b1b1b' : '#f1f1f1', }}
+          onClick={() => {
+            isDark
+              ? localStorage.setItem('theme', 'light')
+              : localStorage.setItem('theme', 'dark');
+            window.location.reload();
+          }}
+        >
+          {isDark ? (
+            <MdWbSunny size={20} style={{ color: ' white' }} />
+            ) : (
+            <BsMoon size={20} style={{ color: '#27aab9' }} />
+          )}
+        </button> */}
+
         {address ? (
           <span
             onClick={() => setModalShow(true)}
@@ -263,16 +295,19 @@ const mapStateToProps = state => ({
 
   initialPromptRedux: state.user.initialPrompt,
   periodCount: state.period.periodCount,
+  isMaintenanceMode: state.fund.isMaintenanceMode,
 });
 
 const mapDispatchToProps = dispatch => ({
   logout: () => dispatch(logout()),
+  setTheme: payload => dispatch(setTheme(payload)),
   unregisterPrep: () => dispatch(unregisterPrep()),
   registerPrep: () => dispatch(registerPrep()),
   setLoginButtonClicked: payload => dispatch(setLoginButtonClicked(payload)),
   setUserDataSubmitSuccess: payload =>
     dispatch(setUserDataSubmitSuccess(payload)),
   fetchPeriodCount: () => dispatch(fetchPeriodCountRequest()),
+  fetchMaintenanceModeRequest: () => dispatch(fetchMaintenanceModeRequest()),
 });
 
 export default withRouter(

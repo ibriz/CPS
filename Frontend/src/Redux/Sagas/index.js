@@ -16,6 +16,8 @@ import {
 import {
   submitProposalToIPFSWorker,
   submitProposalToScoreWorker,
+  submitMigrationProposalWorker,
+  submitMigrationProposalToScoreWorker,
   fetchProposalListWorker,
   fetchSortPriorityProposalListWorker,
   fetchMyProposalListWorker,
@@ -28,6 +30,7 @@ import {
   fetchDraftRequestWorker,
   voteProposalWorker,
   fetchProposalByAddressWorker,
+  fetchMigrationProposalByAddressWorker,
   fetchProposalVoteResultRequestWorker,
   fetchProjectAmountsWorker,
   fetchRemainingVotesRequestWorker,
@@ -37,6 +40,7 @@ import {
   fetchChangeVoteWorker,
   submitPriorityVotingWorker,
   fetchPriorityVotingStatusWorker,
+  fetchSelectedProposalForProgressReportWorker,
 } from './Proposal/index';
 
 import {
@@ -68,12 +72,14 @@ import {
   fetchAvailableFundWorker,
   fetchSponsorDepositAmountWorker,
   fetchRemainingSwapAmountWorker,
+  fetchPrePaymentAmountWorker,
 } from './Fund';
 
 import {
   fetchPrepWorker,
   unregisterPrepWorker,
   registerPrepWorker,
+  fetchSponsorBondPercentageWorker,
   payPenaltyWorker,
   fetchPrepsWithStatsWorker,
 } from './PRep';
@@ -94,6 +100,8 @@ import {
 
 import {
   submitProposalRequest,
+  submitMigrationProposalRequest,
+  submitMigrationProposalSuccess,
   submitProposalSuccess,
   fetchProposalListRequest,
   fetchMyProposalListRequest,
@@ -106,6 +114,7 @@ import {
   fetchDraftsRequest,
   voteProposal,
   fetchProposalByAddressRequest,
+  fetchMigrationProposalByAddressRequest,
   fetchVoteResultRequest as fetchProposalVoteResultRequest,
   fetchProjectAmountsRequest,
   fetchRemainingVotesRequest,
@@ -117,6 +126,7 @@ import {
   fetchPriorityVotingRequest,
   fetchSortPriorityProposalListRequest,
   fetchProposalHistoryRequest,
+  fetchSelectedProposalForProgressReportRequest,
 } from '../Reducers/proposalSlice';
 import {
   submitProgressReportRequest,
@@ -145,6 +155,7 @@ import {
   unregisterPrep,
   registerPrep,
   payPenalty,
+  fetchSponsorBondPercentageRequest
 } from '../Reducers/prepsSlice';
 import {
   fetchCPFTreasuryScoreAddressRequest,
@@ -159,6 +170,7 @@ import {
   fetchSponsorDepositAmountRequest,
   fetchMaintenanceModeRequest,
   fetchRemainingSwapAmountRequest,
+  fetchPrePaymentAmountRequest,
 } from '../Reducers/fundSlice';
 import {
   fetchUserDataRequest,
@@ -178,6 +190,8 @@ function* rootSaga() {
 
   yield takeEvery(submitProposalRequest.type, submitProposalToIPFSWorker);
   yield takeEvery(submitProposalSuccess.type, submitProposalToScoreWorker);
+  yield takeEvery(submitMigrationProposalRequest.type, submitMigrationProposalWorker);
+  yield takeEvery(submitMigrationProposalSuccess.type, submitMigrationProposalToScoreWorker);
 
   yield takeEvery(fetchProposalListRequest.type, fetchProposalListWorker);
   yield takeEvery(fetchProposalHistoryRequest.type, fetchProposalHistoryWorker);
@@ -186,7 +200,7 @@ function* rootSaga() {
     fetchSortPriorityProposalListRequest.type,
     fetchSortPriorityProposalListWorker,
   );
-
+  yield takeEvery(fetchSponsorBondPercentageRequest.type, fetchSponsorBondPercentageWorker);
   yield takeEvery(fetchMyProposalListRequest.type, fetchMyProposalListWorker);
   yield takeEvery(fetchProposalByIpfsRequest.type, fetchProposalByIpfsWorker);
 
@@ -214,6 +228,7 @@ function* rootSaga() {
   yield takeEvery(fetchPrepsWithStatsRequest.type, fetchPrepsWithStatsWorker);
 
   yield takeEvery(fetchProposalDetailRequest.type, fetchProposalDetailWorker);
+  yield takeEvery(fetchSelectedProposalForProgressReportRequest.type, fetchSelectedProposalForProgressReportWorker);
   yield takeEvery(
     fetchProgressReportDetailRequest.type,
     fetchProgressReportDetailWorker,
@@ -245,6 +260,10 @@ function* rootSaga() {
   yield takeEvery(
     fetchProposalByAddressRequest.type,
     fetchProposalByAddressWorker,
+  );
+  yield takeEvery(
+    fetchMigrationProposalByAddressRequest.type,
+    fetchMigrationProposalByAddressWorker,
   );
 
   yield takeEvery(voteProgressReport.type, voteProgressReportWorker);
@@ -371,6 +390,7 @@ function* rootSaga() {
     fetchPriorityVotingRequest.type,
     fetchPriorityVotingStatusWorker,
   );
+  yield takeEvery(fetchPrePaymentAmountRequest.type, fetchPrePaymentAmountWorker);
 }
 
 export default rootSaga;

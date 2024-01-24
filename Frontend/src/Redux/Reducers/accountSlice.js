@@ -26,6 +26,7 @@ const accountSlice = createSlice({
       state.address = action.payload.address;
     },
     logout(state) {
+      state.isPrep = null;
       state.address = null;
       state.signature = null;
     },

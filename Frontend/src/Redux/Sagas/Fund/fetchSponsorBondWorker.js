@@ -17,9 +17,9 @@ function* fetchSponsorBondWorker() {
     const isRegistered = yield select(getIsRegistered);
 
     const response = yield call(callKeyStoreWallet, {
-      method: 'check_claimable_sponsor_bond',
+      method: 'checkClaimableSponsorBond',
       params: {
-        _address: walletAddress,
+        address: walletAddress,
       },
       scoreAddress: CPSScore,
     });

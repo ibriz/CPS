@@ -13,9 +13,10 @@ export const getCurrentUserActiveProposals = createSelector(
   },
 );
 
-const getApprovedVotes = state => state.proposals.approvedVotes;
 const getTotalVotes = state => state.proposals.totalVotes;
+const getTotalVoters = state => state.proposals.totalVoters;
 
+const getApprovedVotes = state => state.proposals.approvedVotes;
 export const getProposalApprovedPercentage = createSelector(
   [getApprovedVotes, getTotalVotes],
   (approvedVotes, totalVotes) => {
@@ -27,8 +28,6 @@ export const getProposalApprovedPercentage = createSelector(
 );
 
 const getApprovedVoters = state => state.proposals.approvedVoters;
-const getTotalVoters = state => state.proposals.totalVoters;
-
 export const getProposalApprovedVotersPercentage = createSelector(
   [getApprovedVoters, getTotalVoters],
   (approvedVoters, totalVoters) => {
@@ -43,11 +42,11 @@ const getRejectedVotes = state => state.proposals.rejectedVotes;
 
 export const getProposalRejectedPercentage = createSelector(
   [getRejectedVotes, getTotalVotes],
-  (approvedVotes, totalVotes) => {
+  (rejectedVotes, totalVotes) => {
     if (parseInt(totalVotes) === 0) {
       return 0;
     }
-    return (approvedVotes / totalVotes) * 100;
+    return (rejectedVotes / totalVotes) * 100;
   },
 );
 
@@ -55,17 +54,41 @@ const getRejectedVoters = state => state.proposals.rejectedVoters;
 
 export const getProposalRejectedVotersPercentage = createSelector(
   [getRejectedVoters, getTotalVoters],
-  (approvedVoters, totalVoters) => {
+  (rejectedVoters, totalVoters) => {
     if (parseInt(totalVoters) === 0) {
       return 0;
     }
-    return (approvedVoters / totalVoters) * 100;
+    return (rejectedVoters / totalVoters) * 100;
+  },
+);
+const getAbstainedVotes = state => state.proposals.abstainedVotes;
+
+export const getProposalAbstainedPercentage = createSelector(
+  [getAbstainedVotes, getTotalVotes],
+  (abstainedVotes, totalVotes) => {
+    if (parseInt(totalVotes) === 0) {
+      return 0;
+    }
+    return (abstainedVotes / totalVotes) * 100;
   },
 );
 
-const getApprovedVotesPR = state => state.progressReport.approvedVotes;
-const getTotalVotesPR = state => state.progressReport.totalVotes;
+const getAbstainVoters = state => state.proposals.abstainVoters;
 
+export const getProposalAbstainVotersPercentage = createSelector(
+  [getAbstainVoters, getTotalVoters],
+  (abstainVoters, totalVoters) => {
+    if (parseInt(totalVoters) === 0) {
+      return 0;
+    }
+    return (abstainVoters / totalVoters) * 100;
+  },
+);
+
+const getTotalVotesPR = state => state.progressReport.totalVotes;
+const getTotalVotersPR = state => state.progressReport.totalVoters;
+
+const getApprovedVotesPR = state => state.progressReport.approvedVotes;
 export const getProgressReportApprovedPercentage = createSelector(
   [getApprovedVotesPR, getTotalVotesPR],
   (approvedVotes, totalVotes) => {
@@ -77,7 +100,6 @@ export const getProgressReportApprovedPercentage = createSelector(
 );
 
 const getApprovedVotersPR = state => state.progressReport.approvedVoters;
-const getTotalVotersPR = state => state.progressReport.totalVoters;
 
 export const getProgressReportApprovedVotersPercentage = createSelector(
   [getApprovedVotersPR, getTotalVotersPR],
@@ -193,10 +215,10 @@ export const getProposalPendingProgressReport = createSelector(
   (proposalByAddress, myProposals) => {
     const pendingProposalIPFSList = [];
 
-    const activePausedProposals = myProposals.filter(proposal => {
+    const activePausedProposals = myProposals?.filter(proposal => {
       const status = proposalStatusMapping.find(
         mapping => mapping.status === proposal._status,
-      ).name;
+      )?.name;
       return status === 'Active' || status === 'Paused';
     });
     const proposalPendingProgressReport = activePausedProposals

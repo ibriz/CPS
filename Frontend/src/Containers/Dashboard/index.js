@@ -14,6 +14,7 @@ import {
   claimReward,
   fetchSponsorBondRequest,
   claimSponsorBondReward,
+  fetchPrePaymentAmountRequest,
   fetchSponsorDepositAmountRequest,
 } from 'Redux/Reducers/fundSlice';
 import {
@@ -27,11 +28,12 @@ import SponsorRequestsCard from 'Components/SponsorRequestsCard';
 import VotingCard from 'Components/VotingCard';
 import {
   fetchExpectedGrantRequest,
-  fetchCPSTreasuryScoreAddressRequest,
 } from 'Redux/Reducers/fundSlice';
 import { setLoginButtonClicked } from 'Redux/Reducers/accountSlice';
 import congratulationsImg from '../../Assets/Images/congratulations.png';
+import congratulationsWhiteImg from '../../Assets/Images/congratulationsWhite.png';
 import UpperCard from 'Containers/Proposals/UpperCard';
+import { useSelector } from 'react-redux';
 
 const Dashboard = ({
   payPenaltyRequest,
@@ -89,6 +91,7 @@ const Dashboard = ({
 
   let cardInfo;
   const isDarkTheme = localStorage.getItem('theme') === 'dark';
+  // const isDark = useSelector(state => state.theme.isDark);
 
   const getSponsorBondRewardText = amount => {
     if (parseFloat(amount.icx) > 0 && parseFloat(amount.bnUSD) > 0) {
@@ -180,7 +183,7 @@ const Dashboard = ({
             ? totalCountSponsorRequests.Pending
             : priorityVote
             ? remainingVotesProposal.length + remainingVotesPR.length
-            : remainingVotesProposal.length + remainingVotesPR.length + 1,
+            : remainingVotesProposal.length + remainingVotesPR.length,
       },
       {
         title: `Remaining Time in ${
@@ -222,11 +225,10 @@ const Dashboard = ({
   useEffect(() => {
     fetchCPFTreasuryScoreAddressRequest();
     fetchProjectAmountsRequest();
-    fetchCPSTreasuryScoreAddressRequest();
   }, [
-    fetchCPFTreasuryScoreAddressRequest,
     fetchProjectAmountsRequest,
     fetchExpectedGrantRequest,
+
   ]);
 
   useEffect(() => {
@@ -316,7 +318,7 @@ const Dashboard = ({
   }, [isPrep]);
 
   return address ? (
-    <Container>
+    <Container fluid style={{minHeight:'50vh'}}>
       {/* < Header title='Dashboard' /> */}
       <Row style={{ marginTop: '30px' }}>
         <Col xs='12'>
@@ -330,7 +332,7 @@ const Dashboard = ({
       {period === 'APPLICATION' && previousPeriod === 'APPLICATION' && (
         <Row style={{ marginTop: '15px' }}>
           <Col xs='12'>
-            <Alert variant='info'>
+            <Alert variant='dark'>
               <span>
                 Note: The period switched back to application period because{' '}
                 {preps.length < 7
@@ -348,10 +350,21 @@ const Dashboard = ({
         parseFloat(withDrawAmountProposalGrant.bnUSD) > 0) && (
         <Row style={{ marginTop: '15px' }}>
           <Col xs='12'>
-            <Container className={styles.container}>
-              <img src={congratulationsImg} style={{ padding: '24px' }} />
-              <Container style={{ display: 'flex', flexDirection: 'column' }}>
+            <Container fluid className={styles.container}>
+            
+              <img
+                src={isDarkTheme ? congratulationsWhiteImg : congratulationsImg}
+                style={{ padding: '24px' }}
+              />
+              <Container
+              fluid
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                }}
+              >
                 <span
+                  className={styles.textContainer}
                   style={{
                     fontWeight: '500',
                     fontSize: '1.5rem',
@@ -362,6 +375,7 @@ const Dashboard = ({
                 </span>
 
                 <span
+                  className={styles.textContainer}
                   style={{
                     fontWeight: '500',
                     fontSize: '1rem',
@@ -403,11 +417,15 @@ const Dashboard = ({
         parseFloat(sponsorBondReward.bnUSD) > 0) && (
         <Row style={{ marginTop: '15px' }}>
           <Col xs='12'>
-            <Container className={styles.container}>
-              <img src={congratulationsImg} style={{ padding: '24px' }} />
+            <Container fluid className={styles.container}>
+            <img
+                src={isDarkTheme ? congratulationsWhiteImg : congratulationsImg}
+                style={{ padding: '24px' }}
+              />
               {isPrep && (
                 <Container style={{ display: 'flex', flexDirection: 'column' }}>
                   <span
+                        className={styles.textContainer}
                     style={{
                       fontWeight: '500',
                       fontSize: '1.5rem',
@@ -418,6 +436,7 @@ const Dashboard = ({
                   </span>
 
                   <span
+                        className={styles.textContainer}
                     style={{
                       fontWeight: '500',
                       fontSize: '1rem',
@@ -425,7 +444,7 @@ const Dashboard = ({
                     }}
                   >
                     You can claim a total sponsor bond of $
-                    {getSponsorBondRewardText(sponsorBondReward)}`
+                    {getSponsorBondRewardText(sponsorBondReward)}
                   </span>
                 </Container>
               )}
@@ -633,7 +652,6 @@ const mapDispatchToProps = {
   fetchCPFRemainingFundRequest,
   fetchProjectAmountsRequest,
   fetchExpectedGrantRequest,
-  fetchCPSTreasuryScoreAddressRequest,
   claimReward,
   claimSponsorBondReward,
   fetchSponsorBondRequest,

@@ -10,3 +10,4 @@ export { default as fetchAvailableFundWorker } from './fetchAvailableFundWorker'
 export { default as fetchSponsorDepositAmountWorker } from './fetchSponsorDepositAmountWorker';
 export { default as fetchMaintenanceModeWorker } from './fetchMaintenanceModeWorker';
 export { default as fetchRemainingSwapAmountWorker } from './fetchRemainingSwapAmountWorker';
+export { default as fetchPrePaymentAmountWorker } from './fetchPrePaymentAmountWorker';

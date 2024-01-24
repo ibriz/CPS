@@ -15,9 +15,9 @@ function* fetchSponsorDepositAmountWorker() {
     const cpsTreasuryAddress = yield select(getCPSTreasuryScoreAddress);
     const address = yield select(getAddress);
     const response = yield call(callKeyStoreWallet, {
-      method: 'get_sponsor_projected_fund',
+      method: 'getSponsorProjectedFund',
       params: {
-        _wallet_address: address,
+        walletAddress: address,
       },
       scoreAddress: cpsTreasuryAddress,
     });

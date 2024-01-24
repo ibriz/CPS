@@ -96,11 +96,6 @@ const ProgressReport = ({
               [styles.progressBarModal]: isModal,
             })}
           >
-            {/* <ProgressText>Stake- {progressReport.approvedPercentage ? progressReport.approvedPercentage.toFixed() : 0}% approved, {progressReport.rejectedPercentage ? progressReport.rejectedPercentage.toFixed() : 0}% rejected</ProgressText>
-                        <ProgressBarCombined 
-                          approvedPercentage = {progressReport.approvedPercentage}
-                          rejectedPercentage = {progressReport.rejectedPercentage}
-                          /> */}
 
             {!minLayout && (
               <VoteProgressBar
@@ -109,34 +104,14 @@ const ProgressReport = ({
               />
             )}
 
-            {/* <ProgressText>Voter count- {progressReport.approvedVotesPercentageCount ? progressReport.approvedVotesPercentageCount.toFixed() : 0}% approved, {progressReport.rejectedVotesPercentageCount ? progressReport.rejectedVotesPercentageCount.toFixed() : 0}% rejected</ProgressText>
-                        <ProgressBarCombined 
-                          approvedPercentage = {progressReport.approvedVotesPercentageCount}
-                          rejectedPercentage = {progressReport.rejectedVotesPercentageCount}
-                          /> */}
-
-            <VoteProgressBar
+            {/* <VoteProgressBar
               approvedPercentage={progressReport.approvedVotesPercentageCount}
               rejectedPercentage={progressReport.rejectedVotesPercentageCount}
               voterCount
-            />
+            /> */}
           </Col>
         )}
 
-        {/* {
-                    progressReportStatusMapping.find(mapping => mapping.status === progressReport.status).name !== 'Draft' && progressReportStatusMapping.find(mapping => mapping.status === progressReport.status).name === 'Rejected' && progressReport.approvedVotesPercentageCount > progressReport.approvedPercentage &&
-                    <Col md="3" xs="12" className={styles.progressBar} >
-                        <ProgressText>{progressReport.approvedPercentage ? progressReport.approvedPercentage.toFixed() : 0}% Stake Approved</ProgressText>
-                        <ProgressBar percentage={progressReport.approvedPercentage} />
-                    </Col>
-                }
-                {
-                    progressReportStatusMapping.find(mapping => mapping.status === progressReport.status).name !== 'Draft' && progressReportStatusMapping.find(mapping => mapping.status === progressReport.status).name === 'Rejected' && progressReport.approvedPercentage >= progressReport.approvedVotesPercentageCount &&
-                    <Col md="3" xs="12" className={styles.progressBar} >
-                        <ProgressText>{progressReport.approvedVotesPercentageCount ? progressReport.approvedVotesPercentageCount.toFixed() : 0}% Voter Count Approved</ProgressText>
-                        <ProgressBar percentage={progressReport.approvedVotesPercentageCount} />
-                    </Col>
-                } */}
       </Row>
       <hr className={styles.horizontalRule} />
     </>

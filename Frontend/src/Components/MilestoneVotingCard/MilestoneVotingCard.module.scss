@@ -1,0 +1,18 @@
+.icon {
+    font-size: 2rem;
+    margin-top: 0.1rem;
+    margin-right: 0.1rem; /* Add spacing between icon and text */
+    vertical-align: middle; /* Align icon vertically */
+    border-radius: 50%;
+    color: #e9f0f5;
+    background-color: #00563b;
+  }
+
+  .container {
+    margin-top: 15px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background-color: var(--proposal-card-color);
+  }

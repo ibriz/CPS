@@ -31,7 +31,10 @@ import {
   fetchSponsorMessageRequest,
   fetchChangeVoteRequest,
 } from 'Redux/Reducers/proposalSlice';
-import { emptyProgressReportDetailRequest, fetchProgressReportByProposalRequest } from 'Redux/Reducers/progressReportSlice';
+import {
+  emptyProgressReportDetailRequest,
+  fetchProgressReportByProposalRequest,
+} from 'Redux/Reducers/progressReportSlice';
 import { connect } from 'react-redux';
 import ProgressReportList from 'Components/Card/ProgressReportList';
 import {
@@ -107,17 +110,23 @@ const sponsorNote = (
 );
 
 function DetailsModal(props) {
-  const voteOptions = [{ title: 'Approve', bgColor: 'success' }, { title: 'Reject', bgColor: 'danger' }, { title: 'Abstain', bgColor: 'info' }];
+  const voteOptions = [
+    { title: 'Approve', bgColor: 'success' },
+    { title: 'Reject', bgColor: 'danger' },
+    { title: 'Abstain', bgColor: 'info' },
+  ];
   const [vote, setVote] = useState('');
 
-  const sponsorVoteOptions = [{ title: 'Accept', bgColor: 'success' }, { title: 'Deny', bgColor: 'danger' }];
+  const sponsorVoteOptions = [
+    { title: 'Accept', bgColor: 'success' },
+    { title: 'Deny', bgColor: 'danger' },
+  ];
   const [sponsorVote, setSponsorVote] = useState('');
 
   const [voteReason, setVoteReason] = useState('');
   const [sponsorVoteReason, setSponsorVoteReason] = useState('');
-  const [sponsorConfirmationShow, setSponsorConfirmationShow] = React.useState(
-    false,
-  );
+  const [sponsorConfirmationShow, setSponsorConfirmationShow] =
+    React.useState(false);
   // const [sponsorVote, setSponsorVote] = useState('');
   const [modalShow, setModalShow] = React.useState(false);
   const [selectedProgressReport, setSelectedProgressReport] = React.useState();
@@ -125,10 +134,8 @@ function DetailsModal(props) {
 
   const [voteConfirmationShow, setVoteConfirmationShow] = React.useState(false);
   const [description, setDescription] = useState(null);
-  const [
-    sponsorVoteReasonDescription,
-    setSponsorVoteReasonDescription,
-  ] = useState(null);
+  const [sponsorVoteReasonDescription, setSponsorVoteReasonDescription] =
+    useState(null);
 
   const [error, setError] = useState('');
 
@@ -152,6 +159,7 @@ function DetailsModal(props) {
     period,
     remainingTime,
     approvedVoterPercentage,
+    sponsorBondPercentage,
     fetchProposalDetail,
     walletAddress,
     rejectedPercentage,
@@ -166,7 +174,7 @@ function DetailsModal(props) {
     fetchChangeVoteRequest,
     votingPRep,
     isMaintenanceMode,
-		fetchMaintenanceModeRequest,
+    fetchMaintenanceModeRequest,
     ...remainingProps
   } = props;
 
@@ -179,12 +187,12 @@ function DetailsModal(props) {
     : preps.find(prep => prep.address == proposalDetail?.sponserPrep)?.name;
 
   useEffect(() => {
-    console.log(
-      'sponsorConfirmationShow',
-      sponsorConfirmationShow,
-      modalShow,
-      modalShow || sponsorConfirmationShow,
-    );
+    // console.log(
+    //   'sponsorConfirmationShow',
+    //   sponsorConfirmationShow,
+    //   modalShow,
+    //   modalShow || sponsorConfirmationShow,
+    // );
   }, [sponsorConfirmationShow, modalShow]);
   const onClickProgressReport = porgressReport => {
     setModalShow(true);
@@ -195,16 +203,16 @@ function DetailsModal(props) {
     fetchPrepsRequest();
   }, []);
 
-	useEffect(() => {
+  useEffect(() => {
     fetchMaintenanceModeRequest();
   }, [fetchMaintenanceModeRequest]);
 
   useEffect(() => {
-    console.log(
-      'sponorRequest',
-      sponsorRequest,
-      document.getElementById('sponsorVoteReason'),
-    );
+    // console.log(
+    //   'sponorRequest',
+    //   sponsorRequest,
+    //   document.getElementById('sponsorVoteReason'),
+    // );
     if (
       sponsorRequest &&
       status === 'Pending' &&
@@ -248,20 +256,20 @@ function DetailsModal(props) {
   }, [proposal?.sponsorVoteReason]);
 
   useEffect(() => {
-    console.log(
-      'voteReason',
-      voting &&
-      period === 'VOTING' &&
-      remainingTime > 0 &&
-      !votesByProposal.some(vote => vote.sponsorAddress === walletAddress),
-    );
+    // console.log(
+    //   'voteReason',
+    //   voting &&
+    //     period === 'VOTING' &&
+    //     remainingTime > 0 &&
+    //     !votesByProposal.some(vote => vote.sponsorAddress === walletAddress),
+    // );
     if (
       voting &&
       period === 'VOTING' &&
       remainingTime > 0 &&
       !votesByProposal.some(vote => vote.sponsorAddress === walletAddress)
     ) {
-      console.log('voteReasonhere', document.getElementById('voteReason'));
+      // console.log('voteReasonhere', document.getElementById('voteReason'));
       if (!voteReason) {
         document.getElementById('voteReason') &&
           document
@@ -317,14 +325,13 @@ function DetailsModal(props) {
     }
   }, [props.proposal]);
 
-
   useEffect(() => {
     if (ipfsError) {
       setLoading(false);
       props.onHide();
-      NotificationManager.error("Error fetching ipfs data");
+      NotificationManager.error('Error fetching ipfs data');
     }
-  }, [ipfsError])
+  }, [ipfsError]);
 
   useEffect(() => {
     // if (status === 'Voting') {
@@ -337,15 +344,19 @@ function DetailsModal(props) {
   }, [props.proposal, props.show]);
 
   useEffect(() => {
-    props.proposal && fetchChangeVoteRequest({ ipfs_key: props.proposal.ipfsKey, address: walletAddress })
-  }, [props.proposal])
+    props.proposal &&
+      fetchChangeVoteRequest({
+        ipfs_key: props.proposal.ipfsKey,
+        address: walletAddress,
+      });
+  }, [props.proposal]);
 
   const onSubmitVote = () => {
     voteProposal({
       vote,
       voteReason: voteReason.replace(/&nbsp;/g, ''),
       ipfsKey: proposal.ipfsKey,
-      vote_change: changeVoteButton ? "1" : "0"
+      vote_change: changeVoteButton ? '1' : '0',
     });
   };
 
@@ -356,11 +367,11 @@ function DetailsModal(props) {
       proposal: {
         contributorAddress: proposal?._contributor_address,
         title: (proposalDetail && proposalDetail.projectName) || '',
-        sponsorAddress: proposalDetail?.sponserPrep
+        sponsorAddress: proposalDetail?.sponserPrep,
       },
       sponsorBond: IconConverter.toBigNumber(
         proposalDetail?.totalBudget,
-      ).dividedBy(10),
+      ).multipliedBy(sponsorBondPercentage),
       reason: sponsorVoteReason.replace(/&nbsp;/g, ''),
     });
     // props.onHide();
@@ -373,12 +384,11 @@ function DetailsModal(props) {
       proposal: {
         contributorAddress: proposal?._contributor_address,
         title: (proposalDetail && proposalDetail.projectName) || '',
-        sponsorAddress: proposalDetail?.sponserPrep
+        sponsorAddress: proposalDetail?.sponserPrep,
       },
     });
     // props.onHide();
   };
-
 
   return (
     <Modal
@@ -392,235 +402,170 @@ function DetailsModal(props) {
           <Spinner animation='border' variant='secondary' />
         </LoadingDiv>
       ) : (
-        !ipfsError && <>
-          <Modal.Header
-            closeButton
-            className={styles.modalHeader}
-            style={
-              modalShow || sponsorConfirmationShow
-                ? { backgroundColor: '#DDDDDD' }
-                : {}
-            }
-          >
-            <Container fluid className={styles.container}>
-              <Row>
-                <Col sm='12'>
-                  <Header>
-                    {(proposalDetail && proposalDetail.projectName) || 'N/A'}
-                  </Header>
-                </Col>
-              </Row>
-              <Row>
-                <Col sm='12'>
-                  <Address>{proposal?._contributor_address || 'N/A'}</Address>
-                </Col>
-              </Row>
-              <Row style={{ alignItems: 'center' }}>
-                <Col lg='1' xs='12'>
-                  <Badge
-                    variant={
-                      proposalStatusMapping.find(mapping => {
-                        return mapping.name === status;
-                      })?.badgeColor
-                    }
-                  >
-                    {status}
-                  </Badge>{' '}
-                </Col>
+        !ipfsError && (
+          <>
+            <Modal.Header
+              closeButton
+              className={styles.modalHeader}
+              style={
+                modalShow || sponsorConfirmationShow
+                  ? { backgroundColor: '#DDDDDD' }
+                  : {}
+              }
+            >
+              <Container fluid className={styles.container}>
+                <Row>
+                  <Col sm='12'>
+                    <Header>
+                      {(proposalDetail && proposalDetail.projectName) || 'N/A'}
+                    </Header>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col sm='12'>
+                    <Address>{proposal?._contributor_address || 'N/A'}</Address>
+                  </Col>
+                </Row>
+                <Row style={{ alignItems: 'center' }}>
+                  <Col lg='1' xs='12'>
+                    <Badge
+                      variant={
+                        proposalStatusMapping.find(mapping => {
+                          return mapping.name === status;
+                        })?.badgeColor
+                      }
+                    >
+                      {status}
+                    </Badge>{' '}
+                  </Col>
 
-                {(selectedTab => {
-                  // console.log(props.selectedTab);
-                  if (['Active', 'Paused'].includes(status))
-                    return (
-                      <>
-                        <Col lg='3' xs='12'>
-                          <ProgressBar
-                            percentage={proposal?.completedPercentage}
-                          />
-                        </Col>
+                  {(selectedTab => {
+                    // console.log(props.selectedTab);
+                    if (['Active', 'Paused'].includes(status))
+                      return (
+                        <>
+                          <Col lg='3' xs='12'>
+                            <ProgressBar
+                              percentage={proposal?.completedPercentage}
+                            />
+                          </Col>
 
-                        <Col
-                          lg='8'
-                          xs='12'
-                          className={styles.progressTextContainer}
-                        >
-                          {
-                            <ProgressText>
-                              {proposal?.completedPercentage
-                                ? `${proposal?.completedPercentage.toFixed()}`
-                                : 0}
-                              % Completed
-                            </ProgressText>
-                          }
-                        </Col>
-                      </>
-                    );
-                  if (['Voting'].includes(status))
-                    return (
-                      <>
-                        {/* <Col xs="12"> */}
-                        <Col lg='3' xs='12'>
-                          {/* <ProgressBar
+                          <Col
+                            lg='8'
+                            xs='12'
+                            className={styles.progressTextContainer}
+                          >
+                            {
+                              <ProgressText>
+                                {proposal?.completedPercentage
+                                  ? `${proposal?.completedPercentage.toFixed()}`
+                                  : 0}
+                                % Completed
+                              </ProgressText>
+                            }
+                          </Col>
+                        </>
+                      );
+                    if (['Voting'].includes(status))
+                      return (
+                        <>
+                          {/* <Col xs="12"> */}
+                          <Col lg='3' xs='12'>
+                            {/* <ProgressBar
                           percentage={approvedPercentage} /> */}
 
-                          <ProgressBarCombined
-                            approvedPercentage={approvedPercentage}
-                            rejectedPercentage={rejectedPercentage}
-                          />
-                        </Col>
-
-                        <Col
-                          lg='8'
-                          xs='12'
-                          className={styles.progressTextContainer}
-                        >
-                          {
-                            // <ProgressText>
-                            //   Stake- {approvedPercentage ? `${approvedPercentage.toFixed()}` : 0}% approved, {rejectedPercentage ? `${rejectedPercentage.toFixed()}` : 0}% rejected
-                            //   <InfoIcon description="The category the project falls into" />
-
-                            //   </ProgressText>
-
-                            <VoteProgressBar
+                            <ProgressBarCombined
                               approvedPercentage={approvedPercentage}
                               rejectedPercentage={rejectedPercentage}
-                              noProgressBar
-                              proposal
-                              placement='bottom'
                             />
-                          }
-                        </Col>
-                        {/* </Col> */}
-                        <Col lg='1' xs='12'></Col>
-                        <Col lg='3' xs='12'>
-                          {/* <ProgressBar
+                          </Col>
+
+                          <Col
+                            lg='8'
+                            xs='12'
+                            className={styles.progressTextContainer}
+                          >
+                            {
+                              // <ProgressText>
+                              //   Stake- {approvedPercentage ? `${approvedPercentage.toFixed()}` : 0}% approved, {rejectedPercentage ? `${rejectedPercentage.toFixed()}` : 0}% rejected
+                              //   <InfoIcon description="The category the project falls into" />
+
+                              //   </ProgressText>
+
+                              <VoteProgressBar
+                                approvedPercentage={approvedPercentage}
+                                rejectedPercentage={rejectedPercentage}
+                                noProgressBar
+                                proposal
+                                placement='bottom'
+                              />
+                            }
+                          </Col>
+                          {/* </Col> */}
+                          <Col lg='1' xs='12'></Col>
+                          <Col lg='3' xs='12'>
+                            {/* <ProgressBar
                           percentage={approvedVoterPercentage} /> */}
 
-                          <ProgressBarCombined
-                            approvedPercentage={approvedVoterPercentage}
-                            rejectedPercentage={rejectedVoterPercentage}
-                          />
-                        </Col>
-
-                        <Col
-                          lg='8'
-                          xs='12'
-                          className={styles.progressTextContainer}
-                        >
-                          {
-                            // <ProgressText>
-                            //   Voter count- {approvedVoterPercentage ? `${approvedVoterPercentage.toFixed()}` : 0}% approved, {rejectedVoterPercentage ? `${rejectedVoterPercentage.toFixed()}` : 0}% rejected
-                            // </ProgressText>
-
-                            <VoteProgressBar
+                            <ProgressBarCombined
                               approvedPercentage={approvedVoterPercentage}
                               rejectedPercentage={rejectedVoterPercentage}
-                              noProgressBar
-                              proposal
-                              voterCount
-                              placement='bottom'
                             />
-                          }
-                        </Col>
-                      </>
-                    );
-                  else return null;
-                })()}
-              </Row>
-            </Container>
-          </Modal.Header>
-          <Modal.Body
-            className={styles.modalBody}
-            style={modalShow ? { backgroundColor: '#DDDDDD' } : {}}
-          >
-            <Row>
-              <Col lg='8' xs='12'>
-                {/* <div dangerouslySetInnerHTML={{ __html: description }} /> */}
-                <Description
-                  description={
-                    (proposalDetail && description) ||
-                    '<span>No Description</span>'
-                  }
-                />
-                {proposal?.sponsorVoteReason && (
+                          </Col>
+
+                          <Col
+                            lg='8'
+                            xs='12'
+                            className={styles.progressTextContainer}
+                          >
+                            {
+                              // <ProgressText>
+                              //   Voter count- {approvedVoterPercentage ? `${approvedVoterPercentage.toFixed()}` : 0}% approved, {rejectedVoterPercentage ? `${rejectedVoterPercentage.toFixed()}` : 0}% rejected
+                              // </ProgressText>
+
+                              <VoteProgressBar
+                                approvedPercentage={approvedVoterPercentage}
+                                rejectedPercentage={rejectedVoterPercentage}
+                                noProgressBar
+                                proposal
+                                voterCount
+                                placement='bottom'
+                              />
+                            }
+                          </Col>
+                        </>
+                      );
+                    else return null;
+                  })()}
+                </Row>
+              </Container>
+            </Modal.Header>
+            <Modal.Body
+              className={styles.modalBody}
+              style={modalShow ? { backgroundColor: '#DDDDDD' } : {}}
+            >
+              <Row>
+                <Col lg='8' xs='12'>
+                  {/* <div dangerouslySetInnerHTML={{ __html: description }} /> */}
                   <Description
                     description={
-                      sponsorVoteReasonDescription || '<span>No Message</span>'
+                      (proposalDetail && description) ||
+                      '<span>No Description</span>'
                     }
-                    title='Message from Sponsor'
                   />
-                )}
-              </Col>
-
-              {/* <Col lg="4" className = "d-none d-lg-block"> */}
-              <Col lg='4' xs='12'>
-                <Col
-                  xs='12'
-                  style={{
-                    paddingLeft: '0px',
-                    paddingRight: '0px',
-                  }}
-                >
-                  <DetailsTable
-                    title={'Project Details'}
-                    data={[
-                      {
-                        key: 'Category',
-                        value: proposalDetail?.category || 'N/A',
-                      },
-                      {
-                        key: 'Project Duration',
-                        value: `${proposal?.projectDuration} months` || 'N/A',
-                      },
-                      {
-                        key: 'Total Budget',
-                        value: `${icxFormat(proposal?.budget)} ${proposal?.token}` || 'N/A',
-                      },
-                      {
-                        key: 'Sponsor Prep',
-                        value: prepName ? (
-                          <a
-                            href={`${trackerURL}/${proposalDetail?.sponserPrep}`}
-                            target='_blank'
-                            style={{
-                              color: '#262626',
-                              textDecoration: 'underline',
-                            }}
-                          >
-                            {prepName}
-                          </a>
-                        ) : (
-                          (
-                            <a
-                              href={`${trackerURL}/${proposalDetail?.sponserPrep}`}
-                              target='_blank'
-                              style={{
-                                color: '#262626',
-                                textDecoration: 'underline',
-                              }}
-                            >{`${proposalDetail?.sponserPrep?.slice(
-                              0,
-                              6,
-                            )}...`}</a>
-                          ) || 'N/A'
-                        ),
-                      },
-                      {
-                        key: 'Team Name',
-                        value: `${proposalDetail?.teamName}` || 'N/A',
-                      },
-                      {
-                        key: 'Team Email',
-                        value: `${proposalDetail?.teamEmail}` || 'N/A',
-                      },
-                      {
-                        key: 'Team Size',
-                        value: `${proposalDetail?.teamSize}` || 'N/A',
-                      },
-                    ]}
-                  />
+                  {proposal?.sponsorVoteReason && (
+                    <Description
+                      description={
+                        sponsorVoteReasonDescription ||
+                        '<span>No Message</span>'
+                      }
+                      title='Message from Sponsor'
+                    />
+                  )}
                 </Col>
-                {proposalDetail?.milestones?.length > 0 && (
+
+                {/* <Col lg="4" className = "d-none d-lg-block"> */}
+                <Col lg='4' xs='12'>
                   <Col
                     xs='12'
                     style={{
@@ -628,136 +573,123 @@ function DetailsModal(props) {
                       paddingRight: '0px',
                     }}
                   >
-                    {/* <MilestoneTable
+                    <DetailsTable
+                      title={'Project Details'}
+                      data={[
+                        {
+                          key: 'Category',
+                          value: proposalDetail?.category || 'N/A',
+                        },
+                        {
+                          key: 'Project Duration',
+                          value: `${proposal?.projectDuration} months` || 'N/A',
+                        },
+                        {
+                          key: 'Total Budget',
+                          value:
+                            `${icxFormat(proposal?.budget)} ${
+                              proposal?.token
+                            }` || 'N/A',
+                        },
+                        {
+                          key: 'Sponsor Prep',
+                          value: prepName ? (
+                            <a
+                              href={`${trackerURL}/${proposalDetail?.sponserPrep}`}
+                              target='_blank'
+                              style={{
+                                color: '#262626',
+                                textDecoration: 'underline',
+                              }}
+                            >
+                              {prepName}
+                            </a>
+                          ) : (
+                            (
+                              <a
+                                href={`${trackerURL}/${proposalDetail?.sponserPrep}`}
+                                target='_blank'
+                                style={{
+                                  color: '#262626',
+                                  textDecoration: 'underline',
+                                }}
+                              >{`${proposalDetail?.sponserPrep?.slice(
+                                0,
+                                6,
+                              )}...`}</a>
+                            ) || 'N/A'
+                          ),
+                        },
+                        {
+                          key: 'Team Name',
+                          value: `${proposalDetail?.teamName}` || 'N/A',
+                        },
+                        {
+                          key: 'Team Email',
+                          value: `${proposalDetail?.teamEmail}` || 'N/A',
+                        },
+                        {
+                          key: 'Team Size',
+                          value: `${proposalDetail?.teamSize}` || 'N/A',
+                        },
+                      ]}
+                    />
+                  </Col>
+                  {proposalDetail?.milestones?.length > 0 && (
+                    <Col
+                      xs='12'
+                      style={{
+                        paddingLeft: '0px',
+                        paddingRight: '0px',
+                      }}
+                    >
+                      {/* <MilestoneTable
                   milestones={proposalDetail?.milestones}
                   style={{
                     paddingLeft: '0px',
                     paddingRight: '0px'
                   }} /> */}
-                  </Col>
-                )}
-              </Col>
-            </Row>
-
-            <Row>
-              <Col>
-                <ListTitle>MILESTONES</ListTitle>
-                <MilestonesTimeline milestones={proposalDetail?.milestones} />
-              </Col>
-            </Row>
-
-            {status === 'Voting' && (
-              <Row>
-                <Col xs='12'>
-                  <div
-                    style={{
-                      textAlign: 'center',
-                      color: '#262626',
-                      marginBottom: '5px',
-                      fontSize: '1rem',
-                    }}
-                  >
-                    <>
-                      {period !== 'VOTING'
-                        ? 'Voting starts in '
-                        : 'Voting ends in '}
-                    </>
-                    <b>{remainingTimer.day}</b> days{' '}
-                    <b>{remainingTimer.hour}</b> hours{' '}
-                    <b>{remainingTimer.minute}</b> minutes{' '}
-                    <b>{remainingTimer.second}</b> seconds
-                  </div>
+                    </Col>
+                  )}
                 </Col>
               </Row>
-            )}
 
-            {proposalDetail?.sponserPrep === walletAddress &&
-              status === 'Pending' &&
-              period === 'APPLICATION' &&
-              remainingTime > 0 && (
-                <>
-                  <Row
-                    style={{
-                      justifyContent: 'center',
-                      flexDirection: 'row',
-                    }}
-                  >
-                    <ButtonGroup aria-label='Basic example'>
-                      {sponsorVoteOptions.map(sponsorVoteOption => (
-                        <Button
-                          variant={
-                            sponsorVote === sponsorVoteOption.title
-                              ? sponsorVoteOption.bgColor
-                              : 'light'
-                          }
-                          onClick={() => setSponsorVote(sponsorVoteOption.title)}
-                          style={{ border: '1px solid rgba(0,0,0,0.7)' }}
-                        >
-                          {sponsorVoteOption.title}
-                        </Button>
-                      ))}
-                    </ButtonGroup>
-                    <Col xs={12} style={{ textAlign: 'center', color: 'red' }}>
-                      {error}
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col xs='12'>
-                      <span>
-                        Explain in brief the reason behind your decision
-                      </span>
-                      <InfoIcon description={specialCharacterMessage()} />
-                    </Col>
+              <Row>
+                <Col>
+                  <ListTitle>MILESTONES</ListTitle>
+                  <MilestonesTimeline milestones={proposalDetail?.milestones} />
+                </Col>
+              </Row>
 
-                    <Col xs='12'>
-                      <RichTextEditor
-                        required
-                        initialData={sponsorVoteReason}
-                        onChange={data => setSponsorVoteReason(data)}
-                      />
-                      <input
-                        className={styles.fakeInput}
-                        style={{ left: '15px' }}
-                        id='sponsorVoteReason'
-                      />
-                    </Col>
-                  </Row>
-
-                  <Alert variant={'info'} style={{ marginTop: '15px' }}>
-                    {sponsorNote}
-                  </Alert>
-
-                  <Row style={{ justifyContent: 'center' }}>
-                    <Button
-                      variant='primary'
-                      onClick={() => handleSponsorVoteSubmission()}
-                      style={{ marginTop: '10px', width: '199px' }}
+              {status === 'Voting' && (
+                <Row>
+                  <Col xs='12'>
+                    <div
+                      style={{
+                        textAlign: 'center',
+                        color: '#262626',
+                        marginBottom: '5px',
+                        fontSize: '1rem',
+                      }}
                     >
-                      Submit Sponsor Vote
-                    </Button>
-                  </Row>
-
-                  {/* <Row style={{ justifyContent: 'center' }}>
-            <Button variant="success" onClick={onClickApproveSponsorRequest}
-              onClick={() => {
-                setSponsorConfirmationShow(true);
-                setSponsorVote('approve')
-              }}>Accept</Button>
-            <Button variant="danger" className={styles.rejectButton} onClick={onClickRejectSponsorRequest}
-              onClick={() => {
-                setSponsorConfirmationShow(true);
-                setSponsorVote('reject')
-              }}>Deny</Button>
-
-          </Row> */}
-                </>
+                      <>
+                        {period !== 'VOTING'
+                          ? 'Voting starts in '
+                          : 'Voting ends in '}
+                      </>
+                      <b>{remainingTimer.day}</b> days{' '}
+                      <b>{remainingTimer.hour}</b> hours{' '}
+                      <b>{remainingTimer.minute}</b> minutes{' '}
+                      <b>{remainingTimer.second}</b> seconds
+                    </div>
+                  </Col>
+                </Row>
               )}
 
-            {isPrep && votingPRep && period === 'VOTING' && remainingTime > 0 && (
-              <>
-                {!votesByProposal.some(
-                  vote => vote.sponsorAddress === walletAddress,
-                ) || changeVoteButton ? (
+              {proposalDetail?.sponserPrep === walletAddress &&
+                status === 'Pending' &&
+                period === 'APPLICATION' &&
+                remainingTime > 0 && (
                   <>
                     <Row
                       style={{
@@ -766,17 +698,26 @@ function DetailsModal(props) {
                       }}
                     >
                       <ButtonGroup aria-label='Basic example'>
-                        {voteOptions.map(voteOption => (
+                        {sponsorVoteOptions.map(sponsorVoteOption => (
                           <Button
-                            variant={vote === voteOption.title ? voteOption.bgColor : 'light'}
-                            onClick={() => setVote(voteOption.title)}
-                            style={{ border: '1px solid rgba(0,0,0,0.7)' }}
+                            variant={
+                              sponsorVote === sponsorVoteOption.title
+                                ? sponsorVoteOption.bgColor
+                                : 'light'
+                            }
+                            onClick={() =>
+                              setSponsorVote(sponsorVoteOption.title)
+                            }
+                            // style={{ border: '1px solid rgba(0,0,0,0.7)' }}
                           >
-                            {voteOption.title}
+                            {sponsorVoteOption.title}
                           </Button>
                         ))}
                       </ButtonGroup>
-                      <Col xs={12} style={{ textAlign: 'center', color: 'red' }}>
+                      <Col
+                        xs={12}
+                        style={{ textAlign: 'center', color: 'red' }}
+                      >
                         {error}
                       </Col>
                     </Row>
@@ -790,78 +731,189 @@ function DetailsModal(props) {
 
                       <Col xs='12'>
                         <RichTextEditor
-                          initialData={voteReason}
                           required
-                          onChange={data => setVoteReason(data)}
+                          initialData={sponsorVoteReason}
+                          onChange={data => setSponsorVoteReason(data)}
                         />
-
                         <input
                           className={styles.fakeInput}
                           style={{ left: '15px' }}
-                          id='voteReason'
+                          id='sponsorVoteReason'
                         />
                       </Col>
                     </Row>
 
+                    <Alert variant={'info'} style={{ marginTop: '15px' }}>
+                      {sponsorNote}
+                    </Alert>
+
                     <Row style={{ justifyContent: 'center' }}>
-											{!isMaintenanceMode ? (  <Button
+                      <Button
                         variant='primary'
-                        onClick={() => handleVoteSubmission()}
-                        style={{ marginTop: '10px', width: '150px' }}
+                        onClick={() => handleSponsorVoteSubmission()}
+                        style={{ marginTop: '10px', width: '199px' }}
                       >
-                        Submit Vote
-                      </Button>): (
-                  <Popup
-                    component={
-                      <span className='d-inline-block'>
-                        <Button
-                          variant='info'
-                          type='submit'
-                          disabled
-                          style={{ pointerEvents: 'none' }}
-                        >
-                          SUBMIT
-                        </Button>
-                      </span>
-                    }
-                    popOverText='You can submit a vote after the maintenance period is over.'
-                    placement='left'
-                  />)}
-                    
+                        Submit Sponsor Vote
+                      </Button>
                     </Row>
-                  </>
-                ) : (
-                  <>
-                    {status === 'Voting' && <p style={{ color: '#262626', textAlign: 'center' }}>
-                      You have already voted for this proposal. <br /> {changeVote &&
-                        <ButtonGroup aria-label='Basic example'>
-                          <Button style={{ width: 200 }} onClick={() => setChangeVoteButton(true)} variant="primary">Change Vote</Button>
-                        </ButtonGroup>}
-                    </p>
-                    }
+
+                    {/* <Row style={{ justifyContent: 'center' }}>
+            <Button variant="success" onClick={onClickApproveSponsorRequest}
+              onClick={() => {
+                setSponsorConfirmationShow(true);
+                setSponsorVote('approve')
+              }}>Accept</Button>
+            <Button variant="danger" className={styles.rejectButton} onClick={onClickRejectSponsorRequest}
+              onClick={() => {
+                setSponsorConfirmationShow(true);
+                setSponsorVote('reject')
+              }}>Deny</Button>
+
+          </Row> */}
                   </>
                 )}
-              </>
-            )}
 
-            {
-              // !sponsorRequest &&
-              <Row>
-                <Col xs='12'>
-                  {status === 'Voting' ||
+              {isPrep &&
+                votingPRep &&
+                period === 'VOTING' &&
+                remainingTime > 0 && (
+                  <>
+                    {!votesByProposal.some(
+                      vote => vote.sponsorAddress === walletAddress,
+                    ) || changeVoteButton ? (
+                      <>
+                        <Row
+                          style={{
+                            justifyContent: 'center',
+                            flexDirection: 'row',
+                          }}
+                        >
+                          {/* {milestoneArray.map((milestone, index) => {
+                            return (
+                              <div className='d-flex flex-column'>
+                                <MilestoneVoteCard
+                                  id={index + 1}
+                                  name={milestone.name}
+                                  description={milestone.description}
+                                />
+                              </div>
+                            );
+                          })} */}
+                          <ButtonGroup aria-label='Basic example'>
+                            {voteOptions.map(voteOption => (
+                              <Button
+                                variant={
+                                  vote === voteOption.title
+                                    ? voteOption.bgColor
+                                    : 'light'
+                                }
+                                onClick={() => setVote(voteOption.title)}
+                                style={{ border: '1px solid rgba(0,0,0,0.7)' }}
+                              >
+                                {voteOption.title}
+                              </Button>
+                            ))}
+                          </ButtonGroup>
+                          <Col
+                            xs={12}
+                            style={{ textAlign: 'center', color: 'red' }}
+                          >
+                            {error}
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col xs='12'>
+                            <span>
+                              Explain in brief the reason behind your decision
+                            </span>
+                            <InfoIcon description={specialCharacterMessage()} />
+                          </Col>
+
+                          <Col xs='12'>
+                            <RichTextEditor
+                              initialData={voteReason}
+                              required
+                              onChange={data => setVoteReason(data)}
+                            />
+
+                            <input
+                              className={styles.fakeInput}
+                              style={{ left: '15px' }}
+                              id='voteReason'
+                            />
+                          </Col>
+                        </Row>
+
+                        <Row style={{ justifyContent: 'center' }}>
+                          {!isMaintenanceMode ? (
+                            <Button
+                              variant='primary'
+                              onClick={() => handleVoteSubmission()}
+                              style={{ marginTop: '10px', width: '150px' }}
+                            >
+                              Submit Vote
+                            </Button>
+                          ) : (
+                            <Popup
+                              component={
+                                <span className='d-inline-block'>
+                                  <Button
+                                    variant='info'
+                                    type='submit'
+                                    disabled
+                                    style={{ pointerEvents: 'none' }}
+                                  >
+                                    SUBMIT
+                                  </Button>
+                                </span>
+                              }
+                              popOverText='You can submit a vote after the maintenance period is over.'
+                              placement='left'
+                            />
+                          )}
+                        </Row>
+                      </>
+                    ) : (
+                      <>
+                        {status === 'Voting' && (
+                          <p style={{ color: '#262626', textAlign: 'center' }}>
+                            You have already voted for this proposal. <br />{' '}
+                            {changeVote && (
+                              <ButtonGroup aria-label='Basic example'>
+                                <Button
+                                  style={{ width: 200 }}
+                                  onClick={() => setChangeVoteButton(true)}
+                                  variant='primary'
+                                >
+                                  Change Vote
+                                </Button>
+                              </ButtonGroup>
+                            )}
+                          </p>
+                        )}
+                      </>
+                    )}
+                  </>
+                )}
+
+              {
+                // !sponsorRequest &&
+                <Row>
+                  <Col xs='12'>
+                    {status === 'Voting' ||
                     status === 'Active' ||
                     status === 'Completed' ||
                     status === 'Paused' ||
                     status === 'Disqualified' ||
                     (status === 'Rejected' && votesByProposal?.length) ? (
-                    <>
-                      <ListTitle>VOTES</ListTitle>
-                      <VoteList votes={votesByProposal} />
-                    </>
-                  ) : null}
-                  {(status === 'Active' ||
-                    status === 'Completed' ||
-                    status === 'Paused') && (
+                      <>
+                        <ListTitle>VOTES</ListTitle>
+                        <VoteList votes={votesByProposal} />
+                      </>
+                    ) : null}
+                    {(status === 'Active' ||
+                      status === 'Completed' ||
+                      status === 'Paused') && (
                       <>
                         <ListTitle>Progress Reports</ListTitle>
                         <ProgressReportList
@@ -871,59 +923,63 @@ function DetailsModal(props) {
                         />
                       </>
                     )}
-                </Col>
-              </Row>
-            }
+                  </Col>
+                </Row>
+              }
 
-            <ConfirmationModal
-              show={sponsorConfirmationShow}
-              size='lg'
-              onHide={() => setSponsorConfirmationShow(false)}
-              heading={
-                sponsorVote === 'Accept'
-                  ? 'Sponsor Request Approval Confirmation'
-                  : 'Sponsor Request Rejection Confirmation'
-              }
-              onConfirm={
-                sponsorVote === 'Accept'
-                  ? onClickApproveSponsorRequest
-                  : onClickRejectSponsorRequest
-              }
-            >
-              {sponsorVote === 'Accept' ? (
-                <>
-                  <div>
-                    Are you sure you want to accept the sponsor request?
-                  </div>
-                  {sponsorNote}
-                </>
-              ) : (
-                <span>Are you sure you want to deny the sponsor request?</span>
+              <ConfirmationModal
+                show={sponsorConfirmationShow}
+                size='lg'
+                onHide={() => setSponsorConfirmationShow(false)}
+                heading={
+                  sponsorVote === 'Accept'
+                    ? 'Sponsor Request Approval Confirmation'
+                    : 'Sponsor Request Rejection Confirmation'
+                }
+                onConfirm={
+                  sponsorVote === 'Accept'
+                    ? onClickApproveSponsorRequest
+                    : onClickRejectSponsorRequest
+                }
+              >
+                {sponsorVote === 'Accept' ? (
+                  <>
+                    <div>
+                      Are you sure you want to accept the sponsor request?
+                    </div>
+                    {sponsorNote}
+                  </>
+                ) : (
+                  <span>
+                    Are you sure you want to deny the sponsor request?
+                  </span>
+                )}
+              </ConfirmationModal>
+
+              <ConfirmationModal
+                show={voteConfirmationShow}
+                onHide={() => setVoteConfirmationShow(false)}
+                heading={'Vote Confirmation'}
+                onConfirm={onSubmitVote}
+              >
+                Are you sure you want to {vote.toLowerCase()} the proposal?
+              </ConfirmationModal>
+
+              {modalShow && (
+                <DetailsModalPR
+                  show={modalShow}
+                  onHide={() => {
+                    setLoading(false);
+                    emptyProgressReportDetailRequest();
+                    setModalShow(false);
+                  }}
+                  progressReport={selectedProgressReport}
+                  // status={selectedTab}
+                />
               )}
-            </ConfirmationModal>
-
-            <ConfirmationModal
-              show={voteConfirmationShow}
-              onHide={() => setVoteConfirmationShow(false)}
-              heading={'Vote Confirmation'}
-              onConfirm={onSubmitVote}
-            >
-              Are you sure you want to {vote.toLowerCase()} the proposal?
-            </ConfirmationModal>
-
-            {modalShow && <DetailsModalPR
-              show={modalShow}
-              onHide={() => {
-                setLoading(false);
-                emptyProgressReportDetailRequest();
-                setModalShow(false)
-              }}
-              progressReport={selectedProgressReport}
-            // status={selectedTab}
-            />
-            }
-          </Modal.Body>
-        </>
+            </Modal.Body>
+          </>
+        )
       )}
     </Modal>
   );
@@ -935,7 +991,7 @@ const mapStateToProps = state => ({
   votesByProposal: state.proposals.votesByProposal,
   approvedPercentage: getProposalApprovedPercentage(state),
   approvedVoterPercentage: getProposalApprovedVotersPercentage(state),
-
+  sponsorBondPercentage: state.preps.sponsorBondPercentage,
   rejectedPercentage: getProposalRejectedPercentage(state),
   rejectedVoterPercentage: getProposalRejectedVotersPercentage(state),
 
@@ -949,8 +1005,8 @@ const mapStateToProps = state => ({
   isPrep: state.account.isPrep,
   ipfsError: state.proposals.error,
   changeVote: state.proposals.changeVote,
-  votingPRep:state.account.votingPRep,
-	isMaintenanceMode: state.fund.isMaintenanceMode,
+  votingPRep: state.account.votingPRep,
+  isMaintenanceMode: state.fund.isMaintenanceMode,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -964,10 +1020,10 @@ const mapDispatchToProps = dispatch => ({
   fetchPrepsRequest: payload => dispatch(fetchPrepsRequest(payload)),
   fetchSponsorMessageRequest: payload =>
     dispatch(fetchSponsorMessageRequest(payload)),
-  emptyProgressReportDetailRequest: (payload) =>
+  emptyProgressReportDetailRequest: payload =>
     dispatch(emptyProgressReportDetailRequest()),
-  fetchChangeVoteRequest: (payload) => dispatch(fetchChangeVoteRequest(payload)),
-	fetchMaintenanceModeRequest: () => dispatch(fetchMaintenanceModeRequest()),
+  fetchChangeVoteRequest: payload => dispatch(fetchChangeVoteRequest(payload)),
+  fetchMaintenanceModeRequest: () => dispatch(fetchMaintenanceModeRequest()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DetailsModal);

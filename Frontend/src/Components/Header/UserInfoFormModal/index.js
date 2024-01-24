@@ -54,10 +54,8 @@ const UserInfoFormModal = ({
     [user],
   );
 
-  let [
-    submissionConfirmationShow,
-    setSubmissionConfirmationShow,
-  ] = React.useState(false);
+  let [submissionConfirmationShow, setSubmissionConfirmationShow] =
+    React.useState(false);
 
   const handleSubmit = event => {
     event.preventDefault();
@@ -90,19 +88,21 @@ const UserInfoFormModal = ({
       size='lg'
       aria-labelledby='contained-modal-title-vcenter'
       centered
+      // className='customModal'
+      contentClassName={styles['modal-content']}
     >
       <Modal.Header closeButton>
         <Modal.Title
           id='contained-modal-title-vcenter'
-          style={{ color: '#262626' }}
+          // style={{ color: '#262626' }}
         >
           User Registration
         </Modal.Title>
       </Modal.Header>
-      <Modal.Body className={styles.modalBody}>
+      <Modal.Body /*className={styles.modalBody}*/>
         <Form onSubmit={handleSubmit}>
           <Form.Group as={Row} controlId='formPlaintextEmail'>
-            <Form.Label column sm='2'>
+            <Form.Label className={styles.textColor} column sm='2'>
               First Name
             </Form.Label>
             <Col sm='4' className={styles.inputSameLine}>
@@ -112,17 +112,19 @@ const UserInfoFormModal = ({
                 value={userData.firstName}
                 name='firstName'
                 onChange={handleChange}
+                className={styles.inputBox}
                 required
               />
             </Col>
 
-            <Form.Label column sm='2'>
+            <Form.Label className={styles.textColor} column sm='2'>
               Last Name
             </Form.Label>
             <Col sm='4' className={styles.inputSameLine}>
               <Form.Control
                 placeholder='Enter Last Name'
                 size='md'
+                className={styles.inputBox}
                 value={userData.lastName}
                 name='lastName'
                 onChange={handleChange}
@@ -131,7 +133,7 @@ const UserInfoFormModal = ({
           </Form.Group>
 
           <Form.Group as={Row} controlId='formPlaintextEmail'>
-            <Form.Label column sm='2'>
+            <Form.Label className={styles.textColor} column sm='2'>
               Email
             </Form.Label>
             <Col sm='10' className={styles.inputSameLine}>
@@ -139,6 +141,7 @@ const UserInfoFormModal = ({
                 placeholder='Enter Email Address'
                 size='md'
                 type='email'
+                className={styles.inputBox}
                 value={userData.email}
                 name='email'
                 onChange={handleChange}
@@ -148,7 +151,7 @@ const UserInfoFormModal = ({
           </Form.Group>
 
           <Form.Group as={Row} controlId='formPlaintextEmail'>
-            <Form.Label column sm='2'>
+            <Form.Label className={styles.textColor} column sm='2'>
               Wallet Address
             </Form.Label>
             <Col
@@ -164,13 +167,19 @@ const UserInfoFormModal = ({
 
           <Form.Group as={Row} controlId='formPlaintextEmail'>
             <Col sm='12'>
-              <Form.Check
-                type='checkbox'
-                label='Enable email notifications'
-                checked={userData.enableEmailNotifications}
-                onChange={handleCheckedChange}
-                name='enableEmailNotifications'
-              />
+              <div className='d-flex align-items-center'>
+                <Form.Check
+                  type='checkbox'
+                  className={styles.textColor}
+                  // label='Enable email notifications'
+                  checked={userData.enableEmailNotifications}
+                  onChange={handleCheckedChange}
+                  name='enableEmailNotifications'
+                />
+                <Form.Label className={styles.textColor} column sm='12'>
+                  Enable email notifications
+                </Form.Label>
+              </div>
             </Col>
           </Form.Group>
 
@@ -184,7 +193,7 @@ const UserInfoFormModal = ({
                 <span>Your email has been verified</span>
               </span>
             ) : (
-              <>
+              <p className={styles.textColor}>
                 Your email has not been verified yet.
                 <br /> Didn't receive email or the email link expired?{' '}
                 <span
@@ -193,7 +202,7 @@ const UserInfoFormModal = ({
                 >
                   Resend email confirmation
                 </span>
-              </>
+              </p>
             ))}
 
           {initialPrompt && (

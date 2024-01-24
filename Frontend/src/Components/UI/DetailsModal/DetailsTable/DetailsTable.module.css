@@ -10,16 +10,17 @@
   background:var(--proposal-details-title) !important;
   font-style: normal;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 20px;
   line-height: 17px;
   color: #ffffff;
   border: none !important;
 }
 
+
 .key {
   font-style: normal;
   font-weight: 600;
-  font-size: 0.65rem;
+  font-size: 0.7rem;
   line-height: 15px;
   color: var(--proposal-text-color);
 }
@@ -27,8 +28,18 @@
 .value {
   font-style: normal;
   font-weight: normal;
-  font-size: 0.65rem;
+  font-size: 0.875rem;
   line-height: 15px;
-  text-align: right;
   color: var(--proposal-text-color);
+}
+
+
+.cardHeader {
+  font-style: normal;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 17px;
+  color: var(--proposal-text-color);
+  border: none !important;
 }

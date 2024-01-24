@@ -6,7 +6,7 @@ import UpperCard from '../Proposals/UpperCard';
 
 const ActiveProposals = () => {
   return (
-    <Container>
+    <Container fluid style={{minHeight:'50vh'}}>
       {/* <Header title='Voting' /> */}
       {/* <UpperCard voting /> */}
 

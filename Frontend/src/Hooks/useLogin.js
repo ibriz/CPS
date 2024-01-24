@@ -46,6 +46,7 @@ export const useLogin = () => {
                 'Please Use Google Chrome or any other Chromium Browser',
             );
         }
+        window.location.reload();
     }
     return { walletModal, handleLogin, setWalletModal };
 }

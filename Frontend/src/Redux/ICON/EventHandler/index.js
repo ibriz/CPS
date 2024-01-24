@@ -39,20 +39,22 @@ import {
 
 // import { loginSuccess } from 'Redux/Reducers/accountSlice';
 
-const {
-  submit_proposal,
-  submit_progress_report,
+const {    
+  submitProposal,
+  submitProgressReport,
   sponsor_vote,
   reject_sponsor,
-  vote_proposal,
-  vote_progress_report,
-  update_period,
-  unregister_prep,
-  register_prep,
-  pay_prep_penalty,
+  voteProposal,
+  voteProgressReport,
+  updatePeriod,
+  unregisterPrep,
+  registerPrep,
+  payPrepPenalty,
   approve_sponsor,
-  claim_reward,
+  claimSponsorBond,
+  claimReward,
   votePriority,
+  submitProposalMock,
 } = constants;
 
 function setTimeoutPromise() {
@@ -107,6 +109,7 @@ async function getResult({ txHash, successMessage, failureMessage }, callBack) {
 
 export default event => {
   const { type, payload } = event.detail;
+  console.log("submit migration id", payload.id);
   window.icon = true;
 
   switch (type) {
@@ -141,22 +144,22 @@ export default event => {
       break;
 
     case 'RESPONSE_JSON-RPC':
-      console.log(payload);
 
       if (payload.code) {
         NotificationManager.error(payload.message, 'Transaction Failed');
         return;
       }
 
-      switch (payload.id) {
-        case submit_proposal:
+      switch (Number(payload.id)) {
+        case submitProposal:
           console.log('history');
-          history.push('/proposals');
-          history.push('/proposals');
+          history.push('/dashboard');
+          history.push('/dashboard');
           history.goBack();
           history.goForward();
-
           // window.location.reload();
+          // history.push('/dashboard');
+          // history.push('/proposals');
           NotificationManager.info('Proposal Creation Request Sent');
 
           getResult(
@@ -178,13 +181,45 @@ export default event => {
           );
 
           break;
-
-        case submit_progress_report:
+        case submitProposalMock:
           console.log('history');
-          history.push('/progress-reports');
-          history.push('/progress-reports');
+          history.push('/dashboard');
+          history.push('/dashboard');
           history.goBack();
           history.goForward();
+          // history.push('/proposals');
+          // history.goBack();
+          // history.goForward();
+          // window.location.reload();
+          NotificationManager.info('Migration Request Sent');
+
+          getResult(
+            {
+              txHash: payload.result,
+              failureMessage: 'Migration Failed',
+              successMessage: 'Migration Successful',
+            },
+            function () {
+              store.dispatch(
+                fetchProposalListRequest({
+                  status: 'Pending',
+                  walletAddress: store.getState().account.address,
+                  pageNumber: 1,
+                }),
+              );
+              return true;
+            },
+          );
+
+          break;
+
+        case submitProgressReport:
+          console.log('history');
+          history.push('/dashboard');
+          history.push('/dashboard');
+          history.goBack();
+          history.goForward();
+          // history.push('/dashboard');
           getResult(
             {
               txHash: payload.result,
@@ -226,7 +261,10 @@ export default event => {
 
         case sponsor_vote:
           console.log('history');
-          history.push('/');
+          history.push('/dashboard');
+          history.push('/dashboard');
+          history.goBack();
+          history.goForward();
           NotificationManager.info('Sponsor Vote Request Sent');
 
           getResult(
@@ -267,7 +305,10 @@ export default event => {
 
         case approve_sponsor:
           console.log('history');
-          history.push('/');
+          history.push('/dashboard');
+          history.push('/dashboard');
+          history.goBack();
+          history.goForward();
           NotificationManager.info('Sponsor request approval request sent');
 
           getResult(
@@ -332,7 +373,10 @@ export default event => {
 
         case reject_sponsor:
           console.log('history');
-          history.push('/');
+          history.push('/dashboard');
+          history.push('/dashboard');
+          history.goBack();
+          history.goForward();
           NotificationManager.info('Sponsor request rejection request sent');
 
           getResult(
@@ -381,9 +425,13 @@ export default event => {
           // setTimeout(() => window.location.reload(), 800);
           break;
 
-        case vote_proposal:
-          console.group('vote_proposal');
-          console.log('vote_proposal', payload);
+        case voteProposal:
+          console.group('voteProposal');
+          history.push('/dashboard');
+          history.push('/dashboard');
+          history.goBack();
+          history.goForward();
+          console.log('voteProposal', payload);
 
           console.groupEnd();
           getResult(
@@ -415,7 +463,11 @@ export default event => {
 
           // result = await iconService.getTransactionResult().execute();
           break;
-        case vote_progress_report:
+        case voteProgressReport:
+          history.push('/dashboard');
+          history.push('/dashboard');
+          history.goBack();
+          history.goForward();
           getResult(
             {
               txHash: payload.result,
@@ -446,7 +498,7 @@ export default event => {
           // result = await iconService.getTransactionResult().execute();
           break;
 
-        case update_period:
+        case updatePeriod:
           getResult(
             {
               txHash: payload.result,
@@ -462,7 +514,7 @@ export default event => {
           NotificationManager.info('Period Update Request Sent');
           break;
 
-        case unregister_prep:
+        case unregisterPrep:
           getResult(
             {
               txHash: payload.result,
@@ -482,7 +534,7 @@ export default event => {
           NotificationManager.info('Prep Unregistration Request Sent');
           break;
 
-        case register_prep:
+        case registerPrep:
           getResult(
             {
               txHash: payload.result,
@@ -502,7 +554,7 @@ export default event => {
           NotificationManager.info('Prep Registration Request Sent');
           break;
 
-        case pay_prep_penalty:
+        case payPrepPenalty:
           getResult(
             {
               txHash: payload.result,
@@ -515,11 +567,15 @@ export default event => {
             },
           );
 
-          // window.location.reload();
           NotificationManager.info('Prep Penalty Sent');
+          window.location.reload();
           break;
 
-        case claim_reward:
+        case claimReward:
+          history.push('/dashboard');
+          history.push('/dashboard');
+          history.goBack();
+          history.goForward();
           getResult(
             {
               txHash: payload.result,
@@ -547,9 +603,22 @@ export default event => {
               return true;
             },
           );
-
-          // window.location.reload();
           NotificationManager.info('Reward Claim Request Sent');
+          // window.location.reload();
+          break;
+
+        case claimSponsorBond:
+          history.push('/dashboard');
+          history.goBack();
+          history.goForward();
+          getResult({
+            txHash: payload.result,
+            failureMessage: 'Sponsor Bond Claim Failed',
+            successMessage: 'Sponsor Bond Claimed Successfully',
+          });
+
+          NotificationManager.info('Sponsor bond claim Request Sent');
+          // window.location.reload();
           break;
 
         case votePriority:

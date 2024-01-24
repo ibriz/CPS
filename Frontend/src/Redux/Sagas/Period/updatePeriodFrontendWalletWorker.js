@@ -3,7 +3,7 @@ import { sendTransactionFrontendWallet } from 'Redux/ICON/utils';
 function* updatePeriodFrontendWalletWorker({ payload }) {
   try {
     sendTransactionFrontendWallet({
-      method: 'update_period',
+      method: 'updatePeriod',
     });
     console.log('success');
   } catch {

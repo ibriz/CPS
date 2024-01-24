@@ -21,6 +21,7 @@ import ProposalDetailsPage from 'Containers/ProposalDetailsPage';
 import ProgressReportDetailsPage from 'Containers/ProgressReportDetailsPage';
 import StatsPage from 'Containers/StatsPage';
 import ProposalHistoryPage from 'Containers/ProposalHistoryPage';
+import MigrationForm from 'Containers/MigrationForm';
 
 const Main = ({
   handleToggleSidebar,
@@ -57,6 +58,7 @@ const Main = ({
           style={{
             paddingLeft: '25px',
             paddingRight: '25px',
+     
             height:
               !address && window.location.pathname === '/dashboard'
                 ? '100%'
@@ -145,6 +147,12 @@ const Main = ({
                 {<Voting />}
                 <Helmet>
                   <title>CPS - Voting</title>
+                </Helmet>
+              </Route>
+              <Route path={process.env.PUBLIC_URL + '/migration'}>
+                {<MigrationForm />}
+                <Helmet>
+                  <title>CPS - Migration</title>
                 </Helmet>
               </Route>
 

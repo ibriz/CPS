@@ -2,10 +2,13 @@ import fetchProposalListWorker from './fetchProposalListWorker';
 import fetchMyProposalListWorker from './fetchMyProposalListWorker';
 
 import submitProposalToScoreWorker from './submitProposalToScoreWorker';
+import submitMigrationProposalToScoreWorker from './submitMigrationProposalToScoreWorker';
 import submitProposalToIPFSWorker from './submitProposalWorker';
+import submitMigrationProposalWorker from './submitMigrationProposalWorker';
 import updateProposalStatusWorker from './updateProposalStatusWorker';
 import fetchProposalDetailWorker from './fetchProposalDetailWorker';
 import emptyProposalDetailWorker from './emptyProposalDetailWorker';
+import fetchSelectedProposalForProgressReportWorker from './fetchSelectedProposalForProgressReportWorker'
 import fetchSponsorRequestsListWorker from './fetchSponsorRequestsListWorker';
 import approveSponserRequestWorker from './approveSponserRequestWorker';
 import rejectSponserRequestWorker from './rejectSponserRequestWorker'
@@ -13,6 +16,7 @@ import saveDraftRequestWorker from './saveDraftRequestWorker';
 import fetchDraftRequestWorker from './fetchDraftRequestWorker';
 import voteProposalWorker from './voteProposalWorker';
 import fetchProposalByAddressWorker from './fetchProposalByAddressWorker';
+import fetchMigrationProposalByAddressWorker from './fetchMigrationProposalByAddressWorker';
 import fetchProposalVoteResultRequestWorker from './fetchProposalVoteResultRequestWorker';
 import fetchProjectAmountsWorker from './fetchProjectAmountsWorker';
 import fetchRemainingVotesRequestWorker from './fetchRemainingVotesRequestWorker';
@@ -30,11 +34,14 @@ export {
     fetchProposalListWorker,
     fetchMyProposalListWorker,
     submitProposalToScoreWorker,
+    submitMigrationProposalWorker,
+    submitMigrationProposalToScoreWorker,
     submitProposalToIPFSWorker,
     updateProposalStatusWorker,
     fetchProposalDetailWorker,
     emptyProposalDetailWorker,
     fetchSponsorRequestsListWorker,
+    fetchMigrationProposalByAddressWorker,
     approveSponserRequestWorker,
     rejectSponserRequestWorker,
     saveDraftRequestWorker,
@@ -49,5 +56,6 @@ export {
     fetchChangeVoteWorker,
     submitPriorityVotingWorker,
     fetchPriorityVotingStatusWorker,
-		fetchSortPriorityProposalListWorker
+		fetchSortPriorityProposalListWorker,
+    fetchSelectedProposalForProgressReportWorker,
 }

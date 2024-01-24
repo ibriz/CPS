@@ -9,14 +9,14 @@ import { progressReportStatusMapping } from 'Constants';
 function* submitProgressReportWorker({ payload }) {
   try {
     const response = yield call(callKeyStoreWallet, {
-      method: 'get_progress_reports',
+      method: 'getProgressReports',
       params: {
-        _status: progressReportStatusMapping.find(
+        status: progressReportStatusMapping.find(
           mapping => mapping.name === payload.status,
         ).status,
         // _address: payload.walletAddress,
         // _end_index: `${payload.pageNumber * 10}`,
-        _start_index: `${payload.pageNumber * 10 - 10}`,
+        startIndex: `${payload.pageNumber * 10 - 10}`,
       },
     });
 

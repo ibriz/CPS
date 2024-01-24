@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './ProposalNavBar.module.scss';
 import NavBarTitle from '../../UI/LowerCardNavBar/NavBarTitle';
 import NavBarInputGroup from '../../UI/LowerCardNavBar/NavBarInputGroup';
-import { Nav } from 'react-bootstrap';
+import { Container, Nav } from 'react-bootstrap';
 
 const TabBar = ({
   selectedTab,
@@ -16,7 +16,14 @@ const TabBar = ({
   hideSearch = false,
 }) => {
   return (
-    <div className={styles.proposalNavBar}>
+    <div
+      className={styles.proposalNavBar}
+      style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems:'center'
+      }}
+    >
       {/* {
                 proposalStates.map(
                     (proposalState) =>
@@ -33,8 +40,7 @@ const TabBar = ({
         activeKey='/home'
         onSelect={selectedKey => alert(`selected ${selectedKey}`)}
         style={{
-          display: 'inline-flex',
-          flexWrap: 'wrap',
+          display: 'flex',
           alignItems: 'center',
           gap: '5px',
           width: '100%',
@@ -53,8 +59,8 @@ const TabBar = ({
             </NavBarTitle>
           </Nav.Item>
         ))}
-
-        <div style={{ flexGrow: 1 }}></div>
+      </Nav>
+      <div>
         {!hideSearch && (
           <NavBarInputGroup
             placeholder={placeholder}
@@ -63,7 +69,7 @@ const TabBar = ({
             maxWidth={maxWidth}
           />
         )}
-      </Nav>
+      </div>
     </div>
   );
 };

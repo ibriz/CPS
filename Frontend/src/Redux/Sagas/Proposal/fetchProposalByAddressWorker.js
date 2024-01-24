@@ -22,10 +22,10 @@ const proposalListStatusMapping = {
 function* fetchProposalByAddressWorker({ payload }) {
   try {
     const responseActive = yield call(callKeyStoreWallet, {
-      method: 'get_active_proposals',
+      method: 'getActiveProposals',
       params: {
         // _status: '_active',
-        _wallet_address: payload.walletAddress,
+        walletAddress: payload.walletAddress,
       },
     });
 

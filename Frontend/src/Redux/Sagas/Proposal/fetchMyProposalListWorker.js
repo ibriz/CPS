@@ -23,10 +23,10 @@ const proposalListStatusMapping = {
 function* fetchMyProposalListWorker({ payload }) {
   try {
     const response = yield call(callKeyStoreWallet, {
-      method: 'get_proposal_detail_by_wallet',
+      method: 'getProposalDetailByWallet',
       params: {
-        _wallet_address: payload.walletAddress,
-        _start_index: 0,
+        walletAddress: payload.walletAddress,
+        startIndex: 0,
       },
     });
 
@@ -34,9 +34,9 @@ function* fetchMyProposalListWorker({ payload }) {
     let fetchedCount = response.data.length;
     while (fetchedCount < totalCount) {
       let temp = yield call(callKeyStoreWallet, {
-        method: 'get_proposal_detail_by_wallet',
+        method: 'getProposalDetailByWallet',
         params: {
-          _wallet_address: payload.walletAddress,
+          walletAddress: payload.walletAddress,
           startIndex: `${Number(fetchedCount) || 0}`,
         },
       });

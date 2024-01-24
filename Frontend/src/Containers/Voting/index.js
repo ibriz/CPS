@@ -6,14 +6,14 @@ import UpperCard from '../Proposals/UpperCard';
 
 const Voting = () => {
   return (
-    <Container>
+    <Container fluid style={{minHeight:'50vh'}}>
       {/* <Header title='Voting' /> */}
       <UpperCard voting />
 
       <VotingCard
         proposalStatesList={['Proposals', 'Progress Reports']}
         initialState={'Proposals'}
-      />
+      /> 
     </Container>
   );
 };

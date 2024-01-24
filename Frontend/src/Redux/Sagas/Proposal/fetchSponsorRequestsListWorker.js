@@ -19,11 +19,11 @@ const proposalListStatusMapping = {
 function* fetchSponsorRequestsListWorker({ payload }) {
   try {
     const response = yield call(callKeyStoreWallet, {
-      method: 'get_sponsors_requests',
+      method: 'getSponsorsRequests',
       params: {
-        _status: proposalListStatusMapping[payload.status],
-        _sponsor_address: payload.walletAddress,
-        _start_index: 0,
+        status: proposalListStatusMapping[payload.status],
+        sponsorAddress: payload.walletAddress,
+        startIndex: 0,
       },
     });
 
@@ -31,11 +31,11 @@ function* fetchSponsorRequestsListWorker({ payload }) {
     let fetchedCount = response.data.length;
     while (fetchedCount < totalCount) {
       let temp = yield call(callKeyStoreWallet, {
-        method: 'get_sponsors_requests',
+        method: 'getSponsorsRequests',
         params: {
-          _status: proposalListStatusMapping[payload.status],
-          _sponsor_address: payload.walletAddress,
-          _start_index: `${Number(fetchedCount) || 0}`,
+          status: proposalListStatusMapping[payload.status],
+          sponsorAddress: payload.walletAddress,
+          startIndex: `${Number(fetchedCount) || 0}`,
         },
       });
       fetchedCount += temp.data.length;

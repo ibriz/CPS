@@ -9,13 +9,13 @@ const useVerification = () => {
   const walletAddress = useSelector(state => state.account.address);
   useEffect(() => {
     const interval = setInterval(() => {
-      console.log(
-        'INTERVAL',
-        new Date().getTime() / 1000,
-        walletAddress,
-        firstName,
-        !verified,
-      );
+      // console.log(
+      //   'INTERVAL',
+      //   new Date().getTime() / 1000,
+      //   walletAddress,
+      //   firstName,
+      //   !verified,
+      // );
       if (walletAddress && firstName && !verified) {
         dispatch(fetchUserDataRequest());
       }

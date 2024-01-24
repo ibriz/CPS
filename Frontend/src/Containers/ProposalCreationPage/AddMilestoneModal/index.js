@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
+import { findFutureMonth } from '../../../utils';
 import {
   Modal,
   Button,
@@ -14,17 +14,18 @@ import RichTextEditor from '../../../Components/RichTextEditor';
 import AppFormLabel from '../../../Components/UI/AppFormLabel';
 
 function AddMilestoneModal(props) {
+  const id = Date.now().toString().slice(-6);
   const [milestone, setMilestone] = useState({
+    id: null,
     name: null,
-    duration: null,
+    completionPeriod: null,
     budget: null,
     description: null,
   });
-
   useEffect(() => {
     setMilestone({
       name: null,
-      duration: null,
+      completionPeriod: null,
       budget: null,
       description: null,
     });
@@ -37,12 +38,13 @@ function AddMilestoneModal(props) {
     setMilestone(prevState => ({
       ...prevState,
       [name]: value,
+      id: id,
     }));
   };
 
   const handleSubmit = event => {
     event.preventDefault();
-
+    // console.log({ milestone });
     props.onAddMilestone(milestone);
     props.onHide();
     // submitProposal(
@@ -58,18 +60,24 @@ function AddMilestoneModal(props) {
       size='lg'
       aria-labelledby='contained-modal-title-vcenter'
       centered
+      contentClassName={styles['modal-content']}
     >
       <Modal.Header closeButton>
-        <Modal.Title id='contained-modal-title-vcenter'>Milestone</Modal.Title>
+        <Modal.Title id='contained-modal-title-vcenter'>
+          Add Milestone
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form onSubmit={handleSubmit} className={styles.form}>
-          <Form.Group as={Row} controlId='formPlaintextEmail'>
-            <AppFormLabel sm='2'>Milestone Name</AppFormLabel>
-            <Col sm='10' className={styles.inputSameLine}>
+        <Form onSubmit={handleSubmit}>
+          <Form.Group as={Col} controlId='titleofeachmilestone'>
+            <Form.Label column sm='6' className={styles.textColor}>
+              Title
+            </Form.Label>
+            <Col sm='12' className={styles.inputSameLine}>
               <Form.Control
                 placeholder='Enter Milestone Name'
                 size='md'
+                className={styles.inputBox}
                 value={milestone.name}
                 name='name'
                 onChange={handleChange}
@@ -77,32 +85,83 @@ function AddMilestoneModal(props) {
               />
             </Col>
           </Form.Group>
-          <Form.Group as={Row} controlId='formPlaintextEmail'>
-            <AppFormLabel column sm='2' className={styles.labelSameLine}>
-              Duration
-            </AppFormLabel>
-            <Col sm='4' className={styles.inputSameLine}>
-              <InputGroup size='md'>
-                <FormControl
-                  placeholder='Duration'
-                  type='number'
-                  value={milestone.duration}
-                  name='duration'
-                  min={0}
-                  max={12}
-                  onChange={handleChange}
-                  required
-                />
-                <InputGroup.Append>
-                  <InputGroup.Text>Months</InputGroup.Text>
-                </InputGroup.Append>
-              </InputGroup>
-            </Col>
 
-            {/* <AppFormLabel column sm="1">
+          <Form.Group as={Col} controlId='budgetandduration'>
+            <Form.Group as={Row} controlId='bndRow'>
+              <Form.Group as={Col} controlId='budgetRow'>
+                <Form.Label column className={styles.textColor}>
+                  Budget {`( remaining: ${props.remainingBudget} bnUSD)`}
+                </Form.Label>
+                <Col className={styles.inputSameLine}>
+                  <InputGroup>
+                    <Form.Control
+                      placeholder='Enter Budget'
+                      size='md'
+                      type='number'
+                      className={styles.inputBox}
+                      value={milestone.budget}
+                      name='budget'
+                      onChange={handleChange}
+                      required
+                    />
+                    <InputGroup.Append>
+                      <InputGroup.Text>bnUSD</InputGroup.Text>
+                    </InputGroup.Append>
+                  </InputGroup>
+                  {props.remainingBudget < milestone.budget && (
+                    <div style={{ padding: 4, fontSize: 14, color: '#ff0000' }}>
+                      Budget cannot be greater than remaining budget
+                    </div>
+                  )}
+                </Col>
+              </Form.Group>
+              <Form.Group as={Col} controlId='durationRow'>
+                <Form.Label column className={styles.textColor}>
+                  Delivery Month
+                </Form.Label>
+                <Col className={styles.inputSameLine}>
+                  <InputGroup size='md'>
+                    <Form.Control
+                      placeholder='Enter duration'
+                      size='md'
+                      type='number'
+                      className={styles.inputBox}
+                      value={milestone.completionPeriod}
+                      name='completionPeriod'
+                      onChange={handleChange}
+                      required
+                    />
+                    <InputGroup.Append>
+                      <InputGroup.Text>
+                        {findFutureMonth(milestone.completionPeriod)}
+                      </InputGroup.Text>
+                    </InputGroup.Append>
+                  </InputGroup>
+                </Col>
+              </Form.Group>
+            </Form.Group>
+          </Form.Group>
+          <Form.Group as={Col} controlId='formPlaintextEmail'>
+            <Form.Label column sm='6' className={styles.textColor}>
+              Description
+            </Form.Label>
+            <Col sm='12' className={styles.inputSameLine}>
+              <Form.Control
+                name='description'
+                value={milestone.description}
+                className={styles.inputBox}
+                placeholder='Enter Milestone Description'
+                as='textarea'
+                rows={5}
+                required
+                onChange={handleChange}
+              />
+            </Col>
+          </Form.Group>
+          {/* <AppFormLabel column sm="1">
                             Budget
                             </AppFormLabel>
-                        <Col sm="5" className={styles.inputSameLine}>
+                        <Col sm="5" className={styles.inputSameLine}s>
                             <InputGroup size="md">
 
                                 <FormControl placeholder="0" type="number" value={milestone.budget} name="budget" onChange={handleChange} required />
@@ -111,7 +170,6 @@ function AddMilestoneModal(props) {
                                 </InputGroup.Append>
                             </InputGroup>
                         </Col> */}
-          </Form.Group>
 
           {/* <Form.Group as={Row} controlId="formPlaintextPassword">
                         <AppFormLabel column sm="12">
@@ -127,7 +185,7 @@ function AddMilestoneModal(props) {
                                         })
                                     )
                                 } />
-                            </Col>
+                            </Col>  
                     </Form.Group> */}
 
           <Form.Group as={Row} controlId='formPlaintextPassword'>

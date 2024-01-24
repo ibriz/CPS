@@ -19,19 +19,26 @@
   padding-right: 15px;
 }
 
-.modalBody label,
-.form label {
-  font-style: normal;
-  font-weight: 600;
-  font-size: 0.85rem;
-  line-height: 17px;
-  color: #262626;
-}
 
-.modalBody input,
-.modalBody select {
-  font-size: 0.86rem;
-}
+// .modal-content {
+//   background-color: #000;
+//   color: #fff;
+// }
+
+
+// .modalBody label,
+// .form label {
+//   font-style: normal;
+//   font-weight: 600;
+//   font-size: 0.85rem;
+//   line-height: 17px;
+//   color: #262626;
+// }
+
+// .modalBody input,
+// .modalBody select {
+//   font-size: 0.86rem;
+// }
 
 @media (min-width: 768px) {
   .inputSameLine {
@@ -66,7 +73,7 @@
 }
 
 .address {
-  font-size: 0.9rem;
+  font-size: 1rem;
   word-wrap: break-word;
 }
 
@@ -75,3 +82,20 @@
     padding-left: 15px !important;
   }
 }
+
+
+.modal-content{
+  background-color: var(--proposal-card-color) !important;
+  color: var(--font-color) !important;   
+}
+
+.textColor{
+  color: var(--font-color)!important;
+  // color: white !important;
+}
+
+.inputBox{
+  background-color: var(--proposal-card-color) !important;
+  color: var(--font-color) !important ;
+  border:  1px solid rgb(66, 66, 66) !important;
+} 

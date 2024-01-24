@@ -2,6 +2,7 @@ import React from 'react';
 import { Container, Alert, Row } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import Proposal from './Proposal';
+import { useSelector } from 'react-redux';
 
 const PriorityVoteStatusCard = ({
   proposals,
@@ -10,6 +11,7 @@ const PriorityVoteStatusCard = ({
   minHeight = '100px',
 }) => {
   const isDarkTheme = localStorage.getItem('theme') === 'dark';
+  // const isDark = useSelector(state => state.theme.isDark);
   return (
     <Container
       fluid

@@ -8,7 +8,7 @@ import { callKeyStoreWallet } from '../../ICON/utils';
 function* fetchMaintenanceModeWorker({ payload }) {
   try {
     const response = yield call(callKeyStoreWallet, {
-      method: 'get_maintenance_mode',
+      method: 'getMaintenanceMode',
     });
 
     console.log('Fetched maintenance mode', response, Boolean(response));

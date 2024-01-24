@@ -8,9 +8,9 @@ import {
 function* fetchVoteResultBudgetChangeRequestWorker({ payload }) {
   try {
     const response = yield call(callKeyStoreWallet, {
-      method: 'get_budget_adjustment_vote_result',
+      method: 'getBudgetAdjustmentVoteResult',
       params: {
-        _report_key: payload.reportKey,
+        reportKey: payload.reportKey,
       },
     });
 

@@ -37,7 +37,7 @@ const MyProposalCard = ({
 }) => {
   const PAGE_SIZE = 5;
 
-  const [selectedTab, setSelectedTab] = useState();
+  const [selectedTab, setSelectedTab] = useState('Proposals');
 
   const [filteredProposalList, setFilteredProposalList] =
     useState(myProposalList);
@@ -47,8 +47,6 @@ const MyProposalCard = ({
   const [selectedProposal, setSelectedProposal] = React.useState();
 
   const [pageLength, setPageLength] = useState(1);
-
-  const [showDrafts, setShowDrafts] = useState(false);
 
   const [proposalPendingPRList, setProposalPendingPRList] = useState(
     proposalPendingProgressReport,
@@ -70,7 +68,7 @@ const MyProposalCard = ({
   };
 
   useEffect(() => {
-    if (showDrafts) {
+    if (selectedTab === 'Drafts') {
       fetchDraftsRequest({
         walletAddress,
       });
@@ -87,7 +85,7 @@ const MyProposalCard = ({
     }
   }, [
     selectedTab,
-    showDrafts,
+
     pageNumber,
     fetchDraftsRequest,
     fetchMyProposalListRequest,
@@ -101,10 +99,11 @@ const MyProposalCard = ({
   // Resets the pagination
   useEffect(() => {
     setPageNumber(1);
-  }, [searchText, showDrafts]);
+  }, [searchText, selectedTab]);
 
   useEffect(() => {
-    const mainList = showDrafts ? myDraftsList : myProposalList;
+    const mainList =
+      selectedTab === 'Proposals' ? myProposalList : myDraftsList;
     let filteredProposals = mainList.filter(proposal =>
       proposal._proposal_title
         ?.toLowerCase()
@@ -150,65 +149,41 @@ const MyProposalCard = ({
     pageNumber,
     walletAddress,
     myDraftsList,
-    showDrafts,
   ]);
 
   return (
     <>
       <Row className={styles.proposalCard}>
-        <Col>
+        <Container fluid>
           <Card className={styles.card}>
             <Card.Body className={styles.cardBody}>
-              <Container
+              <div
                 style={{
                   display: 'flex',
-                  justifyContent: 'space-between',
                   alignItems: 'center',
-                  padding: '0px 0px 10px 0px',
                 }}
               >
-                <div
-                  style={{
-                    fontWeight: 'bold',
-                    fontSize: '1.1rem',
-                    whiteSpace: 'nowrap',
-                  }}
-                >
-                  My Proposals
-                </div>
-
-                <Container
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'flex-end',
-                    alignItems: 'center',
-                  }}
-                >
-                  <a
-                    href='#'
+                <div style={{width:'100%'}}>
+                  <h5
                     style={{
-                      textDecoration: 'none',
-                      marginRight: '12px',
                       fontWeight: 'bold',
-                    }}
-                    onClick={e => {
-                      e.preventDefault();
-                      setShowDrafts(prevState => !prevState);
+                      fontSize: '1.1rem',
+                      whiteSpace: 'nowrap',
                     }}
                   >
-                    {showDrafts ? 'View regular' : 'View drafts'}
-                  </a>
+                    My Proposals
+                  </h5>
                   <TabBar
                     selectedTab={selectedTab}
                     setSelectedTab={setSelectedTab}
                     searchText={searchText}
                     setSearchText={setSearchText}
-                    tabs={[]}
+                    tabs={['Proposals', 'Drafts']}
                     placeholder='Search Proposal'
                     maxWidth
                   />
-                </Container>
-              </Container>
+                </div>
+              </div>
 
               <hr style={{ marginTop: '-9px' }} />
 
@@ -221,7 +196,9 @@ const MyProposalCard = ({
                 selectedProposal={selectedProposal}
                 setSelectedProposal={setSelectedProposal}
                 onClickProposal={
-                  showDrafts ? onClickProposalDraft : onClickProposal
+                  selectedTab === 'Proposals'
+                    ? onClickProposal
+                    : onClickProposalDraft
                 }
                 emptyListMessage='No Proposal'
                 minLayout={true}
@@ -246,7 +223,7 @@ const MyProposalCard = ({
               )} */}
             </Card.Body>
           </Card>
-        </Col>
+        </Container>
       </Row>
     </>
   );

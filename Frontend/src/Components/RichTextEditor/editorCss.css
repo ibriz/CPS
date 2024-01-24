@@ -1,0 +1,30 @@
+/* table{
+    min-width: 450px;
+    overflow-x: scroll;
+} */
+
+figure{
+    overflow-x: auto;
+}
+
+th{
+    text-align: left;
+    min-width: 160px;
+    font-size: 10px;
+    font-weight: semibold;
+}
+td{
+    text-align: left;
+    font-size: 10px;
+    font-weight: normal;
+}
+
+li,p{
+    font-size: 14px;
+  }
+
+
+  .ck .ck-editor__main > .ck-editor__editable{
+    color: var(--ck-color-text);
+  }
+

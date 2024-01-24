@@ -19,8 +19,9 @@
   align-items: center;
   justify-content: center;
   display: flex;
+  color: var(--font-color);
   font-size: x-large;
-  height: 120px;
+  min-height: 40vh;
 }
 
 .statsTab {
@@ -36,3 +37,9 @@
 .card {
   border: var(--proposal-card-border) !important;
 }
+
+
+.tableHead{
+  background-color: var(--proposal-card-color) !important;
+}
+

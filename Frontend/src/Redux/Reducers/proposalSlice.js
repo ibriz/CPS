@@ -11,19 +11,22 @@ const PARAMS = {
   totalBudget: 'total_budget',
   timestamp: 'timestamp',
   sponsoredTimestamp: 'sponsored_timestamp',
+  sponsorAddress: 'sponsor_address',
+  sponsorDepositAmount: 'sponsor_deposit_amount',
+  sponsorDepositStatus: 'sponsor_deposit_status',
   proposalHash: 'ipfs_hash',
-
+  isMilestone:'isMilestone',
+  milestoneCount:'milestoneCount',
   approvedVotes: 'approved_votes',
+  abstainedVotes: 'abstained_votes',
+  abstainVoters: 'abstain_voters',
   approvedReports: 'approved_reports',
   totalVotes: 'total_votes',
   rejectedVotes: 'rejected_votes',
-
   approvedVoters: 'approve_voters',
   totalVoters: 'total_voters',
   rejectedVoters: 'reject_voters',
-
   percentageCompleted: 'percentage_completed',
-
   newProgressReport: 'new_progress_report',
   lastProgressReport: 'last_progress_report',
 
@@ -41,6 +44,7 @@ export const VotingPhase = {
 };
 
 const initialState = {
+  selectedProposalDetailsbyHash:{},
   numberOfSubmittedProposals: 29,
   totalSubmittedProposalBudget: 1240000,
 
@@ -115,6 +119,7 @@ const initialState = {
   },
 
   proposalByAddress: [],
+  migrationProposalByAddress: [],
 
   votesByProposal: [],
 
@@ -155,6 +160,8 @@ const initialState = {
   sponsorRequestProposalTitle: '',
   sponsorRequestProposal: null,
   selectedProposal: {},
+  selectedProposalForMigration:{},
+  selectedProposalDetailForProgressReport:{},
   token: '',
   error: '',
   changeVote: false,
@@ -170,6 +177,13 @@ const proposalSlice = createSlice({
       state.submittingProposal = false;
     },
     submitProposalFailure(state) {
+      state.submittingProposal = false;
+    },
+    submitMigrationProposalRequest(state) {},
+    submitMigrationProposalSuccess(state) {
+      state.submittingProposal = false;
+    },
+    submitMigrationProposalFailure(state) {
       state.submittingProposal = false;
     },
 
@@ -289,6 +303,14 @@ const proposalSlice = createSlice({
               total: proposal[PARAMS.totalVoters],
               actual: proposal[PARAMS.approvedVoters],
             }),
+            abstainedPercentage: calculatePercentage({
+              total: proposal[PARAMS.totalVotes],
+              actual: proposal[PARAMS.abstainedVotes],
+            }),
+            abstainVotesPercentageCount: calculatePercentage({
+              total: proposal[PARAMS.totalVoters],
+              actual: proposal[PARAMS.abstainVoters],
+            }),
 
             rejectedPercentage: calculatePercentage({
               total: proposal[PARAMS.totalVotes],
@@ -346,7 +368,7 @@ const proposalSlice = createSlice({
           budget: IconConverter.toBigNumber(
             proposal[PARAMS.totalBudget],
           ).dividedBy(10 ** 18),
-          _timestamp: proposal[PARAMS.timestamp],
+          _timestamp: IconConverter.toBigNumber(proposal[PARAMS.timestamp]),
           _sponsored_timestamp: proposal[PARAMS.sponsoredTimestamp],
           ipfsHash: proposal[PARAMS.proposalHash],
           ipfsKey: proposal[PARAMS.proposalHash],
@@ -409,11 +431,21 @@ const proposalSlice = createSlice({
     fetchProposalDetailRequest() {
       return;
     },
-
     fetchProposalDetailSuccess(state, payload) {
       state.proposalDetail = payload.payload.response;
     },
     fetchProposalDetailFailure(state) {
+      state.error = true;
+    },
+    fetchSelectedProposalForProgressReportRequest() {
+      console.log("reached here")
+      return;
+    },
+
+    fetchSelectedProposalForProgressReportSuccess(state, payload) {
+      state.selectedProposalDetailForProgressReport = payload.payload.response;
+    },
+    fetchSelectedProposalForProgressReportFailure(state) {
       state.error = true;
     },
     emptyProposalDetailRequest() {
@@ -431,26 +463,6 @@ const proposalSlice = createSlice({
       return;
     },
     fetchSponsorRequestsListSuccess(state, action) {
-      // state.proposalList[action.payload.status][action.payload.pageNumber - 1] = action.payload.response.data.map (
-      //     proposal => (
-      //         {
-      //             _status: proposal._status,
-      //             _proposal_title: proposal._proposal_title,
-      //             _contributor_address: proposal._contributor_address,
-      //             budget: proposal.budget,
-      //             _timestamp: proposal._timestamp,
-      //             ipfsHash: proposal._ipfs_hash,
-      //             ipfsKey: proposal._ipfs_key
-      //         }
-      //     )
-      // );
-      // console.log(fetchProposalListSuccess);
-      // // console.log(Math.ceil(IconConverter.toNumber(action.payload.response[0].count) / 10));
-      // console.log(action.payload.status);
-      // // state.totalPages[action.payload.status] = Math.ceil(IconConverter.toNumber(action.payload.response[0].count) / 10)
-      // state.totalPages[action.payload.status] = Math.ceil(IconConverter.toNumber(action.payload.response.count) / 10)
-      // return;
-
       state.sponsorRequestsList[action.payload.status][
         action.payload.pageNumber - 1
       ] = action.payload.response.data
@@ -463,8 +475,13 @@ const proposalSlice = createSlice({
             proposal[PARAMS.totalBudget],
           ).dividedBy(10 ** 18),
 
-          _timestamp: proposal[PARAMS.timestamp],
-          _sponsored_timestamp: proposal[PARAMS.sponsoredTimestamp],
+          timestamp: proposal[PARAMS.timestamp],
+          sponsored_address: proposal[PARAMS.sponsorAddress],
+          sponsored_deposit_amount: IconConverter.toBigNumber(
+            proposal[PARAMS.sponsorDepositAmount],
+          ).dividedBy(10 ** 18),
+          sponsored_deposit_status: proposal[PARAMS.sponsorDepositStatus],
+          sponsored_timestamp: proposal[PARAMS.sponsoredTimestamp],
           ipfsHash: proposal[PARAMS.proposalHash],
           ipfsKey: proposal[PARAMS.proposalHash],
           projectDuration: IconConverter.toBigNumber(
@@ -587,6 +604,23 @@ const proposalSlice = createSlice({
     fetchProposalByAddressFailure(state) {
       return;
     },
+    fetchMigrationProposalByAddressRequest(state) {
+      return;
+    },
+
+    fetchMigrationProposalByAddressSuccess(state, action) {
+      console.log("migration proposal list",action.payload.response)
+      state.migrationProposalByAddress = action.payload.response?.data.map(proposal => ({
+        proposalTitle: proposal[PARAMS.proposalTitle],
+        ipfsKey: proposal[PARAMS.proposalHash],
+        contributorAddress:proposal[PARAMS.contributorAddress]
+      }));
+      return;
+    },
+
+    fetchMigrationProposalByAddressFailure(state) {
+      return;
+    },
     setModalShowSponsorRequests(state, action) {
       state.modalShowSponsorRequests = action.payload;
     },
@@ -612,6 +646,12 @@ const proposalSlice = createSlice({
       }));
       state.votesByProposal = state.votesByProposal.filter(vote => vote.status);
 
+      state.abstainedVotes = IconConverter.toBigNumber(
+        action.payload.response.abstained_votes,
+      );
+      state.abstainVoters = IconConverter.toBigNumber(
+        action.payload.response.abstain_voters,
+      );
       state.approvedVotes = IconConverter.toBigNumber(
         action.payload.response.approved_votes,
       );
@@ -660,7 +700,7 @@ const proposalSlice = createSlice({
           },
           count: parseInt(
             IconConverter.toBigNumber(
-              action.payload[proposalStatus.status]?._count ?? 0,
+              action.payload[proposalStatus.status]?.count ?? 0,
             ),
           ),
         };
@@ -714,6 +754,14 @@ const proposalSlice = createSlice({
           approvedVotesPercentageCount: calculatePercentage({
             total: proposal[PARAMS.totalVoters],
             actual: proposal[PARAMS.approvedVoters],
+          }),
+          abstainedPercentage: calculatePercentage({
+            total: proposal[PARAMS.totalVotes],
+            actual: proposal[PARAMS.abstainedVotes],
+          }),
+          abstainVotesPercentageCount: calculatePercentage({
+            total: proposal[PARAMS.totalVoters],
+            actual: proposal[PARAMS.abstainVoters],
           }),
 
           rejectedPercentage: calculatePercentage({
@@ -848,10 +896,14 @@ const proposalSlice = createSlice({
     fetchProposalByIpfsSuccess(state, action) {
       console.log('Response', action.payload.response);
       let proposal = action.payload.response;
+      state.selectedProposalForMigration = action.payload.response;
+      state.selectedProposalDetailsbyHash = action.payload.response;
       state.selectedProposal = {
         _status: proposal[PARAMS.status],
         _proposal_title: proposal[PARAMS.proposalTitle],
         _contributor_address: proposal[PARAMS.contributorAddress],
+        _milestone_count:proposal[PARAMS.milestoneCount],
+        _is_milestone:proposal[PARAMS.isMilestone],
         // budget: parseInt(proposal[PARAMS.totalBudget]),
         budget: IconConverter.toBigNumber(
           proposal[PARAMS.totalBudget],
@@ -870,7 +922,14 @@ const proposalSlice = createSlice({
 
         sponsorVoteReason: proposal[PARAMS.sponsorVoteReason],
         // approvedPercentage: (!proposal[PARAMS.totalVotes] || parseInt(proposal[PARAMS.totalVotes]) === 0) ? 0 : ((proposal[PARAMS.approvedVotes] / proposal[PARAMS.totalVotes]) * 100),
-
+        abstainedPercentage: calculatePercentage({
+          total: proposal[PARAMS.totalVotes],
+          actual: proposal[PARAMS.abstainedVotes],
+        }),
+        abstainVotesPercentageCount: calculatePercentage({
+          total: proposal[PARAMS.totalVoters],
+          actual: proposal[PARAMS.abstainVoters],
+        }),
         approvedPercentage: calculatePercentage({
           total: proposal[PARAMS.totalVotes],
           actual: proposal[PARAMS.approvedVotes],
@@ -896,6 +955,31 @@ const proposalSlice = createSlice({
         approvedReports: proposal['approved_reports'],
         projectDuration: proposal['project_duration'],
       };
+      state.abstainedVotes = IconConverter.toBigNumber(
+        action.payload.response.abstained_votes,
+      );
+      state.abstainVoters = IconConverter.toBigNumber(
+        action.payload.response.abstain_voters,
+      );
+      state.approvedVotes = IconConverter.toBigNumber(
+        action.payload.response.approved_votes,
+      );
+      state.totalVotes = IconConverter.toBigNumber(
+        action.payload.response.total_votes,
+      );
+      state.rejectedVotes = IconConverter.toBigNumber(
+        action.payload.response.rejected_votes,
+      );
+
+      state.approvedVoters = IconConverter.toBigNumber(
+        action.payload.response.approve_voters,
+      );
+      state.rejectedVoters = IconConverter.toBigNumber(
+        action.payload.response.reject_voters,
+      );
+      state.totalVoters = IconConverter.toBigNumber(
+        action.payload.response.total_voters,
+      );
       return;
     },
     fetchProposalByIpfsFailure(state) {
@@ -963,6 +1047,9 @@ export const {
   fetchProposalDetailRequest,
   fetchProposalDetailSuccess,
   fetchProposalDetailFailure,
+  fetchSelectedProposalForProgressReportRequest,
+  fetchSelectedProposalForProgressReportSuccess,
+  fetchSelectedProposalForProgressReportFailure,
   fetchSponsorRequestsListRequest,
   fetchSponsorRequestsListSuccess,
   fetchSponsorRequestsListFailure,
@@ -978,6 +1065,9 @@ export const {
   fetchProposalByAddressRequest,
   fetchProposalByAddressSuccess,
   fetchProposalByAddressFailure,
+  fetchMigrationProposalByAddressRequest,
+  fetchMigrationProposalByAddressSuccess,
+  fetchMigrationProposalByAddressFailure,
   setModalShowSponsorRequests,
   setModalShowVoting,
   fetchVoteResultRequest,
@@ -1014,5 +1104,8 @@ export const {
   fetchPriorityVotingSuccess,
   fetchPriorityVotingFailure,
   setVotingPhase,
+  submitMigrationProposalFailure,
+  submitMigrationProposalSuccess,
+  submitMigrationProposalRequest,
 } = proposalSlice.actions;
 export default proposalSlice.reducer;

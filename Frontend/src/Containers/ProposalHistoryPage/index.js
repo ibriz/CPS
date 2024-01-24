@@ -7,7 +7,7 @@ import ProposalHistoryCard from 'Components/ProposalHistoryCard';
 
 const ProposalHistoryPage = ({ numberOfSubmittedProposals }) => {
   return (
-    <Container>
+    <Container fluid>
       {/* <Header title='Proposals' /> */}
 
       <ProposalHistoryCard

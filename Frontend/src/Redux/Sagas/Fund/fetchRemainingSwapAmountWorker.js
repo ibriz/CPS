@@ -14,7 +14,7 @@ function* fetchRemainingSwapAmountWorker({ payload }) {
     const cpfTreasuryAddress = yield select(getCPFTreasuryScoreAddress);
     console.log({ cpfTreasuryAddress });
     const response = yield call(callKeyStoreWallet, {
-      method: 'get_remaining_swap_amount',
+      method: 'getRemainingSwapAmount',
       scoreAddress: cpfTreasuryAddress,
     });
 

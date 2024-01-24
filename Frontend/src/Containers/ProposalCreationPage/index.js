@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import {findFutureMonth} from '../../utils'
 import {
   Row,
   Card,
@@ -47,6 +48,8 @@ import { requestIPFS } from 'Redux/Sagas/helpers';
 import useTimer from 'Hooks/useTimer';
 import Popup from 'Components/Popup';
 import { specialCharacterMessage } from 'Constants';
+
+import IconService from 'icon-sdk-js';
 
 const signingInfoMessage = (
   <div className='text-information'>
@@ -97,43 +100,6 @@ const initialDescription = `
 <p><em>Clearly formatted table. Projects applying for CPS funding should have roadmaps made in accordance with 30 day funding cycles. Please see <a href="https://github.com/icon-community/CPS/wiki/Funding-Cycle-Explanation">this explanation</a> of CPS funding cycles and how it may affect development and disbursement of funding</em></p>
 
 <p>Expected start date: <em>start date</em></p>
-
-<p><strong>Roadmap</strong>
-
-<table>
-<thead>
-  <tr>
-    <th>Name</th>
-    <th>Time [days]</th>
-    <th>Completion Date</th>
-		<th>Explanation</th>
-		<th>Dependants</th>
-  </tr>
-</thead>
-<tbody>
-  <tr>
-    <td>Milestone 1</td>
-    <td>20 days</td>
-    <td>August 1</td>
-		<td>This provides deliverable 1</td>
-		<td>Milestone 2, Milestone 3</td>
-  </tr>
-	<tr>
-		<td>Milestone 2</td>
-		<td>10 days</td>
-		<td>August 20</td>
-		<td>This is where we will perform marketing and initial user onboarding</td>
-		<td>None</td>
-	</tr>
-	<tr>
-		<td>Milestone 3</td>
-		<td>10 days</td>
-		<td>September 1</td>
-		<td>This is where we perform debugging and maintenance services</td>
-		<td>None</td>
-	</tr>
-</tbody>
-</table>
 
 <h4 id="deliverables">Deliverables</h4>
 
@@ -245,14 +211,16 @@ const ProposalCreationPage = ({
   isMaintenanceMode,
   fetchMaintenanceModeRequest,
   remainingSwapAmount,
+  prePaymentPercentage,
 }) => {
   const { draftProposal, isDraft } = location;
   const { period } = useTimer();
+  const [milestoneCount, setMilestoneCount] = useState(0);
   const [modalShow, setModalShow] = React.useState(false);
   let [submissionConfirmationShow, setSubmissionConfirmationShow] =
     React.useState(false);
   let [draftConfirmationShow, setDraftConfirmationShow] = React.useState(false);
-
+  const isDarkTheme = localStorage.getItem('theme');
   const [editModalShow, setEditModalShow] = React.useState(false);
   const [editModalIndex, setEditModalIndex] = React.useState();
   const [proposalIPFS, setProposalIPFS] = React.useState({});
@@ -261,7 +229,12 @@ const ProposalCreationPage = ({
   const [descriptionCharacters, setDescriptionCharacters] = React.useState(0);
   const [totalNumberOfMonthsInMilestone, setTotalNumberOfMonthsInMilestone] =
     React.useState(0);
+  const [totalMilestoneBudget, setTotalMilestoneBudget] = React.useState(0);
+  const [totalInputBudget, setTotalInputBudget] = React.useState(0);
+  const [remainingBudget, setRemainingBudget] = React.useState(0);
   let [prepList, setPrepList] = React.useState([]);
+
+  const {IconConverter} = IconService;
 
   useEffect(() => {
     fetchCPFRemainingFundRequest();
@@ -299,6 +272,7 @@ const ProposalCreationPage = ({
     sponserPrepName: null,
     description: null,
     milestones: [],
+    milestoneCount: milestoneCount,
     teamName: null,
     teamEmail: null,
     teamSize: null,
@@ -332,29 +306,64 @@ const ProposalCreationPage = ({
     }
   }, [proposal.totalBudget, remainingSwapAmount]);
 
+  // useEffect(() => {
+  //   const minimumNumberOfWords = 2;
+  //   // const maximumNumberOfMilestones = 6;
+  //   const totalMonths =
+  //     proposal.milestones.reduce(
+  //       (sum, milestone) => sum + parseInt(milestone.duration),
+  //       0,
+  //     );
+  //   setTotalNumberOfMonthsInMilestone(totalMonths);
+
+  //   console.log('proposal.projectDuration', proposal.projectDuration);
+  //   if (proposal.milestones.length < 1) {
+  //     document
+  //       .getElementById('milestones')
+  //       .setCustomValidity(`Please add milestones`);
+  //   } else if (parseInt(totalMonths) !== parseInt(proposal.projectDuration)) {
+  //     document.getElementById('milestones').setCustomValidity(
+  //         `The total duration in milestones should equal to the project duration (currently ${
+  //           proposal.projectDuration || 0
+  //         } months)`,
+  //       );
+  //   } else {
+  //     document.getElementById('milestones').setCustomValidity(``);
+  //   }
+  // }, [proposal.milestones, proposal.projectDuration]);
+
   useEffect(() => {
-    const minimumNumberOfWords = 2;
-    // const maximumNumberOfMilestones = 6;
-    const totalMonths = proposal.milestones.reduce(
-      (sum, milestone) => sum + parseInt(milestone.duration),
-      0,
-    );
+    const totalMonths =
+      proposal.milestones.reduce(
+        (sum, milestone) => sum + parseInt(milestone.completionPeriod),
+        0,
+      );
     setTotalNumberOfMonthsInMilestone(totalMonths);
 
-    console.log('proposal.projectDuration', proposal.projectDuration);
+    const milestoneBudget = proposal.totalBudget - (prePaymentPercentage * proposal.totalBudget);
+    setTotalMilestoneBudget(milestoneBudget);
+    const inputBudget = proposal.milestones.reduce(
+      (sum, milestone) => sum + Number(milestone.budget),
+      0,
+    );
+    setTotalInputBudget(inputBudget);
+    setRemainingBudget(milestoneBudget - inputBudget);
+    // console.log(milestoneBudget, inputBudget);
+    // console.log(totalInputBudget, totalMilestoneBudget);
     if (proposal.milestones.length < 1) {
       document
-        .getElementById('milestones')
-        .setCustomValidity(`Please add milestones`);
-    } else if (parseInt(totalMonths) != parseInt(proposal.projectDuration)) {
-      console.log(
-        'mielstone',
-        parseInt(totalMonths),
-        parseInt(proposal.projectDuration),
-      );
+      .getElementById('milestones')
+      .setCustomValidity(`Please add milestones`);
+    } else if (parseInt(inputBudget) !== parseInt(milestoneBudget)) {
       document
         .getElementById('milestones')
         .setCustomValidity(
+          `The total budget in milestones should equal to the project budget (currently ${
+            milestoneBudget || 0
+          } bnUSD)`,
+        );
+    } else if (parseInt(proposal.milestones[proposal.milestones.length-1].completionPeriod) !== parseInt(proposal.projectDuration)) {
+      document.getElementById('milestones').setCustomValidity(
           `The total duration in milestones should equal to the project duration (currently ${
             proposal.projectDuration || 0
           } months)`,
@@ -362,7 +371,7 @@ const ProposalCreationPage = ({
     } else {
       document.getElementById('milestones').setCustomValidity(``);
     }
-  }, [proposal.milestones, proposal.projectDuration]);
+  }, [proposal.totalBudget, proposal.milestones,proposal.projectDuration]);
 
   useEffect(() => {
     const minimumNumberOfWords = 10;
@@ -481,7 +490,7 @@ const ProposalCreationPage = ({
         address: walletAddress,
         proposalKey: proposal.ipfsKey,
         callBackAfterSigning: () => {
-          history.push('/proposals');
+          history.push('/dashboard');
         },
       });
     } else {
@@ -489,7 +498,7 @@ const ProposalCreationPage = ({
         ...proposal,
         address: walletAddress,
         callBackAfterSigning: () => {
-          history.push('/proposals');
+          history.push('/dashboard');
         },
       });
     }
@@ -527,6 +536,7 @@ const ProposalCreationPage = ({
   useEffect(() => {
     fetchAvailableFundRequest();
   }, []);
+  // console.log({remainingSwapAmount});
   return (
     <div className={styles.proposalCreationPage}>
       {/* <Header title='Create New Proposal' /> */}
@@ -550,6 +560,7 @@ const ProposalCreationPage = ({
                 <Form.Control
                   placeholder='Project Name'
                   size='md'
+                  className={styles.inputBox}
                   value={proposal.projectName}
                   name='projectName'
                   id='projectName'
@@ -571,6 +582,7 @@ const ProposalCreationPage = ({
                 <Form.Control
                   size='md'
                   as='select'
+                  className={styles.inputBox}
                   value={proposal.category}
                   name='category'
                   id='category'
@@ -600,6 +612,7 @@ const ProposalCreationPage = ({
                     value={proposal.projectDuration}
                     name='projectDuration'
                     id='projectDuration'
+                    className={styles.inputBox}
                     onChange={handleChange}
                     min={0}
                     max={12}
@@ -633,6 +646,7 @@ const ProposalCreationPage = ({
                     min={0}
                     max={remainingSwapAmount}
                     type='number'
+                    className={styles.inputBox}
                     value={proposal.totalBudget}
                     name='totalBudget'
                     id='totalBudget'
@@ -668,6 +682,7 @@ const ProposalCreationPage = ({
                 <Form.Control
                   size='md'
                   as='select'
+                  className={styles.inputBox}
                   value={proposal.sponserPrep}
                   name='sponserPrep'
                   id='sponserPrep'
@@ -727,9 +742,92 @@ const ProposalCreationPage = ({
                 <span className={styles.required}></span>
                 {/* <InfoIcon description="Milestone for the project" /> */}
               </Form.Label>
+              <div className='pl-3 pr-3 w-100 overflow-auto mb-4'>
+                {
+                  <Table bordered>
+                    <thead>
+                      <tr>
+                        <th>Milestone Name</th>
+                        <th>Completion Period</th>
+                        <th>Budget</th>
+                        <th>Description</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <>
+                        {proposal.milestones.map((milestone, index) => (
+                          <tr style={{ height: '100%' }} key={index}>
+                            <td>{milestone.name}</td>
+                            <td>
+                              {`${findFutureMonth(milestone.completionPeriod)} after ${milestone.completionPeriod} month`}
+                              {milestone.completionPeriod > 1 && 's'}
+                            </td>
+                            <td>{milestone.budget} bnUSD</td>
+                            <td>{milestone.description}</td>
+                            <td style={{}}>
+                              {' '}
+                              <AiFillDelete
+                                style={{ cursor: 'pointer', fontSize: '20px' }}
+                                onClick={() => {
+                                  setProposal(prevState => {
+                                    const newMilestone = [
+                                      ...prevState.milestones,
+                                    ];
+                                    newMilestone.splice(index, 1);
+                                    return {
+                                      ...prevState,
+                                      milestones: newMilestone,
+                                    };
+                                  });
+                                }}
+                              />
+                              <FiEdit2
+                                style={{
+                                  marginLeft: '10px',
+                                  fontSize: '20px',
+                                  cursor: 'pointer',
+                                }}
+                                onClick={() => {
+                                  setEditModalShow(true);
+                                  setEditModalIndex(index);
+                                }}
+                              />
+                            </td>
+                          </tr>
+                        ))}
+                        <tr>
+                          <td colspan='2'>
+                            <p>{`Pre-Payment Amount (${prePaymentPercentage*100}% of Budget)`}</p>
+                          </td>
+
+                          <td>
+                            <p>
+                              {/* <b>300 bnUSD</b> */}
+                              <b>{prePaymentPercentage*proposal.totalBudget} bnUSD</b>
+                            </p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <b>Total</b>
+                          </td>
+                          <td>
+                            <b></b>
+                          </td>
+                          <td>
+                            <b>{totalInputBudget + (prePaymentPercentage*proposal.totalBudget)} bnUSD</b>
+                          </td>
+                        </tr>
+                      </>
+                    </tbody>
+                  </Table>
+                }
+              </div>
+
               <Col sm='12'>
                 <Button
-                  variant='light'
+                  variant={isDarkTheme === 'dark' ? 'dark' : 'light'}
                   onClick={() => setModalShow(true)}
                   style={{ position: 'relative' }}
                 >
@@ -742,64 +840,6 @@ const ProposalCreationPage = ({
               </Col>
             </Form.Group>
 
-            {proposal.milestones.length > 0 && (
-              <Table striped bordered hover>
-                <thead>
-                  <tr>
-                    <th>Milestone Name</th>
-                    <th>Duration</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <>
-                    {proposal.milestones.map((milestone, index) => (
-                      <tr>
-                        <td>{milestone.name}</td>
-                        <td>
-                          {milestone.duration} month
-                          {milestone.duration > 1 && 's'}
-                        </td>
-                        <td
-                          style={{ display: 'flex', justifyContent: 'center' }}
-                        >
-                          {' '}
-                          <AiFillDelete
-                            style={{ cursor: 'pointer' }}
-                            onClick={() => {
-                              setProposal(prevState => {
-                                const newMilestone = [...prevState.milestones];
-                                newMilestone.splice(index, 1);
-                                return {
-                                  ...prevState,
-                                  milestones: newMilestone,
-                                };
-                              });
-                            }}
-                          />
-                          <FiEdit2
-                            style={{ marginLeft: '10px', cursor: 'pointer' }}
-                            onClick={() => {
-                              setEditModalShow(true);
-                              setEditModalIndex(index);
-                            }}
-                          />
-                        </td>
-                      </tr>
-                    ))}
-                    <tr>
-                      <td>
-                        <b>TOTAL</b>
-                      </td>
-                      <td>
-                        <b>{totalNumberOfMonthsInMilestone} months</b>
-                      </td>
-                    </tr>
-                  </>
-                </tbody>
-              </Table>
-            )}
-
             <Form.Group as={Row}>
               <Form.Label column sm='2'>
                 Team Name
@@ -809,6 +849,7 @@ const ProposalCreationPage = ({
 
               <Col sm='3' className={styles.inputSameLine}>
                 <Form.Control
+                  className={styles.inputBox}
                   placeholder={'Team Name'}
                   size={'md'}
                   value={proposal.teamName}
@@ -826,6 +867,7 @@ const ProposalCreationPage = ({
 
               <Col sm='2' className={styles.inputSameLine}>
                 <Form.Control
+                  className={styles.inputBox}
                   placeholder={'Team Email'}
                   type='email'
                   size={'md'}
@@ -842,6 +884,7 @@ const ProposalCreationPage = ({
               </Form.Label>
               <Col sm='2' className={styles.inputSameLine}>
                 <Form.Control
+                  className={styles.inputBox}
                   placeholder={'Team Size'}
                   size={'md'}
                   type='number'
@@ -919,16 +962,19 @@ const ProposalCreationPage = ({
       <AddMilestoneModal
         show={modalShow}
         onHide={() => setModalShow(false)}
+        remainingBudget={remainingBudget}
         onAddMilestone={milestone => {
           setProposal(prevState => ({
             ...prevState,
             milestones: [...prevState.milestones, milestone],
+            milestoneCount: prevState.milestoneCount + 1,
           }));
         }}
       />
 
       <EditMileStoneModal
         show={editModalShow}
+        remainingBudget={remainingBudget}
         onHide={() => setEditModalShow(false)}
         milestone={proposal.milestones[editModalIndex]}
         onAddMilestone={milestone => {
@@ -954,9 +1000,14 @@ const ProposalCreationPage = ({
         onHide={() => setSubmissionConfirmationShow(false)}
         heading={'Proposal Submission Confirmation'}
         size='mdxl'
+
         onConfirm={() => {
           submitProposal({
-            proposal,
+            proposal: {...proposal,milestones:proposal.milestones.map((x)=>{
+              const {budget, ...rest} = x;
+              const updatedBudget = IconConverter.toBigNumber(budget*1e18);
+              return {budget:IconConverter.toHex(updatedBudget),...rest};
+            })  }
           });
         }}
       >
@@ -1003,6 +1054,8 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const mapStateToProps = state => ({
+  sponsorBondPercentage:state.preps.sponsorBondPercentage,
+  prePaymentPercentage:state.fund.prePaymentPercentage,
   submittingProposal: state.proposals.submittingProposal,
   preps: state.preps.preps,
   walletAddress: state.account.address,
