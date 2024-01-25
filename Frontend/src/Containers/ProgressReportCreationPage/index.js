@@ -55,7 +55,10 @@ const signingInfoMessage = (
   <div className='text-information'>
     <div>Note:</div>
     <div className='intendation'>
-      You need to sign the transaction two times-
+      1. You need to submit at least one milestone while submitting the progress report. Otherwise your progress report will be rejected.
+    </div>
+    <div className='intendation'>
+      2. You need to sign the transaction two times-
       <div className='intendation'>
         i) First time: to verify the user identity while submitting the progress
         report data to the Backend (IPFS).

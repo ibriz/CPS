@@ -726,12 +726,12 @@ function ProgressReportDetailsPage(props) {
                               // console.log("votes of each milestones",votesByProgressReport.filter(x=>Number(x.milestoneId) === milestone.id))
                               return (
                                 <Container
-                                fluid
+                                  fluid
                                   key={index}
                                   id='milestoneArray'
                                   style={{
-                                    display:'flex',
-                                    flexDirection:'column',
+                                    display: 'flex',
+                                    flexDirection: 'column',
                                     padding: '16px 8px',
                                   }}
                                 >
@@ -969,29 +969,23 @@ function ProgressReportDetailsPage(props) {
                           votingPRep &&
                           selectedProgressReportCompletedMilestone ===
                             '0x0' && (
-                            <Container
-                              fluid
+                              <Alert
+                              variant='info'
                               style={{
-                                color: 'var(--proposal-text-color)',
-                                backgroundColor: 'var(--proposal-card-color)',
-                                marginBottom: '5px',
-                                marginTop: '16px',
-                                fontSize: '1.5rem',
-                                lineHeight: '36px',
+                                marginTop: '10px',
                                 display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
                                 flexDirection: 'column',
-                                textAlign: 'center',
-                                paddingTop: '50px',
-                                paddingBottom: '50px',
-                                width: '100%',
+                                alignItems: 'center',
                               }}
                             >
+                              <Alert.Heading>No voting required</Alert.Heading>
+                              <p className='text-center'>
                               This progress report doesnot have any completed
                               milestone. <br />
                               So, No vote required for this progress report.
-                            </Container>
+                              </p>
+                            </Alert>
+
                           )}
                         {isPrep &&
                           votingPRep &&
@@ -1133,12 +1127,13 @@ function ProgressReportDetailsPage(props) {
                         ) &&
                           !changeVoteButton && (
                             <Container
-                            fluid
-                            style={{
-                              marginTop: '12px',
-                              padding: '16px 8px',
-                              backgroundColor: 'var(--proposal-card-color)',
-                            }}>
+                              fluid
+                              style={{
+                                marginTop: '12px',
+                                padding: '16px 8px',
+                                backgroundColor: 'var(--proposal-card-color)',
+                              }}
+                            >
                               {status === 'Voting' && (
                                 <p
                                   style={{
@@ -1170,6 +1165,23 @@ function ProgressReportDetailsPage(props) {
                           )}
                       </>
                     ))}
+                  {selectedProgressReportCompletedMilestone === '0x0' && (progressReport?.status !=='_waiting') && (
+                    <Alert
+                      variant='danger'
+                      style={{
+                        marginTop: '10px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <Alert.Heading>Progress report rejected</Alert.Heading>
+                      <p className='text-center'>
+                        This progress report doesnot have any completed
+                        milestone.
+                      </p>
+                    </Alert>
+                  )}
 
                   {status === 'Voting' && (
                     <Row>
