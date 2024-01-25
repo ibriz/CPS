@@ -20,7 +20,8 @@ import { Badge, Fade } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { CgFileDocument } from 'react-icons/cg';
-import iconCPSImg from '../../Assets/Images/ICON CPS white.svg';
+import iconCPSImg from '../../Assets/Images/iconCPSlogo.svg';
+import iconCPSImgDark from '../../Assets/Images/iconCPSlogo-light.svg';
 import { GenIcon } from 'react-icons';
 
 const Aside = ({
@@ -41,7 +42,7 @@ const Aside = ({
   const highlightedStyle = { background: 'rgba(38, 38, 38, 0.1)' };
   const pathName = history.location.pathname;
   const [notificationsCount, setNotificationsCount] = React.useState(0);
-
+  const isDark = localStorage.getItem('theme') === 'dark';
   const getHighlightedStyle = routes => {
     return routes.includes(pathName) ? highlightedStyle : {};
   };
@@ -88,7 +89,7 @@ const Aside = ({
               className='sidebarHeader'
             >
               {/* <span style = {{fontSize: '26px', fontWeight: 400}}>ICON</span><span style = {{fontSize: '26px', fontWeight: '900'}}>CPS</span> */}
-              <img src={iconCPSImg} style={{ width: '65%' }} />
+              <img src={iconCPSImgDark} style={{ width: '65%' }} />
             </Link>
           )}
           <FaList

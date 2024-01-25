@@ -55,7 +55,10 @@ const signingInfoMessage = (
   <div className='text-information'>
     <div>Note:</div>
     <div className='intendation'>
-      You need to sign the transaction two times-
+      1. You need to submit at least one milestone while submitting the progress report. Otherwise your progress report will be rejected.
+    </div>
+    <div className='intendation'>
+      2. You need to sign the transaction two times-
       <div className='intendation'>
         i) First time: to verify the user identity while submitting the progress
         report data to the Backend (IPFS).
@@ -764,7 +767,7 @@ const ProgressReportCreationPage = ({
                       return (
                         <div
                           key={option.id}
-                          class='d-flex custom-control custom-checkbox pl-4 pr-4'
+                          className='d-flex custom-control custom-checkbox pl-4 pr-4'
                         >
                           <Checkbox
                             proposalKey={`${selectedProposalForProgressReport.ipfsHash}`}
@@ -776,7 +779,7 @@ const ProgressReportCreationPage = ({
                             onChange={() => handleCheckboxChange(option.id)}
                           />
                           <label
-                            class='custom-control-label w-100'
+                            className='custom-control-label w-100'
                             for={`customCheck${index}`}
                           >
                             {option.name}
@@ -961,7 +964,7 @@ const ProgressReportCreationPage = ({
         size='mdxl'
         onConfirm={() => {
           if(progressReport.completedMilestone.length === 0){
-            NotificationManager.error('Please select atleast one milestone');
+            NotificationManager.error('Please select atleast one milestone!');
             return;
           }else{
             submitProgressReport({

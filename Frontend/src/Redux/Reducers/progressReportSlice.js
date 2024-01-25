@@ -13,7 +13,7 @@ const PARAMS = {
   timestamp: 'timestamp',
   proposalHash: 'ipfs_hash',
   reportHash: 'report_hash',
-
+  milestoneSubmittedCount:'milestone_submitted_count',
   approvedVotes: 'approved_votes',
   totalVotes: 'total_votes',
   rejectedVotes: 'rejected_votes',
@@ -110,6 +110,7 @@ const progressReportStatusMapping = {
 const initialState = {
   numberOfSubmittedProgressReports: 29,
   selectedProgressReportHasMilestone: false,
+  selectedProgressReportCompletedMilestone:'',
   numberOfApprovedProgressReports: 29,
 
   // numberOfPendingProposals: 235,
@@ -450,11 +451,12 @@ fetchProgressReportListRequest(state) {
       return;
     },
     fetchProgressReportByIpfsSuccess(state, action) {
-      console.log('Response', action.payload.response);
+      console.log('Response of the progress report', action.payload.response);
       let progressReport = action.payload.response;
       if(progressReport[PARAMS.hasMilestone] === '0x1'){
         state.selectedProgressReportHasMilestone=true;
       }
+      state.selectedProgressReportCompletedMilestone=progressReport[PARAMS.milestoneSubmittedCount];
       state.approvedVotes = IconConverter.toBigNumber(
         action.payload.response.approved_votes,
       );
@@ -477,6 +479,7 @@ fetchProgressReportListRequest(state) {
       state.selectedProgressReport = {
         status: progressReport[PARAMS.status],
         hasMilestone:progressReport[PARAMS.hasMilestone],
+        milestoneSubmittedCount:progressReport[PARAMS.milestoneSubmittedCount],
         progressReportTitle: progressReport[PARAMS.progressReportTitle],
         projectTitle: progressReport[PARAMS.proposalTitle],
         contributorAddress: progressReport[PARAMS.contributorAddress],

@@ -136,11 +136,11 @@ const MilestoneVoteCard = ({
 
           <div
             id={`collapse${id}`}
-            class='collapse show'
+            className='collapse show'
             aria-labelledby='headingOne'
             data-parent='#accordionComponent'
           >
-            <div class='card-body'>
+            <div className='card-body'>
               <div className='d-flex flex-column'>
                 <p style={{ fontWeight: '600', marginBottom: '4px' }}>
                   Milestone Description
