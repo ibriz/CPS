@@ -28,7 +28,7 @@ function* submitProgressReportToScoreWorker({ payload }) {
     },
     milestoneSubmissions:payload?.progressReport?.completedMilestone?.map((x)=> {
       const {status,id,...rest} = x;
-      return {status,id};
+      return { status: status === "0x1" ? "0x1" : "0x0", id };
     })
   };
 
