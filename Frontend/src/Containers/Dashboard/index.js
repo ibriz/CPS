@@ -511,7 +511,7 @@ const Dashboard = ({
               >
                 <div>Are you sure you pay the penalty?</div>
                 <div style={{ color: 'red' }}>
-                  You will need to transfer {`${payPenaltyAmount} `} ICX
+                  You will need to transfer {`${payPenaltyAmount} `} bnUSD
                 </div>
               </ConfirmationModal>
             </Alert>
